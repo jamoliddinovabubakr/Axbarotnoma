@@ -116,3 +116,16 @@ class Notification(models.Model):
                                    related_name="to_user")
     status = models.CharField(max_length=50, choices=STATUS, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Menu(models.Model):
+    name = models.CharField(max_length=100)
+    parent_id = models.PositiveIntegerField(default=0)
+    status = models.BooleanField(default=True)
+    icon = models.CharField(max_length=255, null=True, blank=True)
+    url = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse(f"{self.url}")
