@@ -46,13 +46,13 @@ class Role(models.Model):
 
 class User(AbstractUser):
     username = models.CharField(_("Username"), max_length=100, blank=True, unique=True)
-    first_name = models.CharField(_('Familiya'), max_length=100, blank=True)
-    last_name = models.CharField(_('Ism'), max_length=100, blank=True)
+    first_name = models.CharField(_('Familiya'), max_length=100, blank=True, null=True)
+    last_name = models.CharField(_('Ism'), max_length=100, blank=True, null=True)
     middle_name = models.CharField(_('Otasini ismi'), max_length=30, null=True, blank=True)
     birthday = models.DateField(_('Tugilgan kun'), null=True, blank=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True, )
-    avatar = models.ImageField(_("Avatar"), upload_to='avatars/', default='user.png', null=True, blank=True)
-    email = models.EmailField(_('Email address'), blank=True, null=True, unique=True)
+    avatar = models.ImageField(_("Avatar"), upload_to='avatars/', default='user.png')
+    email = models.EmailField(_('Email address'), blank=True, null=True)
     phone = models.CharField(max_length=13, null=True, blank=True, verbose_name='Telefon raqam', unique=True)
     passport = models.CharField(_('Pasport'), max_length=15, blank=True, null=True)
     work_place = models.CharField(_("Ish joy"), max_length=255, blank=True, null=True)
@@ -60,6 +60,9 @@ class User(AbstractUser):
     role = models.ForeignKey(Role, related_name="user_role", on_delete=models.CASCADE, null=True, blank=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name="Viloyat", null=True, blank=True)
     district = models.ForeignKey(District, on_delete=models.CASCADE, verbose_name="Tuman", null=True, blank=True)
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["first_name", "last_name", "middle_name", "password1", "password2"]
 
     def save(self, *args, **kwargs):
         rollar = Role.objects.all()
@@ -116,6 +119,7 @@ class Notification(models.Model):
                                    related_name="to_user")
     status = models.CharField(max_length=50, choices=STATUS, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Menu(models.Model):
     name = models.CharField(max_length=100)

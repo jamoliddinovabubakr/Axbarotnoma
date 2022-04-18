@@ -1,0 +1,46 @@
+{% load static %}
+<!-- begin #header -->
+<div id="header" class="header navbar navbar-default navbar-fixed-top navbar-expand-lg">
+    <!-- begin container -->
+    <div class="container">
+        <!-- begin navbar-brand -->
+        <a href="/" class="navbar-brand">
+            <span class="brand-logo"></span>
+            <span class="brand-text">
+					Davlat test markazi
+				</span>
+        </a>
+        <!-- end navbar-brand -->
+        <!-- begin navbar-toggle -->
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <!-- end navbar-toggle -->
+        <!-- begin #header-navbar -->
+        <div class="collapse navbar-collapse" id="header-navbar">
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.user.is_authenticated %}
+                    <li class="dropdown navbar-user">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                             <img src="{{ request.user.avatar.url }}" alt="" width="35"/>
+                            <span class="d-none d-md-inline">{{ request.user.first_name }} {{ request.user.last_name }}  </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="{% url 'home' %}" class="dropdown-item"><i
+                                    class="icon-pencil  p-r-10"></i><span>Profil</span></a>
+                            <a href="{% url 'logout' %}" class="dropdown-item"><i class="icon-logout  p-r-10"></i><span>Chiqish</span></a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'register' %}">Ro'yxatdan o'tish</a></li>
+                    <li><a href="{% url 'login' %}">Kirish</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <!-- end #header-navbar -->
+    </div>
+    <!-- end container -->
+</div>
+<!-- end #header -->

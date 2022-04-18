@@ -11,11 +11,11 @@ urlpatterns = [
 
 urlpatterns += [
     path('admin/', admin.site.urls),
-    path('', include('backend.urls')),
-    # path('', include('frontend.urls')),
+    path('', include('frontend.urls')),
+    path('profile/', include('backend.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# handler404 = 'report.views.handler404'
+handler404 = 'backend.views.handler404'
