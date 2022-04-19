@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Permission
-from .models import  Role, Region, District, Gender, State, User, Notification, Menu
+from .models import Role, Region, District, Gender, State, User, Notification, Menu, Category, Article
 
 
 @admin.register(Permission)
@@ -38,7 +38,6 @@ class MenuAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'parent_id', 'status']
 
 
-
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'description', 'from_user_id', 'to_user_id', 'status', 'created_at']
@@ -48,3 +47,14 @@ class NotificationAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'username', 'first_name', 'last_name', 'middle_name', 'birthday', 'gender', 'avatar', 'email',
                     'phone', 'passport', 'work_place', 'position', 'role', 'region', 'district']
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'key', 'status']
+
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ['id', 'category', 'title', 'abstract', 'keywords', 'references', 'author', 'editor', 'analyst',
+                    'file', 'state_edit', 'state_analysis', 'created_at', 'status', 'payed', 'url']

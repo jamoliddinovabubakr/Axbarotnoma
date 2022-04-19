@@ -11,8 +11,7 @@ urlpatterns = [
 
 urlpatterns += [
     path('admin/', admin.site.urls),
-    path('', include('frontend.urls')),
-    path('profile/', include('backend.urls')),
+    path('', include('backend.urls')),
 ]
 
 if settings.DEBUG:

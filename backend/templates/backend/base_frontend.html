@@ -15,13 +15,13 @@
 
 </head>
 <body>
-{% include 'frontend/parts/navbar.html' %}
-{% include 'frontend/parts/banner.html' %}
+{% include 'backend/parts_frontend/navbar.html' %}
+{% include 'backend/parts_frontend/banner.html' %}
 
 {% block content %}
 
 {% endblock content %}
-{% include 'frontend/parts/footer.html' %}
+{% include 'backend/parts_frontend/footer.html' %}
 
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="{% static '/assets/js/forum/app.min.js' %}"></script>
