@@ -1,0 +1,229 @@
+{% extends 'user_app/base.html' %}
+{% block content %}
+    <div id="content" class="content">
+        <!-- begin breadcrumb -->
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Sozlamalar</a></li>
+            <li class="breadcrumb-item active">Profilni sozlash</li>
+        </ol>
+        <!-- end breadcrumb -->
+        <!-- begin page-header -->
+        <h1 class="page-header">Profile sozlamalari <small>profilizni ma'luotlarini o'zgartirish...</small></h1>
+        <!-- end page-header -->
+        <!-- begin wizard-form -->
+        <form method="POST" name="form-wizard" class="form-control-with-bg">
+            <!-- begin wizard -->
+            <div id="wizard">
+                <!-- begin wizard-step -->
+                <ul>
+                    <li>
+                        <a href="#step-1">
+                            <span class="number">1</span>
+                            <span class="info">
+									Shaxsiy ma'lumotlar
+									<small>FIO, Address, Tug'ilgan kun, Jins</small>
+								</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#step-2">
+                            <span class="number">2</span>
+                            <span class="info">
+									Bog'lanish
+									<small>Username, Email, Telefon, Passport</small>
+								</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#step-4">
+                            <span class="number">3</span>
+                            <span class="info">
+									Completed
+									<small>Complete Changed</small>
+								</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- end wizard-step -->
+                <!-- begin wizard-content -->
+                <div>
+                    <!-- begin step-1 -->
+                    <div id="step-1">
+                        <!-- begin fieldset -->
+                        <fieldset>
+                            <!-- begin row -->
+                            <div class="row">
+                                <!-- begin col-8 -->
+                                <div class="col-xl-8 offset-xl-2">
+                                    <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse">Shaxsiy
+                                        ma'lumotlaringiz
+                                    </legend>
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Familiya </label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.first_name }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Ism </label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.last_name }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Otangizni ismi </label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.middle_name }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Tug'ilgan kun </label>
+                                        <div class="col-lg-9 col-xl-6">
+                                                <input type="date" class="form-control" id="datepicker-default" placeholder="Select Date"/>
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Viloyat</label>
+                                        <div class="col-lg-9 col-xl-6">
+                                           {{ form.region }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Tuman</label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.district }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Jins</label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.gender }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                </div>
+                                <!-- end col-8 -->
+                            </div>
+                            <!-- end row -->
+                        </fieldset>
+                        <!-- end fieldset -->
+                    </div>
+                    <!-- end step-1 -->
+                    <!-- begin step-2 -->
+                    <div id="step-2">
+                        <!-- begin fieldset -->
+                        <fieldset>
+                            <!-- begin row -->
+                            <div class="row">
+                                <!-- begin col-8 -->
+                                <div class="col-xl-8 offset-xl-2">
+                                    <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse">You contact
+                                        info, so that we can easily reach you
+                                    </legend>
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Username <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.username }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Telefon Nomer </label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.phone }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Email Address </label>
+                                        <div class="col-lg-9 col-xl-6">
+                                           <input type="email" value="{{ user.email }}" name="email" placeholder="someone@example.com" class="form-control" data-parsley-group="step-2" data-parsley-required="true" data-parsley-type="email" />
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Passport</label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.passport }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Ish Joyi</label>
+                                        <div class="col-lg-9">
+                                            {{ form.work_place }}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Lavozim</label>
+                                        <div class="col-lg-9">
+                                            {{ form.position}}
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <!-- begin form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Rasmingizni yuklang</label>
+                                        <div class="col-lg-9">
+                                            <img src="{{ user.avatar.url }}" width="100" id="image">
+                                            <br>
+                                            <br>
+                                            <input type="file" name="avatar" class="form-control" id="id_avatar"
+                                                   accept=".png, .jpg, .jpeg">
+                                        </div>
+                                    </div>
+                                    <!-- end form-group -->
+                                    <script>
+                                        document.getElementById('id_avatar').onchange = function () {
+                                            var src = URL.createObjectURL(this.files[0])
+                                            document.getElementById('image').src = src
+                                        }
+                                    </script>
+
+                                </div>
+                                <!-- end col-8 -->
+                            </div>
+                            <!-- end row -->
+                        </fieldset>
+                        <!-- end fieldset -->
+                    </div>
+                    <!-- end step-2 -->
+                    <!-- begin step-4 -->
+                    <div id="step-4">
+                        <div class="jumbotron m-b-0 text-center">
+                            <h4 class="display-4 text-success">Profilingiz ma'lumotlari omadli o'zgartirildi.</h4><br>
+                            <p><a href="{% url 'profile_page' %}" class="btn btn-outline-success btn-lg">Bosh Sahifaga
+                                qaytish</a></p>
+                        </div>
+                    </div>
+                    <!-- end step-4 -->
+                </div>
+                <!-- end wizard-content -->
+            </div>
+            <!-- end wizard -->
+        </form>
+        <!-- end wizard-form -->
+    </div>
+{% endblock %}
