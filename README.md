@@ -1,2 +1,2 @@
-# O'zbekiston Respublikasi Vazirlar mahkamasi huzuridagi Davlat test markazi
+# O'zbekiston Respublikasi 
 Online maqola topshirish va chop etish platformasi
