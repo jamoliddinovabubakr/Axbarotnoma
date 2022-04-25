@@ -15,13 +15,13 @@
 
 </head>
 <body>
-{% include 'article_app/parts/navbar.html' %}
-{% include 'article_app/parts/banner.html' %}
+{% include 'article_app/includes/navbar.html' %}
+{% include 'article_app/includes/banner.html' %}
 
 {% block content %}
 
 {% endblock content %}
-{% include 'article_app/parts/footer.html' %}
+{% include 'article_app/includes/footer.html' %}
 
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="{% static '/assets/js/forum/app.min.js' %}"></script>
