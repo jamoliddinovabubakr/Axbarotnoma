@@ -1,4 +1,5 @@
 from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 from .views import login_page, logout_user, register_page, profile_page, settings_page, change_password, edit_profile
 
 urlpatterns = [

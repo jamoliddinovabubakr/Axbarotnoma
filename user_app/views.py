@@ -11,14 +11,12 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
 from .forms import CreateUserForm, UpdateUserForm
-from .models import Menu
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Admins', 'Users'])
 # @admin_only
 def profile_page(request):
-
     context = {
 
     }
@@ -88,24 +86,25 @@ def register_page(request):
         }
         return render(request, "user_app/register/register.html", context)
 
+
 def change_password(request):
-    res = 1
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('change_password')
+            messages.success(request, 'Parolingiz muvaffaqiyatli o\'zgartirildi!')
+            r = 1
+            return render(request, 'user_app/register/change_password.html', {'result': r})
         else:
-            res = 2
+            r = -1
             messages.error(request, 'Please correct the error below.')
     else:
-        res = 0
+        r = 2
         form = PasswordChangeForm(request.user)
     return render(request, 'user_app/register/change_password.html', {
         'form': form,
-        'result': res,
+        'result': r,
     })
 
 
@@ -131,8 +130,10 @@ def edit_profile(request):
                 print('Exception in removing old profile image: ', e)
             user.avatar = request.FILES['avatar']
             user.save()
-        return redirect('profile_page')
+        r = 1
+        return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
 
     else:
+        r = 0
         form = UpdateUserForm(instance=user)
-        return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form})
+        return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})

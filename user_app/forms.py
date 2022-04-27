@@ -39,7 +39,7 @@ class UpdateUserForm(UserChangeForm):
                 'class': 'form-control',
                 'type': 'text',
                 'placeholder': "Enter...",
-                'data - parsley - group': "step-2",
+                'data - parsley - group': "step-1",
                 'data - parsley - required': "true",
             }),
             'phone': TextInput(attrs={
@@ -47,14 +47,14 @@ class UpdateUserForm(UserChangeForm):
                 'type': 'text',
                 'id': 'masked-input-phone',
                 'placeholder': '(99) 999-99-99',
-                'data - parsley - group': "step-2",
+                'data - parsley - group': "step-1",
             }),
             'passport': TextInput(attrs={
                 'class': 'form-control',
                 'type': 'text',
                 'id': 'masked-input-passport',
                 'placeholder': 'AA 9999999',
-                'data - parsley - group': "step-2",
+                'data - parsley - group': "step-1",
             }),
             # 'email': TextInput(attrs={
             #     'class': 'form-control',
@@ -94,13 +94,13 @@ class UpdateUserForm(UserChangeForm):
                 'class': 'form-control m-b-10',
                 'type': 'text',
                 'placeholder': "Enter...",
-                'data - parsley - group': "step-2",
+                'data - parsley - group': "step-1",
             }),
             'position': TextInput(attrs={
                 'class': 'form-control m-b-10',
                 'type': 'text',
                 'placeholder': "Enter...",
-                'data - parsley - group': "step-2",
+                'data - parsley - group': "step-1",
             }),
 
         }

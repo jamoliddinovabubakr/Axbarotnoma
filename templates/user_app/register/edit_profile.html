@@ -28,11 +28,13 @@
                         </a>
                     </li>
                 </ul>
-                <div>
+                <div style="background-color: #f8f8f8">
                     <div id="step-1">
                         <div class="row">
                             <div class="col-md-6">
-                                <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse">Shaxsiy
+                                <br>
+                                <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse"
+                                        style="text-align: center;">Shaxsiy
                                     ma'lumotlaringiz
                                 </legend>
                                 <!-- begin form-group -->
@@ -63,7 +65,8 @@
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">Tug'ilgan kun </label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input type="text" value="{{ user.birthday }}" name="birthday" class="form-control" id="datepicker-default" placeholder="Select Date"/>
+                                        <input type="text" value="{{ user.birthday }}" name="birthday"
+                                               class="form-control" id="datepicker-default" placeholder="Select Date"/>
                                     </div>
                                 </div>
                                 <!-- end form-group -->
@@ -99,6 +102,7 @@
                                         <br>
                                         <br>
                                         <input type="file" name="avatar" class="form-control" id="id_avatar"
+                                               style="width: 400px"
                                                accept=".png, .jpg, .jpeg">
                                     </div>
                                 </div>
@@ -112,7 +116,9 @@
                             </div>
 
                             <div class="col-md-6">
-                                <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse">Bog'lanish
+                                <br>
+                                <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse"
+                                        style="text-align: center;">Bog'lanish
                                     uchun ma'lumotlar
                                 </legend>
                                 <!-- begin form-group -->
@@ -154,7 +160,7 @@
                                 <!-- begin form-group -->
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">Ish Joyi</label>
-                                    <div class="col-lg-9">
+                                    <div class="col-lg-9 col-xl-6">
                                         {{ form.work_place }}
                                     </div>
                                 </div>
@@ -162,7 +168,7 @@
                                 <!-- begin form-group -->
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">Lavozim</label>
-                                    <div class="col-lg-9">
+                                    <div class="col-lg-9 col-xl-6">
                                         {{ form.position }}
                                     </div>
                                 </div>
@@ -172,11 +178,18 @@
                         <div class="row">
                             <div class="col-xs-6"></div>
                             <div class="col-xs-6">
-                                <button type="submit" style="float: right;" href="{% url 'profile_page' %}"
-                                        class="btn btn-success btn-lg">O'zgarishlarni saqlash
-                                </button>
+                                <div class="row">
+                                    <div class="col-xs-3"></div>
+                                    <div class="col-xs-6">
+                                        <button type="submit" style="float: right;" href="{% url 'profile_page' %}"
+                                                class="btn btn-success"><span style="font-family: Arial,cursive">O'zgarishlarni saqlash</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-xs-3"></div>
+                                </div>
                             </div>
                         </div>
+                        <br>
                     </div>
                     <!-- end step-4 -->
                 </div>
@@ -185,5 +198,33 @@
             <!-- end wizard -->
         </form>
         <!-- end wizard-form -->
+     <br>
+        <div class="row">
+            <div class="col-lg-2 col-xs-2"></div>
+            <div class="col-lg-8 col-xs-8">
+                {% if result == -1 %}
+                    <div class="alert alert-danger" style="text-align: center">
+                        <strong>Diqqat!</strong> Siz kiritgan joriy parol xato yoki yangi parol biri ikkinchisiga mos
+                        emas.
+                    </div>
+                {% endif %}
+                {% if result == 0 %}
+                    <div class="alert alert-warning">
+                        <strong>Ogohlantirish!</strong>
+                        <ul>
+                            <li>Siz kiritgan joriy parolni to'g'ri kiriting.</li>
+                            <li>Siz kiritgan yangi parollar bir - biriga mos kelishi kerak.</li>
+                            <li>Kamida 8 ta belgidan iborat bo'lsin.</li>
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if result == 1 %}
+                    <div class="alert alert-success" style="text-align: center">
+                        <strong>Muvafaqqiyat!</strong> Sizni joriy paroliz yangisiga muvafaqqiyatli o'zgartirildi.
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-2 col-xs-2"></div>
+        </div>
     </div>
 {% endblock %}
