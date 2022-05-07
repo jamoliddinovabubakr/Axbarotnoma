@@ -1,0 +1,55 @@
+{% extends 'user_app/base.html' %}
+{% load static %}
+{% block title %}
+    Viloyatlar
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Sozlamalar</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Viloyatlar</a></li>
+        </ol>
+        <h1 class="page-header">Viloyatlar ro'yxati</h1>
+
+        <div class="panel panel-inverse">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+                <h4 class="panel-title"></h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-redo"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i
+                            class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i
+                            class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <!-- end panel-heading -->
+            <div class="panel-body">
+                <table id="data-table-default" class="table table-striped table-bordered table-td-valign-middle table-hover">
+                    <thead>
+                    <tr>
+                        <th width="1%"></th>
+                        <th class="text-nowrap">Nomi</th>
+                        <th class="text-nowrap">Key</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for region in regions %}
+                        <tr class="odd gradeA">
+								<td class="f-s-600 text-inverse">{{ forloop.counter }}</td>
+								<td>{{ region.name }}</td>
+								<td>{{ region.key }}</td>
+							</tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

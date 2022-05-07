@@ -6,7 +6,8 @@ register = template.Library()
 
 @register.simple_tag()
 def get_menus():
-    return Menu.objects.all()
+    menus = Menu.objects.filter(status=True).order_by('menu_tr')
+    return menus
 
 
 # @register.inclusion_tag("articles/index.html")

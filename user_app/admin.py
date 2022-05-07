@@ -34,7 +34,7 @@ class GenderAdmin(admin.ModelAdmin):
 
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'parent_id', 'status', 'url', 'type_menu', 'icon']
+    list_display = ['id', 'name', 'parent_id', 'status', 'url', 'type_menu', 'icon', 'menu_tr']
 
 
 @admin.register(Notification)

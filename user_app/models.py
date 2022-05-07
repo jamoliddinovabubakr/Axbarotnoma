@@ -112,6 +112,7 @@ class Menu(models.Model):
     icon = models.CharField(max_length=255, null=True, blank=True)
     url = models.CharField(max_length=255, null=True, blank=True)
     type_menu = models.PositiveSmallIntegerField(default=0)
+    menu_tr = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return self.name

@@ -12,7 +12,7 @@ from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
-from user_app.models import User
+from user_app.models import User, Menu, Role, District, Region, Gender
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
@@ -33,12 +33,84 @@ def profile_page(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Users'])
-# @admin_only
-def settings_page(request):
+def profile(request):
     context = {
+
     }
-    return render(request, "user_app/cabinet_page.html", context=context)
+    return render(request, "user_app/profile_page.html", context=context)
+
+
+@login_required(login_url='login')
+def admins(request):
+    admins = User.objects.filter(Q(role__name="MASTER") | Q(role__name="ADMIN"))
+    context = {
+        'admins': admins
+    }
+    return render(request, "user_app/admins_page.html", context=context)
+
+
+@login_required(login_url='login')
+def users(request):
+    users = User.objects.filter(role__name='USER')
+    context = {
+        'users': users
+    }
+    return render(request, "user_app/users_page.html", context=context)
+
+
+
+@login_required(login_url='login')
+def menus(request):
+    menus = Menu.objects.filter(status=True)
+    context = {
+        'menus': menus
+    }
+    return render(request, "user_app/settings/menus_page.html", context=context)
+
+
+@login_required(login_url='login')
+def roles(request):
+    roles = Role.objects.filter(status=True)
+    context = {
+        'roles': roles
+    }
+    return render(request, "user_app/settings/roles_page.html", context=context)
+
+
+@login_required(login_url='login')
+def menus(request):
+    menus = Menu.objects.filter(status=True)
+    context = {
+        'menus': menus
+    }
+    return render(request, "user_app/settings/menus_page.html", context=context)
+
+
+@login_required(login_url='login')
+def genders(request):
+    genders = Gender.objects.filter(status=True)
+    context = {
+        'genders': genders
+    }
+    return render(request, "user_app/settings/gender_page.html", context=context)
+
+
+@login_required(login_url='login')
+def districts(request):
+    districts = District.objects.all()
+    context = {
+        'districts': districts
+    }
+    return render(request, "user_app/settings/district_page.html", context=context)
+
+
+@login_required(login_url='login')
+def regions(request):
+    regions = Region.objects.all()
+    context = {
+        'regions': regions
+    }
+    return render(request, "user_app/settings/region_page.html", context=context)
 
 
 @unauthenticated_user
