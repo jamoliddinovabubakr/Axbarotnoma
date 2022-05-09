@@ -1,0 +1,123 @@
+{% extends 'user_app/base.html' %}
+{% block title %}
+    Formani to'ldirish
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
+            <li class="breadcrumb-item active"><a href="javascript:;">Maqolani yuborish</a></li>
+        </ol>
+        <h1 class="page-header">Maqolani yuborish <small>Quyidagi maydonlarni to'g'ri to'ldiring...</small></h1>
+        <form method="POST" name="form-wizard" class="form-control-with-bg" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="wizard">
+                <ul>
+                    <li>
+                        <a href="#step-1">
+                            <span class="number">!</span>
+                            <span class="info">
+									Shaxsiy ma'lumotlar
+									<small>FIO, Address, Tug'ilgan kun, Jins</small>
+								</span>
+                        </a>
+                    </li>
+                </ul>
+                <div style="background-color: #f8f8f8">
+                    <div id="step-1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <br>
+                                <div class="form-group row m-b-10">
+                                    <label class="col-lg-3 text-lg-right col-form-label">Mavzu <span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-lg-9 col-xl-6">
+                                        <input type="text" name="title" placeholder="Mavzu" data-parsley-group="step-1"
+                                               data-parsley-required="true" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row m-b-10">
+                                    <label class="col-lg-3 text-lg-right col-form-label">Abstraksiya<span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-lg-9 col-xl-6">
+                                    <textarea class="form-control" name="abstract" rows="3" placeholder="Abstrakt"
+                                              data-parsley-group="step-1"
+                                              data-parsley-required="true"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <br>
+                                <div class="form-group row m-b-10">
+                                    <label class="col-lg-3 text-lg-right col-form-label">Kategoriya <span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-lg-9 col-xl-6">
+                                        {{ form.category }}
+                                    </div>
+                                </div>
+                                <div class="form-group row m-b-10">
+                                    <label class="col-lg-3 text-lg-right col-form-label">Kalit so'zlar<span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-lg-9 col-xl-6">
+                                    <textarea class="form-control" name="keywords" rows="3" placeholder="Kalit soz'lar"
+                                              data-parsley-group="step-1"
+                                              data-parsley-required="true"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"></div>
+                        <div class="row">
+                            <div class="col-xs-6"></div>
+                            <div class="col-xs-6">
+                                <div class="row">
+                                    <div class="col-xs-3"></div>
+                                    <div class="col-xs-6">
+                                        <button type="submit" style="float: right;" href="{% url 'profile_page' %}"
+                                                class="btn btn-success"><span style="font-family: Arial,cursive">O'zgarishlarni saqlash</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-xs-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                    <!-- end step-4 -->
+                </div>
+                <!-- end wizard-content -->
+            </div>
+            <!-- end wizard -->
+        </form>
+        <!-- end wizard-form -->
+        <br>
+        <div class="row">
+            <div class="col-lg-2 col-xs-2"></div>
+            <div class="col-lg-8 col-xs-8">
+                {% if result == -1 %}
+                    <div class="alert alert-danger" style="text-align: center">
+                        <strong>Diqqat!</strong> Siz kiritgan joriy parol xato yoki yangi parol biri ikkinchisiga mos
+                        emas.
+                    </div>
+                {% endif %}
+                {% if result == 0 %}
+                    <div class="alert alert-warning">
+                        <strong>Ogohlantirish!</strong>
+                        <ul>
+                            <li>Siz kiritgan joriy parolni to'g'ri kiriting.</li>
+                            <li>Siz kiritgan yangi parollar bir - biriga mos kelishi kerak.</li>
+                            <li>Kamida 8 ta belgidan iborat bo'lsin.</li>
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if result == 1 %}
+                    <div class="alert alert-success" style="text-align: center">
+                        <strong>Muvafaqqiyat!</strong> Sizni joriy paroliz yangisiga muvafaqqiyatli o'zgartirildi.
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-2 col-xs-2"></div>
+        </div>
+    </div>
+{% endblock %}
