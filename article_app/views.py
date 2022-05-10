@@ -3,7 +3,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
-from .models import Article, Category
+from .models import Article, Category, Shartnoma
 from .forms import AddArticleForm
 
 
@@ -24,6 +24,8 @@ def add_article(request):
     else:
         context = {
             'form': AddArticleForm(),
+            'shartnoma1': Shartnoma.objects.get(name='shartnoma1'),
+            'shartnoma2': Shartnoma.objects.get(name='shartnoma2'),
         }
         return render(request, "article_app/add_article.html", context=context)
 

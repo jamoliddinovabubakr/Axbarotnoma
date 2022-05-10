@@ -46,8 +46,8 @@ class Role(models.Model):
 
 class User(AbstractUser):
     username = models.CharField(_("Username"), max_length=100, blank=True, unique=True)
-    first_name = models.CharField(_('Familiya'), max_length=100, blank=True, null=True)
-    last_name = models.CharField(_('Ism'), max_length=100, blank=True, null=True)
+    first_name = models.CharField(_('Ism'), max_length=100, blank=True, null=True)
+    last_name = models.CharField(_('Familiya'), max_length=100, blank=True, null=True)
     middle_name = models.CharField(_('Otasini ismi'), max_length=30, null=True, blank=True)
     birthday = models.DateField(_('Tugilgan kun'), null=True, blank=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True, )
@@ -55,8 +55,6 @@ class User(AbstractUser):
     email = models.CharField(_('Email address'), max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Telefon raqam', unique=True)
     passport = models.CharField(_('Pasport'), max_length=15, blank=True, null=True)
-    work_place = models.CharField(_("Ish joy"), max_length=255, blank=True, null=True)
-    position = models.CharField(_("Lavozim"), max_length=255, blank=True, null=True)
     role = models.ForeignKey(Role, related_name="user_role", on_delete=models.CASCADE, null=True, blank=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name="Viloyat", null=True, blank=True)
     district = models.ForeignKey(District, on_delete=models.CASCADE, verbose_name="Tuman", null=True, blank=True)

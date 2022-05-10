@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import Select, DateInput, PasswordInput, TextInput
-from .models import Article, Category
+from .models import Article, Category, Author
+
 
 class AddArticleForm(forms.ModelForm):
     class Meta:

@@ -14,7 +14,7 @@ class UpdateUserForm(UserChangeForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'middle_name', 'birthday', 'gender', 'avatar', 'email',
-                  'phone', 'passport', 'work_place', 'position', 'region', 'district']
+                  'phone', 'passport', 'region', 'district']
 
         widgets = {
             'first_name': TextInput(attrs={
@@ -90,17 +90,4 @@ class UpdateUserForm(UserChangeForm):
                 'data - style': "btn-white",
                 'data - parsley - group': "step-1",
             }),
-            'work_place': TextInput(attrs={
-                'class': 'form-control m-b-10',
-                'type': 'text',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-            }),
-            'position': TextInput(attrs={
-                'class': 'form-control m-b-10',
-                'type': 'text',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-            }),
-
         }
