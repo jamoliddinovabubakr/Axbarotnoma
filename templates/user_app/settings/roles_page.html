@@ -37,6 +37,7 @@
                         <th width="1%"></th>
                         <th class="text-nowrap">Nomi</th>
                         <th class="text-nowrap">Status</th>
+                        <th class="text-nowrap">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -45,6 +46,16 @@
 								<td class="f-s-600 text-inverse">{{ forloop.counter }}</td>
 								<td>{{ role.name }}</td>
 								<td>{{ role.status }}</td>
+                        <td>
+                                <a href="#" title="O'zgartirish" data-toggle="tooltip"
+                                   class="userModal"
+                                   style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
+
+                                <a href="#" title="O'chirish" data-toggle="tooltip"
+                                   class="userModal"
+                                   style="color: #f83333"><i
+                                        class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>
+                            </td>
 							</tr>
                     {% endfor %}
                     </tbody>

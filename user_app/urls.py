@@ -2,7 +2,8 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 from .views import login_page, logout_user, register_page, profile_page, change_password, edit_profile, \
-    password_reset, profile, admins, users, menus, roles, districts, regions, genders
+    password_reset, profile, admins, users, get_menus, roles, districts, regions, genders, view_user, update_user, \
+    delete_user, view_menu, edit_menu, delete_menu, edit_gender, delete_gender
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -15,8 +16,19 @@ urlpatterns = [
 
     path('admins/', admins, name='admins'),
     path('users/', users, name='users'),
-    path('menus/', menus, name='menus'),
+    path('users/view/<int:pk>/', view_user, name='view_user'),
+    path('users/update/<int:pk>/', update_user, name='update_user'),
+    path('users/delete/<int:pk>/', delete_user, name='delete_user'),
+
+    path('menus/', get_menus, name='menus'),
+    path('menus/view/<int:pk>/', view_menu, name='view_menu'),
+    path('menus/edit/<int:pk>/', edit_menu, name='edit_menu'),
+    path('menus/delete/<int:pk>/', delete_menu, name='delete_menu'),
+
     path('genders/', genders, name='genders'),
+    path('genders/edit/<int:pk>/', edit_gender, name='edit_gender'),
+    path('genders/delete/<int:pk>/', delete_gender, name='delete_gender'),
+
     path('roles/', roles, name='roles'),
     path('districts/', districts, name='districts'),
     path('regions/', regions, name='regions'),

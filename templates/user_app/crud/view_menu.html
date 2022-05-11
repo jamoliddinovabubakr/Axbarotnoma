@@ -1,0 +1,50 @@
+<div class="modal fade" id="UserModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Menyular</h5>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+
+                <table id="data-table-default"
+                       class="table table-striped table-bordered table-td-valign-middle">
+                    <tbody>
+                    <tr>
+                        <th class="text-nowrap">Nomi</th>
+                        <td class="text-nowrap">{{ menu.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-nowrap">Parent ID</th>
+                        <td class="text-nowrap">{{ menu.parent_id }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-nowrap">Icon</th>
+                        <td class="text-nowrap">{{ menu.icon }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-nowrap">Url</th>
+                        <td class="text-nowrap">{{ menu.url }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-nowrap">Menyu turi</th>
+                        <td class="text-nowrap">{{ menu.type_menu }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-nowrap">Tartib nomeri</th>
+                        <td class="text-nowrap">{{ menu.menu_tr }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-nowrap">Status</th>
+                        <td class="text-nowrap">{{ menu.status }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-outline-warning" data-dismiss="modal">Yopish</a>
+            </div>
+        </div>
+    </div>
+</div>
