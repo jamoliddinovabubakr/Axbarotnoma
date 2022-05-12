@@ -1,10 +1,10 @@
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_role' role.id %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_state' state.id %}">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Rolni o'zgartirish</h5>
+                    <h5 class="modal-title">Holatni o'zgartirish</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">

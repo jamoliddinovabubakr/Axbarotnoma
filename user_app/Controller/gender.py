@@ -15,6 +15,21 @@ def genders(request):
 
 
 @login_required(login_url='login')
+def create_gender(request):
+    if request.method == "POST":
+        form = CreateGenderForm(request.POST)
+        if form.is_valid():
+            gender = form.save(commit=False)
+            gender.save()
+            return redirect('districts')
+    else:
+        context = {
+            'form': CreateGenderForm(),
+        }
+        return render(request, 'user_app/crud/add_gender.html', context)
+
+
+@login_required(login_url='login')
 def edit_gender(request, pk):
     gender = get_object_or_404(Gender, pk=pk)
     if request.method == 'POST':

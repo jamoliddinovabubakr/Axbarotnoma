@@ -1,10 +1,10 @@
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_role' role.id %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_region' region.id %}">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Rolni o'zgartirish</h5>
+                    <h5 class="modal-title">Viloyatni o'zgartirish</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
@@ -16,8 +16,8 @@
                             <td class="text-nowrap">{{ form.name }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Status</th>
-                            <td class="text-nowrap">{{ form.status }}</td>
+                            <th class="text-nowrap">Key</th>
+                            <td class="text-nowrap">{{ form.key }}</td>
                         </tr>
                         </tbody>
                     </table>

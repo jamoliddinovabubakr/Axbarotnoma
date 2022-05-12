@@ -20,38 +20,40 @@
         </ul>
         <!-- end sidebar user -->
         <!-- begin sidebar nav -->
-        <ul class="nav">
-            <li class="nav-header">Shaxsiy Kabinet</li>
-        {% get_menus as menus %}
-            {% for menu in menus %}
-                {% if menu.type_menu == 0 %}
-                    <li>
-                        <a href="{{ menu.get_absolute_url }}">
-                            <i class="material-icons">{{ menu.icon }}</i>
-                            <span>{{ menu.name }}</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if menu.type_menu == 1 %}
-                    <li class="has-sub">
-                        <a href="javascript:;">
-                            <b class="caret"></b>
-                            <i class="material-icons">{{ menu.icon }}</i>
-                            <span>{{ menu.name }}</span>
-                        </a>
-                        <ul class="sub-menu">
-                            {% for item in menus %}
-                                {% if item.type_menu == 2 and item.parent_id == menu.id %}
-                                    <li>
-                                        <a href="{{ item.get_absolute_url }}">{{ item.name }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
+        {% with request.resolver_match.url_name as url_name %}
+            <ul class="nav">
+                <li class="nav-header">Shaxsiy Kabinet</li>
+                {% get_menus as menus %}
+                {% for menu in menus %}
+                    {% if menu.type_menu == 0 %}
+                        <li class="{% if url_name == menu.url %} active {% endif %}">
+                            <a href="{{ menu.get_absolute_url }}">
+                                <i class="material-icons">{{ menu.icon }}</i>
+                                <span>{{ menu.name }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if menu.type_menu == 1 %}
+                        <li class="has-sub">
+                            <a href="javascript:;">
+                                <b class="caret"></b>
+                                <i class="material-icons">{{ menu.icon }}</i>
+                                <span>{{ menu.name }}</span>
+                            </a>
+                            <ul class="sub-menu">
+                                {% for item in menus %}
+                                    {% if item.type_menu == 2 and item.parent_id == menu.id %}
+                                        <li class="{% if url_name == item.url %} active {% endif %}">
+                                            <a href="{{ item.get_absolute_url }}">{{ item.name }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endwith %}
         <!-- end sidebar nav -->
     </div>
     <!-- end sidebar scrollbar -->

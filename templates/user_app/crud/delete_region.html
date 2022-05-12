@@ -1,0 +1,22 @@
+<div class="modal fade" id="UserModal">
+    <div class="modal-dialog">
+        <form method="post" enctype="multipart/form-data" action="{% url 'delete_region' region.pk %}">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Viloyatni o'chirish</h4>
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>
+                <div class="modal-body">
+                    <strong>{{ region.name }}</strong><br>
+                    <span style="font-size: small">O'chirishga ishonchingiz komilmi?</span>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Yoq</a>
+                    <button type="submit" class="btn btn-primary">Ha</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>

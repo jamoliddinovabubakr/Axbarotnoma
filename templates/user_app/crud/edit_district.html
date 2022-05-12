@@ -1,10 +1,11 @@
+{% load static %}
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_role' role.id %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_district' district.id %}">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Rolni o'zgartirish</h5>
+                    <h5 class="modal-title">Tumanni o'zgartirish</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
@@ -16,8 +17,8 @@
                             <td class="text-nowrap">{{ form.name }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Status</th>
-                            <td class="text-nowrap">{{ form.status }}</td>
+                            <th class="text-nowrap">Viloyat</th>
+                            <td class="text-nowrap">{{ form.region }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -30,3 +31,4 @@
         </form>
     </div>
 </div>
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>

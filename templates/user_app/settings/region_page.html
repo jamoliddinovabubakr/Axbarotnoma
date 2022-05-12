@@ -12,10 +12,14 @@
         </ol>
         <h1 class="page-header">Viloyatlar ro'yxati</h1>
 
-        <div class="panel panel-inverse">
+        <div class="panel panel-default">
             <!-- begin panel-heading -->
-            <div class="panel-heading">
-                <h4 class="panel-title"></h4>
+            <div class="panel-heading" style="background-color: #ababab">
+                <h4 class="panel-title">
+                    <button href="{% url 'create_region' %}" data-toggle="modal" type="button"
+                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
+                    </button>
+                </h4>
                 <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
                             class="fa fa-expand"></i></a>
@@ -31,21 +35,33 @@
             </div>
             <!-- end panel-heading -->
             <div class="panel-body">
-                <table id="data-table-default" class="table table-striped table-bordered table-td-valign-middle table-hover">
+                <table id="data-table-default"
+                       class="table table-striped table-bordered table-td-valign-middle table-hover">
                     <thead>
                     <tr>
                         <th width="1%"></th>
                         <th class="text-nowrap">Nomi</th>
                         <th class="text-nowrap">Key</th>
+                        <th class="text-nowrap" width="70">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for region in regions %}
                         <tr class="odd gradeA">
-								<td class="f-s-600 text-inverse">{{ forloop.counter }}</td>
-								<td>{{ region.name }}</td>
-								<td>{{ region.key }}</td>
-							</tr>
+                            <td class="f-s-600 text-inverse">{{ forloop.counter }}</td>
+                            <td>{{ region.name }}</td>
+                            <td>{{ region.key }}</td>
+                            <td>
+                                <a href="{% url 'edit_region' region.id %}" title="O'zgartirish" data-toggle="tooltip"
+                                   class="userModal"
+                                   style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
+
+                                <a href="{% url 'delete_region' region.id %}" title="O'chirish" data-toggle="tooltip"
+                                   class="userModal"
+                                   style="color: #f83333"><i
+                                        class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>

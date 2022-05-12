@@ -107,3 +107,5 @@ def delete_user(request, pk):
         return redirect('users')
     else:
         return render(request, 'user_app/crud/delete_user.html', {'user': user})
+
+

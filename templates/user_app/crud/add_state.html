@@ -1,15 +1,15 @@
-<div class="modal fade" id="UserModal">
-    <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_role' role.id %}">
-            {% csrf_token %}
+<form method="post" action="{% url 'create_state' %}">
+    {% csrf_token %}
+    <div class="modal fade" id="addUser">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Rolni o'zgartirish</h5>
+                    <h5 class="modal-title">Yangi holat qo'shish</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
-                    <table id="data-table-default"
-                           class="table table-bordered table-td-valign-middle">
+                   <table id="data-table-default"
+                          class="table table-striped table-bordered table-td-valign-middle">
                         <tbody>
                         <tr>
                             <th class="text-nowrap">Nomi</th>
@@ -27,6 +27,6 @@
                     <button type="submit" class="btn btn-primary">Saqlash</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>

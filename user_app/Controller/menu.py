@@ -24,6 +24,21 @@ def view_menu(request, pk):
 
 
 @login_required(login_url='login')
+def create_menu(request):
+    if request.method == "POST":
+        form = CreateMenuForm(request.POST)
+        if form.is_valid():
+            menu = form.save(commit=False)
+            menu.save()
+            return redirect('menus')
+    else:
+        context = {
+            'form': CreateMenuForm(),
+        }
+        return render(request, 'user_app/crud/add_menu.html', context)
+
+
+@login_required(login_url='login')
 def edit_menu(request, pk):
     menu = get_object_or_404(Menu, pk=pk)
     if request.method == 'POST':

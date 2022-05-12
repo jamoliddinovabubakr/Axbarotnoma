@@ -117,6 +117,7 @@ class CreateMenuForm(forms.ModelForm):
             'url': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': "Enter...",
+                'data - parsley - required': "true",
             }),
             'type_menu': NumberInput(attrs={
                 'class': 'form-control',
@@ -191,12 +192,13 @@ class CreateDistrictForm(forms.ModelForm):
 
         widgets = {
             'name': TextInput(attrs={
-                'class': 'form-control',
+                'class': 'form-control ',
                 'placeholder': "Enter...",
             }),
 
-            'region': NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': "Enter...",
+            'region': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data-live-search': "true",
+                'data - style': "btn-white",
             }),
         }
