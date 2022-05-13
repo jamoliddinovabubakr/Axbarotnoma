@@ -73,10 +73,6 @@ def edit_profile(request):
 
 @login_required(login_url='login')
 def update_user(request, pk):
-    # user = request.user
-    # if is_user(user):
-    #     error = "Error"
-    #     return render(request, 'report/not_access.html', {'error': error})
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         form = UpdateUserForm(request.POST, instance=user)

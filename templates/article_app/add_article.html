@@ -14,7 +14,9 @@
         <h1 class="page-header">Maqola yuborish formasini to'ldirish <small>header small text goes here...</small></h1>
         <!-- end page-header -->
         <!-- begin wizard-form -->
-        <form action="/" method="POST" name="form-wizard" class="form-control-with-bg">
+        <form method="POST" name="form-wizard" class="form-control-with-bg" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
             <!-- begin wizard -->
             <div id="wizard">
                 <!-- begin wizard-step -->
@@ -49,15 +51,6 @@
                     <li>
                         <a href="#step-4">
                             <span class="number">4</span>
-                            <span class="info">
-									Login Account
-									<small>Enter your username and password</small>
-								</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#step-5">
-                            <span class="number">5</span>
                             <span class="info">
 									Completed
 									<small>Complete Registration</small>
@@ -138,37 +131,63 @@
 
                                     <!-- begin form-group -->
                                     <div class="form-group row m-b-10">
-                                        <label class="col-lg-3 text-lg-right col-form-label">Familiya <span
+                                        <label class="col-lg-3 text-lg-right col-form-label">Aftor <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-lg-9 col-xl-6">
-                                            <input type="text" name="lastname" placeholder="Ism"
-                                                   value="{{ request.user.last_name }}"
-                                                   data-parsley-group="step-3" data-parsley-required="false"
-                                                   class="form-control"/>
+                                            <select id="id_author" name="author" class="form-control">
+                                                        <option selected value="{{ user.id }}">{{ user.email }}</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- end form-group -->
                                     <!-- begin form-group -->
                                     <div class="form-group row m-b-10">
-                                        <label class="col-lg-3 text-lg-right col-form-label">Otasini ismi</label>
+                                        <label class="col-lg-3 text-lg-right col-form-label">Kategoriya</label>
                                         <div class="col-lg-9 col-xl-6">
-                                            <input type="text" name="middle_name" placeholder="Otasini ismi"
-                                                   value="{{ request.user.middle_name }}"
-                                                   data-parsley-group="step-3" class="form-control"/>
+                                            {{ form.category }}
                                         </div>
                                     </div>
                                     <!-- end form-group -->
                                     <div class="form-group row m-b-10">
-                                        <label class="col-lg-3 text-lg-right col-form-label">Ism <span
+                                        <label class="col-lg-3 text-lg-right col-form-label">Mavzu <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-lg-9 col-xl-6">
-                                            <input type="text" name="firstname" placeholder="Familiya"
-                                                   value="{{ request.user.first_name }}"
-                                                   data-parsley-group="step-3" data-parsley-required="false"
-                                                   class="form-control"/>
+                                            {{ form.title|safe }}
                                         </div>
                                     </div>
                                     <!-- end form-group -->
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Abstrakt <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.abstract|safe }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Kalit so'zlar <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.keywords|safe }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">Foydalanilgan adabiyotlar
+                                            <span
+                                                    class="text-danger">*</span></label>
+                                        <div class="col-lg-9 col-xl-6">
+                                            {{ form.references|safe }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row m-b-10">
+                                        <label class="col-lg-3 text-lg-right col-form-label">File </label>
+                                        <div class="col-lg-9">
+                                            <input type="file" name="avatar" class="form-control" id="id_avatar"
+                                               style="width: 400px"
+                                               accept=".docx, .doc, .rtf, .pdf">
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <!-- end col-8 -->
                             </div>
@@ -179,65 +198,15 @@
                     <!-- end step-3 -->
                     <!-- begin step-4 -->
                     <div id="step-4">
-                        <!-- begin fieldset -->
-                        <fieldset>
-                            <!-- begin row -->
-                            <div class="row">
-                                <!-- begin col-8 -->
-                                <div class="col-xl-8 offset-xl-2">
-                                    <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse">Select your
-                                        login username and password
-                                    </legend>
-                                    <!-- begin form-group -->
-                                    <div class="form-group row m-b-10">
-                                        <label class="col-lg-3 text-lg-right col-form-label">Username <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-lg-9 col-xl-6">
-                                            <input type="text" name="username" placeholder="johnsmithy"
-                                                   class="form-control" data-parsley-group="step-3"
-                                                   data-parsley-required="false" data-parsley-type="alphanum"/>
-                                        </div>
-                                    </div>
-                                    <!-- end form-group -->
-                                    <!-- begin form-group -->
-                                    <div class="form-group row m-b-10">
-                                        <label class="col-lg-3 text-lg-right col-form-label">Pasword <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-lg-9 col-xl-6">
-                                            <input type="password" name="password" placeholder="Your password"
-                                                   class="form-control" data-parsley-group="step-3"
-                                                   data-parsley-required="false"/>
-                                        </div>
-                                    </div>
-                                    <!-- end form-group -->
-                                    <!-- begin form-group -->
-                                    <div class="form-group row m-b-10">
-                                        <label class="col-lg-3 text-lg-right col-form-label">Confirm Pasword <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-lg-9 col-xl-6">
-                                            <input type="password" name="password2" placeholder="Confirmed password"
-                                                   class="form-control" data-parsley-group="step-3"
-                                                   data-parsley-required="false"/>
-                                        </div>
-                                    </div>
-                                    <!-- end form-group -->
-                                </div>
-                                <!-- end col-8 -->
-                            </div>
-                            <!-- end row -->
-                        </fieldset>
-                        <!-- end fieldset -->
-                    </div>
-                    <!-- end step-4 -->
-                    <!-- begin step-5 -->
-                    <div id="step-5">
                         <div class="jumbotron m-b-0 text-center">
                             <h2 class="display-4">Register Successfully</h2>
                             <p class="lead mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
                                 consequat commodo porttitor. <br/>Vivamus eleifend, arcu in tincidunt semper, lorem odio
                                 molestie lacus, sed malesuada est lacus ac ligula. Aliquam bibendum felis id purus
                                 ullamcorper, quis luctus leo sollicitudin. </p>
-                            <p><a href="javascript:;" class="btn btn-primary btn-lg">Proceed to User Profile</a></p>
+                            <p>
+                                <button type="submit" class="btn btn-primary btn-lg">Proceed to User Profile</button>
+                            </p>
                         </div>
                     </div>
                     <!-- end step-5 -->

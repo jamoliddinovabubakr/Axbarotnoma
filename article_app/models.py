@@ -24,11 +24,11 @@ def user_directory_path(instance, filename):
 
 class Article(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya")
-    title = models.CharField(_("Title"), max_length=255)
+    title = RichTextField(_("Title"), max_length=255)
     abstract = RichTextField(_("Abstrarct"), blank=True, null=True)
     keywords = RichTextField(_("Kalit so\'zlar"), blank=True, null=True)
     references = RichTextField(_("Foydalanilgan adabiyotlar"), blank=True, null=True)
-    author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE, blank=True, null=True,
+    author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE,
                                related_name="article_author")
     editor = models.ForeignKey('user_app.User', verbose_name='Taxrirchi', on_delete=models.CASCADE, blank=True,
                                null=True,
@@ -38,12 +38,14 @@ class Article(models.Model):
                                 related_name="article_analyst")
     file = models.FileField(_("Fayl"), upload_to=user_directory_path, max_length=255)
     payed = models.BooleanField(default=True)
-    state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit")
-    state_analysis = models.ForeignKey('user_app.State', on_delete=models.CASCADE,
+    state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit", blank=True,
+                               null=True,)
+    state_analysis = models.ForeignKey('user_app.State', on_delete=models.CASCADE, blank=True,
+                               null=True,
                                        related_name="article_state_analysis")
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
-    url = models.SlugField(max_length=200, unique=True)
+    # url = models.SlugField(max_length=200, unique=True)
 
     def __str__(self):
         return self.title
@@ -54,19 +56,6 @@ class Article(models.Model):
     class Meta:
         verbose_name = _("Maqola")
         verbose_name_plural = _("Maqolalar")
-
-
-class Author(models.Model):
-    article_id = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_authors')
-    last_name = models.CharField(max_length=255, null=True, blank=True)
-    middle_name = models.CharField(max_length=255, null=True, blank=True)
-    first_name = models.CharField(max_length=255, null=True, blank=True)
-    email = models.EmailField(max_length=70, blank=True, unique=True)
-    work_place = models.CharField(max_length=255, null=True, blank=True)
-    oreder = models.PositiveSmallIntegerField(default=0)
-
-    def __str__(self):
-        return str(self.article_id.title)
 
 
 class Shartnoma(models.Model):
