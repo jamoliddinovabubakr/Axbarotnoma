@@ -1,7 +1,7 @@
 {% load static %}
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_author' author.pk  author.id %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_author' author.pk %}">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
@@ -30,7 +30,7 @@
                         </tr>
                         <tr>
                             <th class="text-nowrap">Otasini ismi</th>
-                            <td class="text-nowrap">{{ form.midlle_name }}</td>
+                            <td class="text-nowrap">{{ form.middle_name }}</td>
                         </tr>
                         <tr>
                             <th class="text-nowrap">Email</th>

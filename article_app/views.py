@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from .models import Article, Category, Shartnoma, Authors
+from user_app.models import User
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm
 
 
@@ -26,13 +27,23 @@ def my_articles(request):
 
 
 def create_article(request):
-    user = request.user
+    user = User.objects.get(pk=request.user.pk)
     if request.method == "POST":
         form = CreateArticleForm(request.POST)
         if form.is_valid():
             article = form.save(commit=False)
             article.save()
             id = article.id
+
+            Authors.objects.create(
+                article=article,
+                last_name=user.last_name,
+                first_name=user.first_name,
+                middle_name=user.middle_name,
+                email=user.email,
+                work_place='No.',
+                author_order=1
+            )
             return HttpResponseRedirect(f'/update_my_article/{id}/')
     else:
         context = {
@@ -48,7 +59,6 @@ def update_my_article(request, pk):
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
-            print("OK")
             ob = form.save(commit=False)
             ob.save()
             return redirect('my_articles')
@@ -79,7 +89,7 @@ def add_author(request, pk):
         return render(request, "article_app/crud/add_authors.html", context=context)
 
 
-def edit_author(request, pk, id):
+def edit_author(request, pk):
     author = Authors.objects.get(pk=pk)
     if request.method == "POST":
         form = AddAuthorForm(request.POST, instance=author)

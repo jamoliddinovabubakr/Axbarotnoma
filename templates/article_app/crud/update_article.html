@@ -23,10 +23,6 @@
                 <h4 class="panel-title">
                 </h4>
                 <div class="panel-heading-btn">
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
-                            class="fa fa-expand"></i></a>
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
-                            class="fa fa-redo"></i></a>
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
                        data-click="panel-collapse"><i class="fa fa-minus"></i></a>
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
@@ -36,9 +32,8 @@
             <!-- end panel-heading -->
             <!-- begin panel-body -->
             <div class="panel-body">
-                <form data-parsley-validate="true" method="POST">
+                <form data-parsley-validate="true" method="POST"  enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form.media }}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row m-b-15">
@@ -47,7 +42,7 @@
                                 <div class="col-md-9 col-sm-9">
                                     <select id="id_author" name="author" class="form-control">
                                         <option selected
-                                                value="{{ request.user.id }}">{{ request.user.username }}</option>
+                                                value="{{ article.author.id }}">{{ article.author.username }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -83,7 +78,7 @@
                                 <label class="col-md-3 col-sm-3 col-form-label">Abstrakt <span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
-                                    {{ form.abstract|safe }}
+                                    {{ form.abstract }}
                                 </div>
                             </div>
                         </div>
@@ -92,7 +87,7 @@
                                 <label class="col-md-3 col-sm-3 col-form-label">Adabiyotlar <span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
-                                    {{ form.references|safe }}
+                                    {{ form.references }}
                                 </div>
                             </div>
                         </div>
@@ -140,12 +135,12 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ author.last_name }}</td>
                                     <td>{{ author.first_name }}</td>
-                                    <td>{{ author.midlle_name }}</td>
+                                    <td>{{ author.middle_name }}</td>
                                     <td>{{ author.email }}</td>
                                     <td>{{ author.work_place }}</td>
                                     <td>{{ author.author_order }}</td>
                                     <td class="with-btn" nowrap>
-                                        <a href="{% url 'edit_author' author.pk  article.id %}"
+                                        <a href="{% url 'edit_author' author.pk %}"
                                            class="userModal btn btn-sm btn-primary width-60 m-r-2">Edit</a>
                                         <a href="{% url 'delete_author' author.pk %}"
                                            class="userModal btn btn-sm btn-danger width-60">Delete</a>

@@ -74,7 +74,7 @@ class Authors(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     first_name = models.CharField(_("Ism"), max_length=255)
     last_name = models.CharField(_("Familiya"), max_length=255)
-    midlle_name = models.CharField(_("Sharif"), max_length=255, blank=True, null=True)
+    middle_name = models.CharField(_("Sharif"), max_length=255, blank=True, null=True)
     email = models.CharField(_('Email'), max_length=255)
     work_place = models.CharField(_('Ish joy'), max_length=255)
     author_order = models.PositiveSmallIntegerField(default=0)

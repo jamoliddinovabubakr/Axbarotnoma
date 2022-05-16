@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import Select, DateInput, PasswordInput, TextInput, Textarea
+from django.forms import Select, DateInput, PasswordInput, TextInput, Textarea, FileInput
 from .models import Article, Category, Authors
 
 
@@ -61,7 +61,7 @@ class UpdateArticleForm(forms.ModelForm):
                 'rows': '5',
                 'placeholder': 'Enter...'
             }),
-            'file': TextInput(attrs={
+            'file': FileInput(attrs={
                 'type': 'file',
                 'class': 'form-control',
                 'data - parsley - required': "true",
@@ -73,7 +73,7 @@ class UpdateArticleForm(forms.ModelForm):
 class AddAuthorForm(forms.ModelForm):
     class Meta:
         model = Authors
-        fields = ['first_name', 'last_name', 'midlle_name', 'email', 'article', 'work_place', 'author_order']
+        fields = ['first_name', 'last_name', 'middle_name', 'email', 'article', 'work_place', 'author_order']
 
         widgets = {
             'first_name': TextInput(attrs={
@@ -88,7 +88,7 @@ class AddAuthorForm(forms.ModelForm):
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
-            'midlle_name': TextInput(attrs={
+            'middle_name': TextInput(attrs={
                 'class': 'form-control',
                 'type': 'text',
                 'placeholder': "Enter...",

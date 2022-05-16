@@ -20,4 +20,4 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @admin.register(Authors)
 class AuthorsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'midlle_name', 'email', 'article', 'work_place', 'author_order']
+    list_display = ['id', 'first_name', 'last_name', 'middle_name', 'email', 'article', 'work_place', 'author_order']
