@@ -52,7 +52,7 @@ class UpdateUserForm(UserChangeForm):
             'passport': TextInput(attrs={
                 'class': 'form-control',
                 'type': 'text',
-                'id': 'masked-input-passport',
+                'id': 'masked-input-pasport',
                 'placeholder': 'AA 9999999',
                 'data - parsley - group': "step-1",
             }),
@@ -68,7 +68,7 @@ class UpdateUserForm(UserChangeForm):
                 'type': 'email',
                 'data-parsley-type': "email",
                 'placeholder': 'someone@example.com',
-                'data - parsley - group': "step-2",
+                'data - parsley - group': "step-1",
                 'data - parsley - required': "true",
             }),
 

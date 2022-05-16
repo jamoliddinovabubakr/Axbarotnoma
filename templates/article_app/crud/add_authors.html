@@ -1,0 +1,73 @@
+{% load static %}
+<form data-parsley-validate="true" method="post" action="{% url 'add_author' article.id %}">
+    {% csrf_token %}
+    <div class="modal fade" id="addUser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Aftorlarni qo'shish</h5>
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row m-b-15" hidden>
+                        <label class="col-md-3 col-sm-3 col-form-label">Maqola <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            <select id="id_article" name="article" class="form-control">
+                                <option selected value="{{ article.id }}">{{ article.title }}</option>
+                            </select>
+                        </div>
+                    </div>
+                     <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">Familiya <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                         {{ form.last_name }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">Ism <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                         {{ form.first_name }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">Sharif <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                        {{ form.midlle_name }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">Email <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                         {{ form.email }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">Ish Joyi<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                        {{ form.work_place }}
+                        </div>
+                    </div>
+                     <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">Aftor tartibi<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                        {{ form.author_order }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Yopish</a>
+                    <button type="submit" class="btn btn-primary" id="my_article">Saqlash</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

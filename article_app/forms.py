@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import Select, DateInput, PasswordInput, TextInput, Textarea
-from .models import Article, Category
+from .models import Article, Category, Authors
 
 
 class CreateArticleForm(forms.ModelForm):
@@ -39,6 +39,7 @@ class UpdateArticleForm(forms.ModelForm):
                 'class': 'form-control selectpicker',
                 'data-live-search': "true",
                 'data - style': "btn-white",
+                'data - parsley - required': "true",
             }),
             'title': TextInput(attrs={
                 'class': 'form-control',
@@ -57,7 +58,59 @@ class UpdateArticleForm(forms.ModelForm):
             'references': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
-                'rows':'5',
+                'rows': '5',
                 'placeholder': 'Enter...'
+            }),
+            'file': TextInput(attrs={
+                'type': 'file',
+                'class': 'form-control',
+                'data - parsley - required': "true",
+                'accept': ".docx, .doc, .pdf"
+            }),
+        }
+
+
+class AddAuthorForm(forms.ModelForm):
+    class Meta:
+        model = Authors
+        fields = ['first_name', 'last_name', 'midlle_name', 'email', 'article', 'work_place', 'author_order']
+
+        widgets = {
+            'first_name': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'last_name': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'midlle_name': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'email': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'email',
+                'data-parsley-type': "email",
+                'placeholder': 'someone@example.com',
+                'data - parsley - required': "true",
+            }),
+            'work_place': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'author_order': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'number',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
             }),
         }

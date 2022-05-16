@@ -38,13 +38,15 @@ class Article(models.Model):
                                 related_name="article_analyst")
     file = models.FileField(_("Fayl"), upload_to=user_directory_path, max_length=255)
     payed = models.BooleanField(default=True)
-    state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit", blank=True,
-                               null=True,)
+    state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit",
+                                   blank=True,
+                                   null=True, )
     state_analysis = models.ForeignKey('user_app.State', on_delete=models.CASCADE, blank=True,
-                               null=True,
+                                       null=True,
                                        related_name="article_state_analysis")
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
+
     # url = models.SlugField(max_length=200, unique=True)
 
     def __str__(self):
@@ -69,4 +71,17 @@ class Shartnoma(models.Model):
 
 
 class Authors(models.Model):
-    pass
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    first_name = models.CharField(_("Ism"), max_length=255)
+    last_name = models.CharField(_("Familiya"), max_length=255)
+    midlle_name = models.CharField(_("Sharif"), max_length=255, blank=True, null=True)
+    email = models.CharField(_('Email'), max_length=255)
+    work_place = models.CharField(_('Ish joy'), max_length=255)
+    author_order = models.PositiveSmallIntegerField(default=0)
+
+    def __str__(self):
+        return self.first_name
+
+    class Meta:
+        verbose_name = _("Aftor")
+        verbose_name_plural = _("Aftorlar")

@@ -140,12 +140,10 @@
                                 <!-- end form-group -->
                                 <!-- begin form-group -->
                                 <div class="form-group row m-b-10">
-                                    <label class="col-lg-3 text-lg-right col-form-label">Email Address </label>
+                                    <label class="col-lg-3 text-lg-right col-form-label">Email Address <span
+                                            class="text-danger">*</span></label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input type="email" value="{{ user.email }}" name="email"
-                                               placeholder="someone@example.com" class="form-control"
-                                               data-parsley-group="step-2" data-parsley-required="true"
-                                               data-parsley-type="email"/>
+                                        {{ form.email }}
                                     </div>
                                 </div>
                                 <!-- end form-group -->
