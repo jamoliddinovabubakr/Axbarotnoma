@@ -32,14 +32,11 @@ Ro'yxatdan o'tish
                         {% csrf_token %}
 						<label class="control-label">FIO <span class="text-danger">*</span></label>
 						<div class="row row-space-10">
-							<div class="col-md-4 m-b-15">
+							<div class="col-md-6 m-b-15">
 								<input type="text" name="last_name" class="form-control" placeholder="Familiya" required />
 							</div>
-							<div class="col-md-4 m-b-15">
+							<div class="col-md-6 m-b-15">
 								<input type="text" name="first_name" class="form-control" placeholder="Ism" required />
-							</div>
-                            <div class="col-md-4 m-b-15">
-								<input type="text" name="middle_name" class="form-control" placeholder="Sharif" required />
 							</div>
 						</div>
 						<label class="control-label">Username <span class="text-danger">*</span></label>
@@ -48,9 +45,10 @@ Ro'yxatdan o'tish
 								<input type="text" name="username" class="form-control" placeholder="Username" required />
 							</div>
 						</div>
+                        <label class="control-label">Email <span class="text-danger">*</span></label>
                         <div class="row m-b-15">
 							<div class="col-md-12">
-								<input type="text" name="email" class="form-control" placeholder="Username" required />
+								<input type="text" name="email" class="form-control" placeholder="Email" required />
 							</div>
 						</div>
 						<label class="control-label">Password <span class="text-danger">*</span></label>

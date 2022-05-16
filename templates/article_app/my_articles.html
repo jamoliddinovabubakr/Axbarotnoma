@@ -1,0 +1,144 @@
+{% extends 'user_app/base.html' %}
+{% load static %}
+{% block title %}
+    Formani to'ldirish
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <!-- begin breadcrumb -->
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Form Stuff</a></li>
+            <li class="breadcrumb-item active">Form Elements</li>
+        </ol>
+        <!-- end breadcrumb -->
+        <!-- begin page-header -->
+        <h1 class="page-header">Form Elements <small>header small text goes here...</small></h1>
+        <!-- end page-header -->
+
+        <!-- begin panel -->
+        <div class="panel panel-inverse" data-sortable-id="table-basic-7">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <button href="{% url 'create_article' %}" data-toggle="modal"
+                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
+                    </button>
+                </h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-redo"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body">
+                <!-- begin table-responsive -->
+                <div class="table-responsive">
+                    <table class="table table-hover  m-b-0">
+                        {#                    <table class="table  table-bordered table-td-valign-middle table-hover">#}
+                        <thead>
+                        <tr style="background-color: #dedcdc">
+                            <th>Tr</th>
+                            <th>Soha</th>
+                            <th>Mavzu</th>
+                            <th>File</th>
+                            <th>Yaratilgan vaqt</th>
+                            <th width="1%"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for my_article in my_articles %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ my_article.category.name }}</td>
+                                <td>{{ my_article.title|safe }}</td>
+                                <td>{{ my_article.file }}</td>
+                                <td>{{ my_article.created_at }}</td>
+                                <td class="with-btn" nowrap>
+                                    <a href="#" class="btn btn-sm btn-primary width-60 m-r-2">Edit</a>
+                                    <a href="#" class="btn btn-sm btn-danger width-60">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end table-responsive -->
+            </div>
+            <!-- end panel-body -->
+        </div>
+        <!-- end panel -->
+    </div>
+{% endblock %}
+<div class="row">
+    <!-- begin col-8 -->
+    <div class="col-xl-8 offset-xl-2">
+        <!-- begin form-group -->
+        <div class="form-group row m-b-10">
+            <label class="col-lg-3 text-lg-right col-form-label">Aftor <span
+                    class="text-danger">*</span></label>
+            <div class="col-lg-9 col-xl-6">
+                <select id="id_author" name="author" class="form-control">
+                    <option selected value="{{ user.id }}">{{ user.email }}</option>
+                </select>
+            </div>
+        </div>
+        <!-- end form-group -->
+        <!-- begin form-group -->
+        <div class="form-group row m-b-10">
+            <label class="col-lg-3 text-lg-right col-form-label">Kategoriya</label>
+            <div class="col-lg-9 col-xl-6">
+                {{ form.category }}
+            </div>
+        </div>
+        <!-- end form-group -->
+        <div class="form-group row m-b-10">
+            <label class="col-lg-3 text-lg-right col-form-label">Mavzu <span
+                    class="text-danger">*</span></label>
+            <div class="col-lg-9 col-xl-6">
+                {{ form.title|safe }}
+            </div>
+        </div>
+        <!-- end form-group -->
+        <div class="form-group row m-b-10">
+            <label class="col-lg-3 text-lg-right col-form-label">Abstrakt <span
+                    class="text-danger">*</span></label>
+            <div class="col-lg-9 col-xl-6">
+                {{ form.abstract|safe }}
+            </div>
+        </div>
+        <div class="form-group row m-b-10">
+            <label class="col-lg-3 text-lg-right col-form-label">Kalit so'zlar <span
+                    class="text-danger">*</span></label>
+            <div class="col-lg-9 col-xl-6">
+                {{ form.keywords|safe }}
+            </div>
+        </div>
+        <div class="form-group row m-b-10">
+            <label class="col-lg-3 text-lg-right col-form-label">Foydalanilgan adabiyotlar
+                <span
+                        class="text-danger">*</span></label>
+            <div class="col-lg-9 col-xl-6">
+                {{ form.references|safe }}
+            </div>
+        </div>
+
+        <div class="form-group row m-b-10">
+            <label class="col-lg-3 text-lg-right col-form-label">File </label>
+            <div class="col-lg-9">
+                <input type="file" name="avatar" class="form-control" id="id_avatar"
+                       style="width: 400px"
+                       accept=".docx, .doc, .rtf, .pdf">
+            </div>
+        </div>
+
+    </div>
+    <!-- end col-8 -->
+</div>

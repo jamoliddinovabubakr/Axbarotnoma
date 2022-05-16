@@ -54,16 +54,20 @@ def edit_profile(request):
     user = request.user
     if request.method == 'POST':
         form = UpdateUserForm(request.POST, instance=user)
-        form.save()
-        if request.FILES.get('avatar', None) is not None:
-            try:
-                os.remove(user.avatar.url)
-            except Exception as e:
-                print('Exception in removing old profile image: ', e)
-            user.avatar = request.FILES['avatar']
-            user.save()
-        r = 1
-        return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
+        if form.is_valid():
+            ob = form.save(commit=False)
+            ob.save()
+            if request.FILES.get('avatar', None) is not None:
+                try:
+                    os.remove(user.avatar.url)
+                except Exception as e:
+                    print('Exception in removing old profile image: ', e)
+                user.avatar = request.FILES['avatar']
+                user.save()
+            r = 1
+            return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
+        else:
+            return redirect('profile')
 
     else:
         r = 0

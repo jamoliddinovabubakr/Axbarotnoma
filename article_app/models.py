@@ -23,11 +23,11 @@ def user_directory_path(instance, filename):
 
 
 class Article(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya")
-    title = RichTextField(_("Title"), max_length=255)
-    abstract = RichTextField(_("Abstrarct"), blank=True, null=True)
-    keywords = RichTextField(_("Kalit so\'zlar"), blank=True, null=True)
-    references = RichTextField(_("Foydalanilgan adabiyotlar"), blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya", blank=True, null=True)
+    title = models.CharField(_("Title"), max_length=255)
+    abstract = models.TextField(_("Abstrarct"), blank=True, null=True)
+    keywords = models.CharField(_("Kalit so\'zlar"), blank=True, null=True, max_length=255)
+    references = models.TextField(_("Foydalanilgan adabiyotlar"), blank=True, null=True)
     author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE,
                                related_name="article_author")
     editor = models.ForeignKey('user_app.User', verbose_name='Taxrirchi', on_delete=models.CASCADE, blank=True,
@@ -54,6 +54,7 @@ class Article(models.Model):
     #     return reverse("article_detail", kwargs={"slug": self.url})
 
     class Meta:
+        ordering = ['-id']
         verbose_name = _("Maqola")
         verbose_name_plural = _("Maqolalar")
 
@@ -65,3 +66,7 @@ class Shartnoma(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Authors(models.Model):
+    pass

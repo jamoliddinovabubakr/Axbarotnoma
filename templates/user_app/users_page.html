@@ -39,13 +39,8 @@
                         <th class="text-nowrap">Familiya</th>
                         <th class="text-nowrap">Ism</th>
                         <th class="text-nowrap">Otasini ismi</th>
-                        <th class="text-nowrap">Tug'ilgan kun</th>
-                        <th class="text-nowrap">Pasport</th>
                         <th class="text-nowrap">Telefon</th>
                         <th class="text-nowrap">Email</th>
-                        <th class="text-nowrap">Tuman</th>
-                        <th class="text-nowrap">Viloyat</th>
-                        <th class="text-nowrap">Role</th>
                         <th class="text-nowrap">Action</th>
                         <th></th>
                     </tr>
@@ -58,13 +53,8 @@
                             <td>{{ user.last_name }}</td>
                             <td>{{ user.first_name }}</td>
                             <td>{{ user.middle_name }}</td>
-                            <td>{{ user.birthday }}</td>
-                            <td>{{ user.passport }}</td>
                             <td>{{ user.phone }}</td>
                             <td>{{ user.email }}</td>
-                            <td>{{ user.district }}</td>
-                            <td>{{ user.region }}</td>
-                            <td>{{ user.role }}</td>
                             <td>
                                 <a href="{% url 'view_user' user.pk %}" title="Ko'rish" class="userModal"
                                    data-toggle="tooltip"

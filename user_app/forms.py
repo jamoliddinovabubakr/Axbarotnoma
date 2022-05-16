@@ -7,13 +7,7 @@ from .models import User, Menu, Role, Gender, State, Region, District
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'middle_name', 'password1', 'password2']
-
-
-class CreateUserForm1(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'middle_name', 'username', 'email', 'work_place', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 
 class UpdateUserForm(UserChangeForm):
@@ -98,64 +92,6 @@ class UpdateUserForm(UserChangeForm):
                 'data-live-search': "true",
                 'data - style': "btn-white",
                 'data - parsley - group': "step-1",
-            }),
-        }
-
-
-class UpdateUserForm1(UserChangeForm):
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'middle_name', 'email', 'work_place', 'author_order']
-
-        widgets = {
-            'first_name': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'text',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-            }),
-            'last_name': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'text',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-            }),
-            'middle_name': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'text',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-            }),
-            'username': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'text',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-                'data - parsley - required': "true",
-            }),
-
-            'work_place': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'text',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-                'data - parsley - required': "true",
-            }),
-
-            'email': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'email',
-                'data-parsley-type': "email",
-                'placeholder': 'someone@example.com',
-                'data - parsley - group': "step-2",
-                'data - parsley - required': "true",
-            }),
-
-            'author_order': NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': "Enter...",
-                'data - parsley - group': "step-1",
-                'data - parsley - required': "true",
             }),
         }
 

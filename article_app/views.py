@@ -2,10 +2,10 @@ from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .models import Article, Category, Shartnoma
-from .forms import AddArticleForm
-from user_app.forms import UpdateUserForm1
+from .forms import CreateArticleForm, UpdateArticleForm
 
 
 def main_page(request):
@@ -15,26 +15,43 @@ def main_page(request):
     return render(request, "article_app/main.html", context=context)
 
 
-def add_article(request):
+def my_articles(request):
     user = request.user
-    print("1")
+    get_my_articles = Article.objects.filter(author=user)
+    context = {
+        'user': user,
+        'my_articles': get_my_articles,
+    }
+    return render(request, "article_app/my_articles.html", context=context)
+
+
+def create_article(request):
+    user = request.user
     if request.method == "POST":
-        print("2")
-        form = AddArticleForm(request.POST, request.FILES)
+        form = CreateArticleForm(request.POST)
         if form.is_valid():
-            print("3")
             article = form.save(commit=False)
             article.save()
-            print("4")
-            return redirect('profile_page')
+            id = article.id
+            return HttpResponseRedirect(f'/update_my_article/{id}/')
     else:
         context = {
-            'form': AddArticleForm(),
+            'form': CreateArticleForm(),
             'user': user,
-            'shartnoma1': Shartnoma.objects.get(name='shartnoma1'),
-            'shartnoma2': Shartnoma.objects.get(name='shartnoma2'),
         }
-        return render(request, "article_app/add_article.html", context=context)
+        return render(request, "article_app/crud/create_article.html", context=context)
 
 
-
+def update_my_article(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.method == "POST":
+        form = UpdateArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            ob = form.save(commit=False)
+            ob.save()
+            return redirect('my_articles')
+    else:
+        context = {
+            'form': UpdateArticleForm(instance=article),
+        }
+        return render(request, "article_app/crud/update_article.html", context=context)

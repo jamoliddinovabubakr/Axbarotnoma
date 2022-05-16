@@ -1,0 +1,127 @@
+{% extends 'user_app/base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <!-- begin breadcrumb -->
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Form Stuff</a></li>
+            <li class="breadcrumb-item active">Form Elements</li>
+        </ol>
+        <!-- end breadcrumb -->
+        <!-- begin page-header -->
+        <h1 class="page-header">Form Elements <small>header small text goes here...</small></h1>
+        <!-- end page-header -->
+
+        <!-- begin panel -->
+        <div class="panel panel-inverse" data-sortable-id="table-basic-7">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                </h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i
+                            class="fa fa-expand"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i
+                            class="fa fa-redo"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body">
+                <form data-parsley-validate="true" method="POST">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Aftor <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    <select id="id_author" name="author" class="form-control">
+                                        <option selected
+                                                value="{{ request.user.id }}">{{ request.user.username }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Kategoriya <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.category }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Mavzu <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.title }}
+                                </div>
+                            </div>
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Kalit so'zlar <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.keywords }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Abstrakt <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.abstract|safe }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Adabiyotlar <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.references|safe }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">File <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.file }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+
+                    </div>
+ <button type="submit" class="btn btn-primary">Saqlash</button>
+
+                </form>
+            </div>
+            <!-- end panel-body -->
+        </div>
+        <!-- end panel -->
+    </div>
+
+{% endblock %}
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

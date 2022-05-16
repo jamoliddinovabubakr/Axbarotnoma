@@ -58,8 +58,6 @@ class User(AbstractUser):
     role = models.ForeignKey(Role, related_name="user_role", on_delete=models.CASCADE, null=True, blank=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name="Viloyat", null=True, blank=True)
     district = models.ForeignKey(District, on_delete=models.CASCADE, verbose_name="Tuman", null=True, blank=True)
-    work_place = models.CharField(max_length=255, null=True, blank=True)
-    author_order = models.PositiveSmallIntegerField(default=0)
 
     # USERNAME_FIELD = "username"
     # REQUIRED_FIELDS = []
