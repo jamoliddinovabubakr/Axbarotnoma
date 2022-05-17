@@ -1,5 +1,5 @@
 from django.contrib import admin
-from article_app.models import Category, Article, Shartnoma, Authors
+from article_app.models import Category, Article, Shartnoma, Authors, Page
 
 
 @admin.register(Category)
@@ -10,6 +10,11 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Shartnoma)
 class ShartnomaAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'body', 'status']
+
+
+@admin.register(Page)
+class PageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'value']
 
 
 @admin.register(Article)

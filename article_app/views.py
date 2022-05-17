@@ -2,11 +2,13 @@ from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from .models import Article, Category, Shartnoma, Authors
 from user_app.models import User
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm
+from django.core.paginator import Paginator, EmptyPage
 
 
 def main_page(request):
@@ -18,10 +20,40 @@ def main_page(request):
 
 def my_articles(request):
     user = request.user
-    get_my_articles = Article.objects.filter(author=user)
+    search = request.GET.get('search')
+    n_show = request.GET.get('n_show')
+
+    if search is None:
+        get_my_articles = Article.objects.filter(author=user)
+        search = ''
+    else:
+        get_my_articles = Article.objects.filter(author=user).filter(
+            Q(title__icontains=search) | Q(category__name__icontains=search)
+        )
+
+    if n_show is None:
+        n_show = 10
+
+    if n_show == '0':
+        n_show = get_my_articles.count()
+
+    paginator = Paginator(get_my_articles, int(n_show))
+    page_num = request.GET.get('page')
+    page = paginator.get_page(page_num)
+    p_n = paginator.count
+    page_count = page.paginator.page_range
+
+    if n_show == p_n:
+        n_show = 0
+
     context = {
         'user': user,
         'my_articles': get_my_articles,
+        'page_count': page_count,
+        'page': page,
+        'p_n': p_n,
+        'search': search,
+        'n_show': int(n_show),
     }
     return render(request, "article_app/my_articles.html", context=context)
 
@@ -114,3 +146,12 @@ def delete_author(request, pk):
         return redirect('update_my_article', pk=author.article.id)
     else:
         return render(request, 'article_app/crud/delete_author.html', {'author': author})
+
+
+def delete_myarticle(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.method == "POST":
+        article.delete()
+        return redirect('my_articles')
+    else:
+        return render(request, 'article_app/crud/delete_myarticle.html', {'article': article})

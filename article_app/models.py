@@ -85,3 +85,15 @@ class Authors(models.Model):
     class Meta:
         verbose_name = _("Aftor")
         verbose_name_plural = _("Aftorlar")
+
+
+class Page(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    value = models.PositiveBigIntegerField(default=5, unique=True)
+
+    def __str__(self):
+        return str(self.value)
+
+    class Meta:
+        verbose_name = _("Page")
+        verbose_name_plural = _("Pages")
