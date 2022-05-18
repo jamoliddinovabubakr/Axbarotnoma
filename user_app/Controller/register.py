@@ -5,7 +5,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect, get_object_or_404
-from user_app.decorators import unauthenticated_user, allowed_users, admin_only
+from user_app.decorators import unauthenticated_user, allowed_users, admin_only, password_reset_authentification
 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
@@ -77,6 +77,7 @@ def register_page(request):
         return render(request, "user_app/register/register.html", context)
 
 
+@login_required(login_url='login')
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -98,6 +99,7 @@ def change_password(request):
     })
 
 
+@password_reset_authentification
 def password_reset(request):
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)

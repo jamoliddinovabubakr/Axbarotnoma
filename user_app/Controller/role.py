@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
+from user_app.decorators import allowed_users
 from user_app.models import Role
 from user_app.forms import CreateRoleForm
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def get_roles(request):
     roles = Role.objects.filter(status=True)
     context = {
@@ -15,6 +17,7 @@ def get_roles(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def create_role(request):
     if request.method == "POST":
         form = CreateRoleForm(request.POST)
@@ -30,6 +33,7 @@ def create_role(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def edit_role(request, pk):
     role = get_object_or_404(Role, pk=pk)
     if request.method == 'POST':
@@ -43,6 +47,7 @@ def edit_role(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def delete_role(request, pk):
     role = get_object_or_404(Role, pk=pk)
     if request.method == "POST":

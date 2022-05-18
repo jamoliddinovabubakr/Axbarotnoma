@@ -9,7 +9,7 @@ from user_app.Controller.district import *
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Users'])
+@allowed_users(allowed_roles=['Masters', 'Admins', 'Users'])
 # @admin_only
 def profile_page(request):
     context = {
@@ -19,6 +19,7 @@ def profile_page(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Masters', 'Admins', 'Users'])
 def profile(request):
     context = {
 

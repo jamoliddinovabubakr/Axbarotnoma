@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import Select, DateInput, PasswordInput, TextInput, Textarea, FileInput
+from django.forms import Select, DateInput, PasswordInput, TextInput, Textarea, FileInput, NumberInput
 from .models import Article, Category, Authors
 
 
@@ -110,6 +110,26 @@ class AddAuthorForm(forms.ModelForm):
             'author_order': TextInput(attrs={
                 'class': 'form-control',
                 'type': 'number',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+        }
+
+
+class CreateCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'key', 'status']
+
+        widgets = {
+            'name': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'key': NumberInput(attrs={
+                'class': 'form-control',
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),

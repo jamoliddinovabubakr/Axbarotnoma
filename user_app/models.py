@@ -78,17 +78,17 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-    def is_admin(self) -> bool:
-        return self.groups.filter(name='ADMIN').exists()
-
-    def is_user(self):
-        return self.groups.filter(name='USER').exists()
-
-    def is_editor(self):
-        return self.groups.filter(name='MUHARRIR').exists()
-
-    def is_analitic(self):
-        return self.groups.filter(name='TAHLILCHI').exists()
+    # def is_admin(self) -> bool:
+    #     return self.groups.filter(name='ADMIN').exists()
+    #
+    # def is_user(self):
+    #     return self.groups.filter(name='USER').exists()
+    #
+    # def is_editor(self):
+    #     return self.groups.filter(name='MUHARRIR').exists()
+    #
+    # def is_analitic(self):
+    #     return self.groups.filter(name='TAHLILCHI').exists()
 
     class Meta:
         verbose_name = _('Foydalanuvchi')

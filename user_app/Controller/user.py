@@ -23,6 +23,7 @@ from user_app.forms import CreateUserForm, UpdateUserForm
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def admins(request):
     admins = User.objects.filter(Q(role__name="MASTER") | Q(role__name="ADMIN"))
     context = {
@@ -32,6 +33,7 @@ def admins(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def users(request):
     users = User.objects.all()
     context = {
@@ -41,6 +43,7 @@ def users(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def view_user(request, pk):
     # user = request.user
     # if is_user(user):
@@ -50,6 +53,7 @@ def view_user(request, pk):
     return render(request, 'user_app/crud/view_user.html', {'user': user})
 
 
+@login_required(login_url='login')
 def edit_profile(request):
     user = request.user
     if request.method == 'POST':
@@ -75,13 +79,34 @@ def edit_profile(request):
         return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
 
 
+def change_group(user, new_gr):
+    if user.groups.exists():
+        user.groups.clear()
+    new_group = Group.objects.get(name=new_gr)
+    new_group.user_set.add(user)
+
+
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def update_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         form = UpdateUserForm(request.POST, instance=user)
-        form.save()
-        if request.FILES.get('avatar', None) != None:
+        person = form.save(commit=False)
+        person.save()
+
+        if user.role.name == 'MASTER':
+            if not user.groups.exists():
+                new_group, created = Group.objects.get_or_create(name='Masters')
+                new_group.user_set.add(user)
+
+        if user.role.name == 'ADMIN':
+            change_group(user, 'Admins')
+
+        if user.role.name == 'USER':
+            change_group(user, 'Users')
+
+        if request.FILES.get('avatar', None) is not None:
             try:
                 os.remove(user.avatar.url)
             except Exception as e:
@@ -96,6 +121,7 @@ def update_user(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def delete_user(request, pk):
     user = request.user
     # if is_user(user):
@@ -107,5 +133,3 @@ def delete_user(request, pk):
         return redirect('users')
     else:
         return render(request, 'user_app/crud/delete_user.html', {'user': user})
-
-

@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
+from user_app.decorators import allowed_users
 from user_app.models import Menu
 from user_app.forms import CreateMenuForm
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def get_menus(request):
     menus = Menu.objects.filter(status=True)
     context = {
@@ -24,6 +26,7 @@ def view_menu(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def create_menu(request):
     if request.method == "POST":
         form = CreateMenuForm(request.POST)
@@ -39,6 +42,7 @@ def create_menu(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def edit_menu(request, pk):
     menu = get_object_or_404(Menu, pk=pk)
     if request.method == 'POST':
@@ -52,6 +56,7 @@ def edit_menu(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def delete_menu(request, pk):
     menu = get_object_or_404(Menu, pk=pk)
     if request.method == "POST":

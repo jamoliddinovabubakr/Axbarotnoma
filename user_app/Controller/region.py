@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
+from user_app.decorators import allowed_users
 from user_app.models import Region
 from user_app.forms import CreateRegionForm
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def get_regions(request):
     regions = Region.objects.all()
     context = {
@@ -15,6 +17,7 @@ def get_regions(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def create_region(request):
     if request.method == "POST":
         form = CreateRegionForm(request.POST)
@@ -30,6 +33,7 @@ def create_region(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def edit_region(request, pk):
     region = get_object_or_404(Region, pk=pk)
     if request.method == 'POST':
@@ -43,6 +47,7 @@ def edit_region(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def delete_region(request, pk):
     region = get_object_or_404(Region, pk=pk)
     if request.method == "POST":

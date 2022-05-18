@@ -5,9 +5,11 @@ from django.contrib.auth.models import Group
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
+
+from user_app.decorators import allowed_users
 from .models import Article, Category, Shartnoma, Authors
 from user_app.models import User
-from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm
+from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm
 from django.core.paginator import Paginator, EmptyPage
 
 
@@ -18,6 +20,7 @@ def main_page(request):
     return render(request, "article_app/main.html", context=context)
 
 
+@login_required(login_url='login')
 def my_articles(request):
     user = request.user
     search = request.GET.get('search')
@@ -58,6 +61,7 @@ def my_articles(request):
     return render(request, "article_app/my_articles.html", context=context)
 
 
+@login_required(login_url='login')
 def create_article(request):
     user = User.objects.get(pk=request.user.pk)
     if request.method == "POST":
@@ -85,6 +89,7 @@ def create_article(request):
         return render(request, "article_app/crud/create_article.html", context=context)
 
 
+@login_required(login_url='login')
 def update_my_article(request, pk):
     article = Article.objects.get(pk=pk)
     authors = Authors.objects.filter(article=article)
@@ -103,6 +108,7 @@ def update_my_article(request, pk):
         return render(request, "article_app/crud/update_article.html", context=context)
 
 
+@login_required(login_url='login')
 def add_author(request, pk):
     user = request.user
     article = Article.objects.get(pk=pk)
@@ -121,6 +127,7 @@ def add_author(request, pk):
         return render(request, "article_app/crud/add_authors.html", context=context)
 
 
+@login_required(login_url='login')
 def edit_author(request, pk):
     author = Authors.objects.get(pk=pk)
     if request.method == "POST":
@@ -139,6 +146,7 @@ def edit_author(request, pk):
         return render(request, "article_app/crud/edit_author.html", context=context)
 
 
+@login_required(login_url='login')
 def delete_author(request, pk):
     author = Authors.objects.get(pk=pk)
     if request.method == "POST":
@@ -148,6 +156,7 @@ def delete_author(request, pk):
         return render(request, 'article_app/crud/delete_author.html', {'author': author})
 
 
+@login_required(login_url='login')
 def delete_myarticle(request, pk):
     article = Article.objects.get(pk=pk)
     if request.method == "POST":
@@ -155,3 +164,58 @@ def delete_myarticle(request, pk):
         return redirect('my_articles')
     else:
         return render(request, 'article_app/crud/delete_myarticle.html', {'article': article})
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Masters', 'Admins'])
+def get_category(request):
+    categories = Category.objects.all()
+    context = {
+        'categories': categories,
+    }
+    return render(request, 'article_app/categories_page.html', context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Masters', 'Admins'])
+def create_category(request):
+    if request.method == "POST":
+        form = CreateCategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.save()
+            return redirect('get_category')
+    else:
+        context = {
+            'form': CreateCategoryForm(),
+        }
+        return render(request, "article_app/crud/add_category.html", context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Masters', 'Admins'])
+def edit_category(request, pk):
+    category = Category.objects.get(pk=pk)
+    if request.method == "POST":
+        form = CreateCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.save()
+            return redirect('get_category')
+    else:
+        context = {
+            'form': CreateCategoryForm(instance=category),
+            'category': category,
+        }
+        return render(request, "article_app/crud/edit_category.html", context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['Masters', 'Admins'])
+def delete_category(request, pk):
+    category = Category.objects.get(pk=pk)
+    if request.method == "POST":
+        category.delete()
+        return redirect('get_category')
+    else:
+        return render(request, 'article_app/crud/delete_category.html', {'category': category})

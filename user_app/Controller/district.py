@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
+from user_app.decorators import allowed_users
 from user_app.models import District
 from user_app.forms import CreateDistrictForm
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def get_districts(request):
     districts = District.objects.all()
     context = {
@@ -15,6 +17,7 @@ def get_districts(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def create_district(request):
     if request.method == "POST":
         form = CreateDistrictForm(request.POST)
@@ -30,6 +33,7 @@ def create_district(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def edit_district(request, pk):
     district = get_object_or_404(District, pk=pk)
     if request.method == 'POST':
@@ -43,6 +47,7 @@ def edit_district(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def delete_district(request, pk):
     district = get_object_or_404(District, pk=pk)
     if request.method == "POST":

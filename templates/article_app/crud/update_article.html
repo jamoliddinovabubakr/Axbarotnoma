@@ -7,21 +7,19 @@
     <div id="content" class="content">
         <!-- begin breadcrumb -->
         <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">Form Stuff</a></li>
-            <li class="breadcrumb-item active">Form Elements</li>
+            <li class="breadcrumb-item"><a href="javascript:;">Bosh sahifa</a></li>
+            <li class="breadcrumb-item active">Maqola ma'lumotlarini o'zgartirish</li>
         </ol>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header">Form Elements <small>header small text goes here...</small></h1>
+        <h1 class="page-header">Maqola ma'lumotlarini o'zgartirish</h1>
         <!-- end page-header -->
 
         <!-- begin panel -->
         <div class="panel panel-inverse" data-sortable-id="table-basic-7">
             <!-- begin panel-heading -->
             <div class="panel-heading">
-                <h4 class="panel-title">
-                </h4>
+                <h4 class="panel-title"></h4>
                 <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
                        data-click="panel-collapse"><i class="fa fa-minus"></i></a>
@@ -157,9 +155,9 @@
                             <button type="submit" style="float: right;"
                                     class="btn btn btn-success">Saqlash
                             </button>
-                            <button style="float: right; margin-right: 1em"
-                                    class="btn btn-outline-secondary">Yopish
-                            </button>
+                            <a style="float: right; margin-right: 1em" href="{% url 'my_articles' %}"
+                                    class="btn btn-outline-warning">Yopish
+                            </a>
                         </div>
                     </div>
 
@@ -170,7 +168,6 @@
         </div>
         <!-- end panel -->
     </div>
-
 {% endblock %}
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

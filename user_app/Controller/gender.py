@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
+from user_app.decorators import allowed_users
 from user_app.models import Gender
 from user_app.forms import CreateGenderForm
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def genders(request):
     genders = Gender.objects.filter(status=True)
     context = {
@@ -15,6 +17,7 @@ def genders(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def create_gender(request):
     if request.method == "POST":
         form = CreateGenderForm(request.POST)
@@ -30,6 +33,7 @@ def create_gender(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def edit_gender(request, pk):
     gender = get_object_or_404(Gender, pk=pk)
     if request.method == 'POST':
@@ -43,6 +47,7 @@ def edit_gender(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['Admins', 'Masters'])
 def delete_gender(request, pk):
     gender = get_object_or_404(Gender, pk=pk)
     if request.method == "POST":
