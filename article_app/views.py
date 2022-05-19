@@ -80,7 +80,7 @@ def create_article(request):
                 work_place='No.',
                 author_order=1
             )
-            return HttpResponseRedirect(f'/update_my_article/{id}/')
+            return redirect('update_my_article', pk=id)
     else:
         context = {
             'form': CreateArticleForm(),
@@ -100,10 +100,12 @@ def update_my_article(request, pk):
             ob.save()
             return redirect('my_articles')
     else:
+        file_name = str(article.file.name).split('/')[-1]
         context = {
             'form': UpdateArticleForm(instance=article),
             'authors': authors,
-            'article': article
+            'article': article,
+            'file_name': file_name,
         }
         return render(request, "article_app/crud/update_article.html", context=context)
 

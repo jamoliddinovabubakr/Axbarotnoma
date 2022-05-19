@@ -62,6 +62,7 @@ class UpdateArticleForm(forms.ModelForm):
                 'placeholder': 'Enter...'
             }),
             'file': FileInput(attrs={
+                'id': 'id_file',
                 'type': 'file',
                 'class': 'form-control',
                 'data - parsley - required': "true",
