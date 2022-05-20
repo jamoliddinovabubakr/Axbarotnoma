@@ -9,9 +9,9 @@ from user_app.forms import CreateGenderForm
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Admins', 'Masters'])
 def genders(request):
-    genders = Gender.objects.filter(status=True)
+    genderlar = Gender.objects.filter(status=True)
     context = {
-        'genders': genders
+        'genders': genderlar
     }
     return render(request, "user_app/settings/gender_page.html", context=context)
 

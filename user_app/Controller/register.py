@@ -1,18 +1,14 @@
-import os
-
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-from django.shortcuts import render, redirect, get_object_or_404
-from user_app.decorators import unauthenticated_user, allowed_users, admin_only, password_reset_authentification
-
+from django.shortcuts import render, redirect
+from user_app.decorators import unauthenticated_user, password_reset_authentification
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
-from user_app.models import User, Menu, Role, District, Region, Gender
+from user_app.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
@@ -43,9 +39,6 @@ def login_page(request):
 
 @unauthenticated_user
 def register_page(request):
-    # if is_user(user):
-    #     error = "Error"
-    #     return render(request, 'report/not_access.html', {'error': error})
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():

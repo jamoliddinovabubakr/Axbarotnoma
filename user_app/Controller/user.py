@@ -1,33 +1,19 @@
 import os
-
-from django.contrib import messages
-from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect, get_object_or_404
-from user_app.decorators import unauthenticated_user, allowed_users, admin_only
-
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
-from user_app.models import User, Menu, Role, District, Region, Gender
-from django.template.loader import render_to_string
+from user_app.decorators import allowed_users
+from user_app.models import User
 from django.db.models.query_utils import Q
-from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
-
-from user_app.forms import CreateUserForm, UpdateUserForm
+from user_app.forms import UpdateUserForm
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Admins', 'Masters'])
 def admins(request):
-    admins = User.objects.filter(Q(role__name="MASTER") | Q(role__name="ADMIN"))
+    adminlar = User.objects.filter(Q(role__name="MASTER") | Q(role__name="ADMIN"))
     context = {
-        'admins': admins
+        'admins': adminlar
     }
     return render(request, "user_app/admins_page.html", context=context)
 
@@ -35,9 +21,9 @@ def admins(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Admins', 'Masters'])
 def users(request):
-    users = User.objects.all()
+    userlar = User.objects.all()
     context = {
-        'users': users
+        'users': userlar
     }
     return render(request, "user_app/users_page.html", context=context)
 
@@ -45,10 +31,6 @@ def users(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Admins', 'Masters'])
 def view_user(request, pk):
-    # user = request.user
-    # if is_user(user):
-    #     error = "Error"
-    #     return render(request, 'report/not_access.html', {'error': error})
     user = get_object_or_404(User, pk=pk)
     return render(request, 'user_app/crud/view_user.html', {'user': user})
 
@@ -123,10 +105,6 @@ def update_user(request, pk):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['Admins', 'Masters'])
 def delete_user(request, pk):
-    user = request.user
-    # if is_user(user):
-    #     error = "Error"
-    #     return render(request, 'report/not_access.html', {'error': error})
     user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
         user.delete()
