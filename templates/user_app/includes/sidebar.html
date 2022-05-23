@@ -25,7 +25,7 @@
                 <li class="nav-header">Shaxsiy Kabinet</li>
                 {% get_menus as menus %}
                 {% for menu in menus %}
-                    {% if menu.type_menu == 0 %}
+                    {% if menu.type_menu == 0  %}
                         <li class="{% if url_name == menu.url %} active {% endif %}">
                             <a href="{{ menu.get_absolute_url }}">
                                 <i class="material-icons">{{ menu.icon }}</i>

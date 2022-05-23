@@ -16,9 +16,6 @@
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #ababab">
                 <h4 class="panel-title">
-                    <button href="{% url 'create_menu' %}" data-toggle="modal" type="button"
-                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
-                    </button>
                 </h4>
                 <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
@@ -43,6 +40,7 @@
                         <th class="text-nowrap">Url</th>
                         <th class="text-nowrap">Menyu Turi</th>
                         <th class="text-nowrap">Menyu tartibi</th>
+                        <th class="text-nowrap">Ruxsatlar</th>
                         <th class="text-nowrap">Action</th>
                         <th></th>
                     </tr>
@@ -59,12 +57,13 @@
                             <td>{{ menu.type_menu }}</td>
                             <td>{{ menu.menu_tr }}</td>
                             <td>
-                                <a href="{% url 'view_menu' menu.pk %}" title="Ko'rish" class="userModal"
-                                   data-toggle="tooltip"
-                                   style="color: #0188d0">
-                                    <i class="fas  fa-fw m-r-15 fa-eye"></i>
-                                </a>
-
+                                <ul class="list-inline">
+                                    {% for item in menu.get_roles %}
+                                    <li class="list-inline-item"><span class="badge badge-default" style="font-size: 10px;">{{ item }}</span></li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>                          
                                 <a href="{% url 'edit_menu' menu.pk %}" title="O'zgartirish" data-toggle="tooltip"
                                    class="userModal"
                                    style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>

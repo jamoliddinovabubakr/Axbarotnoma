@@ -1,3 +1,5 @@
+from email.policy import default
+from operator import mod
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, GroupManager
 from django.urls import reverse
@@ -111,6 +113,12 @@ class Menu(models.Model):
     url = models.CharField(max_length=255, null=True, blank=True)
     type_menu = models.PositiveSmallIntegerField(default=0)
     menu_tr = models.PositiveSmallIntegerField(default=0)
+    allowed_roles = models.ManyToManyField('Role', related_name='allowed_role_menus', blank=True)
+
+
+    def get_roles(self):
+        return [p.name for p in self.allowed_roles.all()]
+    
 
     def __str__(self):
         return self.name

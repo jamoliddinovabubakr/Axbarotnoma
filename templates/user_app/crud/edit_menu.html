@@ -11,7 +11,7 @@
                 <div class="modal-body">
 
                     <table id="data-table-default"
-                           class="table table-bordered table-td-valign-middle">
+                           class="table table-striped table-bordered table-td-valign-middle">
                         <tbody>
                         <tr>
                             <th class="text-nowrap">Nomi</th>
@@ -37,9 +37,17 @@
                             <th class="text-nowrap">Tartib nomeri</th>
                             <td class="text-nowrap">{{ form.menu_tr }}</td>
                         </tr>
+                    
                         <tr>
                             <th class="text-nowrap">Status</th>
                             <td class="text-nowrap">{{ form.status }}</td>
+                        </tr>
+                        <tr class="text-center">
+                            <th colspan="2">Ruxsatlar</th>
+                        </tr>
+                        <tr>
+                            <th class="text-nowrap">Aftorlar</th>
+                            <td class="text-nowrap">{{ form.allowed_roles }}</td>
                         </tr>
                         </tbody>
                     </table>

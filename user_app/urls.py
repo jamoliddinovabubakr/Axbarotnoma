@@ -1,4 +1,4 @@
-from django.urls import path, include, re_path
+from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 from .views import login_page, logout_user, register_page, profile_page, change_password, edit_profile, \

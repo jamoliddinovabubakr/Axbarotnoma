@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput
+from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput, ModelMultipleChoiceField
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User, Menu, Role, Gender, State, Region, District
 
@@ -99,7 +99,7 @@ class UpdateUserForm(UserChangeForm):
 class CreateMenuForm(forms.ModelForm):
     class Meta:
         model = Menu
-        fields = ['name', 'parent_id', 'icon', 'url', 'type_menu', 'menu_tr', 'status']
+        fields = ['name', 'parent_id', 'icon', 'url', 'type_menu', 'menu_tr', 'status', 'allowed_roles']
 
         widgets = {
             'name': TextInput(attrs={
@@ -117,7 +117,7 @@ class CreateMenuForm(forms.ModelForm):
             'url': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': "Enter...",
-                'data - parsley - required': "true",
+        
             }),
             'type_menu': NumberInput(attrs={
                 'class': 'form-control',
@@ -125,6 +125,9 @@ class CreateMenuForm(forms.ModelForm):
             'menu_tr': NumberInput(attrs={
                 'class': 'form-control',
             }),
+            # 'allowed_roles': ModelMultipleChoiceField(attrs={
+            #     'class': 'form-control',
+            # }),
         }
 
 
