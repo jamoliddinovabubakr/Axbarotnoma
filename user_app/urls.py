@@ -4,8 +4,8 @@ from django.contrib.auth import views as auth_views
 from .views import login_page, logout_user, register_page, profile_page, change_password, edit_profile, \
     password_reset, profile, admins, users, get_menus, get_roles, get_districts, get_regions, genders, view_user, \
     update_user, \
-    delete_user, view_menu, edit_menu, delete_menu, edit_gender, delete_gender, edit_role, delete_role, edit_state, \
-    delete_state, get_states, edit_region, delete_region, edit_district, delete_district, create_menu, create_gender, \
+    delete_user, edit_menu, delete_menu, edit_gender, delete_gender, edit_role, delete_role, edit_state, \
+    delete_state, get_states, edit_region, delete_region, edit_district, delete_district, create_gender, \
     create_role, create_state, create_district, create_region
 
 urlpatterns = [
@@ -24,8 +24,8 @@ urlpatterns = [
     path('users/delete/<int:pk>', delete_user, name='delete_user'),
 
     path('menus/', get_menus, name='menus'),
-    path('menus/create', create_menu, name='create_menu'),
-    path('menus/view/<int:pk>', view_menu, name='view_menu'),
+    # path('menus/create', create_menu, name='create_menu'),
+    # path('menus/view/<int:pk>', view_menu, name='view_menu'),
     path('menus/edit/<int:pk>', edit_menu, name='edit_menu'),
     path('menus/delete/<int:pk>', delete_menu, name='delete_menu'),
 
