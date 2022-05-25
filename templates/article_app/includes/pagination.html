@@ -9,7 +9,7 @@
         {#                    of {{ page.paginator.num_pages }}</a></li>#}
 
         {% for i in page_count %}
-            {% if n_show != 0 %}
+            {% if n_show != 0 and p_n != 0 %}
                 <li {% if page.number == i %} class="page-item active" {% else %} class="page-item" {% endif %}><a
                         class="page-link"
                         href="?page={{ i }}">{{ i }}</a></li>

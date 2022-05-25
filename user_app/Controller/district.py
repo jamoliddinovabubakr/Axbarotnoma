@@ -7,7 +7,7 @@ from user_app.forms import CreateDistrictForm
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def get_districts(request):
     districts = District.objects.all()
     context = {
@@ -17,7 +17,7 @@ def get_districts(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def create_district(request):
     if request.method == "POST":
         form = CreateDistrictForm(request.POST)
@@ -33,7 +33,7 @@ def create_district(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def edit_district(request, pk):
     district = get_object_or_404(District, pk=pk)
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def edit_district(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def delete_district(request, pk):
     district = get_object_or_404(District, pk=pk)
     if request.method == "POST":

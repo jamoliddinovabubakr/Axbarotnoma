@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser, Group, GroupManager
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from article_app.models import Article
+
 
 class Region(models.Model):
     name = models.CharField(_('Nomi'), max_length=150)
@@ -115,10 +117,8 @@ class Menu(models.Model):
     menu_tr = models.PositiveSmallIntegerField(default=0)
     allowed_roles = models.ManyToManyField('Role', related_name='allowed_role_menus', blank=True)
 
-
     def get_roles(self):
         return [p.name for p in self.allowed_roles.all()]
-    
 
     def __str__(self):
         return self.name
@@ -129,15 +129,18 @@ class Menu(models.Model):
 
 class Notification(models.Model):
     STATUS = (
-        (0, _("O\'qilmadi")),
-        (1, _('O\'qildi')),
+        ("O\'qilmadi", "O\'qilmadi"),
+        ('O\'qildi', 'O\'qildi'),
     )
-
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(blank=True, null=True)
-    from_user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
+    from_user_id = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True,
                                      related_name="from_user")
-    to_user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
+    to_user_id = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True,
                                    related_name="to_user")
-    status = models.CharField(max_length=50, choices=STATUS, default=0)
+    status = models.CharField(max_length=50, choices=STATUS, default="O\'qilmadi")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

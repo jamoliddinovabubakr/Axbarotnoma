@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput, ModelMultipleChoiceField
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Menu, Role, Gender, State, Region, District
+from .models import User, Menu, Role, Gender, State, Region, District, Notification
 
 
 class CreateUserForm(UserCreationForm):
@@ -201,6 +201,54 @@ class CreateDistrictForm(forms.ModelForm):
 
             'region': Select(attrs={
                 'class': 'form-control selectpicker',
+                'data-live-search': "true",
+                'data - style': "btn-white",
+            }),
+        }
+
+
+class CreateNotificationForm(forms.ModelForm):
+    class Meta:
+        model = Notification
+        fields = ['article', 'title', 'description', 'from_user_id', 'to_user_id', 'status']
+
+        widgets = {
+            'title': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'description': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'article': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data - style': "btn-white",
+                'data - parsley - required': "true",
+            }),
+            'from_user_id': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data - style': "btn-white",
+                'data - parsley - required': "true",
+            }),
+            'to_user_id': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data - style': "btn-white",
+                'data - parsley - required': "true",
+            }),
+            'status': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
                 'data-live-search': "true",
                 'data - style': "btn-white",
             }),
