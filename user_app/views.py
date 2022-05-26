@@ -12,9 +12,7 @@ from user_app.Controller.district import *
 @allowed_users(allowed_roles=['Masters', 'Admins', 'Users'])
 # @admin_only
 def profile_page(request):
-    context = {
-
-    }
+    context = {}
     return render(request, "user_app/cabinet_page.html", context=context)
 
 
