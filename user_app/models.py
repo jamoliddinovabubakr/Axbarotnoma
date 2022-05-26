@@ -128,9 +128,11 @@ class Menu(models.Model):
 
 
 class Notification(models.Model):
+    READ = 'Read'
+    UNREAD = 'Unread'
     STATUS = (
-        ("O\'qilmadi", "O\'qilmadi"),
-        ('O\'qildi', 'O\'qildi'),
+        (READ, 'read'),
+        (UNREAD, 'unread'),
     )
     article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(_("Title"), max_length=255)
@@ -139,7 +141,7 @@ class Notification(models.Model):
                                      related_name="from_user")
     to_user_id = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True,
                                    related_name="to_user")
-    status = models.CharField(max_length=50, choices=STATUS, default="O\'qilmadi")
+    status = models.CharField(max_length=50, choices=STATUS, default=UNREAD)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
