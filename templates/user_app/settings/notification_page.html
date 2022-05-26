@@ -1,19 +1,18 @@
 {% extends 'user_app/base.html' %}
 {% load static %}
-{% load pages_tags %}
 {% block title %}
-    Maqolalarim
+    Xabarlar
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
         <!-- begin breadcrumb -->
         <ol class="breadcrumb float-xl-right">
             <li class="breadcrumb-item"><a href="javascript:;">Bosh sahifa</a></li>
-            <li class="breadcrumb-item active">Mening maqolalarim</li>
+            <li class="breadcrumb-item active">Xabarlar</li>
         </ol>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header">Mening maqolalarim </h1>
+        <h1 class="page-header">Menga kelgan xabarlar </h1>
         <!-- end page-header -->
 
         <!-- begin panel -->
@@ -43,11 +42,11 @@
                                 <label style="margin-right: 5px"><strong>Show</strong></label>
                                 <select id="id_n_show" name="n_show" class="form-control selectpicker"
                                         data-style="btn-white">
-                                    {% get_pages as all_pages %}
-                                    {% for item in all_pages %}
-                                        <option  {% if n_show == item.value %} selected {% endif %}
-                                                                               value="{{ item.value }}">{{ item.name }}</option>
-                                    {% endfor %}
+{#                                    {% get_pages as all_pages %}#}
+{#                                    {% for item in all_pages %}#}
+{#                                        <option  {% if n_show == item.value %} selected {% endif %}#}
+{#                                                                               value="{{ item.value }}">{{ item.name }}</option>#}
+{#                                    {% endfor %}#}
                                 </select>
                             </div>
                             <button {% if p_n == 0 %} disabled {% endif %} type="submit"
@@ -56,16 +55,16 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                        <form class="form-inline justify-content-end">
-                            <div class="form-group mx-sm-3 mb-3">
-                                <input {% if p_n == 0 %} disabled {% endif %} type="text" name="search"
-                                                         value="{{ search }}" class="form-control "
-                                                         placeholder="Search..." style="width: 250px">
-                            </div>
-                            <button {% if p_n == 0 %} disabled {% endif %} type="submit" class="btn btn-success mb-3"><i
-                                    class="fa fa-search"></i>Search
-                            </button>
-                        </form>
+{#                        <form class="form-inline justify-content-end">#}
+{#                            <div class="form-group mx-sm-3 mb-3">#}
+{#                                <input {% if p_n == 0 %} disabled {% endif %} type="text" name="search"#}
+{#                                                         value="{{ search }}" class="form-control "#}
+{#                                                         placeholder="Search..." style="width: 250px">#}
+{#                            </div>#}
+{#                            <button {% if p_n == 0 %} disabled {% endif %} type="submit" class="btn btn-success mb-3"><i#}
+{#                                    class="fa fa-search"></i>Search#}
+{#                            </button>#}
+{#                        </form>#}
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -74,28 +73,32 @@
                         <thead>
                         <tr class="text-center">
                             <th width="1%">Tr</th>
-                            <th>Soha</th>
-                            <th>Mavzu</th>
-                            {#                            <th>File</th>#}
-                            <th>Yaratilgan vaqt</th>
+                            <th>Title</th>
+                            <th>Article</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Status</th>
+                            <th>Create At</th>
                             <th width="1%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% if p_n != 0 %}
-                            {% for my_article in page.object_list %}
+{#                        {% if p_n != 0 %}#}
+                            {% for notification in notifications %}
                                 <tr class="text-center">
-                                    <td id="counter_ar">{{ forloop.counter0|add:page.start_index }}</td>
-                                    <td>{{ my_article.category.name }}</td>
-                                    <td>{{ my_article.title }}</td>
-                                    {#                                <td>{{ my_article.file }}</td>#}
-                                    <td>{{ my_article.created_at }}</td>
+                                    <td id="counter_ar">{{ forloop.counter}}</td>
+                                    <td>{{ notification.title }}</td>
+                                    <td>{{ notification.article.title }}</td>
+                                    <td>{{ notification.from_user_id }}</td>
+                                    <td>{{ notification.to_user_id }}</td>
+                                    <td>{{ notification.status }}</td>
+                                    <td>{{ notification.created_at }}</td>
                                     <td class="with-btn" nowrap>
-                                        <a href="{% url 'update_my_article' my_article.id %}" title="O'zgartirish"
+                                        <a href="{% url 'update_my_article' notification.id %}" title="O'zgartirish"
                                            data-toggle="tooltip"
                                            style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
 
-                                        <a href="{% url 'delete_myarticle' my_article.id %}" title="O'chirish"
+                                        <a href="{% url 'delete_myarticle' notification.id %}" title="O'chirish"
                                            data-toggle="tooltip"
                                            class="userModal"
                                            style="color: #f83333"><i
@@ -103,20 +106,20 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                        {% endif %}
-                        {% if p_n == 0 %}
-                            <tr class="text-center"><td class="panel-warning" colspan="5"><h2 style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No elements.</h2></td></tr>
-                        {% endif %}
+{#                        {% endif %}#}
+{#                        {% if p_n == 0 %}#}
+{#                            <tr class="text-center"><td class="panel-warning" colspan="5"><h2 style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No elements.</h2></td></tr>#}
+{#                        {% endif %}#}
                         </tbody>
                     </table>
                 </div>
                 <!-- end table-responsive -->
                 <div class="row">
                     <div class="col-md-6" style="padding-top: 1.5em">
-                        <b>Showing {{ page.start_index }} to {{ page.end_index }} of {{ p_n }} entries</b>
+{#                        <b>Showing {{ page.start_index }} to {{ page.end_index }} of {{ p_n }} entries</b>#}
                     </div>
                     <div class="col-md-6" style="padding-top: 1em">
-                        {% include 'article_app/includes/pagination.html' %}
+{#                        {% include 'article_app/includes/pagination.html' %}#}
                     </div>
                 </div>
             </div>

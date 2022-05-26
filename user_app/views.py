@@ -6,10 +6,11 @@ from user_app.Controller.role import *
 from user_app.Controller.state import *
 from user_app.Controller.region import *
 from user_app.Controller.district import *
+from user_app.Controller.notification import *
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Masters', 'Admins', 'Users'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHLILCHI'])
 # @admin_only
 def profile_page(request):
     context = {}
@@ -17,7 +18,7 @@ def profile_page(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Masters', 'Admins', 'Users'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHLILCHI'])
 def profile(request):
     context = {
 

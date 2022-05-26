@@ -79,7 +79,10 @@
     </div>
 {% endblock base_content %}
 <!-- end page container -->
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    swal("Good job!", "You clicked the button!", "success");
+</script>
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="{% static '/assets/js/app.min.js' %}"></script>
 <script src="{% static '/assets/js/theme/google.min.js' %}"></script>

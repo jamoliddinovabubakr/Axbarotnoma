@@ -7,7 +7,7 @@ from user_app.forms import CreateRoleForm
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def get_roles(request):
     roles = Role.objects.filter(status=True)
     context = {
@@ -17,7 +17,7 @@ def get_roles(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def create_role(request):
     if request.method == "POST":
         form = CreateRoleForm(request.POST)
@@ -33,7 +33,7 @@ def create_role(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def edit_role(request, pk):
     role = get_object_or_404(Role, pk=pk)
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def edit_role(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def delete_role(request, pk):
     role = get_object_or_404(Role, pk=pk)
     if request.method == "POST":

@@ -40,7 +40,7 @@ class MenuAdmin(admin.ModelAdmin):
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'description', 'from_user_id', 'to_user_id', 'status', 'created_at']
+    list_display = ['id', 'article', 'title', 'description', 'from_user_id', 'to_user_id', 'status', 'created_at']
 
 
 @admin.register(User)

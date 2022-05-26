@@ -7,7 +7,7 @@ from user_app.forms import CreateGenderForm
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def genders(request):
     genderlar = Gender.objects.filter(status=True)
     context = {
@@ -17,7 +17,7 @@ def genders(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def create_gender(request):
     if request.method == "POST":
         form = CreateGenderForm(request.POST)
@@ -33,7 +33,7 @@ def create_gender(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def edit_gender(request, pk):
     gender = get_object_or_404(Gender, pk=pk)
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def edit_gender(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def delete_gender(request, pk):
     gender = get_object_or_404(Gender, pk=pk)
     if request.method == "POST":

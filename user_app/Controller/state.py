@@ -7,7 +7,7 @@ from user_app.forms import CreateStateForm
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def get_states(request):
     states = State.objects.filter(status=True)
     context = {
@@ -17,7 +17,7 @@ def get_states(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def create_state(request):
     if request.method == "POST":
         form = CreateStateForm(request.POST)
@@ -33,7 +33,7 @@ def create_state(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def edit_state(request, pk):
     state = get_object_or_404(State, pk=pk)
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def edit_state(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def delete_state(request, pk):
     state = get_object_or_404(State, pk=pk)
     if request.method == "POST":

@@ -6,7 +6,7 @@ from .views import login_page, logout_user, register_page, profile_page, change_
     update_user, \
     delete_user, edit_menu, delete_menu, edit_gender, delete_gender, edit_role, delete_role, edit_state, \
     delete_state, get_states, edit_region, delete_region, edit_district, delete_district, create_gender, \
-    create_role, create_state, create_district, create_region
+    create_role, create_state, create_district, create_region, get_notifications
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -22,6 +22,8 @@ urlpatterns = [
     path('users/view/<int:pk>', view_user, name='view_user'),
     path('users/update/<int:pk>', update_user, name='update_user'),
     path('users/delete/<int:pk>', delete_user, name='delete_user'),
+
+    path('notifications/', get_notifications, name='notifications'),
 
     path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),

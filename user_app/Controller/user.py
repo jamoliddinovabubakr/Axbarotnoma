@@ -9,7 +9,7 @@ from user_app.forms import UpdateUserForm
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def admins(request):
     adminlar = User.objects.filter(Q(role__name="MASTER") | Q(role__name="ADMIN"))
     context = {
@@ -19,7 +19,7 @@ def admins(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def users(request):
     userlar = User.objects.all()
     context = {
@@ -29,7 +29,7 @@ def users(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def view_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     return render(request, 'user_app/crud/view_user.html', {'user': user})
@@ -68,8 +68,16 @@ def change_group(user, new_gr):
     new_group.user_set.add(user)
 
 
+MASTER = 'MASTER'
+ADMIN = 'ADMIN'
+USER = 'USER'
+BOSH_MUHARRIR = 'BOSH MUHARRIR'
+TAHLILCHI = 'TAHLILCHI'
+MASUL_KOTIB = 'MASUL KOTIB'
+
+
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def update_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -77,16 +85,25 @@ def update_user(request, pk):
         person = form.save(commit=False)
         person.save()
 
-        if user.role.name == 'MASTER':
+        if user.role.name == MASTER:
             if not user.groups.exists():
-                new_group, created = Group.objects.get_or_create(name='Masters')
+                new_group, created = Group.objects.get_or_create(name=MASTER)
                 new_group.user_set.add(user)
 
-        if user.role.name == 'ADMIN':
-            change_group(user, 'Admins')
+        if user.role.name == ADMIN:
+            change_group(user, ADMIN)
 
-        if user.role.name == 'USER':
-            change_group(user, 'Users')
+        if user.role.name == USER:
+            change_group(user, USER)
+
+        if user.role.name == TAHLILCHI:
+            change_group(user, TAHLILCHI)
+
+        if user.role.name == BOSH_MUHARRIR:
+            change_group(user, BOSH_MUHARRIR)
+
+        if user.role.name == MASUL_KOTIB:
+            change_group(user, MASUL_KOTIB)
 
         if request.FILES.get('avatar', None) is not None:
             try:
@@ -103,7 +120,7 @@ def update_user(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admins', 'Masters'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
 def delete_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
