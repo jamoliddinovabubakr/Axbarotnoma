@@ -1,4 +1,6 @@
 {% load static %}
+{% load menu_tag %}
+{% get_editor_notifications as notifications %}
 <div id="header" class="header navbar-default">
     <!-- begin navbar-header -->
     <div class="navbar-header">
@@ -20,38 +22,34 @@
     <ul class="navbar-nav d-flex flex-grow-1">
         <li class="navbar-form flex-grow-1"></li>
         <li class="dropdown">
+{% if request.user.role.id == 2 %}
             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                 <i class="fa fa-bell"></i>
-                <span class="label label-primary">5</span>
+                <span class="label label-primary">{{ notifications.count }}</span>
             </a>
             <div class="dropdown-menu media-list dropdown-menu-right">
-                <div class="dropdown-header">Notifications (5)</div>
-                <a href="javascript:;" class="dropdown-item media">
+                <div class="dropdown-header">Notifications ({{ notifications.count }})</div>
+                
+                {% for  notification in notifications %}
+               
+                <a href="{% url 'notifications'%}" class="dropdown-item media">
                     <div class="media-left">
-                        <i class="fa fa-bug media-object bg-silver-darker"></i>
-                    </div>
-                    <div class="media-body">
-                        <h6 class="media-heading">Server Error Reports <i
-                                class="fa fa-exclamation-circle text-danger"></i></h6>
-                        <div class="text-muted f-s-12">3 minutes ago</div>
-                    </div>
-                </a>
-                <a href="javascript:;" class="dropdown-item media">
-                    <div class="media-left">
-                        <img src="{% static '/assets/img/user/user-1.jpg' %}" class="media-object" alt=""/>
+                        <img src="{{ notification.article.author.avatar.url }}" class="media-object" alt=""/>
                         <i class="fab fa-facebook-messenger text-blue media-object-icon"></i>
                     </div>
                     <div class="media-body">
-                        <h6 class="media-heading">John Smith</h6>
-                        <p>Quisque pulvinar tellus sit amet sem scelerisque tincidunt.</p>
-                        <div class="text-muted f-s-12">25 minutes ago</div>
+                        <h6 class="media-heading">{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</h6>
+                        <p>{{ notification.title}}.</p>
+                        <div class="text-muted f-s-12">{{ notification.created_at}}</div>
                     </div>
                 </a>
+                {% endfor %}
                 <div class="dropdown-footer text-center">
                     <a href="{% url 'notifications' %}">View more</a>
                 </div>
             </div>
         </li>
+        {% endif %}
         <li class="dropdown navbar-user">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="{{ request.user.avatar.url }}" alt=""/>

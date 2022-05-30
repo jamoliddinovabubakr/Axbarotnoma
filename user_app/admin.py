@@ -35,18 +35,17 @@ class GenderAdmin(admin.ModelAdmin):
 
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'parent_id', 'status', 'url', 'type_menu', 'icon', 'menu_tr', 'get_roles']
+    list_display = ['id', 'name', 'parent_id', 'status',
+                    'url', 'type_menu', 'icon', 'menu_tr', 'get_roles']
 
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'article', 'title', 'description', 'from_user_id', 'to_user_id', 'status', 'created_at']
+    list_display = ['id', 'article', 'title',
+                    'description', 'status', 'created_at']
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'username', 'first_name', 'last_name', 'middle_name', 'birthday', 'gender', 'avatar', 'email',
                     'phone', 'passport', 'role', 'region', 'district']
-
-
-

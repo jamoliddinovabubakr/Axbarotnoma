@@ -137,12 +137,11 @@ class Notification(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(blank=True, null=True)
-    from_user_id = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True,
-                                     related_name="from_user")
-    to_user_id = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True,
-                                   related_name="to_user")
     status = models.CharField(max_length=50, choices=STATUS, default=UNREAD)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['-id']

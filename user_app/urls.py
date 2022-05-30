@@ -6,7 +6,7 @@ from .views import login_page, logout_user, register_page, profile_page, change_
     update_user, \
     delete_user, edit_menu, delete_menu, edit_gender, delete_gender, edit_role, delete_role, edit_state, \
     delete_state, get_states, edit_region, delete_region, edit_district, delete_district, create_gender, \
-    create_role, create_state, create_district, create_region, get_notifications
+    create_role, create_state, create_district, create_region, get_notifications, view_notification
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -24,6 +24,7 @@ urlpatterns = [
     path('users/delete/<int:pk>', delete_user, name='delete_user'),
 
     path('notifications/', get_notifications, name='notifications'),
+    path('notifications/view/<int:pk>/', view_notification, name='view_notification'),
 
     path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),
@@ -60,12 +61,15 @@ urlpatterns = [
 
     path('password_reset/', password_reset, name='password_reset'),
     path('password_reset/done/',
-         auth_views.PasswordResetDoneView.as_view(template_name='user_app/register/password_reset_done.html'),
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='user_app/register/password_reset_done.html'),
          name='password_reset_done'),
     path('reset/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(template_name="user_app/register/password_reset_confirm.html"),
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name="user_app/register/password_reset_confirm.html"),
          name='password_reset_confirm'),
     path('reset/done/',
-         auth_views.PasswordResetCompleteView.as_view(template_name='user_app/register/password_reset_complete.html'),
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='user_app/register/password_reset_complete.html'),
          name='password_reset_complete'),
 ]

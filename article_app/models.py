@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 
-
 class Category(models.Model):
     name = models.CharField(_('Nomi'), max_length=150)
     key = models.PositiveSmallIntegerField(_("Key"))

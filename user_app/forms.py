@@ -210,7 +210,7 @@ class CreateDistrictForm(forms.ModelForm):
 class CreateNotificationForm(forms.ModelForm):
     class Meta:
         model = Notification
-        fields = ['article', 'title', 'description', 'from_user_id', 'to_user_id', 'status']
+        fields = ['article', 'title', 'description', 'status']
 
         widgets = {
             'title': TextInput(attrs={
@@ -226,20 +226,6 @@ class CreateNotificationForm(forms.ModelForm):
                 'data - parsley - required': "true",
             }),
             'article': Select(attrs={
-                'class': 'form-control selectpicker',
-                'data - size': "10",
-                'data-live-search': "true",
-                'data - style': "btn-white",
-                'data - parsley - required': "true",
-            }),
-            'from_user_id': Select(attrs={
-                'class': 'form-control selectpicker',
-                'data - size': "10",
-                'data-live-search': "true",
-                'data - style': "btn-white",
-                'data - parsley - required': "true",
-            }),
-            'to_user_id': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data - size': "10",
                 'data-live-search': "true",
