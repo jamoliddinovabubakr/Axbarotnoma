@@ -4,12 +4,13 @@
     <!-- begin container -->
     <div class="container">
         <!-- begin navbar-brand -->
-        <a href="/" class="navbar-brand">
-            <span class="brand-logo"></span>
-            <span class="brand-text">
-					Davlat test markazi
-				</span>
-        </a>
+        <a href="/">
+        <img src="{% static 'img/Logo.png' %}" alt=""  width="100"/></a>
+            <span  style="text-transform: uppercase; margin-left: 1em; font-family: FontSemibold, serif; text-align: center; display: table-cell; vertical-align: middle;">
+                <b>O‘zbekiston Respublikasi<br> Vazirlar Mahkamasi huzuridagi<br> Davlat test markazi</b>
+			</span>
+        
+        
         <!-- end navbar-brand -->
         <!-- begin navbar-toggle -->
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar">
@@ -24,7 +25,7 @@
                 {% if request.user.is_authenticated %}
                     <li class="dropdown navbar-user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                             <img src="{{ request.user.avatar.url }}" alt="" width="35" class="img-circle"/>
+                             <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>
                             <span class="d-none d-md-inline">{{ request.user.last_name }} {{ request.user.first_name }}  </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">

@@ -76,8 +76,8 @@
                             <th width="1%">Tr</th>
                             <th>Soha</th>
                             <th>Mavzu</th>
-                            <th>File</th>
                             <th>Yaratilgan vaqt</th>
+                            <th>Holat</th>
                             <th width="1%">Actions</th>
                         </tr>
                         </thead>
@@ -88,8 +88,8 @@
                                     <td id="counter_ar">{{ forloop.counter0|add:page.start_index }}</td>
                                     <td>{{ my_article.category.name }}</td>
                                     <td>{{ my_article.title }}</td>
-                                    <td>{{ my_article.file }}</td>
                                     <td>{{ my_article.created_at }}</td>
+                                     <td>{{ my_article.state_edit.name }}</td>
                                     <td class="with-btn" nowrap>
                                         <a href="{% url 'update_my_article' my_article.id %}" title="O'zgartirish"
                                            data-toggle="tooltip"

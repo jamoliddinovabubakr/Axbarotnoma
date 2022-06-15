@@ -1,5 +1,5 @@
 from django.contrib import admin
-from article_app.models import Category, Article, Shartnoma, Authors, Page
+from article_app.models import Category, Article, Shartnoma, Authors, Page, Magazine
 
 
 @admin.register(Category)
@@ -26,3 +26,8 @@ class ArticleAdmin(admin.ModelAdmin):
 @admin.register(Authors)
 class AuthorsAdmin(admin.ModelAdmin):
     list_display = ['id', 'first_name', 'last_name', 'middle_name', 'email', 'article', 'work_place', 'author_order']
+
+
+@admin.register(Magazine)
+class MagazineAdmin(admin.ModelAdmin):
+    list_display = ['id', 'number_magazine', 'year_magazine', 'created_at', 'status']

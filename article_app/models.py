@@ -1,3 +1,4 @@
+from operator import mod
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -39,7 +40,7 @@ class Article(models.Model):
     payed = models.BooleanField(default=True)
     state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit",
                                    blank=True,
-                                   null=True, )
+                                   null=True )
     state_analysis = models.ForeignKey('user_app.State', on_delete=models.CASCADE, blank=True,
                                        null=True,
                                        related_name="article_state_analysis")
@@ -96,3 +97,18 @@ class Page(models.Model):
     class Meta:
         verbose_name = _("Page")
         verbose_name_plural = _("Pages")
+
+
+class Magazine(models.Model):
+    number_magazine = models.PositiveBigIntegerField(default=0, unique=True)
+    year_magazine = models.CharField(max_length=4, blank=True)
+    article = models.ManyToManyField('Article', related_name='articles', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.number_magazine)
+
+    class Meta:
+        verbose_name = _("Magazine")
+        verbose_name_plural = _("Magazines")
