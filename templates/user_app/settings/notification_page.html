@@ -12,7 +12,7 @@
         </ol>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header">Menga kelgan xabarlar </h1>
+        <h1 class="page-header">Yangi kelgan xabarlar </h1>
         <!-- end page-header -->
 
         <!-- begin panel -->
@@ -66,31 +66,29 @@
                 </div>
                 <div class="table-responsive">
                     <table
-                            class="table table-hover">
+                            class="table table-hover table-striped table-bordered">
                         <thead>
                         <tr class="text-center">
                             <th width="1%">Tr</th>
                             <th>Aftor</th>
                             <th>Title</th>
-                            <th>Create At</th>
                             <th>Status</th>
                             <th width="1%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
 {#                        {% if p_n != 0 %}#}
-                            {% for notification in notifications %}
+                            {% for notif in notifications %}
                                 <tr class="text-center">
                                     <td id="counter_ar">{{ forloop.counter}}</td>
-                                    <td>{{ notification.article.author.email }}</td>
-                                    <td>{{ notification.title }}</td>
-                                    <td>{{ notification.created_at }}</td>
+                                    <td>{{ notif.article.author.email }}</td>
+                                    <td>{{ notif.title }}</td>
                                     <td>
                                         <span class="badge {% if notification.status == 'Unread' %} badge-danger {% elif notification.status == 'Read' %} badge-success {% endif %}" 
-                                        style="font-size: 10px;">{{ notification.status }}</span>
+                                        style="font-size: 10px;">{{ notif.status }}</span>
                                     </td>
                             <td>
-                                <a href="{% url 'view_user' user.pk %}" title="Ko'rish" class="userModal"
+                                <a href="{% url 'view_notification' notif.pk %}" title="Ko'rish"
                                    data-toggle="tooltip"
                                    style="color: #0188d0">
                                     <i class="fas  fa-fw m-r-15 fa-eye"></i>

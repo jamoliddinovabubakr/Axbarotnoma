@@ -1,0 +1,48 @@
+{% extends 'user_app/base.html' %}
+{% load static %}
+{% block title%}Maqola tekshiruvi{%endblock%}
+{% block content%} 
+<div id="content" class="content">
+    <ol class="breadcrumb float-xl-right">
+        <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Maqola tekshiruvi</a></li>
+    </ol>
+    <h2 class="page-header"><b>{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</b> ga tegishli maqolani tekshirish</h1> 
+    <div class="panel panel-default">
+       
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2"><img src="{% static 'img/avatar3.png' %}" alt="" width="200"/></div>
+                <div class="col-md-5">
+                    <table>
+                        <tr><th><h4>{{ notification.article.author.last_name }} {{ notification.article.author.first_name}}</h4></th></tr>
+                        <tr><td><strong>Email:</strong> {{ notification.article.author.email }}</td></tr>
+                        <tr><td><strong>Tel:</strong> {{ notification.article.author.phone }}</td></tr>
+                        <tr><td><strong>Yuborilgan vaqt: </strong> {{ notification.article.created_at }}</td></tr>
+                        <tr><td><strong>Status:</strong> {{ notification.article.status }}</td></tr>
+                        <tr><td><strong>Holat:</strong> <span class="badge {% if notification.status == 'Unread' %} 
+                            badge-danger {% elif notification.status == 'Read' %} badge-success {% endif %}"> {{ notification.status }}</span></td></tr>
+                        
+                    </table>
+                </div>
+                <div class="col-md-5">
+                    <table>
+                    <br>
+                        <tr><td><strong>Mavzu:</strong> {{ notification.article.title }}</td></tr>                  
+                        <tr><td><strong>Aftorlar:</strong></td></tr>
+                        {% for author in authors %}
+                            <tr><td>{{author.author_order}}. {{ author.last_name }} {{ author.first_name }}, {{ author.email}},  {{ author.work_place }}</td></tr>
+                        {% endfor%}
+                    </table>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                
+                <iframe id="encoder_iframe" height=75% width="50%" src="{{ notification.article.file.url }}">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}

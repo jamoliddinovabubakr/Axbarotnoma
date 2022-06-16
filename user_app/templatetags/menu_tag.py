@@ -1,3 +1,4 @@
+from ast import Not
 from django import template
 
 from user_app.models import Menu, Notification
@@ -34,5 +35,5 @@ def get_sub_menus():
 
 @register.simple_tag()
 def get_editor_notifications():
-    notifications = Notification.objects.filter(status='Unread')
+    notifications = Notification.objects.order_by("-created_at").filter(status='Unread')[:5]
     return notifications
