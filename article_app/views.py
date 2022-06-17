@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 
 from user_app.decorators import allowed_users
 from .models import Article, Category, Shartnoma, Authors
-from user_app.models import User
+from user_app.models import User, State
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm
 from django.core.paginator import Paginator, EmptyPage
 
@@ -77,7 +77,7 @@ def create_article(request):
                 first_name=user.first_name,
                 middle_name=user.middle_name,
                 email=user.email,
-                work_place='No.',
+                work_place='-',
                 author_order=1
             )
             return redirect('update_my_article', pk=id)
@@ -97,6 +97,7 @@ def update_my_article(request, pk):
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
             ob = form.save(commit=False)
+            ob.state_edit = State.objects.get(pk=1)
             ob.save()
             return redirect('my_articles')
     else:

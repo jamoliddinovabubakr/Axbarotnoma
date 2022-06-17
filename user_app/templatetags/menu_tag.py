@@ -35,5 +35,5 @@ def get_sub_menus():
 
 @register.simple_tag()
 def get_editor_notifications():
-    notifications = Notification.objects.order_by("-created_at").filter(status='Unread')[:5]
+    notifications = Notification.objects.order_by("-created_at").filter(status='Unread')
     return notifications

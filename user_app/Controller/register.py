@@ -45,7 +45,7 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
 
-            user_group, created = Group.objects.get_or_create(name='Users')
+            user_group, created = Group.objects.get_or_create(name='USER')
             user_group.user_set.add(user)
 
             user = authenticate(request, username=user.username, password=request.POST['password1'])

@@ -1,46 +1,93 @@
 {% extends 'user_app/base.html' %}
 {% load static %}
 {% block title%}Maqola tekshiruvi{%endblock%}
-{% block content%} 
+{% block content%}
 <div id="content" class="content">
     <ol class="breadcrumb float-xl-right">
         <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
         <li class="breadcrumb-item"><a href="javascript:;">Maqola tekshiruvi</a></li>
     </ol>
-    <h2 class="page-header"><b>{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</b> ga tegishli maqolani tekshirish</h1> 
+    <h2 class="page-header"><b>{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</b> ga tegishli maqolani tekshirish</h2>
     <div class="panel panel-default">
-       
+
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-2"><img src="{% static 'img/avatar3.png' %}" alt="" width="200"/></div>
+                <div class="col-md-2"><img src="{% static 'img/avatar3.png' %}" alt="" width="100%" height="100%"/>
+                </div>
                 <div class="col-md-5">
                     <table>
-                        <tr><th><h4>{{ notification.article.author.last_name }} {{ notification.article.author.first_name}}</h4></th></tr>
-                        <tr><td><strong>Email:</strong> {{ notification.article.author.email }}</td></tr>
-                        <tr><td><strong>Tel:</strong> {{ notification.article.author.phone }}</td></tr>
-                        <tr><td><strong>Yuborilgan vaqt: </strong> {{ notification.article.created_at }}</td></tr>
-                        <tr><td><strong>Status:</strong> {{ notification.article.status }}</td></tr>
-                        <tr><td><strong>Holat:</strong> <span class="badge {% if notification.status == 'Unread' %} 
-                            badge-danger {% elif notification.status == 'Read' %} badge-success {% endif %}"> {{ notification.status }}</span></td></tr>
-                        
+                        <tr>
+                            <th><h4>{{ notification.article.author.last_name }} {{ notification.article.author.first_name}}</h4></th>
+                        </tr>
+                        <tr>
+                            <td><strong>Email:</strong> {{ notification.article.author.email }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tel:</strong> {{ notification.article.author.phone }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Yuborilgan vaqt: </strong> {{ notification.article.created_at }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status:</strong> {{ notification.article.status }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Holat:</strong> <span class="badge {% if notification.status == 'Unread' %}
+                            badge-danger {% elif notification.status == 'Read' %} badge-success {% endif %}"> {{ notification.status }}</span>
+                            </td>
+                        </tr>
+
+                         <tr><td><img src="{% static 'img/word.png' %}" alt="word" width="50"/> </td></tr>
+                        <tr><td><a class="btn btn-primary" href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a></td></tr>
                     </table>
                 </div>
                 <div class="col-md-5">
                     <table>
-                    <br>
-                        <tr><td><strong>Mavzu:</strong> {{ notification.article.title }}</td></tr>                  
-                        <tr><td><strong>Aftorlar:</strong></td></tr>
+                        <br>
+                        <tr>
+                            <td><strong>Mavzu:</strong> {{ notification.article.title }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Aftorlar:</strong></td>
+                        </tr>
                         {% for author in authors %}
-                            <tr><td>{{author.author_order}}. {{ author.last_name }} {{ author.first_name }}, {{ author.email}},  {{ author.work_place }}</td></tr>
+                        <tr>
+                            <td>{{author.author_order}}. {{ author.last_name }} {{ author.first_name }}, {{ author.email}}, {{ author.work_place }}
+                            </td>
+                        </tr>
                         {% endfor%}
+
                     </table>
                 </div>
             </div>
             <hr>
             <div class="row">
-                
-                <iframe id="encoder_iframe" height=75% width="50%" src="{{ notification.article.file.url }}">
-                </iframe>
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <table>
+                        <tr>
+                            <th><h2>Mavzu: {{ notification.article.title }}</h2></th>
+                        </tr>
+                        <tr>
+                            <td><strong>Abstaktsiya:</strong> {{ notification.article.abstract}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kalit so'zlar:</strong> {{ notification.article.keywords}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Foydalanilgan adabiyotlar:</strong> {{ notification.article.references}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <a href="{% url 'notifications' %}" class="btn btn-indigo">Tahlilchiga yuborish</a>
+                </div>
             </div>
         </div>
     </div>

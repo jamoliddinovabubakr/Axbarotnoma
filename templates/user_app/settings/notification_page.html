@@ -39,11 +39,11 @@
                                 <label style="margin-right: 5px"><strong>Show</strong></label>
                                 <select id="id_n_show" name="n_show" class="form-control selectpicker"
                                         data-style="btn-white">
-{#                                    {% get_pages as all_pages %}#}
-{#                                    {% for item in all_pages %}#}
-{#                                        <option  {% if n_show == item.value %} selected {% endif %}#}
-{#                                                                               value="{{ item.value }}">{{ item.name }}</option>#}
-{#                                    {% endfor %}#}
+<!--{#                                    {% get_pages as all_pages %}#}-->
+<!--{#                                    {% for item in all_pages %}#}-->
+<!--{#                                        <option  {% if n_show == item.value %} selected {% endif %}#}-->
+<!--{#                                                                               value="{{ item.value }}">{{ item.name }}</option>#}-->
+<!--{#                                    {% endfor %}#}-->
                                 </select>
                             </div>
                             <button {% if p_n == 0 %} disabled {% endif %} type="submit"
@@ -52,16 +52,16 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-{#                        <form class="form-inline justify-content-end">#}
-{#                            <div class="form-group mx-sm-3 mb-3">#}
-{#                                <input {% if p_n == 0 %} disabled {% endif %} type="text" name="search"#}
-{#                                                         value="{{ search }}" class="form-control "#}
-{#                                                         placeholder="Search..." style="width: 250px">#}
-{#                            </div>#}
-{#                            <button {% if p_n == 0 %} disabled {% endif %} type="submit" class="btn btn-success mb-3"><i#}
-{#                                    class="fa fa-search"></i>Search#}
-{#                            </button>#}
-{#                        </form>#}
+<!--{#                        <form class="form-inline justify-content-end">#}-->
+<!--{#                            <div class="form-group mx-sm-3 mb-3">#}-->
+<!--{#                                <input {% if p_n == 0 %} disabled {% endif %} type="text" name="search"#}-->
+<!--{#                                                         value="{{ search }}" class="form-control "#}-->
+<!--{#                                                         placeholder="Search..." style="width: 250px">#}-->
+<!--{#                            </div>#}-->
+<!--{#                            <button {% if p_n == 0 %} disabled {% endif %} type="submit" class="btn btn-success mb-3"><i#}-->
+<!--{#                                    class="fa fa-search"></i>Search#}-->
+<!--{#                            </button>#}-->
+<!--{#                        </form>#}-->
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -77,15 +77,14 @@
                         </tr>
                         </thead>
                         <tbody>
-{#                        {% if p_n != 0 %}#}
+<!--                        {% if p_n != 0 %}#}-->
                             {% for notif in notifications %}
                                 <tr class="text-center">
                                     <td id="counter_ar">{{ forloop.counter}}</td>
                                     <td>{{ notif.article.author.email }}</td>
                                     <td>{{ notif.title }}</td>
                                     <td>
-                                        <span class="badge {% if notification.status == 'Unread' %} badge-danger {% elif notification.status == 'Read' %} badge-success {% endif %}" 
-                                        style="font-size: 10px;">{{ notif.status }}</span>
+                                        {{ notif.status }}
                                     </td>
                             <td>
                                 <a href="{% url 'view_notification' notif.pk %}" title="Ko'rish"
@@ -97,20 +96,20 @@
                             </td>
                                 </tr>
                             {% endfor %}
-{#                        {% endif %}#}
-{#                        {% if p_n == 0 %}#}
-{#                            <tr class="text-center"><td class="panel-warning" colspan="5"><h2 style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No elements.</h2></td></tr>#}
-{#                        {% endif %}#}
+<!--                       {% endif %}#}-->
+<!--                       {% if p_n == 0 %}#}-->
+<!--                           <tr class="text-center"><td class="panel-warning" colspan="5"><h2 style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No elements.</h2></td></tr>#}-->
+<!--                       {% endif %}#}-->
                         </tbody>
                     </table>
                 </div>
                 <!-- end table-responsive -->
                 <div class="row">
                     <div class="col-md-6" style="padding-top: 1.5em">
-{#                        <b>Showing {{ page.start_index }} to {{ page.end_index }} of {{ p_n }} entries</b>#}
+<!--{#                        <b>Showing {{ page.start_index }} to {{ page.end_index }} of {{ p_n }} entries</b>#}-->
                     </div>
                     <div class="col-md-6" style="padding-top: 1em">
-{#                        {% include 'article_app/includes/pagination.html' %}#}
+<!--{#                        {% include 'article_app/includes/pagination.html' %}#}-->
                     </div>
                 </div>
             </div>
