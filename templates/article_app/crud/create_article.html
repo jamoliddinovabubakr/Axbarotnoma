@@ -1,6 +1,7 @@
 {% load static %}
 <form data-parsley-validate="true" method="post" action="{% url 'create_article' %}">
     {% csrf_token %}
+    {{ form.media }}
     <div class="modal fade" id="addUser">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -29,14 +30,8 @@
                         <label class="col-md-3 col-sm-3 col-form-label">Mavzu <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                         {{ form.title }}
-                        </div>
-                    </div>
-                    <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Kalit so'zlar <span
-                                class="text-danger">*</span></label>
-                        <div class="col-md-9 col-sm-9">
-                        {{ form.keywords }}
+                           
+                         {{ form.title|safe }}
                         </div>
                     </div>
                 </div>

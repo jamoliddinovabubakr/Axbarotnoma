@@ -82,7 +82,7 @@
                                 <tr class="text-center">
                                     <td id="counter_ar">{{ forloop.counter}}</td>
                                     <td>{{ notif.article.author.email }}</td>
-                                    <td>{{ notif.title }}</td>
+                                    <td>{{ notif.title|slice:100 }}</td>
                                     <td>
                                         {{ notif.status }}
                                     </td>

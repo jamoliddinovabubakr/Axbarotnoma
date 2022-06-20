@@ -5,7 +5,7 @@ from .views import main_page, my_articles, create_article, update_my_article, ad
 urlpatterns = [
     path('', main_page, name='main_page'),
     path('articles/', my_articles, name='my_articles'),
-    path('article/create', create_article, name='create_article'),
+    path('article/create/', create_article, name='create_article'),
     path('article/edit/<int:pk>/', update_my_article, name='update_my_article'),
     path('article/delete/<int:pk>/', delete_myarticle, name='delete_myarticle'),
 

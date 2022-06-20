@@ -6,7 +6,7 @@ from .models import Article, Category, Authors
 class CreateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['author', 'title', 'category', 'keywords']
+        fields = ['author', 'title', 'category']
 
         widgets = {
             'category': Select(attrs={
@@ -17,11 +17,6 @@ class CreateArticleForm(forms.ModelForm):
                 'data - parsley - required': "true",
             }),
             'title': TextInput(attrs={
-                'class': 'form-control',
-                'data - size': "10",
-                'data - parsley - required': "true",
-            }),
-            'keywords': TextInput(attrs={
                 'class': 'form-control',
                 'data - size': "10",
                 'data - parsley - required': "true",
@@ -41,7 +36,7 @@ class UpdateArticleForm(forms.ModelForm):
                 'data - style': "btn-white",
                 'data - parsley - required': "true",
             }),
-            'title': TextInput(attrs={
+            'title': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
             }),

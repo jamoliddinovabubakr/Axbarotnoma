@@ -36,16 +36,13 @@
                             badge-danger {% elif notification.status == 'Read' %} badge-success {% endif %}"> {{ notification.status }}</span>
                             </td>
                         </tr>
-
-                         <tr><td><img src="{% static 'img/word.png' %}" alt="word" width="50"/> </td></tr>
-                        <tr><td><a class="btn btn-primary" href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a></td></tr>
                     </table>
                 </div>
                 <div class="col-md-5">
                     <table>
                         <br>
                         <tr>
-                            <td><strong>Mavzu:</strong> {{ notification.article.title }}</td>
+                            <td><strong>Mavzu:</strong> {{ notification.article.title|safe }}</td>
                         </tr>
                         <tr>
                             <td><strong>Aftorlar:</strong></td>
@@ -56,7 +53,8 @@
                             </td>
                         </tr>
                         {% endfor%}
-
+                        <tr><td><img src="{% static 'img/word.png' %}" alt="word" width="50"/> </td></tr>
+                        <tr><td><a class="btn btn-primary" href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a></td></tr>
                     </table>
                 </div>
             </div>
@@ -66,16 +64,16 @@
                 <div class="col-md-6">
                     <table>
                         <tr>
-                            <th><h2>Mavzu: {{ notification.article.title }}</h2></th>
+                            <th><h2>Mavzu: {{ notification.article.title|safe }}</h2></th>
                         </tr>
                         <tr>
-                            <td><strong>Abstaktsiya:</strong> {{ notification.article.abstract}}</td>
+                            <td><strong>Abstaktsiya:</strong> {{ notification.article.abstract|safe }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Kalit so'zlar:</strong> {{ notification.article.keywords}}</td>
+                            <td><strong>Kalit so'zlar:</strong> {{ notification.article.keywords|safe }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Foydalanilgan adabiyotlar:</strong> {{ notification.article.references}}</td>
+                            <td><strong>Foydalanilgan adabiyotlar:</strong> {{ notification.article.references|safe }}</td>
                         </tr>
                     </table>
                 </div>
