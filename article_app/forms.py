@@ -16,7 +16,7 @@ class CreateArticleForm(forms.ModelForm):
                 'data - style': "btn-white",
                 'data - parsley - required': "true",
             }),
-            'title': TextInput(attrs={
+            'title': Textarea(attrs={
                 'class': 'form-control',
                 'data - size': "10",
                 'data - parsley - required': "true",
@@ -46,7 +46,7 @@ class UpdateArticleForm(forms.ModelForm):
                 'rows': '5',
                 'placeholder': 'Enter...'
             }),
-            'keywords': TextInput(attrs={
+            'keywords': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
             }),

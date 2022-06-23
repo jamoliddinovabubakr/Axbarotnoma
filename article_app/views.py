@@ -1,17 +1,12 @@
-from msilib.schema import Error
-from django.contrib import messages
-from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
 from user_app.decorators import allowed_users
-from .models import Article, Category, Shartnoma, Authors
+from .models import Article, Category, Authors
 from user_app.models import User, State
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm
-from django.core.paginator import Paginator, EmptyPage
+from django.core.paginator import Paginator
 
 
 def main_page(request):
@@ -64,13 +59,13 @@ def my_articles(request):
 
 @login_required(login_url='login')
 def create_article(request):
-    user = User.objects.get(pk=request.user.pk)
+    user = request.user
     if request.method == "POST":
         form = CreateArticleForm(request.POST)
         if form.is_valid():
             article = form.save(commit=False)
             article.save()
-            id = article.id
+            articleId = article.id
 
             Authors.objects.create(
                 article=article,
@@ -81,7 +76,7 @@ def create_article(request):
                 work_place='-',
                 author_order=1
             )
-            return redirect('update_my_article', pk=id)
+            return redirect('update_my_article', pk=articleId)
     else:
         context = {
             'form': CreateArticleForm(),

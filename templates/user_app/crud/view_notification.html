@@ -42,7 +42,7 @@
                     <table>
                         <br>
                         <tr>
-                            <td><strong>Mavzu:</strong> {{ notification.article.title|safe }}</td>
+                            <td> {{ notification.article.title|safe }}</td>
                         </tr>
                         <tr>
                             <td><strong>Aftorlar:</strong></td>
@@ -64,16 +64,16 @@
                 <div class="col-md-6">
                     <table>
                         <tr>
-                            <th><h2>Mavzu: {{ notification.article.title|safe }}</h2></th>
+                            <th>{{ notification.article.title|safe }}</th>
                         </tr>
                         <tr>
-                            <td><strong>Abstaktsiya:</strong> {{ notification.article.abstract|safe }}</td>
+                            <td>{{ notification.article.abstract|safe }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Kalit so'zlar:</strong> {{ notification.article.keywords|safe }}</td>
+                            <td> {{ notification.article.keywords|safe }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Foydalanilgan adabiyotlar:</strong> {{ notification.article.references|safe }}</td>
+                            <td> {{ notification.article.references|safe }}</td>
                         </tr>
                     </table>
                 </div>
@@ -82,12 +82,21 @@
             <hr>
             <div class="row">
                 <div class="col-md-4"></div>
-                <div class="col-md-4"></div>
+                <div class="col-md-4"><a href="{% url 'notifications'%}" class="btn btn-warning">Orqaga</a></div>
                 <div class="col-md-4">
-                    <a href="{% url 'notifications' %}" class="btn btn-indigo">Tahlilchiga yuborish</a>
+                    <a class="btn btn-danger" id="cancel_state">Rad etish</a>
+                    <a class="btn btn-success" id="success_state">Tasdiqlash</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+       document.getElementById("cancel_state").addEventListener("click", function() {
+        
+      });
+      document.getElementById("success_state").addEventListener("click", function() {
+        alert("Hello World!");
+      });
+    </script>
 {% endblock%}

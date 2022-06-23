@@ -1,5 +1,5 @@
 {% load static %}
-<form data-parsley-validate="true" method="post" action="{% url 'create_article' %}">
+<form  method="post" action="{% url 'create_article' %}">
     {% csrf_token %}
     {{ form.media }}
     <div class="modal fade" id="addUser">

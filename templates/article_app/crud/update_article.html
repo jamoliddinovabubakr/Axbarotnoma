@@ -72,7 +72,7 @@
                                 <label class="col-md-3 col-sm-3 col-form-label">Mavzu <span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
-                                    {{ form.title }}
+                                    {{ form.title|safe }}
                                 </div>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                 <label class="col-md-3 col-sm-3 col-form-label">Kalit so'zlar <span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
-                                    {{ form.keywords }}
+                                    {{ form.keywords|safe }}
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                                 <label class="col-md-3 col-sm-3 col-form-label">Abstrakt <span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
-                                    {{ form.abstract }}
+                                    {{ form.abstract|safe }}
                                 </div>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                                 <label class="col-md-3 col-sm-3 col-form-label">Adabiyotlar <span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
-                                    {{ form.references }}
+                                    {{ form.references|safe }}
                                 </div>
                             </div>
                         </div>

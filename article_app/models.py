@@ -1,8 +1,7 @@
-from operator import mod
 from django.db import models
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
+
 
 class Category(models.Model):
     name = models.CharField(_('Nomi'), max_length=150)
@@ -24,10 +23,10 @@ def user_directory_path(instance, filename):
 
 class Article(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya", blank=True, null=True)
-    title =  RichTextField(blank=True, null=True)
-    abstract =RichTextField(blank=True, null=True)
+    title = RichTextField(blank=True, null=True)
+    abstract = RichTextField(blank=True, null=True)
     keywords = RichTextField(blank=True, null=True)
-    references =  RichTextField(blank=True, null=True)
+    references = RichTextField(blank=True, null=True)
     author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE,
                                related_name="article_author")
     editor = models.ForeignKey('user_app.User', verbose_name='Taxrirchi', on_delete=models.CASCADE, blank=True,
@@ -40,7 +39,7 @@ class Article(models.Model):
     payed = models.BooleanField(default=True)
     state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit",
                                    blank=True,
-                                   null=True )
+                                   null=True)
     state_analysis = models.ForeignKey('user_app.State', on_delete=models.CASCADE, blank=True,
                                        null=True,
                                        related_name="article_state_analysis")
