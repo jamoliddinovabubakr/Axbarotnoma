@@ -2,18 +2,18 @@
 {% load static %}
 {% load pages_tags %}
 {% block title %}
-    Maqolalarim
+    Jurnallar
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
         <!-- begin breadcrumb -->
         <ol class="breadcrumb float-xl-right">
             <li class="breadcrumb-item"><a href="javascript:;">Bosh sahifa</a></li>
-            <li class="breadcrumb-item active">Mening maqolalarim</li>
+            <li class="breadcrumb-item active">Jurnallar</li>
         </ol>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header">Mening maqolalarim </h1>
+        <h1 class="page-header">Jurnallar</h1>
         <!-- end page-header -->
 
         <!-- begin panel -->
@@ -21,7 +21,7 @@
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #b4b4b4">
                 <h4 class="panel-title">
-                    <button href="{% url 'create_article' %}" data-toggle="modal"
+                    <button href="{% url 'create_magazine' %}" data-toggle="modal"
                             class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
                     </button>
                 </h4>
@@ -74,28 +74,34 @@
                         <thead>
                         <tr class="text-center">
                             <th width="1%">Tr</th>
-                            <th>Soha</th>
-                            <th>Mavzu</th>
+                            <th>Jurnal yili</th>
+                            <th>Jurnal soni</th>
                             <th>Yaratilgan vaqt</th>
+                            <th>Maqola aftori</th>
                             <th>Holat</th>
                             <th width="1%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% if p_n != 0 %}
-                            {% for my_article in page.object_list %}
+                            {% for magazine in page.object_list %}
                                 <tr class="text-center">
                                     <td id="counter_ar">{{ forloop.counter0|add:page.start_index }}</td>
-                                    <td>{{ my_article.category.name }}</td>
-                                    <td>{{ my_article.title|safe }}</td>
-                                    <td>{{ my_article.created_at }}</td>
-                                     <td><span class="badge {% if my_article.state_edit.id == 1 %} badge-indigo {% elif my_article.state_edit.id == 2 %} badge-success {% elif my_article.state_edit.id == 3 %} badge-warning {% endif%}" style="font-size: 10px;">{{ my_article.state_edit.name }}</span></td>
+                                    <td>{{ magazine.year_magazine }}</td>
+                                    <td>{{ magazine.number_magazine }}</td>
+                                    <td>{{ magazine.created_at }}</td>
+                                    <td>
+                                        {% for article in magazine.article.all %}
+                                        <span>{{ forloop.counter }}. {{ article.title }}</span>
+                                        {% endfor %}
+                                    </td>
+                                     <td><span class="badge {% if magazine.status %} badge-success {% else %} badge-warning {% endif%}" style="font-size: 10px;">{{ magazine.status }}</span></td>
                                     <td class="with-btn" nowrap>
-                                        <a href="{% url 'update_my_article' my_article.id %}" title="O'zgartirish"
+                                        <a href="#" title="O'zgartirish"
                                            data-toggle="tooltip"
                                            style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
 
-                                        <a href="{% url 'delete_myarticle' my_article.id %}" title="O'chirish"
+                                        <a href="#" title="O'chirish"
                                            data-toggle="tooltip"
                                            class="userModal"
                                            style="color: #f83333"><i

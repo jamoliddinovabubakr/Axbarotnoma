@@ -14,13 +14,23 @@
     <!-- ================== END BASE CSS STYLE ================== -->
 
 </head>
-<body>
+<body style="background-color: #F8F9FC">
 {% include 'article_app/includes/navbar.html' %}
 {% include 'article_app/includes/banner.html' %}
+<div class="content">
+	<div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                {% include 'article_app/includes/left_sidebar.html' %}
+            </div>
+            <div class="col-lg-9">
+                {% block content %}
 
-{% block content %}
-
-{% endblock content %}
+                {% endblock content %}
+            </div>
+        </div>
+    </div>
+</div>
 {% include 'article_app/includes/footer.html' %}
 
 <!-- ================== BEGIN BASE JS ================== -->

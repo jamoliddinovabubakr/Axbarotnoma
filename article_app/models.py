@@ -48,6 +48,7 @@ class Article(models.Model):
 
     # url = models.SlugField(max_length=200, unique=True)
 
+
     def __str__(self):
         return self.title
 
@@ -104,6 +105,9 @@ class Magazine(models.Model):
     article = models.ManyToManyField('Article', related_name='articles', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
+
+    def get_articles(self):
+        return [p.title for p in self.article.all()]
 
     def __str__(self):
         return str(self.number_magazine)

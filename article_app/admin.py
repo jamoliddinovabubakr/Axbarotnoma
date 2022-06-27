@@ -30,4 +30,4 @@ class AuthorsAdmin(admin.ModelAdmin):
 
 @admin.register(Magazine)
 class MagazineAdmin(admin.ModelAdmin):
-    list_display = ['id', 'number_magazine', 'year_magazine', 'created_at', 'status']
+    list_display = ['id', 'number_magazine', 'year_magazine', 'get_articles', 'created_at', 'status']

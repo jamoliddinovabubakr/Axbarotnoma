@@ -1,0 +1,27 @@
+{%load static %}
+{%load pages_tags %}
+ <div class="card card-forum">
+    <div class="card-header f-w-600">Jurnal</div>
+    <!-- begin threads-list -->
+    <ul class="threads-list">
+        {% get_last_articles as articles%}
+        {% for article in articles%}
+        <li>
+               <h4 class="title"> <a href="{{ get_absolute_url }}">{{ article.title|safe }}</a></h4>
+        </li>
+        {% endfor%}
+    </ul>
+</div>
+<br>
+<div class="card card-forum">
+    <div class="card-header f-w-600">So'ngi maqolalar</div>
+    <!-- begin threads-list -->
+    <ul class="threads-list">
+        {% get_last_articles as articles%}
+        {% for article in articles%}
+        <li>
+               <h4 class="title"> <a href="{{ get_absolute_url }}">{{ article.title|safe }}</a></h4>
+        </li>
+        {% endfor%}
+    </ul>
+</div>

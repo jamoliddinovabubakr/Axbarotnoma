@@ -3,9 +3,9 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 
 from user_app.decorators import allowed_users
-from .models import Article, Category, Authors
+from .models import Article, Category, Authors, Magazine
 from user_app.models import User, State
-from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm
+from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm
 from django.core.paginator import Paginator
 
 
@@ -166,7 +166,7 @@ def delete_myarticle(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Masters', 'Admins'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def get_category(request):
     categories = Category.objects.all()
     context = {
@@ -176,7 +176,7 @@ def get_category(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Masters', 'Admins'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def create_category(request):
     if request.method == "POST":
         form = CreateCategoryForm(request.POST)
@@ -192,7 +192,7 @@ def create_category(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Masters', 'Admins'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def edit_category(request, pk):
     category = Category.objects.get(pk=pk)
     if request.method == "POST":
@@ -210,7 +210,7 @@ def edit_category(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Masters', 'Admins'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def delete_category(request, pk):
     category = Category.objects.get(pk=pk)
     if request.method == "POST":
@@ -218,3 +218,81 @@ def delete_category(request, pk):
         return redirect('get_category')
     else:
         return render(request, 'article_app/crud/delete_category.html', {'category': category})
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+def create_magazine(request):
+    user = request.user
+    if request.method == "POST":
+        form = CreateMagazineForm(request.POST)
+        if form.is_valid():
+            magazine = form.save(commit=False)
+            magazine.save()
+            jurnalId = magazine.id
+            return redirect('edit_magazine', pk=jurnalId)
+    else:
+        context = {
+            'form': CreateMagazineForm(),
+            'user': user,
+        }
+        return render(request, "article_app/crud/create_magazine.html", context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+def edit_magazine(request, pk):
+    jurnal = Magazine.objects.get(pk=pk)
+    if request.method == "POST":
+        form = UpdateMagazineForm(request.POST, instance=jurnal)
+        if form.is_valid():
+            ob = form.save(commit=False)
+            ob.save()
+            return redirect('get_magazines')
+    else:
+        context = {
+            'form': UpdateMagazineForm(instance=jurnal),
+            'jurnal': jurnal,
+        }
+        return render(request, "article_app/crud/edit_magazine.html", context=context)
+
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+def get_magazines(request):
+    search = request.GET.get('search')
+    n_show = request.GET.get('n_show')
+
+    if search is None:
+        magazines = Magazine.objects.all()
+        search = ''
+    else:
+        magazines = Magazine.objects.filter(
+            Q(number_magazine__icontains=search) | Q(category__name__icontains=search)
+        )
+
+    if n_show is None:
+        n_show = 10
+
+    if n_show == '0':
+        n_show = magazines.count()
+
+    paginator = Paginator(magazines, int(n_show))
+    page_num = request.GET.get('page')
+    page = paginator.get_page(page_num)
+    p_n = paginator.count
+    page_count = page.paginator.page_range
+
+    if n_show == p_n:
+        n_show = 0
+
+    context = {
+        'magazines': magazines,
+        'page_count': page_count,
+        'page': page,
+        'p_n': p_n,
+        'search': search,
+        'n_show': int(n_show),
+    }
+    return render(request, "article_app/magazines.html", context=context)

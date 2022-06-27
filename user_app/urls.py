@@ -6,7 +6,7 @@ from .views import login_page, logout_user, register_page, profile_page, change_
     update_user, \
     delete_user, edit_menu, delete_menu, edit_gender, delete_gender, edit_role, delete_role, edit_state, \
     delete_state, get_states, edit_region, delete_region, edit_district, delete_district, create_gender, \
-    create_role, create_state, create_district, create_region, get_notifications, view_notification
+    create_role, create_state, create_district, create_region, get_notifications, view_notification, reject_article, confirm_article
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -25,6 +25,8 @@ urlpatterns = [
 
     path('notifications/', get_notifications, name='notifications'),
     path('notifications/view/<int:pk>/', view_notification, name='view_notification'),
+    path('notifications/reject/<int:pk>/', reject_article, name='reject_article'),
+    path('notifications/confirm/<int:pk>/', confirm_article, name='confirm_article'),
 
     path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),

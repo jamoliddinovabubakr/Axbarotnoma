@@ -42,9 +42,6 @@
                     <table>
                         <br>
                         <tr>
-                            <td> {{ notification.article.title|safe }}</td>
-                        </tr>
-                        <tr>
                             <td><strong>Aftorlar:</strong></td>
                         </tr>
                         {% for author in authors %}
@@ -53,6 +50,7 @@
                             </td>
                         </tr>
                         {% endfor%}
+                        <tr><td><hr></td></tr>
                         <tr><td><img src="{% static 'img/word.png' %}" alt="word" width="50"/> </td></tr>
                         <tr><td><a class="btn btn-primary" href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a></td></tr>
                     </table>
@@ -84,19 +82,11 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4"><a href="{% url 'notifications'%}" class="btn btn-warning">Orqaga</a></div>
                 <div class="col-md-4">
-                    <a class="btn btn-danger" id="cancel_state">Rad etish</a>
-                    <a class="btn btn-success" id="success_state">Tasdiqlash</a>
+                    <a href="{% url 'reject_article' notification.article.id %}" class="btn btn-danger" id="cancel_state">Rad etish</a>
+                    <a href="{% url 'confirm_article' notification.article.id %}" class="btn btn-success" id="success_state">Tasdiqlash</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
-       document.getElementById("cancel_state").addEventListener("click", function() {
-        
-      });
-      document.getElementById("success_state").addEventListener("click", function() {
-        alert("Hello World!");
-      });
-    </script>
 {% endblock%}

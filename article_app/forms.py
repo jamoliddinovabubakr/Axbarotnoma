@@ -1,6 +1,9 @@
+from dataclasses import fields
+from operator import mod
+from xmlrpc.client import Boolean
 from django import forms
-from django.forms import Select, DateInput, PasswordInput, TextInput, Textarea, FileInput, NumberInput
-from .models import Article, Category, Authors
+from django.forms import CheckboxInput, Select, DateInput, PasswordInput, TextInput, Textarea, FileInput, NumberInput, BooleanField, SelectMultiple
+from .models import Article, Category, Authors, Magazine
 
 
 class CreateArticleForm(forms.ModelForm):
@@ -129,4 +132,51 @@ class CreateCategoryForm(forms.ModelForm):
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
+        }
+
+
+class CreateMagazineForm(forms.ModelForm):
+    class Meta:
+        model = Magazine
+        fields = ['number_magazine', 'year_magazine']
+
+        widgets = {
+            'year_magazine': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'number_magazine': NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+
+        }
+
+
+class UpdateMagazineForm(forms.ModelForm):
+    class Meta:
+        model = Magazine
+        fields = ['number_magazine', 'year_magazine', 'article', 'status']
+
+        widgets = {
+            'year_magazine': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'number_magazine': NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'article': SelectMultiple(attrs={
+                'class': 'form-control',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+
         }
