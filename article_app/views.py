@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 
 from user_app.decorators import allowed_users
-from .models import Article, Category, Authors, Magazine
+from .models import Article, Category, Authors, Magazine, Post
 from user_app.models import User, State
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm
 from django.core.paginator import Paginator
@@ -11,10 +11,17 @@ from django.core.paginator import Paginator
 
 def main_page(request):
     context = {
-        'menus': '',
+        'post': Post.objects.last(),
     }
     return render(request, "article_app/main.html", context=context)
 
+
+def post_detail(request, slug):
+    context = {
+        'post': Post.objects.get(url=slug),
+    }
+    return render(request, "article_app/post_detail.html", context=context)
+    
 
 @login_required(login_url='login')
 def my_articles(request):
@@ -246,8 +253,8 @@ def edit_magazine(request, pk):
     if request.method == "POST":
         form = UpdateMagazineForm(request.POST, instance=jurnal)
         if form.is_valid():
-            ob = form.save(commit=False)
-            ob.save()
+            form.save()
+            # ob.save()
             return redirect('get_magazines')
     else:
         context = {

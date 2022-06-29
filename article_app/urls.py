@@ -1,9 +1,12 @@
 from django.urls import path, include, re_path
 from .views import main_page, my_articles, create_article, update_my_article, add_author, edit_author, delete_author, \
-    delete_myarticle, get_category, edit_category, delete_category, create_category, create_magazine, get_magazines, edit_magazine
+    delete_myarticle, get_category, edit_category, delete_category, create_category, create_magazine, get_magazines, edit_magazine, post_detail
 
 urlpatterns = [
     path('', main_page, name='main_page'),
+    path('<slug:slug>/', post_detail, name='post_detail'),
+
+
     path('articles/', my_articles, name='my_articles'),
     path('article/create', create_article, name='create_article'),
     path('article/edit/<int:pk>/', update_my_article, name='update_my_article'),
@@ -21,4 +24,5 @@ urlpatterns = [
     path('category/create/', create_category, name='create_category'),
     path('category/edit/<int:pk>/', edit_category, name='edit_category'),
     path('category/delete/<int:pk>/', delete_category, name='delete_category'),
+
 ]

@@ -1,6 +1,11 @@
+from operator import mod
+from pyexpat import model
+from turtle import title
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
+from django.urls import reverse
+from django.template.defaultfilters import slugify
 
 
 class Category(models.Model):
@@ -44,6 +49,7 @@ class Article(models.Model):
                                        null=True,
                                        related_name="article_state_analysis")
     created_at = models.DateTimeField(auto_now_add=True)
+    is_publish = models.BooleanField(default=False)
     status = models.BooleanField(default=False)
 
     # url = models.SlugField(max_length=200, unique=True)
@@ -115,3 +121,30 @@ class Magazine(models.Model):
     class Meta:
         verbose_name = _("Magazine")
         verbose_name_plural = _("Magazines")
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+    tag = RichTextField(blank=True, null=True)
+    img = models.ImageField(upload_to='blog/')
+    desc = RichTextField(blank=True, null=True)
+    is_publish = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    url = models.SlugField(max_length=200, null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse("post_detail", kwargs={"slug": self.url})
+
+    def save(self, *args, **kwargs):
+        if not self.url:
+            self.url = slugify(self.title, allow_unicode=True)
+        return super().save(*args, **kwargs)
+
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = _("Elon")
+        verbose_name_plural = _("Elonlar")

@@ -8,7 +8,7 @@
                 <li class="{% if url_name == menu.url %} active {% endif %}">
                     <a href="{{ menu.get_absolute_url }}">
                         {% if menu.id == 16 %}
-                        <span class="badge pull-right">10</span>
+                        <span class="badge pull-right">+10</span>
                         {% endif %}
                         <i class="material-icons">{{ menu.icon }}</i>
                         <span>{{ menu.name }}</span>
@@ -35,4 +35,4 @@
             {% endif %}
         {% endfor %}
     </ul>
-{% endwith %}
+{% endwith %} 

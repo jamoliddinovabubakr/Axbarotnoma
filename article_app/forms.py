@@ -173,10 +173,11 @@ class UpdateMagazineForm(forms.ModelForm):
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
-            'article': SelectMultiple(attrs={
-                'class': 'form-control',
-                'placeholder': "Enter...",
-                'data - parsley - required': "true",
-            }),
+            # 'article': SelectMultiple(attrs={
+            #     'class': 'form-control',
+            #     'name': 'services',
+            #     'placeholder': "Enter...",
+            #     'data - parsley - required': "true",
+            # }),
 
         }

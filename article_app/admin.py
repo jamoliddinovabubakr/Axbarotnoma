@@ -1,5 +1,5 @@
 from django.contrib import admin
-from article_app.models import Category, Article, Shartnoma, Authors, Page, Magazine
+from article_app.models import Category, Article, Shartnoma, Authors, Page, Magazine, Post
 
 
 @admin.register(Category)
@@ -17,10 +17,16 @@ class PageAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'value']
 
 
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'tag', 'desc', 'img', 'is_publish', 'created_at']
+    prepopulated_fields = {'url': ('title', )}
+
+
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ['id', 'category', 'title', 'editor', 'analyst',
-                    'file', 'state_edit', 'state_analysis', 'created_at', 'status', 'payed']
+                    'file', 'state_edit', 'state_analysis', 'created_at', 'status', 'payed', 'is_publish']
 
 
 @admin.register(Authors)

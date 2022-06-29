@@ -61,7 +61,12 @@ Jurnal ma'lumotlarini o'zgartirish
                                 <label class="col-md-3 col-sm-3 col-form-label">Maqolalarni tanlash <span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
-                                    {{ form.article }}
+                                    {% comment %} {{ form.article }} {% endcomment %}
+                                    <select id="id_article" name="article" multiple="multiple" class="form-control">
+                                {% for id, name in form.fields.article.choices %}
+                                    <option value="{{ id }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
                                 </div>
                             </div>
                         </div>
