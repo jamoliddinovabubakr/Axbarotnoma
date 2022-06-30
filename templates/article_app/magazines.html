@@ -97,9 +97,15 @@
                                     </td>
                                      <td><span class="badge {% if magazine.status %} badge-success {% else %} badge-warning {% endif%}" style="font-size: 10px;">{{ magazine.status }}</span></td>
                                     <td class="with-btn" nowrap>
+                                        <a href="{% url 'view_user' user.pk %}" title="Ko'rish" class="userModal"
+                                        data-toggle="tooltip"
+                                        style="color: #0188d0">
+                                         <i class="fas  fa-fw m-r-15 fa-eye"></i>
+                                     </a>
+
                                         <a href="#" title="O'zgartirish"
-                                           data-toggle="tooltip"
-                                           style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
+                                        data-toggle="tooltip"
+                                        style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
 
                                         <a href="#" title="O'chirish"
                                            data-toggle="tooltip"

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Magazine, Post
@@ -17,8 +17,9 @@ def main_page(request):
 
 
 def post_detail(request, slug):
+    post = get_object_or_404(Post, url=slug)
     context = {
-        'post': Post.objects.get(url=slug),
+        'post': post,
     }
     return render(request, "article_app/post_detail.html", context=context)
     

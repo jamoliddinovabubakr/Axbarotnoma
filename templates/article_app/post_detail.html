@@ -1,0 +1,18 @@
+{% extends 'article_app/base.html' %}
+{% load static %}
+{% block title %}
+Bosh sahifa
+{% endblock %}
+{% block content %}	
+<div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
+	<div class="container">
+		<br>
+		<center><h4 class="title">{{post.title}}</h2></center>
+			<br>
+			<center><img src="{{ post.img.url}}"  width="200" height="300" alt="" /></center>
+		<p>{{ post.desc|safe }}</p>
+		<br>
+		<hr>
+	</div>		
+</div>
+{% endblock %}

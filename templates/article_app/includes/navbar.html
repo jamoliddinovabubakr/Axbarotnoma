@@ -6,31 +6,26 @@
         <!-- begin navbar-brand -->
         <a href="/">
         <img src="{% static 'img/Logo.png' %}" alt=""  width="100"/></a>
-            <span  style="text-transform: uppercase; margin-left: 1em; font-family: FontSemibold, serif; text-align: center; display: table-cell; vertical-align: middle;">
+            <span  style="text-transform: uppercase; margin-left: 1em; font-family: Roboto,sans-serif; text-align: center; display: table-cell; vertical-align: middle;">
                 <b>O‘zbekiston Respublikasi<br> Vazirlar Mahkamasi huzuridagi<br> Davlat test markazi</b>
 			</span>
-        
-        
-        <!-- end navbar-brand -->
-        <!-- begin navbar-toggle -->
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <!-- end navbar-toggle -->
-        <!-- begin #header-navbar -->
+
         <div class="collapse navbar-collapse" id="header-navbar">
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">Bosh sahifa</a></li>
+                <li><a href="#">Jurnal haqida</a></li>
+                <li><a href="#">Maqolalar</a></li>
+                <li><a href="#">Talabnoma</a></li>
+                <li><a href="#">Bog'lanish</a></li>
                 {% if request.user.is_authenticated %}
                     <li class="dropdown navbar-user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                             <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>
-                            <span class="d-none d-md-inline">{{ request.user.last_name }} {{ request.user.first_name }}  </span>
+                             {% comment %} <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/> {% endcomment %}
+                            <span class="d-none d-md-inline">{{ request.user.last_name }} {{ request.user.first_name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="{% url 'profile_page' %}" class="dropdown-item"><i
-                                    class="icon-pencil  p-r-10"></i><span>Profil</span></a>
+                                    class="icon-pencil  p-r-10"></i><span>Shaxsiy kabinet</span></a>
                             <a href="{% url 'logout' %}" class="dropdown-item"><i class="icon-logout  p-r-10"></i><span>Chiqish</span></a>
                         </div>
                     </li>
