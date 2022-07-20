@@ -1,0 +1,29 @@
+{% extends 'article_app/base.html' %}
+{% load static %}
+{% block title %}
+Bog'lanish
+{% endblock %}
+{% block content %}
+<div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
+	<div class="container">
+		<br>
+		<center><h4 class="title">Bog'lanish</h2></center>
+			<br>
+			<pre> Tel: (+998 71) 235-74-85
+
+			 t/me: nsfla_uz
+			
+			 E-mail: nafl@dtm.uz
+			
+			 Fax: (+998 71) 234-71-84
+			
+			 12 Bogishamol street, Tashkent city, 100084
+			
+			 Monday - Friday 10.00 - 17.00
+			
+			 Lunch time 13.00 - 14.00</pre>
+		{% include 'article_app/includes/social_buttons.html' %}
+	</div>		
+</div>
+<br>
+{% endblock content %}

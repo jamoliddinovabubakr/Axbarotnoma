@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import mod
 from pyexpat import model
 from turtle import title
@@ -108,6 +109,7 @@ class Page(models.Model):
 class Magazine(models.Model):
     number_magazine = models.PositiveBigIntegerField(default=0, unique=True)
     year_magazine = models.CharField(max_length=4, blank=True)
+    img = models.ImageField(upload_to='jurnal/', default='jurnal_ob.png')
     article = models.ManyToManyField('Article', related_name='articles', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
@@ -148,3 +150,17 @@ class Post(models.Model):
         ordering = ['-id']
         verbose_name = _("Elon")
         verbose_name_plural = _("Elonlar")
+
+
+class BlankPage(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+    body = RichTextField(blank=True, null=True)
+    is_publish = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = _("BlankPage")
+        verbose_name_plural = _("BlankPages")

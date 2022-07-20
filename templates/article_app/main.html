@@ -12,16 +12,8 @@ Bosh sahifa
 			<center><img src="{{ post.img.url}}"  width="200" height="300" alt="" /></center>
 		<p>{{ post.tag|safe }}</p>
 		<a href="{{ post.get_absolute_url }}" class="btn btn-outline-success">Batafsil>></a>
-		<br>
-		<hr>
-		<h6><b>Ijtimoiy tarmoqlardagi rasmiy sahifalarimiz</b></h6>
-		<div class="clearfix m-b-20">
-			<a href="javascript:;" class="btn btn-social-icon btn-facebook pull-left m-r-5 m-b-5"><span class="fab fa-facebook"></span></a>
-			<a href="javascript:;" class="btn btn-social-icon btn-twitter pull-left m-r-5 m-b-5"><span class="fab fa-telegram"></span></a>
-			<a href="javascript:;" class="btn btn-social-icon btn-google pull-left m-r-5 m-b-5"><span class="fab fa-instagram"></span></a>
-			<a href="javascript:;" class="btn btn-social-icon btn-linkedin pull-left m-r-5 m-b-5"><span class="fab fa-linkedin"></span></a>
-			<a href="javascript:;" class="btn btn-social-icon btn-twitter pull-left m-r-5 m-b-5"><span class="fab fa-twitter"></span></a>
-		</div>
+		{% include 'article_app/includes/social_buttons.html' %}
 	</div>		
 </div>
+<br>
 {% endblock %}

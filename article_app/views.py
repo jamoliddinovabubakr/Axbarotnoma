@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
-from .models import Article, Category, Authors, Magazine, Post
+from .models import Article, Category, Authors, Magazine, Post, BlankPage
 from user_app.models import User, State
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm
 from django.core.paginator import Paginator
@@ -304,3 +304,26 @@ def get_magazines(request):
         'n_show': int(n_show),
     }
     return render(request, "article_app/magazines.html", context=context)
+
+
+
+def about_journal(request):
+    journal_ab = BlankPage.objects.get(id=1)
+    return render(request, "article_app/about_journal.html", {
+        "ob": journal_ab
+    })
+
+
+def talabnoma(request):
+    talabnoma = BlankPage.objects.get(id=2)
+    return render(request, "article_app/talabnoma.html", {
+        "ob": talabnoma
+    })
+
+
+def magazine_detail(request, pk):
+    magazine = get_object_or_404(Magazine, pk=pk)
+    context = {
+        'magazine': magazine
+    }
+    return render(request, "article_app/magazine_detail.html", context=context)

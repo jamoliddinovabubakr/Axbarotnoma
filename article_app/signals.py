@@ -1,9 +1,6 @@
-from ast import Not
-from tkinter.messagebox import NO
-from turtle import title
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from django.shortcuts import get_object_or_404
+
 
 from .models import Article
 from user_app.models import Notification

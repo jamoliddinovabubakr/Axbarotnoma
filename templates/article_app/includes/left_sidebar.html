@@ -7,7 +7,7 @@
         {% get_jurnals as jurnals%}
         {% for jurnal in jurnals%}
         <li>
-               <h4 class="title"> <a href="{{ get_absolute_url }}">{{ jurnal.year_magazine }}.{{ jurnal.number_magazine}}</a></h4>
+               <h4 class="title"> <a href="{% url 'view_magazine' jurnal.id %}">{{ jurnal.year_magazine }}.{{ jurnal.number_magazine}}</a></h4>
         </li>
         {% endfor%}
     </ul>
@@ -25,3 +25,4 @@
         {% endfor%}
     </ul>
 </div>
+<br>
