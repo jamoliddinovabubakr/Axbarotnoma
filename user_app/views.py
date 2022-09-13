@@ -1,3 +1,4 @@
+from article_app.models import Magazine
 from user_app.Controller.user import *
 from user_app.Controller.register import *
 from user_app.Controller.menu import *
@@ -13,7 +14,16 @@ from user_app.Controller.notification import *
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHLILCHI'])
 # @admin_only
 def profile_page(request):
-    context = {}
+    tasdiqlanganlar = Article.objects.filter(state_edit=3)
+    tasdiqlanmaganlar = Article.objects.filter(state_edit=2)
+    kutish_jarayonida = Article.objects.filter(state_edit=1)
+    jurnallar = Magazine.objects.all()
+    context = {
+        'tasdiqlanganlar': tasdiqlanganlar.count,
+        'tasdiqlanmaganlar': tasdiqlanmaganlar.count,
+        'kutish_jarayonida': kutish_jarayonida.count,
+        'jurnallar': jurnallar.count,
+    }
     return render(request, "user_app/cabinet_page.html", context=context)
 
 

@@ -36,7 +36,7 @@ class AuthorsAdmin(admin.ModelAdmin):
 
 @admin.register(Magazine)
 class MagazineAdmin(admin.ModelAdmin):
-    list_display = ['id', 'number_magazine', 'year_magazine', 'get_articles', 'created_at', 'status']
+    list_display = ['id', 'number_magazine', 'year_magazine', 'get_articles', 'file_pdf', 'created_at', 'status']
 
 
 @admin.register(BlankPage)

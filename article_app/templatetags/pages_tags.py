@@ -17,7 +17,7 @@ def get_last_articles():
 
 @register.simple_tag()
 def get_jurnals():
-    jurnals = Magazine.objects.all().order_by('-id')
+    jurnals = Magazine.objects.all().order_by('-id')[:10]
     return jurnals
 
 @register.simple_tag()

@@ -7,11 +7,14 @@ from .models import Article, Category, Authors, Magazine, Post, BlankPage
 from user_app.models import User, State
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm
 from django.core.paginator import Paginator
+from article_app.merge_multiple_word_files import combine_all_docx
 
 
 def main_page(request):
+    post = Post.objects.last()
+   
     context = {
-        'post': Post.objects.last(),
+        'post': post,
     }
     return render(request, "article_app/main.html", context=context)
 
@@ -251,11 +254,25 @@ def create_magazine(request):
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def edit_magazine(request, pk):
     jurnal = Magazine.objects.get(pk=pk)
+
     if request.method == "POST":
-        form = UpdateMagazineForm(request.POST, instance=jurnal)
+        form = UpdateMagazineForm(request.POST, request.FILES, instance=jurnal)
         if form.is_valid():
+
+            choosen_article = form.cleaned_data['article']
+            print(choosen_article.values('file'))
+
+            A = []
+
+            for i in choosen_article:
+                if i.file:
+                    A.append(i.file.path)
+
+            combine_all_docx(A[0], A)
+            ob = form.save(commit=False)
+            ob.file_pdf = f"C:\\Django\\axborotnomadtm\\media\\combined_file.docx"
             form.save()
-            # ob.save()
+
             return redirect('get_magazines')
     else:
         context = {
@@ -263,7 +280,6 @@ def edit_magazine(request, pk):
             'jurnal': jurnal,
         }
         return render(request, "article_app/crud/edit_magazine.html", context=context)
-
 
 
 @login_required(login_url='login')
@@ -327,3 +343,11 @@ def magazine_detail(request, pk):
         'magazine': magazine
     }
     return render(request, "article_app/magazine_detail.html", context=context)
+
+
+def all_magazine_son(request):
+    magazines = Magazine.objects.all()
+    context = {
+        'magazines': magazines
+    }
+    return render(request, "article_app/all_magazine_son.html", context=context)

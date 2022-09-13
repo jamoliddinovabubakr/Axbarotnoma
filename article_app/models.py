@@ -22,14 +22,13 @@ class Category(models.Model):
         verbose_name_plural = _("Kategoriyalar")
 
 
-def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
-    return 'files/user_{0}/{1}'.format(instance.author.id, filename)
+# def user_directory_path(instance, filename):
+#     return 'files/user_{0}/{1}'.format(instance.author.id, filename)
 
 
 class Article(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya", blank=True, null=True)
-    title = RichTextField(blank=True, null=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
     abstract = RichTextField(blank=True, null=True)
     keywords = RichTextField(blank=True, null=True)
     references = RichTextField(blank=True, null=True)
@@ -41,7 +40,7 @@ class Article(models.Model):
     analyst = models.ForeignKey('user_app.User', verbose_name='Tahlilchi', on_delete=models.CASCADE, blank=True,
                                 null=True,
                                 related_name="article_analyst")
-    file = models.FileField(_("Fayl"), upload_to=user_directory_path, max_length=255)
+    file = models.FileField(_("Fayl"), upload_to="files/articles/", max_length=255)
     payed = models.BooleanField(default=True)
     state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit",
                                    blank=True,
@@ -107,6 +106,7 @@ class Page(models.Model):
 
 
 class Magazine(models.Model):
+    file_pdf = models.FileField(_("Fayl"), upload_to="files/jurnals/", max_length=255, blank=True, null=True)
     number_magazine = models.PositiveBigIntegerField(default=0, unique=True)
     year_magazine = models.CharField(max_length=4, blank=True)
     img = models.ImageField(upload_to='jurnal/', default='jurnal_ob.png')
@@ -147,7 +147,6 @@ class Post(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-id']
         verbose_name = _("Elon")
         verbose_name_plural = _("Elonlar")
 

@@ -27,13 +27,13 @@ def get_allow_menus(role_id: int = None):
 
 
 @register.simple_tag()
+def get_editor_notifications():
+    notifications = Notification.objects.order_by("-created_at").filter(status='Unread')
+    return notifications
+
+
+@register.simple_tag()
 def get_sub_menus():
     menus = Menu.objects.filter(type_menu=2).filter(
         pk__in=get_sub_menus_id).filter(status=True).order_by('menu_tr')
     return menus
-
-
-@register.simple_tag()
-def get_editor_notifications():
-    notifications = Notification.objects.order_by("-created_at").filter(status='Unread')
-    return notifications

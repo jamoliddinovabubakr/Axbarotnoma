@@ -59,8 +59,6 @@ urlpatterns = [
     path('regions/edit/<int:pk>', edit_region, name='edit_region'),
     path('regions/delete/<int:pk>', delete_region, name='delete_region'),
 
-    path('edit_profile', edit_profile, name='edit_profile'),
-
     path('password_reset/', password_reset, name='password_reset'),
     path('password_reset/done/',
          auth_views.PasswordResetDoneView.as_view(

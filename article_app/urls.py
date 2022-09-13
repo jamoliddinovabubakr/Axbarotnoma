@@ -2,13 +2,14 @@ from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 from .views import main_page, my_articles, create_article, update_my_article, add_author, edit_author, delete_author, \
     delete_myarticle, get_category, edit_category, delete_category, create_category, create_magazine, get_magazines, edit_magazine, post_detail, about_journal, \
-    talabnoma, magazine_detail
+    talabnoma, magazine_detail, all_magazine_son
 
 urlpatterns = [
     path('', main_page, name='main_page'),
     path('about_journal/', about_journal, name='about_journal'),
     path('talabnoma/', talabnoma, name='talabnoma'),
-    path('contact/', TemplateView.as_view(template_name="contact.html"), name='contact'),
+    path('all_magazines/', all_magazine_son, name='all_magazine_son'),
+    path('contact/', TemplateView.as_view(template_name="article_app/contact.html"), name='contact'),
     path('post/<slug:slug>/', post_detail, name='post_detail'),
 
 

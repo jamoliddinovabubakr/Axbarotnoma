@@ -7,11 +7,13 @@ Bosh sahifa
 <div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
 	<div class="container">
 		<br>
-		<center><h4 class="title">{{post.title}}</h2></center>
-			<br>
-			<center><img src="{{ post.img.url}}"  width="200" height="300" alt="" /></center>
-		<p>{{ post.tag|safe }}</p>
-		<a href="{{ post.get_absolute_url }}" class="btn btn-outline-success">Batafsil>></a>
+		{% if post %}
+			<center><h4 class="title">{{post.title}}</h4></center>
+			<i class="fas fa-md fa-fw m-r-10 fa-calendar-alt"></i><span class="text-inverse">{{ post.created_at }}</span><br><br>
+			<center><img src="{{ post.img.url}}"   width="100%" alt="" /></center>
+			<p>{{ post.tag|safe }}</p>
+			<a href="{{ post.get_absolute_url }}" class="btn btn-outline-success">Batafsil>></a>
+		{% endif %}
 		{% include 'article_app/includes/social_buttons.html' %}
 	</div>		
 </div>

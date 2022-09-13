@@ -1,0 +1,36 @@
+{% extends 'article_app/base.html' %}
+{% load static %}
+{% block title %}
+Barcha jurnallar soni
+{% endblock %}
+{% block content %}
+<div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
+	<div class="container">
+		<br>
+		<center><h4 class="title">Barcha jurnallar soni</h2></center>
+			<br>
+                <div class="row">
+                {% for item in magazines%}
+                {% if item.article.count > 0 %}
+                    <!-- begin col-3 -->
+                    <div class="col-xl-3 col-sm-6">
+                        <!-- begin card -->
+                        <div class="card border-0">
+                            <img class="card-img-top" src="{% static 'img/jurnal_ob.png' %}" alt="" />
+                            <div class="card-body">
+                                <center><a href="{% url 'view_magazine' item.id %}">{{item.year_magazine }} № {{ item.number_magazine }}</a></center>
+                            </div>
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col-3 -->
+               
+                {% endif %}
+                {% endfor %}
+                </div>
+            <br>
+		{% include 'article_app/includes/social_buttons.html' %}
+	</div>		
+</div>
+<br>
+{% endblock content %}

@@ -64,7 +64,7 @@ Jurnal ma'lumotlarini o'zgartirish
                                     {% comment %} {{ form.article }} {% endcomment %}
                                     <select id="id_article" name="article" multiple="multiple" class="form-control">
                                 {% for id, name in form.fields.article.choices %}
-                                    <option value="{{ id }}">{{ name }}</option>
+                                    <option value="{{ id }}">{{ name|safe }}</option>
                                 {% endfor %}
                             </select>
                                 </div>
@@ -73,14 +73,13 @@ Jurnal ma'lumotlarini o'zgartirish
                         
                         <div class="col-md-6">
                             <div class="form-group row m-b-15">
-                                <label class="col-md-3 col-sm-3 col-form-label">Status <span
+                                <label class="col-md-3 col-sm-3 col-form-label">Status<span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-9 col-sm-9">
                                     {{ form.status}}
                                 </div>
                             </div>
                         </div>
-
                         <button type="submit" style="float: right;"
                         class="btn btn btn-success">Saqlash
                 </button>
