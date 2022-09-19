@@ -1,0 +1,43 @@
+{% extends 'article_app/base.html' %}
+{% load static %}
+{% block title %} Tahririyat kengashi {% endblock %}
+{% block content %}
+<div class="row"
+     style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
+    <div class="container">
+        <br>
+        <center><h5 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif;">Tahririyat kengashi</h5></center>
+        <br>
+        <h5 style="color: #197017; font-family: Tahoma, Helvetica, Arial, Sans-Serif; FONT-VARIANT:small-caps;">Bosh Muharrir</h5>
+        <p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">
+            <a href="#" style="color:black;"><b>Baratov Akmal</b></a>,  Davlat test markazi huzuridagi Ilmiy-o'quv amaliy markazi boshlig'i.
+        </p>
+
+        <h5 style="color: #197017; font-family: Tahoma, Helvetica, Arial, Sans-Serif; FONT-VARIANT:small-caps;">Yordamchi Muharrirlar</h5>
+         <p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">
+            <a href="#" style="color:black;"><b>Normurodov Asror</b></a>,  Davlat test markazi huzuridagi Ilmiy-o'quv amaliy markazi xodimi.<br>
+            <a href="#" style="color:black;"><b>Ergashev Bexruz</b></a>, Davlat test markazi xodimi.<br>
+            <a href="#" style="color:black;"><b>Xakimov Salim</b></a>,  Davlat test markazi xodimi.<br>
+            <a href="#" style="color:black;"><b>Salimov Hakim</b></a>,  Davlat test markazi xodimi.<br>
+        </p>
+
+         <p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">
+            <b>Technical Editors:</b> Boboyev Orziqul Mirzoyevich<br>
+            <b>Language Editor:</b> Shakarov Zoxid Kolboyevich <br>
+            <b>Design:</b> M. Moskal', A. Shvaika<br>
+        </p>
+
+        <h5 style="color: #197017; font-family: Tahoma, Helvetica, Arial, Sans-Serif; FONT-VARIANT:small-caps;">Editorial Office:</h5>
+         <p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">
+            O'zbekiston Respublikasi Vazirlar mahkamasi Davlat test markazi,<br>
+             Toshkent shahri, Bog'ishamol ko'chasi 12-uy.<br>
+             <b>Rasmiy websayt:</b><a href="https://dtm.uz/"> dtm.uz</a><br>
+             <b>Call Center:</b><a href="https://dtm.uz/"> 1195</a>
+        </p>
+
+        {% include 'article_app/includes/social_buttons.html' %}
+    </div>
+</div>
+<br>
+
+{% endblock content %}

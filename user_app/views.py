@@ -14,9 +14,9 @@ from user_app.Controller.notification import *
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHLILCHI'])
 # @admin_only
 def profile_page(request):
-    tasdiqlanganlar = Article.objects.filter(state_edit=3)
-    tasdiqlanmaganlar = Article.objects.filter(state_edit=2)
-    kutish_jarayonida = Article.objects.filter(state_edit=1)
+    tasdiqlanganlar = Article.objects.filter(state=3)
+    tasdiqlanmaganlar = Article.objects.filter(state=2)
+    kutish_jarayonida = Article.objects.filter(state=1)
     jurnallar = Magazine.objects.all()
     context = {
         'tasdiqlanganlar': tasdiqlanganlar.count,

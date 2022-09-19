@@ -20,7 +20,6 @@ from user_app.forms import CreateUserForm
 
 @unauthenticated_user
 def login_page(request):
-    errors = ''
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -29,7 +28,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('main_page')
+            return redirect('profile_page')
         else:
             errors = messages.info(request, 'login yoki parol xato')
             return redirect('login')

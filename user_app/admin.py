@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Permission
-from user_app.models import Role, Region, District, Gender, State, User, Notification, Menu
+from user_app.models import Role, Region, District, Gender, State, User, Notification, Menu, Step
 
 
 @admin.register(Permission)
@@ -15,6 +15,11 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(State)
 class StateAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'status']
+
+
+@admin.register(Step)
+class StepAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'status']
 
 

@@ -107,6 +107,14 @@ class State(models.Model):
         return self.name
 
 
+class Step(models.Model):
+    name = models.CharField(max_length=100, default=None)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Menu(models.Model):
     name = models.CharField(max_length=100)
     parent_id = models.PositiveIntegerField(default=0)

@@ -22,8 +22,8 @@ class Category(models.Model):
         verbose_name_plural = _("Kategoriyalar")
 
 
-# def user_directory_path(instance, filename):
-#     return 'files/user_{0}/{1}'.format(instance.author.id, filename)
+def user_directory_path(instance, filename):
+    return 'files/user_{0}/{1}'.format(instance.author.id, filename)
 
 
 class Article(models.Model):
@@ -40,17 +40,21 @@ class Article(models.Model):
     analyst = models.ForeignKey('user_app.User', verbose_name='Tahlilchi', on_delete=models.CASCADE, blank=True,
                                 null=True,
                                 related_name="article_analyst")
-    file = models.FileField(_("Fayl"), upload_to="files/articles/", max_length=255)
+    file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True,)
+    file_pdf = models.FileField(_("PDF Fayl"), upload_to=user_directory_path, max_length=255, blank=True, null=True)
     payed = models.BooleanField(default=True)
-    state_edit = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state_edit",
+    state = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state",
                                    blank=True,
                                    null=True)
-    state_analysis = models.ForeignKey('user_app.State', on_delete=models.CASCADE, blank=True,
+    step_bosh_muharrir = models.ForeignKey('user_app.Step', on_delete=models.CASCADE, blank=True,
                                        null=True,
-                                       related_name="article_state_analysis")
+                                       related_name="article_step_boshm")
+    step_taqriz = models.ForeignKey('user_app.Step', on_delete=models.CASCADE, blank=True,
+                                       null=True,
+                                       related_name="article_step_taq")
     created_at = models.DateTimeField(auto_now_add=True)
-    is_publish = models.BooleanField(default=False)
-    status = models.BooleanField(default=False)
+    is_publish = models.BooleanField(default=True)
+    status = models.BooleanField(default=True)
 
     # url = models.SlugField(max_length=200, unique=True)
 
@@ -62,22 +66,13 @@ class Article(models.Model):
     #     return reverse("article_detail", kwargs={"slug": self.url})
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['id']
         verbose_name = _("Maqola")
         verbose_name_plural = _("Maqolalar")
 
 
-class Shartnoma(models.Model):
-    name = models.CharField(max_length=255, null=True, blank=True)
-    body = RichTextField(blank=True, null=True)
-    status = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Authors(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
     first_name = models.CharField(_("Ism"), max_length=255)
     last_name = models.CharField(_("Familiya"), max_length=255)
     middle_name = models.CharField(_("Sharif"), max_length=255, blank=True, null=True)
@@ -91,6 +86,28 @@ class Authors(models.Model):
     class Meta:
         verbose_name = _("Aftor")
         verbose_name_plural = _("Aftorlar")
+
+
+class MyResendArticle(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
+    file_word = models.FileField(_("Word Fayl"), upload_to='files/', max_length=255, blank=True,)
+    message = models.CharField(_("Xabar"), max_length=255, blank=True, null=True)
+    state = models.ForeignKey('user_app.State', on_delete=models.CASCADE,
+                                   blank=True,
+                                   null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.article.id)
+
+
+class Shartnoma(models.Model):
+    name = models.CharField(max_length=255, null=True, blank=True)
+    body = RichTextField(blank=True, null=True)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Page(models.Model):

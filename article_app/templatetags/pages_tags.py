@@ -1,5 +1,5 @@
 from django import template
-from article_app.models import Page, Article, Magazine, Post
+from article_app.models import Page, Magazine, Post
 
 register = template.Library()
 
@@ -10,15 +10,11 @@ def get_pages():
     return pages
 
 
-@register.simple_tag()
-def get_last_articles():
-    articles = Article.objects.all()[:5]
-    return articles
-
-@register.simple_tag()
-def get_jurnals():
-    jurnals = Magazine.objects.all().order_by('-id')[:10]
-    return jurnals
+# @register.simple_tag()
+# def get_jurnals():
+#     jurnals = Magazine.objects.all().order_by('-id')[:10]
+#     return jurnals
+#
 
 @register.simple_tag()
 def get_last_posts():

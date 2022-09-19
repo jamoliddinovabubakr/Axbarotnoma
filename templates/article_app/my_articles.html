@@ -21,9 +21,7 @@
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #b4b4b4">
                 <h4 class="panel-title">
-                    <button href="{% url 'create_article' %}" data-toggle="modal"
-                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
-                    </button>
+                    DTM
                 </h4>
                 <div class="panel-heading-btn">
                     <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
@@ -78,7 +76,8 @@
                             <th>Mavzu</th>
                             <th>Yaratilgan vaqt</th>
                             <th>Holat</th>
-                            <th width="1%">Actions</th>
+                            <th>Publish</th>
+                            <th width="1%">PDF fayl</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -87,25 +86,18 @@
                                 <tr class="text-center">
                                     <td id="counter_ar">{{ forloop.counter0|add:page.start_index }}</td>
                                     <td>{{ my_article.category.name }}</td>
-                                    <td>{{ my_article.title|safe }}</td>
+                                    <td>{{ my_article.title}}</td>
                                     <td>{{ my_article.created_at }}</td>
-                                     <td><span class="badge {% if my_article.state_edit.id == 1 %} badge-indigo {% elif my_article.state_edit.id == 2 %} badge-success {% elif my_article.state_edit.id == 3 %} badge-warning {% endif%}" style="font-size: 10px;">{{ my_article.state_edit.name }}</span></td>
+                                    <td><span  class="badge badge-success" style="font-size: 10px;">{{ my_article.state.name }}</span></td>
+                                    <td><span  class="badge {% if my_article.is_publish %} badge-success {% else %} badge-warning {% endif %}" style="font-size: 10px;">{{ my_article.is_publish }}</span></td>
                                     <td class="with-btn" nowrap>
-                                        <a href="{% url 'update_my_article' my_article.id %}" title="O'zgartirish"
-                                           data-toggle="tooltip"
-                                           style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
-
-                                        <a href="{% url 'delete_myarticle' my_article.id %}" title="O'chirish"
-                                           data-toggle="tooltip"
-                                           class="userModal"
-                                           style="color: #f83333"><i
-                                                class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>
+                                        <i class="fas fa-file-pdf"></i> ...<a href="#">Yuklab olish</a>
                                     </td>
                                 </tr>
                             {% endfor %}
                         {% endif %}
                         {% if p_n == 0 %}
-                            <tr class="text-center"><td class="panel-warning" colspan="5"><h2 style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No elements.</h2></td></tr>
+                            <tr class="text-center"><td class="panel-warning" colspan="7"><h2 style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No elements.</h2></td></tr>
                         {% endif %}
                         </tbody>
                     </table>

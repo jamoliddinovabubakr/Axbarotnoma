@@ -1,19 +1,19 @@
 {%load static %}
 {%load pages_tags %}
 <div class="card card-forum" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
-    <div class="card-header f-w-600">Elonlar</div>
+    <div class="card-header f-w-600" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">Elonlar</div>
     <ul class="threads-list">
         {% get_last_posts as posts%}
         {% for post in posts %}
         <li>
-               <h4 class="title"><a href="{{ post.get_absolute_url }}">{{ post.title|safe }}</a></h4>
+               <h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="{{ post.get_absolute_url }}">{{ post.title|safe }}</a></h4>
         </li>
         {% endfor%}
     </ul>
 </div>
 <br>
 <div class="card card-forum" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
-    <div class="card-header f-w-600">Kalendar</div>
+    <div class="card-header f-w-600" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">Kalendar</div>
     <div class="panel panel-inverse" data-sortable-id="index-10" style="background-color: white; margin-left: 1em;">
         <div class="panel-body">
             <div id="datepicker-inline" class="datepicker-full-width overflow-y-scroll position-relative"><div></div></div>

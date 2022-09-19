@@ -72,7 +72,7 @@ class UpdateArticleForm(forms.ModelForm):
 class AddAuthorForm(forms.ModelForm):
     class Meta:
         model = Authors
-        fields = ['first_name', 'last_name', 'middle_name', 'email', 'article', 'work_place', 'author_order']
+        fields = ['article', 'first_name', 'last_name', 'middle_name', 'email', 'work_place', 'author_order']
 
         widgets = {
             'first_name': TextInput(attrs={

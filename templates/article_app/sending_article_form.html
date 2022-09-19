@@ -1,0 +1,97 @@
+{% extends 'user_app/base.html' %}
+{% load static %}
+{% block title %}
+    Maqolalarim
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <!-- begin breadcrumb -->
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">Bosh sahifa</a></li>
+            <li class="breadcrumb-item active">Maqola yuborish</li>
+        </ol>
+        <!-- end breadcrumb -->
+        <!-- begin page-header -->
+        <h1 class="page-header">Maqola yuborish</h1>
+        <!-- end page-header -->
+
+        <!-- begin panel -->
+        <div class="panel panel-default" data-sortable-id="table-basic-7">
+            <!-- begin panel-heading -->
+            <div class="panel-heading" style="background-color: #FFFFFF">
+                <h4 class="panel-title">
+                    <button href="{% url 'create_article' %}" data-toggle="modal"
+                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Yangi maqola yuborish
+                    </button>
+                    {% if is_have %}
+                        <button  {% if last_article.state.id == 3 %} disabled {% endif %} href="{% url 'create_article' %}" data-toggle="modal"
+                            class="addUser btn btn-warning btn-sm"><i class="fa fa-spinner mr-1"></i>Qayta maqola yuborish
+                        </button>
+                    {% endif %}
+                    
+                </h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body">
+                <!-- begin table-responsive -->
+                <div class="table-responsive">
+                    <table
+                            class="table table-td-valign-middle table-hover">
+                        <thead>
+                        <tr class="text-center">
+                            <th>ID</th>
+                            <th>Mavzu</th>
+                            <th>Fayl</th>
+                            <th>Birinchi yuborilgan</th>
+                            <th>Qayta yuborilgan</th>
+                            <th>Holat</th>
+                            <th>Xabar</th>
+                            <th width="1%">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in get_mylast_article %}
+                                <tr class="text-center">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ item.article.title}}</td>
+                                    <td>{{ item.file_word.url }}</td>
+                                    <td>{{ item.article.created_at }}</td>
+                                    <td>{{ item.created_at }}</td>
+                                    <td><span  {% if item.state.id == 4 %} title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" {% endif %} class="badge {% if item.state.id == 1 %} badge-indigo {% elif item.state.id == 3 %} badge-success {% elif item.state.id == 2 %} badge-danger {% elif item.state.id == 4 %} badge-warning {% endif%}" style="font-size: 10px;">{{ item.state.name }}</span></td>
+                                    <td>
+                                        {% if item.message is None %} Xabar yo'q {% else %} <a href="#" title="Xabarni ochish uchun ustiga bosing" data-toggle="tooltip">Xabar bor>></a> {% endif %}
+                                    </td>
+                                    <td class="with-btn" nowrap>
+                                        <a href="{% url 'update_my_article' item.id %}" title="O'zgartirish"
+                                           data-toggle="tooltip"
+                                           style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
+
+
+                                        <a href="{% url 'delete_myarticle' item.id %}" title="O'chirish"
+                                           data-toggle="tooltip"
+                                           class="userModal"
+                                           style="color: #f83333"><i
+                                                class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end table-responsive -->
+            </div>
+            <!-- end panel-body -->
+        </div>
+        <!-- end panel -->
+    </div>
+{% endblock %}
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

@@ -1,37 +1,17 @@
 {%load static %}
-{%load pages_tags %}
- <div class="card card-forum" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
-    <div class="card-header f-w-600">Jurnallar</div>
-    <!-- begin threads-list -->
-    <ul class="threads-list">
-        {% get_jurnals as jurnals %}
-        {% for jurnal in jurnals%}
-        {% if jurnal.article.count > 0 %}
-        <li>
-               <h4 class="title"> <a href="{% url 'view_magazine' jurnal.id %}">Axborotnoma {{ jurnal.year_magazine }} № {{ jurnal.number_magazine}}</a></h4>
-        </li>
-        {% endif %}
-        {% endfor%}
-    </ul>
-    
-    <div class="card-header">
-        <a href="{% url 'all_magazine_son' %}">Barchasini ko'rish>></a>
-    </div>
+<div class="card card-forum">
+    <img src="{% static 'img/jurnal_ob.png' %}" alt="">
 </div>
 <br>
 <div class="card card-forum" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
-    <div class="card-header f-w-600">So'ngi maqolalar</div>
+    <div class="card-header f-w-600" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">Qo'llanmalar</div>
     <ul class="threads-list">
-        {% get_last_articles as articles%}
-        {% if articles.count > 0%}
-        {% for article in articles%}
-        <li>
-            <h4 class="title"> <a href="{{ get_absolute_url }}">{{ article.title }}</a></h4>
-        </li>
-        {% endfor%}
-        {% else %}
-        <li>No article</li>
-        {% endif %}
+        <li><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="/">Asosiy</a></h4></li>
+        <li><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="{% url 'aboutdtm' %}">DTM haqida</a></h4></li>
+        <li><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="{% url 'editor_board' %}">Tahririyat kengashi</a></h4></li>
+        <li><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="{% url 'all_magazine_son' %}">Jurnallar ro'yxati</a></h4></li>
+        <li><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="{% url 'talabnoma' %}">Mualliflar uchun ko'rsatmalar</a></h4></li>
+        <li><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="{% url 'my_articles' %}">Maqolani yuborish</a></h4></li>
     </ul>
 </div>
 <br>

@@ -34,7 +34,7 @@ def view_notification(request, pk):
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def reject_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
-    article.state_edit = State.objects.get(pk=2)
+    article.state = State.objects.get(pk=2)
     article.save()
     return redirect('notifications')
 
@@ -43,6 +43,6 @@ def reject_article(request, pk):
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def confirm_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
-    article.state_edit = State.objects.get(pk=3)
+    article.state = State.objects.get(pk=3)
     article.save()
     return redirect('notifications')

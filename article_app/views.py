@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
-from .models import Article, Category, Authors, Magazine, Post, BlankPage
+from .models import Article, Category, Authors, Magazine, Post, BlankPage, MyResendArticle
 from user_app.models import User, State
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm
 from django.core.paginator import Paginator
@@ -12,7 +12,6 @@ from article_app.merge_multiple_word_files import combine_all_docx
 
 def main_page(request):
     post = Post.objects.last()
-   
     context = {
         'post': post,
     }
@@ -34,7 +33,9 @@ def my_articles(request):
     n_show = request.GET.get('n_show')
 
     if search is None:
-        get_my_articles = Article.objects.filter(author=user)
+        get_my_articles = Article.objects.filter(author=user).filter(
+            Q(state__id=2) | Q(state__id=3)
+        )
         search = ''
     else:
         get_my_articles = Article.objects.filter(author=user).filter(
@@ -100,11 +101,12 @@ def create_article(request):
 def update_my_article(request, pk):
     article = Article.objects.get(pk=pk)
     authors = Authors.objects.filter(article=article)
+
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
             ob = form.save(commit=False)
-            ob.state_edit = State.objects.get(pk=1)
+            ob.state = State.objects.get(pk=4)
             ob.save()
             return redirect('my_articles')
     else:
@@ -118,6 +120,26 @@ def update_my_article(request, pk):
         return render(request, "article_app/crud/update_article.html", context=context)
 
 
+
+@login_required(login_url='login')
+def sending_article_form(request):
+    is_have = False
+    user = request.user
+    last_article = Article.objects.filter(author=user).last()
+    print(last_article)
+    
+    get_mylast_article = MyResendArticle.objects.filter(article=last_article)
+    if get_mylast_article:
+        is_have=True
+    print(get_mylast_article)
+    context = {
+        'get_mylast_article': get_mylast_article,
+        'is_have': is_have,
+        'last_article': last_article,
+    }
+    return render(request, "article_app/sending_article_form.html", context=context)
+
+
 @login_required(login_url='login')
 def add_author(request, pk):
     user = request.user
@@ -125,8 +147,7 @@ def add_author(request, pk):
     if request.method == "POST":
         form = AddAuthorForm(request.POST)
         if form.is_valid():
-            author = form.save(commit=False)
-            author.save()
+            form.save()
             return redirect('update_my_article', pk=pk)
     else:
         context = {
@@ -137,14 +158,16 @@ def add_author(request, pk):
         return render(request, "article_app/crud/add_authors.html", context=context)
 
 
+
 @login_required(login_url='login')
 def edit_author(request, pk):
     author = Authors.objects.get(pk=pk)
+    article = Article.objects.filter(extra_autjhor__id=pk)
     if request.method == "POST":
         form = AddAuthorForm(request.POST, instance=author)
         if form.is_valid():
             form.save()
-            return redirect('update_my_article', pk=author.article.id)
+            return redirect('update_my_article', pk=article.id)
         else:
             return redirect('profile')
     else:
@@ -258,19 +281,7 @@ def edit_magazine(request, pk):
     if request.method == "POST":
         form = UpdateMagazineForm(request.POST, request.FILES, instance=jurnal)
         if form.is_valid():
-
             choosen_article = form.cleaned_data['article']
-            print(choosen_article.values('file'))
-
-            A = []
-
-            for i in choosen_article:
-                if i.file:
-                    A.append(i.file.path)
-
-            combine_all_docx(A[0], A)
-            ob = form.save(commit=False)
-            ob.file_pdf = f"C:\\Django\\axborotnomadtm\\media\\combined_file.docx"
             form.save()
 
             return redirect('get_magazines')
@@ -320,7 +331,6 @@ def get_magazines(request):
         'n_show': int(n_show),
     }
     return render(request, "article_app/magazines.html", context=context)
-
 
 
 def about_journal(request):

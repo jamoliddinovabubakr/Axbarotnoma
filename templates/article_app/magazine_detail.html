@@ -1,29 +1,26 @@
 {% extends 'article_app/base.html' %}
 {% load static %}
 {% block title %}
-Axborotnoma {% if magazine.article.count > 0 %} {{ magazine.year_magazine }} № {{ magazine.number_magazine }} {% endif %}
+DTM Axborotnoma {% if magazine.article.count > 0 %} {{ magazine.year_magazine }} № {{ magazine.number_magazine }} {% endif %}
 {% endblock %}
 {% block content %}
 <div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
 	<div class="container">
 		<br>
 		{% if magazine.article.count > 0 %}
-			<center><h4 class="title">Axborotnoma {{ magazine.year_magazine }} № {{ magazine.number_magazine }}</h2></center>
+			<center><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif;">DTM Axborotnoma {{ magazine.year_magazine }} № {{ magazine.number_magazine }}</h4></center>
 			<br>
-			<i class="fas fa-md fa-fw m-r-10 fa-calendar-alt"></i><span class="text-inverse">{{ magazine.created_at }}</span><br><br>
+			<i class="fas fa-md fa-fw m-r-10 fa-calendar-alt"></i><span class="text-inverse" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">{{ magazine.created_at }}</span><br><br>
 			<center><img src="{{ magazine.img.url}}"  width="200" height="300" alt=""/></center><br>
-			<center><h4 class="title">Mavzular</h2></center>
-			<ul class="list-group">
+			<hr>
 				{% for item in magazine.article.all %}
-					<li class="list-group-item d-flex justify-content-between align-items-center">{{ forloop.counter }}. {{ item.title }}<span 
-						class="badge badge-primary badge-pill">{{ item.author.last_name }} {{ item.author.first_name }} 
-						{% if item.author.middle_name %} {{ item.author.middle_name }} {% endif %}</span></li>
+					<p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a href="#">{{ forloop.counter }}. {{ item.title }}</a></p>
+					<p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><b>Aftorlar:</b><br>{{ item.author.last_name }} {{ item.author.first_name }} {% if item.author.middle_name %} {{ item.author.middle_name }} {% endif %}</p>
+					<p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">To'liq matn [<a href="{{ item.file.url }}">pdf</a>]</p>
+					<hr>
 				{% endfor %}
-			</ul>
-			<br>
-			<button class="btn btn-md btn-outline-warning">Yuklab olish</button>
 		{% else %}
-		<center><h4 class="title" style="color: red;">Jurnal mavjud emas! </center>
+		<center><h4 class="title" style="color: red;">Jurnal mavjud emas!</h4></center>
 		{% endif %}
 		{% include 'article_app/includes/social_buttons.html' %}
 	</div>		
