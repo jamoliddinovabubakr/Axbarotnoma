@@ -23,11 +23,6 @@
                     <button href="{% url 'create_article' %}" data-toggle="modal"
                             class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Yangi maqola yuborish
                     </button>
-                    {% if is_have %}
-                        <button  {% if last_article.state.id == 3 %} disabled {% endif %} href="{% url 'create_article' %}" data-toggle="modal"
-                            class="addUser btn btn-warning btn-sm"><i class="fa fa-spinner mr-1"></i>Qayta maqola yuborish
-                        </button>
-                    {% endif %}
                     
                 </h4>
                 <div class="panel-heading-btn">
@@ -43,21 +38,20 @@
                 <!-- begin table-responsive -->
                 <div class="table-responsive">
                     <table
-                            class="table table-td-valign-middle table-hover">
+                        class="table table-td-valign-middle table-hover">
                         <thead>
-                        <tr class="text-center">
+                        <tr class="text-center" style="background-color: #F5F5F5;">
                             <th>ID</th>
                             <th>Mavzu</th>
                             <th>Fayl</th>
                             <th>Birinchi yuborilgan</th>
                             <th>Qayta yuborilgan</th>
                             <th>Holat</th>
-                            <th>Xabar</th>
                             <th width="1%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                            {% for item in get_mylast_article %}
+                            {% for item in get_mylast_articles %}
                                 <tr class="text-center">
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ item.article.title}}</td>
@@ -65,10 +59,12 @@
                                     <td>{{ item.article.created_at }}</td>
                                     <td>{{ item.created_at }}</td>
                                     <td><span  {% if item.state.id == 4 %} title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" {% endif %} class="badge {% if item.state.id == 1 %} badge-indigo {% elif item.state.id == 3 %} badge-success {% elif item.state.id == 2 %} badge-danger {% elif item.state.id == 4 %} badge-warning {% endif%}" style="font-size: 10px;">{{ item.state.name }}</span></td>
-                                    <td>
-                                        {% if item.message is None %} Xabar yo'q {% else %} <a href="#" title="Xabarni ochish uchun ustiga bosing" data-toggle="tooltip">Xabar bor>></a> {% endif %}
-                                    </td>
                                     <td class="with-btn" nowrap>
+                                        {% if is_have %}
+                                        <a  {% if last_resend.state.id != 5 %} disabled {% endif %} title="Qayta yuborish" href="{% url 'resend_article' last_article.pk %}" data-toggle="tooltip"
+                                            class="btn btn-warning btn-xs"><i class="fa fa-spinner mr-1"></i>
+                                        </a>
+                                        {% endif %}
                                         <a href="{% url 'update_my_article' item.id %}" title="O'zgartirish"
                                            data-toggle="tooltip"
                                            style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
@@ -79,6 +75,11 @@
                                            class="userModal"
                                            style="color: #f83333"><i
                                                 class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <img src="{% static 'img/message.png' %}" width="50"> <b>Xabar: </b>{% if item.message is None %} Sizga xabar yo'q. {% else %} {{ item.message }}{% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

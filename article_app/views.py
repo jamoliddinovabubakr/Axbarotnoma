@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Magazine, Post, BlankPage, MyResendArticle
 from user_app.models import User, State
-from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm
+from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm, CreateMyResendArticleForm
 from django.core.paginator import Paginator
 from article_app.merge_multiple_word_files import combine_all_docx
 
@@ -105,8 +105,9 @@ def update_my_article(request, pk):
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
+            state = State.objects.get(pk=4)
             ob = form.save(commit=False)
-            ob.state = State.objects.get(pk=4)
+            ob.state = state
             ob.save()
             return redirect('my_articles')
     else:
@@ -120,22 +121,48 @@ def update_my_article(request, pk):
         return render(request, "article_app/crud/update_article.html", context=context)
 
 
+@login_required(login_url='login')
+def resend_article(request, pk):
+    article = Article.objects.get(pk=pk)
+    authors = Authors.objects.filter(article=article)
+
+    if request.method == "POST":
+        form = CreateMyResendArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            state = State.objects.get(pk=4)
+            ob = form.save(commit=False)
+            ob.state = state
+            article.state = state
+            article.save()
+            ob.save()
+            return redirect('sending_article_form')
+    else:
+        context = {
+            'form': CreateMyResendArticleForm(),
+            'authors': authors,
+            'article': article,
+        }
+        return render(request, "article_app/crud/resendform.html", context=context)
+
+
+
 
 @login_required(login_url='login')
 def sending_article_form(request):
     is_have = False
     user = request.user
     last_article = Article.objects.filter(author=user).last()
-    print(last_article)
     
-    get_mylast_article = MyResendArticle.objects.filter(article=last_article)
-    if get_mylast_article:
+    get_mylast_articles = MyResendArticle.objects.filter(article=last_article)
+    last_resend = get_mylast_articles.last()
+    if get_mylast_articles:
         is_have=True
-    print(get_mylast_article)
+
     context = {
-        'get_mylast_article': get_mylast_article,
+        'get_mylast_articles': get_mylast_articles,
         'is_have': is_have,
         'last_article': last_article,
+        'last_resend': last_resend,
     }
     return render(request, "article_app/sending_article_form.html", context=context)
 
@@ -162,12 +189,11 @@ def add_author(request, pk):
 @login_required(login_url='login')
 def edit_author(request, pk):
     author = Authors.objects.get(pk=pk)
-    article = Article.objects.filter(extra_autjhor__id=pk)
     if request.method == "POST":
         form = AddAuthorForm(request.POST, instance=author)
         if form.is_valid():
             form.save()
-            return redirect('update_my_article', pk=article.id)
+            return redirect('update_my_article', pk=author.article.id)
         else:
             return redirect('profile')
     else:

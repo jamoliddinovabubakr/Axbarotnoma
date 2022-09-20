@@ -3,7 +3,7 @@ from operator import mod
 from xmlrpc.client import Boolean
 from django import forms
 from django.forms import CheckboxInput, Select, DateInput, PasswordInput, TextInput, Textarea, FileInput, NumberInput, BooleanField, SelectMultiple
-from .models import Article, Category, Authors, Magazine
+from .models import Article, Category, Authors, Magazine, MyResendArticle
 
 
 class CreateArticleForm(forms.ModelForm):
@@ -25,6 +25,13 @@ class CreateArticleForm(forms.ModelForm):
                 'data - parsley - required': "true",
             }),
         }
+
+
+
+class CreateMyResendArticleForm(forms.ModelForm):
+    class Meta:
+        model = MyResendArticle
+        fields = ['article', 'file_word']
 
 
 class UpdateArticleForm(forms.ModelForm):
