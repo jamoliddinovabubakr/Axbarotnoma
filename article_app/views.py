@@ -109,6 +109,14 @@ def update_my_article(request, pk):
             ob = form.save(commit=False)
             ob.state = state
             ob.save()
+
+            MyResendArticle.objects.create(
+                article=article,
+                file_word=ob.file,
+                message='Maqolangiz 14 ish kunida ko\'rib chiqladi.',
+                state=state,
+            )
+
             return redirect('my_articles')
     else:
         file_name = str(article.file.name).split('/')[-1]
@@ -123,11 +131,12 @@ def update_my_article(request, pk):
 
 @login_required(login_url='login')
 def resend_article(request, pk):
-    article = Article.objects.get(pk=pk)
+    last_resend = MyResendArticle.objects.get(pk=pk)
+    article = Article.objects.get(pk=last_resend.article.pk)
     authors = Authors.objects.filter(article=article)
 
     if request.method == "POST":
-        form = CreateMyResendArticleForm(request.POST, request.FILES)
+        form = CreateMyResendArticleForm(request.POST, request.FILES, instance=last_resend)
         if form.is_valid():
             state = State.objects.get(pk=4)
             ob = form.save(commit=False)
@@ -151,10 +160,11 @@ def resend_article(request, pk):
 def sending_article_form(request):
     is_have = False
     user = request.user
+
     last_article = Article.objects.filter(author=user).last()
-    
     get_mylast_articles = MyResendArticle.objects.filter(article=last_article)
     last_resend = get_mylast_articles.last()
+
     if get_mylast_articles:
         is_have=True
 

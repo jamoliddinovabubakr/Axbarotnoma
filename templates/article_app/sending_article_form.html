@@ -51,6 +51,7 @@
                         </tr>
                         </thead>
                         <tbody>
+                            {% if is_have %}
                             {% for item in get_mylast_articles %}
                                 <tr class="text-center">
                                     <td>{{ forloop.counter }}</td>
@@ -58,19 +59,19 @@
                                     <td>{{ item.file_word.url }}</td>
                                     <td>{{ item.article.created_at }}</td>
                                     <td>{{ item.created_at }}</td>
-                                    <td><span  {% if item.state.id == 4 %} title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" {% endif %} class="badge {% if item.state.id == 1 %} badge-indigo {% elif item.state.id == 3 %} badge-success {% elif item.state.id == 2 %} badge-danger {% elif item.state.id == 4 %} badge-warning {% endif%}" style="font-size: 10px;">{{ item.state.name }}</span></td>
+                                    <td><span  {% if item.state.id == 4 %} title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" {% endif %} class="badge {% if item.state.id == 1 %} badge-indigo
+                                         {% elif item.state.id == 3 %} badge-success {% elif item.state.id == 2 %} badge-danger {% elif item.state.id == 4 %} badge-warning {% endif%}" style="font-size: 10px;">{{ item.state.name }}</span></td>
                                     <td class="with-btn" nowrap>
-                                        {% if is_have %}
-                                        <a  {% if last_resend.state.id != 5 %} disabled {% endif %} title="Qayta yuborish" href="{% url 'resend_article' last_article.pk %}" data-toggle="tooltip"
+                                            <a  {% if item.state.id != 5 %} hidden {% endif %} title="Qayta yuborish" href="{% url 'resend_article' item.pk %}" data-toggle="tooltip"
                                             class="btn btn-warning btn-xs"><i class="fa fa-spinner mr-1"></i>
-                                        </a>
-                                        {% endif %}
-                                        <a href="{% url 'update_my_article' item.id %}" title="O'zgartirish"
+                                            </a>
+                                        
+                                            <a href="{% url 'update_my_article' item.id %}"  title="O'zgartirish"
                                            data-toggle="tooltip"
                                            style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
 
 
-                                        <a href="{% url 'delete_myarticle' item.id %}" title="O'chirish"
+                                            <a href="{% url 'delete_myarticle' item.id %}" title="O'chirish"
                                            data-toggle="tooltip"
                                            class="userModal"
                                            style="color: #f83333"><i
@@ -83,6 +84,11 @@
                                     </td>
                                 </tr>
                             {% endfor %}
+                            {% else %}
+                            <tr class="text-center">
+                               <td colspan="7">No article</td>
+                            </tr>
+                            {% endif %}
                         
                         </tbody>
                     </table>

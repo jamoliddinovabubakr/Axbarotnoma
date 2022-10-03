@@ -1,6 +1,7 @@
 {% load static %}
 {% load menu_tag %}
 {% get_editor_notifications as notifications %}
+
 <div id="header" class="header navbar-default">
     <!-- begin navbar-header -->
     <div class="navbar-header">
@@ -22,7 +23,7 @@
     <ul class="navbar-nav d-flex flex-grow-1">
         <li class="navbar-form flex-grow-1"></li>
         <li class="dropdown">
-{% if request.user.role.id == 2 or request.user.role.id == 4 or request.user.role.id == 1 %}
+    {% if request.user.role.id == 2 or request.user.role.id == 4 or request.user.role.id == 1 %}
             <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                 <i class="fa fa-bell"></i>
                 <span class="label label-primary">{{ notifications.count }}</span>
@@ -38,8 +39,8 @@
                         <i class="fab fa-facebook-messenger text-blue media-object-icon"></i>
                     </div>
                     <div class="media-body">
-                        <h6 class="media-heading">{{ notif.article.author.last_name }} {{ notification.article.author.first_name }}</h6>
-                        <p>{{ notif.title}}.</p>
+                        <h6 class="media-heading">{{ notif.article.author.last_name }} {{ notif.article.author.first_name }}</h6>
+                        {% comment %} <p>{{ notif.title}}.</p> {% endcomment %}
                         <div class="text-muted f-s-12">{{ notif.created_at}}</div>
                     </div>
                 </a>

@@ -31,7 +31,7 @@ class CreateArticleForm(forms.ModelForm):
 class CreateMyResendArticleForm(forms.ModelForm):
     class Meta:
         model = MyResendArticle
-        fields = ['article', 'file_word']
+        fields = ['file_word']
 
 
 class UpdateArticleForm(forms.ModelForm):

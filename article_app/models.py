@@ -98,7 +98,7 @@ class MyResendArticle(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.article.id)
+        return str(self.article)
 
 
 class Shartnoma(models.Model):
