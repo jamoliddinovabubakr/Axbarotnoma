@@ -16,7 +16,7 @@
         <!-- end page-header -->
 
         <!-- begin panel -->
-        <div class="panel panel-default" data-sortable-id="table-basic-7">
+        <div class="panel panel-default" data-sortable-id="table-basic-7" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #FFFFFF">
                 <h4 class="panel-title">
@@ -38,7 +38,7 @@
                 <!-- begin table-responsive -->
                 <div class="table-responsive">
                     <table
-                        class="table table-td-valign-middle table-hover">
+                        class="table table-td-valign-middle table-hover table-bordered">
                         <thead>
                         <tr class="text-center" style="background-color: #F5F5F5;">
                             <th>ID</th>
@@ -56,20 +56,23 @@
                                 <tr class="text-center">
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ item.article.title}}</td>
-                                    <td>{{ item.file_word.url }}</td>
+                                    <td>{{ item.file_word }}</td>
                                     <td>{{ item.article.created_at }}</td>
                                     <td>{{ item.created_at }}</td>
-                                    <td><span  {% if item.state.id == 4 %} title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" {% endif %} class="badge {% if item.state.id == 1 %} badge-indigo
-                                         {% elif item.state.id == 3 %} badge-success {% elif item.state.id == 2 %} badge-danger {% elif item.state.id == 4 %} badge-warning {% endif%}" style="font-size: 10px;">{{ item.state.name }}</span></td>
+                                    <td>
+                                        <span  {% if item.state.id == 4 %} title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" {% endif %} class="badge {% if item.state.id == 1 %} badge-indigo
+                                         {% elif item.state.id == 3 %} badge-success {% elif item.state.id == 2 %} badge-danger {% elif item.state.id == 4 %} badge-warning {% endif%}" style="font-size: 10px;">{{ item.state.name }}
+                                        </span>
+                                    </td>
                                     <td class="with-btn" nowrap>
-                                            <a  {% if item.state.id != 5 %} hidden {% endif %} title="Qayta yuborish" href="{% url 'resend_article' item.pk %}" data-toggle="tooltip"
-                                            class="btn btn-warning btn-xs"><i class="fa fa-spinner mr-1"></i>
-                                            </a>
+                                        <a  {% if item.state.id != 5 %} hidden {% endif %} title="Qayta yuborish" href="{% url 'resend_article' item.pk %}" data-toggle="tooltip"
+                                            class="btn btn-warning btn-xs"><i class="fa fa-spinner mr-1"></i></a>
                                         
-                                            <a href="{% url 'update_my_article' item.id %}"  title="O'zgartirish"
+                                           {% if item.state.name == "Yuborildi" %}
+                                           <a href="{% url 'update_my_article' item.id %}"  title="O'zgartirish"
                                            data-toggle="tooltip"
                                            style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
-
+                                           {% endif %}
 
                                             <a href="{% url 'delete_myarticle' item.id %}" title="O'chirish"
                                            data-toggle="tooltip"
@@ -89,6 +92,49 @@
                                <td colspan="7">No article</td>
                             </tr>
                             {% endif %}
+                        
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end table-responsive -->
+            </div>
+            <!-- end panel-body -->
+        </div>
+        <!-- end panel -->
+        <br>
+        <!-- begin panel -->
+        <div class="panel panel-default" data-sortable-id="table-basic-7" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+            <!-- begin panel-heading -->
+            <div class="panel-heading" style="background-color: #FFFFFF">
+                <h4 class="panel-title">
+                    Oldingi topshirilganlar
+                </h4>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body">
+                <!-- begin table-responsive -->
+                <div class="table-responsive">
+                    <table
+                        class="table table-td-valign-middle table-hover table-bordered">    
+                        <tbody>
+                            {% for item in my_resends %}
+                                <tr class="text-center">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ item.article.title}}</td>
+                                    <td>{{ item.created_at }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if item.state.id == 1 %} badge-indigo
+                                            {% elif item.state.id == 3 %} badge-success 
+                                            {% elif item.state.id == 2 %} badge-danger 
+                                            {% elif item.state.id == 4 %} badge-warning 
+                                            {% endif%}" style="font-size: 10px;">
+                                            {{ item.state.name }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         
                         </tbody>
                     </table>

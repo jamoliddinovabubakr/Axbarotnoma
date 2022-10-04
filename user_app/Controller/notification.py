@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from user_app.decorators import allowed_users
 from user_app.models import Notification, State
-from article_app.models import Article, Authors
+from article_app.models import Article, Authors, MyResendArticle
 from user_app.forms import CreateNotificationForm
 
 
@@ -25,6 +25,9 @@ def get_notifications(request):
 def view_notification(request, pk):
     notification = get_object_or_404(Notification, pk=pk)
     notification.status = 'Read'
+    my_resend = MyResendArticle.objects.get(article=notification.article)
+    my_resend.state = State.objects.get(pk=1);
+    my_resend.save();
     notification.save()
     authors = Authors.objects.filter(article=notification.article).order_by('author_order')
     return render(request, 'user_app/crud/view_notification.html', {"notification": notification, 'authors': authors})

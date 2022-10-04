@@ -12,7 +12,7 @@
 
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-2"><img src="{% static 'img/avatar3.png' %}" alt="" width="100%" height="100%"/>
+                <div class="col-md-2">
                 </div>
                 <div class="col-md-5">
                     <table>
@@ -46,7 +46,7 @@
                         </tr>
                         {% for author in authors %}
                         <tr>
-                            <td>{{author.author_order}}. {{ author.last_name }} {{ author.first_name }}, {{ author.email}}, {{ author.work_place }}
+                            <td>{{author.author_order}}. {{ author.last_name }} {{ author.first_name }}, {{ author.work_place }}
                             </td>
                         </tr>
                         {% endfor%}

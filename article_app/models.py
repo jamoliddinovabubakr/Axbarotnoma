@@ -1,6 +1,7 @@
 from email.policy import default
 from operator import mod
 from pyexpat import model
+from tkinter.tix import Tree
 from turtle import title
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -89,6 +90,8 @@ class Authors(models.Model):
 
 
 class MyResendArticle(models.Model):
+    author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE, blank=True, null=True,
+                               related_name="article_resend_author") 
     article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
     file_word = models.FileField(_("Word Fayl"), upload_to='files/', max_length=255, blank=True,)
     message = models.CharField(_("Xabar"), max_length=255, blank=True, null=True)

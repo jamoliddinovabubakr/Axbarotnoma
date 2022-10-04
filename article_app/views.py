@@ -103,6 +103,7 @@ def update_my_article(request, pk):
     authors = Authors.objects.filter(article=article)
 
     if request.method == "POST":
+        user = request.user
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
             state = State.objects.get(pk=4)
@@ -111,6 +112,7 @@ def update_my_article(request, pk):
             ob.save()
 
             MyResendArticle.objects.create(
+                author=user,
                 article=article,
                 file_word=ob.file,
                 message='Maqolangiz 14 ish kunida ko\'rib chiqladi.',
@@ -136,7 +138,7 @@ def resend_article(request, pk):
     authors = Authors.objects.filter(article=article)
 
     if request.method == "POST":
-        form = CreateMyResendArticleForm(request.POST, request.FILES, instance=last_resend)
+        form = CreateMyResendArticleForm(request.POST, request.FILES)
         if form.is_valid():
             state = State.objects.get(pk=4)
             ob = form.save(commit=False)
@@ -163,6 +165,9 @@ def sending_article_form(request):
 
     last_article = Article.objects.filter(author=user).last()
     get_mylast_articles = MyResendArticle.objects.filter(article=last_article)
+    my_resends = MyResendArticle.objects.filter(author=user).filter(
+         Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
+    )
     last_resend = get_mylast_articles.last()
 
     if get_mylast_articles:
@@ -173,6 +178,7 @@ def sending_article_form(request):
         'is_have': is_have,
         'last_article': last_article,
         'last_resend': last_resend,
+        'my_resends': my_resends,
     }
     return render(request, "article_app/sending_article_form.html", context=context)
 
