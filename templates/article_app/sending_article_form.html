@@ -52,41 +52,51 @@
                         </thead>
                         <tbody>
                             {% if is_have %}
-                            {% for item in get_mylast_articles %}
                                 <tr class="text-center">
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{{ item.article.title}}</td>
-                                    <td>{{ item.file_word }}</td>
-                                    <td>{{ item.article.created_at }}</td>
-                                    <td>{{ item.created_at }}</td>
+                                    <td>{{ send_mylast_article.id }}</td>
+                                    <td>{{ send_mylast_article.article.title}}</td>
+                                    <td>{{ send_mylast_article.file_word }}</td>
+                                    <td>{{ send_mylast_article.article.created_at }}</td>
+                                    <td>{{ send_mylast_article.created_at }}</td>
                                     <td>
-                                        <span  {% if item.state.id == 4 %} title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" {% endif %} class="badge {% if item.state.id == 1 %} badge-indigo
-                                         {% elif item.state.id == 3 %} badge-success {% elif item.state.id == 2 %} badge-danger {% elif item.state.id == 4 %} badge-warning {% endif%}" style="font-size: 10px;">{{ item.state.name }}
+                                        <span  
+                                        {% if send_mylast_article.state.id == 4 %} 
+                                            title="Sizni maqolangiz 14 ish kunida ko'rib chiqiladi" data-toggle="tooltip" 
+                                        {% endif %} 
+                                        class="badge 
+                                        {% if send_mylast_article.state.id == 1 %} 
+                                            badge-indigo
+                                        {% elif send_mylast_article.state.id == 3 %} 
+                                            badge-success 
+                                        {% elif send_mylast_article.state.id == 2 %}
+                                            badge-danger 
+                                        {% elif send_mylast_article.state.id == 4 %} 
+                                            badge-warning 
+                                        {% endif%}" 
+                                        style="font-size: 10px;">{{ send_mylast_article.state.name }}
                                         </span>
                                     </td>
                                     <td class="with-btn" nowrap>
-                                        <a  {% if item.state.id != 5 %} hidden {% endif %} title="Qayta yuborish" href="{% url 'resend_article' item.pk %}" data-toggle="tooltip"
-                                            class="btn btn-warning btn-xs"><i class="fa fa-spinner mr-1"></i></a>
+                                        <a  
+                                            {% if send_mylast_article.state.id != 5 %} 
+                                                hidden 
+                                            {% endif %} 
+                                            title="Qayta yuborish" href="{% url 'resend_article' send_mylast_article.pk %}" data-toggle="tooltip" class="btn btn-warning btn-xs"><i class="fa fa-spinner mr-1"></i>
+                                        </a>
                                         
-                                           {% if item.state.name == "Yuborildi" %}
-                                           <a href="{% url 'update_my_article' item.id %}"  title="O'zgartirish"
+                                        {% if send_mylast_article.state.name == "Yuborildi" %}
+                                        <a href="{% url 'update_resend_article' send_mylast_article.id %}"  title="O'zgartirish"
                                            data-toggle="tooltip"
                                            style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
                                            {% endif %}
 
-                                            <a href="{% url 'delete_myarticle' item.id %}" title="O'chirish"
+                                        <a href="{% url 'delete_myarticle' send_mylast_article.id %}" title="O'chirish"
                                            data-toggle="tooltip"
                                            class="userModal"
                                            style="color: #f83333"><i
                                                 class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <img src="{% static 'img/message.png' %}" width="50"> <b>Xabar: </b>{% if item.message is None %} Sizga xabar yo'q. {% else %} {{ item.message }}{% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                                </tr>                  
                             {% else %}
                             <tr class="text-center">
                                <td colspan="7">No article</td>
@@ -95,6 +105,13 @@
                         
                         </tbody>
                     </table>
+                    <div style="padding: 1%; border-radius: 5px;">
+                    {% comment %} <img src="{% static 'img/message.png' %}" width="50">  {% endcomment %}
+                    <p style="font-family: Trebuchet MS, Helvetica, sans-serif;">
+                        <b>Xabar: </b>
+                        {% if send_mylast_article.message is None %} Sizga xabar yo'q. {% else %} {{ send_mylast_article.message }}{% endif %}
+                    </p> 
+                    </div>
                 </div>
                 <!-- end table-responsive -->
             </div>
@@ -102,12 +119,13 @@
         </div>
         <!-- end panel -->
         <br>
+        {% if is_have and get_mylast_articles.count > 1 %}
         <!-- begin panel -->
         <div class="panel panel-default" data-sortable-id="table-basic-7" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #FFFFFF">
-                <h4 class="panel-title">
-                    Oldingi topshirilganlar
+                <h4 class="panel-title" style="text-transform:uppercase;">
+                    Yuborilganlar tarixi
                 </h4>
             </div>
             <!-- end panel-heading -->
@@ -144,6 +162,7 @@
             <!-- end panel-body -->
         </div>
         <!-- end panel -->
+        {% endif %}
     </div>
 {% endblock %}
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>

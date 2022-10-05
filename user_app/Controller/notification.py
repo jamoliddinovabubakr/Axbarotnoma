@@ -1,3 +1,4 @@
+from ast import Constant
 from multiprocessing import context
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
@@ -23,12 +24,23 @@ def get_notifications(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def view_notification(request, pk):
+    UQILMOQDA=State.objects.get(pk=1)
+
     notification = get_object_or_404(Notification, pk=pk)
-    notification.status = 'Read'
-    my_resend = MyResendArticle.objects.get(article=notification.article)
-    my_resend.state = State.objects.get(pk=1);
-    my_resend.save();
+    article = notification.article
+
+    if notification.status == 'Unread':
+        my_resends = MyResendArticle.objects.filter(article=article)
+        my_resend_last = my_resends.last()
+        my_resend_last.state = UQILMOQDA
+        article.state = UQILMOQDA
+        article.save()
+
+        my_resend_last.save()
+        notification.status = 'Read'
+
     notification.save()
+
     authors = Authors.objects.filter(article=notification.article).order_by('author_order')
     return render(request, 'user_app/crud/view_notification.html', {"notification": notification, 'authors': authors})
 
@@ -36,16 +48,26 @@ def view_notification(request, pk):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def reject_article(request, pk):
+    RAD_ETILDI=State.objects.get(pk=2)
     article = get_object_or_404(Article, pk=pk)
-    article.state = State.objects.get(pk=2)
+    article.state = RAD_ETILDI
     article.save()
+    my_resends = MyResendArticle.objects.filter(article=article)
+    my_resend_last = my_resends.last()
+    my_resend_last.state = RAD_ETILDI
+    my_resend_last.save()
     return redirect('notifications')
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def confirm_article(request, pk):
+    TASDIQLANDI=State.objects.get(pk=3)
     article = get_object_or_404(Article, pk=pk)
-    article.state = State.objects.get(pk=3)
+    article.state = TASDIQLANDI
     article.save()
+    my_resends = MyResendArticle.objects.filter(article=article)
+    my_resend_last = my_resends.last()
+    my_resend_last.state = TASDIQLANDI
+    my_resend_last.save()
     return redirect('notifications')

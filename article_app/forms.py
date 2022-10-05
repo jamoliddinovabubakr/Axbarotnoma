@@ -27,13 +27,11 @@ class CreateArticleForm(forms.ModelForm):
         }
 
 
-
 class CreateMyResendArticleForm(forms.ModelForm):
     class Meta:
         model = MyResendArticle
         fields = ['author', 'article', 'file_word']
         
-
 
 class UpdateArticleForm(forms.ModelForm):
     class Meta:

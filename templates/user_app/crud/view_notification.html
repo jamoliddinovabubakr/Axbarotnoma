@@ -8,7 +8,7 @@
         <li class="breadcrumb-item"><a href="javascript:;">Maqola tekshiruvi</a></li>
     </ol>
     <h2 class="page-header"><b>{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</b> ga tegishli maqolani tekshirish</h2>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
 
         <div class="panel-body">
             <div class="row">
@@ -26,7 +26,7 @@
                             <td><strong>Tel:</strong> {{ notification.article.author.phone }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Yuborilgan vaqt: </strong> {{ notification.article.created_at }}</td>
+                            <td><strong>Yuborilgan vaqt: </strong> {{ notification.created_at }}</td>
                         </tr>
                         <tr>
                             <td><strong>Status:</strong> {{ notification.article.status }}</td>

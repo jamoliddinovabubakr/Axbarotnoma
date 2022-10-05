@@ -1,0 +1,178 @@
+{% extends 'user_app/base.html' %}
+{% load static %}
+{% block title %}
+Maqola ma'lumotlarini o'zgartirish
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <!-- begin breadcrumb -->
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">Bosh sahifa</a></li>
+            <li class="breadcrumb-item active">Maqola ma'lumotlarini o'zgartirish</li>
+        </ol>
+        <!-- end breadcrumb -->
+        <!-- begin page-header -->
+        <h1 class="page-header">Maqola ma'lumotlarini o'zgartirish</h1>
+        <!-- end page-header -->
+
+        <!-- begin panel -->
+        <div class="panel panel-inverse" data-sortable-id="table-basic-7">
+            <!-- begin panel-heading -->
+            <div class="panel-heading">
+                <h4 class="panel-title"></h4>
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
+                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
+                       data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body">
+                <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Aftor <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    <select id="id_author" name="author" class="form-control">
+                                        <option selected
+                                                value="{{ article.author.id }}">{{ article.author.username }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Kategoriya <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.category }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">File <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    <input type="file" id="id_file" name="file"  class="form-control"
+                                           data-parsley-required="true" accept=".docx, .doc, .pdf">
+                                    <p id="file_name">{{ file_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Mavzu <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.title|safe }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Kalit so'zlar <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.keywords|safe }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Abstrakt <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.abstract|safe }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">Adabiyotlar <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.references|safe }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                   
+                    <br>
+                    <hr>
+                    <button href="{% url 'add_author' article.id %}" data-toggle="modal"
+                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Aftor qo'shish
+                    </button>
+                    <br>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover  m-b-10">
+                            <thead>
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>Familiya</th>
+                                <th>Ism</th>
+                                <th>Sharif</th>
+                                <th>Email</th>
+                                <th>Ish joy</th>
+                                <th>Aftor tartibi</th>
+                                <th width="100">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for author in authors %}
+                                <tr class="text-center">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ author.last_name }}</td>
+                                    <td>{{ author.first_name }}</td>
+                                    <td>{{ author.middle_name }}</td>
+                                    <td>{{ author.email }}</td>
+                                    <td>{{ author.work_place }}</td>
+                                    <td>{{ author.author_order }}</td>
+                                    <td class="with-btn" nowrap>
+                                        <a href="{% url 'edit_author' author.pk %}"
+                                           class="userModal btn btn-sm btn-primary width-60 m-r-2">Edit</a>
+                                        <a href="{% url 'delete_author' author.pk %}"
+                                           class="userModal btn btn-sm btn-danger width-60">Delete</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row" style="padding-top: 1em">
+                        <div class="col-md-6 col-sm-6"></div>
+                        <div class="col-md-6 col-sm-6">
+                            <button type="submit" style="float: right;"
+                                    class="btn btn btn-success">Saqlash
+                            </button>
+                            <a style="float: right; margin-right: 1em" href="{% url 'my_articles' %}"
+                               class="btn btn-outline-warning">Yopish
+                            </a>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <!-- end panel-body -->
+        </div>
+        <!-- end panel -->
+    </div>
+{% endblock %}
+
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

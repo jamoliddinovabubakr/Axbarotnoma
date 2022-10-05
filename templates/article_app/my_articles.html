@@ -17,7 +17,7 @@
         <!-- end page-header -->
 
         <!-- begin panel -->
-        <div class="panel panel-default" data-sortable-id="table-basic-7">
+        <div class="panel panel-default" data-sortable-id="table-basic-7" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #b4b4b4">
                 <h4 class="panel-title">
@@ -88,11 +88,17 @@
                                     <td>{{ my_article.category.name }}</td>
                                     <td>{{ my_article.title}}</td>
                                     <td>{{ my_article.created_at }}</td>
-                                    <td><span  class="badge badge-success" style="font-size: 10px;">{{ my_article.state.name }}</span></td>
-                                    <td><span  class="badge {% if my_article.is_publish %} badge-success {% else %} badge-warning {% endif %}" style="font-size: 10px;">{{ my_article.is_publish }}</span></td>
+                                    <td><span  class="badge {% if my_article.state.id == 3 %} badge-success {% else %} badge-danger {% endif %}" style="font-size: 10px;">{{ my_article.state.name }}</span></td>
+                                    <td><span  class="badge {% if my_article.is_publish %} badge-success {% else %} badge-danger {% endif %}" style="font-size: 10px;">{{ my_article.is_publish }}</span></td>
+                                    {% if my_article.state.id == 3 %}
+                                        <td class="with-btn" nowrap>
+                                            <i class="fas fa-file-pdf"></i> <a href="#">Yuklab olish</a>
+                                        </td>
+                                    {% else %}
                                     <td class="with-btn" nowrap>
-                                        <i class="fas fa-file-pdf"></i> ...<a href="#">Yuklab olish</a>
+                                        -
                                     </td>
+                                    {% endif %}                       
                                 </tr>
                             {% endfor %}
                         {% endif %}

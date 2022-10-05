@@ -157,28 +157,50 @@ def resend_article(request, pk):
 
 
 
+@login_required(login_url='login')
+def update_resend_article(request, pk):
+    last_resend = MyResendArticle.objects.get(pk=pk)
+    article = last_resend.article
+    authors = Authors.objects.filter(article=article)
+    if request.method == "POST":
+        form = UpdateArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            state = State.objects.get(pk=4)
+            ob = form.save(commit=False)
+            ob.state = state
+            ob.save()
+            return redirect('sending_article_form')
+    else:
+        context = {
+            'form': UpdateArticleForm(instance=article),
+            'authors': authors,
+            'article': article,
+        }
+        return render(request, "article_app/crud/update_resendform.html", context=context)
+
+
 
 @login_required(login_url='login')
 def sending_article_form(request):
     is_have = False
     user = request.user
-
+    get_mylast_articles=send_mylast_article=my_resends=None
     last_article = Article.objects.filter(author=user).last()
-    get_mylast_articles = MyResendArticle.objects.filter(article=last_article)
-    my_resends = MyResendArticle.objects.filter(author=user).filter(
-         Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
-    )
-    last_resend = get_mylast_articles.last()
-
-    if get_mylast_articles:
-        is_have=True
-
+    if last_article:
+        get_mylast_articles = MyResendArticle.objects.filter(article=last_article)
+        if get_mylast_articles.count() > 0:
+            is_have=True
+            send_mylast_article = get_mylast_articles.last()
+            my_resends = MyResendArticle.objects.filter(author=user).exclude(pk=send_mylast_article.pk).filter(
+                        Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
+                    )
     context = {
         'get_mylast_articles': get_mylast_articles,
         'is_have': is_have,
         'last_article': last_article,
-        'last_resend': last_resend,
+        'get_mylast_articles': get_mylast_articles,
         'my_resends': my_resends,
+        'send_mylast_article': send_mylast_article,
     }
     return render(request, "article_app/sending_article_form.html", context=context)
 
@@ -233,12 +255,18 @@ def delete_author(request, pk):
 
 @login_required(login_url='login')
 def delete_myarticle(request, pk):
-    article = Article.objects.get(pk=pk)
+    resend_article = get_object_or_404(MyResendArticle, pk=pk)
+    article = resend_article.article
+    articles = MyResendArticle.objects.filter(article=article)
+    article_count = articles.count()
     if request.method == "POST":
-        article.delete()
-        return redirect('my_articles')
+        if article_count == 1:
+            article.delete()
+            return redirect('sending_article_form')
+        resend_article.delete()
+        return redirect('sending_article_form')
     else:
-        return render(request, 'article_app/crud/delete_myarticle.html', {'article': article})
+        return render(request, 'article_app/crud/delete_myarticle.html', {'article': article, 'resend_article': resend_article})
 
 
 @login_required(login_url='login')
