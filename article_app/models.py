@@ -99,6 +99,7 @@ class MyResendArticle(models.Model):
                                    blank=True,
                                    null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.article)

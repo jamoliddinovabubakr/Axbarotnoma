@@ -1,23 +1,21 @@
 {% extends 'user_app/base.html' %}
+{% load static %}
 {% block title %}
 Bosh sahifa
 {% endblock %}
 {% block content %}
 <div id="content" class="content">
-			<!-- begin breadcrumb -->
 			<ol class="breadcrumb float-xl-right">
 				<li class="breadcrumb-item active"><a href="javascript:;">Bosh sahifa</a></li>
 			</ol>
-			<!-- end breadcrumb -->
-			<!-- begin page-header -->
-			<h1 class="page-header">Bosh sahifa</h1>
-			<!-- end page-header -->
 
-			<!-- begin row -->
+			<h1 class="page-header">Bosh sahifa</h1>
+
+			{% if request.user.role.id != 6 %}
 			<div class="row">
 				<!-- begin col-3 -->
 				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-blue">
+					<div class="widget widget-stats bg-blue forshadow">
 						<div class="stats-icon"><i class="fa fa-desktop"></i></div>
 						<div class="stats-info">
 							<h4>UMUMIY TASDIQLANGANLAR</h4>
@@ -31,7 +29,7 @@ Bosh sahifa
 				<!-- end col-3 -->
 				<!-- begin col-3 -->
 				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-info">
+					<div class="widget widget-stats bg-info forshadow">
 						<div class="stats-icon"><i class="fa fa-link"></i></div>
 						<div class="stats-info">
 							<h4>TASDIQLANMAGANLAR</h4>
@@ -45,7 +43,7 @@ Bosh sahifa
 				<!-- end col-3 -->
 				<!-- begin col-3 -->
 				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-orange">
+					<div class="widget widget-stats bg-orange forshadow">
 						<div class="stats-icon"><i class="fa fa-users"></i></div>
 						<div class="stats-info">
 							<h4>TASDIQLANISHNI KUTAYOTGANLAR</h4>
@@ -59,7 +57,7 @@ Bosh sahifa
 				<!-- end col-3 -->
 				<!-- begin col-3 -->
 				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-red">
+					<div class="widget widget-stats bg-red forshadow">
 						<div class="stats-icon"><i class="fa fa-clock"></i></div>
 						<div class="stats-info">
 							<h4>JURNALLAR SONI</h4>
@@ -72,11 +70,13 @@ Bosh sahifa
 				</div>
 				<!-- end col-3 -->
 			</div>
-			<!-- end row -->
-			<!-- begin row -->
-			<div class="row">
+			{% endif%}
 
+			{% if request.user.role.id == 6 %}
+			<div class="row forshadow" style="padding: 5%;">
+				<h3 style="font-family: Trebuchet MS, Helvetica, sans-serif; align: center;">O'zbekiston Respublikasi Vazirlar mahkamasi huzuridagi Davlat test markazi</h3>
 			</div>
-			<!-- end row -->
+			{% endif %}
+
 		</div>
 {% endblock %}

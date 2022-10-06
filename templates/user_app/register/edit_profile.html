@@ -12,7 +12,7 @@
         <h1 class="page-header">Profile sozlamalari <small>profilizni ma'luotlarini o'zgartirish...</small></h1>
         <!-- end page-header -->
         <!-- begin wizard-form -->
-        <form method="POST" name="form-wizard" class="form-control-with-bg" enctype="multipart/form-data">
+        <form method="POST" name="form-wizard" class="form-control-with-bg forshadow" enctype="multipart/form-data">
             {% csrf_token %}
             <!-- begin wizard -->
             <div id="wizard">
@@ -186,13 +186,13 @@
             <div class="col-lg-2 col-xs-2"></div>
             <div class="col-lg-8 col-xs-8">
                 {% if result == -1 %}
-                    <div class="alert alert-danger" style="text-align: center">
+                    <div class="alert alert-danger forshadow" style="text-align: center">
                         <strong>Diqqat!</strong> Siz kiritgan joriy parol xato yoki yangi parol biri ikkinchisiga mos
                         emas.
                     </div>
                 {% endif %}
                 {% if result == 0 %}
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning forshadow">
                         <strong>Ogohlantirish!</strong>
                         <ul>
                             <li>Siz kiritgan joriy parolni to'g'ri kiriting.</li>
@@ -202,7 +202,7 @@
                     </div>
                 {% endif %}
                 {% if result == 1 %}
-                    <div class="alert alert-success" style="text-align: center">
+                    <div class="alert alert-success forshadow" style="text-align: center">
                         <strong>Muvafaqqiyat!</strong> Sizni joriy paroliz yangisiga muvafaqqiyatli o'zgartirildi.
                     </div>
                 {% endif %}

@@ -16,7 +16,7 @@
         <!-- end page-header -->
 
         <!-- begin panel -->
-        <div class="panel panel-default" data-sortable-id="table-basic-7" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+        <div class="panel panel-default forshadow" data-sortable-id="table-basic-7">
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #FFFFFF">
                 <h4 class="panel-title">
@@ -51,10 +51,10 @@
                         </tr>
                         </thead>
                         <tbody>
-                            {% if is_have %}
+                            {% if is_have and send_mylast_article is not None %}
                                 <tr class="text-center">
                                     <td>{{ send_mylast_article.id }}</td>
-                                    <td>{{ send_mylast_article.article.title}}</td>
+                                    <td>{{ send_mylast_article.article.title|slice:100}}</td>
                                     <td>{{ send_mylast_article.file_word }}</td>
                                     <td>{{ send_mylast_article.article.created_at }}</td>
                                     <td>{{ send_mylast_article.created_at }}</td>
@@ -105,13 +105,14 @@
                         
                         </tbody>
                     </table>
-                    <div style="padding: 1%; border-radius: 5px;">
-                    {% comment %} <img src="{% static 'img/message.png' %}" width="50">  {% endcomment %}
-                    <p style="font-family: Trebuchet MS, Helvetica, sans-serif;">
-                        <b>Xabar: </b>
-                        {% if send_mylast_article.message is None %} Sizga xabar yo'q. {% else %} {{ send_mylast_article.message }}{% endif %}
-                    </p> 
-                    </div>
+                    {% if is_have and send_mylast_article is not None %}
+                        <div style="padding: 1%; border-radius: 5px;"> 
+                            <p style="font-family: Trebuchet MS, Helvetica, sans-serif;"><img src="{% static 'img/message.png' %}" width="50">
+                                <b>Xabar: </b>
+                                {% if send_mylast_article.message is None %} Sizga xabar yo'q. {% else %} {{ send_mylast_article.message }}{% endif %}
+                            </p> 
+                        </div>
+                    {% endif %}
                 </div>
                 <!-- end table-responsive -->
             </div>
@@ -119,9 +120,9 @@
         </div>
         <!-- end panel -->
         <br>
-        {% if is_have and get_mylast_articles.count > 1 %}
+        {% if is_have and my_resends.count > 0 %}
         <!-- begin panel -->
-        <div class="panel panel-default" data-sortable-id="table-basic-7" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+        <div class="panel panel-default forshadow" data-sortable-id="table-basic-7">
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #FFFFFF">
                 <h4 class="panel-title" style="text-transform:uppercase;">

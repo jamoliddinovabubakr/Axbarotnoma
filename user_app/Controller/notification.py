@@ -38,8 +38,7 @@ def view_notification(request, pk):
 
         my_resend_last.save()
         notification.status = 'Read'
-
-    notification.save()
+        notification.save()
 
     authors = Authors.objects.filter(article=notification.article).order_by('author_order')
     return render(request, 'user_app/crud/view_notification.html', {"notification": notification, 'authors': authors})

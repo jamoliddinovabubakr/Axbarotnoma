@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser, Group, GroupManager
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from article_app.models import Article
+from article_app.models import Article, MyResendArticle
 
 
 class Region(models.Model):
@@ -147,6 +147,7 @@ class Notification(models.Model):
     description = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUS, default=UNREAD)
     created_at = models.DateTimeField(auto_now_add=True)
+    my_resend = models.ForeignKey(MyResendArticle, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.title

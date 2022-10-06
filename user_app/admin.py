@@ -47,7 +47,7 @@ class MenuAdmin(admin.ModelAdmin):
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
     list_display = ['id', 'article', 'title',
-                    'description', 'status', 'created_at']
+                    'description', 'status', 'created_at', 'my_resend']
 
 
 @admin.register(User)

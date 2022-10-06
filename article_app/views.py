@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Magazine, Post, BlankPage, MyResendArticle
-from user_app.models import User, State
+from user_app.models import User, State, Notification
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm, CreateMyResendArticleForm
 from django.core.paginator import Paginator
 from article_app.merge_multiple_word_files import combine_all_docx
@@ -106,9 +106,9 @@ def update_my_article(request, pk):
         user = request.user
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
-            state = State.objects.get(pk=4)
+            YUBORILDI = State.objects.get(pk=4)
             ob = form.save(commit=False)
-            ob.state = state
+            ob.state = YUBORILDI
             ob.save()
 
             MyResendArticle.objects.create(
@@ -116,10 +116,10 @@ def update_my_article(request, pk):
                 article=article,
                 file_word=ob.file,
                 message='Maqolangiz 14 ish kunida ko\'rib chiqladi.',
-                state=state,
+                state=YUBORILDI,
             )
 
-            return redirect('my_articles')
+            return redirect('sending_article_form')
     else:
         file_name = str(article.file.name).split('/')[-1]
         context = {
@@ -135,26 +135,28 @@ def update_my_article(request, pk):
 def resend_article(request, pk):
     last_resend = MyResendArticle.objects.get(pk=pk)
     article = Article.objects.get(pk=last_resend.article.pk)
-    authors = Authors.objects.filter(article=article)
+    YUBORILDI = State.objects.get(pk=4)
 
     if request.method == "POST":
         form = CreateMyResendArticleForm(request.POST, request.FILES)
         if form.is_valid():
-            state = State.objects.get(pk=4)
             ob = form.save(commit=False)
-            ob.state = state
-            article.state = state
-            article.save()
+            ob.state = YUBORILDI
             ob.save()
+
+            article.state = YUBORILDI
+            article.save()
+
+            last_resend.status = False
+            last_resend.save()
+
             return redirect('sending_article_form')
     else:
         context = {
             'form': CreateMyResendArticleForm(),
-            'authors': authors,
             'article': article,
         }
         return render(request, "article_app/crud/resendform.html", context=context)
-
 
 
 @login_required(login_url='login')
@@ -162,12 +164,13 @@ def update_resend_article(request, pk):
     last_resend = MyResendArticle.objects.get(pk=pk)
     article = last_resend.article
     authors = Authors.objects.filter(article=article)
+    YUBORILDI = State.objects.get(pk=4)
+
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
-            state = State.objects.get(pk=4)
             ob = form.save(commit=False)
-            ob.state = state
+            ob.state = YUBORILDI
             ob.save()
             return redirect('sending_article_form')
     else:
@@ -184,21 +187,26 @@ def update_resend_article(request, pk):
 def sending_article_form(request):
     is_have = False
     user = request.user
+
     get_mylast_articles=send_mylast_article=my_resends=None
     last_article = Article.objects.filter(author=user).last()
+
     if last_article:
-        get_mylast_articles = MyResendArticle.objects.filter(article=last_article)
+        get_mylast_articles = MyResendArticle.objects.filter(article=last_article).filter(status=True)
+        is_have=True
         if get_mylast_articles.count() > 0:
-            is_have=True
             send_mylast_article = get_mylast_articles.last()
-            my_resends = MyResendArticle.objects.filter(author=user).exclude(pk=send_mylast_article.pk).filter(
+            my_resends = MyResendArticle.objects.filter(author=user).exclude(pk=send_mylast_article.pk).filter(status=False).filter(
                         Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
                     )
+        else:
+            my_resends = MyResendArticle.objects.filter(author=user).filter(status=False).filter(
+                        Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
+                    )
+
     context = {
-        'get_mylast_articles': get_mylast_articles,
         'is_have': is_have,
         'last_article': last_article,
-        'get_mylast_articles': get_mylast_articles,
         'my_resends': my_resends,
         'send_mylast_article': send_mylast_article,
     }
@@ -259,11 +267,13 @@ def delete_myarticle(request, pk):
     article = resend_article.article
     articles = MyResendArticle.objects.filter(article=article)
     article_count = articles.count()
+
     if request.method == "POST":
+        notif = Notification.objects.get(my_resend__pk=resend_article.pk)
         if article_count == 1:
             article.delete()
-            return redirect('sending_article_form')
         resend_article.delete()
+        notif.delete()
         return redirect('sending_article_form')
     else:
         return render(request, 'article_app/crud/delete_myarticle.html', {'article': article, 'resend_article': resend_article})

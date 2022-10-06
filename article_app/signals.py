@@ -13,4 +13,5 @@ def create_article(sender, instance, created, **kwargs):
         article = instance.article,
         title = instance.article.title,
         description='Yangi maqola',
+        my_resend=instance,
     )
