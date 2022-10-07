@@ -7,85 +7,73 @@
         <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
         <li class="breadcrumb-item"><a href="javascript:;">Maqola tekshiruvi</a></li>
     </ol>
-    <h2 class="page-header"><b>{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</b> ga tegishli maqolani tekshirish</h2>
-    <div class="panel panel-default" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+    <h2 class="page-header viewArticleFont"><b>{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</b> ga tegishli maqolani tekshirish</h2>
+    <div class="panel panel-default forshadow">
 
         <div class="panel-body">
+
             <div class="row">
                 <div class="col-md-2">
                 </div>
                 <div class="col-md-5">
                     <table>
                         <tr>
-                            <th><h4>{{ notification.article.author.last_name }} {{ notification.article.author.first_name}}</h4></th>
+                            <th>
+                                <h4 class="viewArticleFont">{{ notification.article.author.last_name }} {{ notification.article.author.first_name}}</h4>
+                            </th>
                         </tr>
                         <tr>
-                            <td><strong>Email:</strong> {{ notification.article.author.email }}</td>
+                            <td class="viewArticleFont"><strong>Email:</strong> {{ notification.article.author.email }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Tel:</strong> {{ notification.article.author.phone }}</td>
+                            <td class="viewArticleFont"><strong>Tel:</strong> {{ notification.article.author.phone }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Yuborilgan vaqt: </strong> {{ notification.created_at }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Status:</strong> {{ notification.article.status }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Holat:</strong> <span class="badge {% if notification.status == 'Unread' %}
-                            badge-danger {% elif notification.status == 'Read' %} badge-success {% endif %}"> {{ notification.status }}</span>
-                            </td>
+                            <td class="viewArticleFont"><strong>Yuborilgan vaqt: </strong> {{ notification.created_at }}</td>
                         </tr>
                     </table>
                 </div>
                 <div class="col-md-5">
+                   
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
                     <table>
-                        <br>
                         <tr>
-                            <td><strong>Aftorlar:</strong></td>
+                            <td class="viewArticleFont"><p><b>Mavzu: </b>{{ notification.article.title|safe }}</p></td>
+                        </tr>
+                        <tr>
+                            <td class="viewArticleFont"><b>Aftorlar: </b></td>
                         </tr>
                         {% for author in authors %}
                         <tr>
-                            <td>{{author.author_order}}. {{ author.last_name }} {{ author.first_name }}, {{ author.work_place }}
-                            </td>
+                            <td class="viewArticleFont">{{author.author_order}}. {{ author.last_name }} {{ author.first_name }} ( {{ author.work_place }} )</td>
                         </tr>
                         {% endfor%}
-                        <tr><td><hr></td></tr>
-                        <tr><td><img src="{% static 'img/word.png' %}" alt="word" width="50"/> </td></tr>
-                        <tr><td><a class="btn btn-primary" href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a></td></tr>
+                        <tr>
+                            <td class="viewArticleFont"><p></p><b>Abstract: </b>{{ notification.article.abstract|safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="viewArticleFont"> <b>Kalit so'zlar: </b>{{ notification.article.keywords|safe }}</td>
+                        </tr>
+                        <br>
+                        <tr><td class="viewArticleFont"><b>MS word fayl: </b>[<a href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a>]</td></tr>
                     </table>
                 </div>
+                <div class="col-md-2"></div>
             </div>
             <hr>
             <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6">
-                    <table>
-                        <tr>
-                            <th>{{ notification.article.title|safe }}</th>
-                        </tr>
-                        <tr>
-                            <td>{{ notification.article.abstract|safe }}</td>
-                        </tr>
-                        <tr>
-                            <td> {{ notification.article.keywords|safe }}</td>
-                        </tr>
-                        <tr>
-                            <td> {{ notification.article.references|safe }}</td>
-                        </tr>
-                    </table>
+                <div class="col-md-12 text-center">
+                    <a href="{% url 'reject_article' notification.article.id %}" class="btn btn-danger viewArticleFont" id="cancel_state"><i class="fas fa-circle-notch fa-spin"></i> Rad etish</a>
+                    <a href="{% url 'confirm_article' notification.article.id %}" class="btn btn-warning viewArticleFont" id="success_state"><i class="fas fa-sync fa-spin"></i> Qayta yuborish</a>
+                    <a href="{% url 'confirm_article' notification.article.id %}" class="btn btn-success viewArticleFont" id="success_state"><i class="fas fa-cog fa-spin"></i> Tasdiqlash</a>
                 </div>
-                <div class="col-md-3"></div>
             </div>
             <hr>
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4"><a href="{% url 'notifications'%}" class="btn btn-warning">Orqaga</a></div>
-                <div class="col-md-4">
-                    <a href="{% url 'reject_article' notification.article.id %}" class="btn btn-danger" id="cancel_state">Rad etish</a>
-                    <a href="{% url 'confirm_article' notification.article.id %}" class="btn btn-success" id="success_state">Tasdiqlash</a>
-                </div>
-            </div>
         </div>
     </div>
 </div>

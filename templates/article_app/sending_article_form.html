@@ -81,20 +81,24 @@
                                             {% if send_mylast_article.state.id != 5 %} 
                                                 hidden 
                                             {% endif %} 
-                                            title="Qayta yuborish" href="{% url 'resend_article' send_mylast_article.pk %}" data-toggle="tooltip" class="btn btn-warning btn-xs"><i class="fa fa-spinner mr-1"></i>
+                                            title="Qayta yuborish" href="{% url 'resend_article' send_mylast_article.pk %}" data-toggle="tooltip" class="btn btn-indigo btn-xs"><i class="fa fa-upload mr-1"></i>
                                         </a>
                                         
                                         {% if send_mylast_article.state.name == "Yuborildi" %}
-                                        <a href="{% url 'update_resend_article' send_mylast_article.id %}"  title="O'zgartirish"
-                                           data-toggle="tooltip"
-                                           style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
-                                           {% endif %}
-
-                                        <a href="{% url 'delete_myarticle' send_mylast_article.id %}" title="O'chirish"
-                                           data-toggle="tooltip"
-                                           class="userModal"
-                                           style="color: #f83333"><i
-                                                class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>
+                                            <a href="{% url 'update_resend_article' send_mylast_article.id %}"  title="O'zgartirish"
+                                                data-toggle="tooltip"
+                                                style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if send_mylast_article.state.name == "Yuborildi" or send_mylast_article.state.name == "Qayta yuborish" %}
+                                            <a href="{% url 'delete_myarticle' send_mylast_article.id %}" title="O'chirish"
+                                                data-toggle="tooltip"
+                                                class="userModal"
+                                                style="color: #f83333"><i
+                                                class="fas  fa-fw m-r-15 fa-trash-alt"></i>
+                                            </a>
+                                        {% endif %}
+                                        
                                     </td>
                                 </tr>                  
                             {% else %}
