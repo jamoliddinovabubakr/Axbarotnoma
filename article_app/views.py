@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
@@ -217,11 +218,15 @@ def sending_article_form(request):
 def add_author(request, pk):
     user = request.user
     article = Article.objects.get(pk=pk)
+    last_resent = MyResendArticle.objects.filter(article=article).last()
+
     if request.method == "POST":
         form = AddAuthorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('update_my_article', pk=pk)
+            if article.state is None:
+                return redirect('update_my_article', pk=pk)
+            return redirect('update_resend_article', pk=last_resent.pk)
     else:
         context = {
             'form': AddAuthorForm(),
@@ -235,11 +240,14 @@ def add_author(request, pk):
 @login_required(login_url='login')
 def edit_author(request, pk):
     author = Authors.objects.get(pk=pk)
+    last_resent = MyResendArticle.objects.filter(article=author.article).last()
     if request.method == "POST":
         form = AddAuthorForm(request.POST, instance=author)
         if form.is_valid():
             form.save()
-            return redirect('update_my_article', pk=author.article.id)
+            if author.article.state is None :
+                return redirect('update_my_article', pk=pk)
+            return redirect('update_resend_article', pk=last_resent.pk)
         else:
             return redirect('profile')
     else:
