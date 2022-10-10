@@ -29,7 +29,7 @@ def view_notification(request, pk):
     notification = get_object_or_404(Notification, pk=pk)
     article = notification.article
 
-    if notification.status == 'Unread':
+    if notification.status == 'Tekshirilmadi':
         my_resends = MyResendArticle.objects.filter(article=article)
         my_resend_last = my_resends.last()
         my_resend_last.state = UQILMOQDA
@@ -37,7 +37,7 @@ def view_notification(request, pk):
         article.save()
 
         my_resend_last.save()
-        notification.status = 'Read'
+        notification.status = 'Tekshirilmoqda'
         notification.save()
 
     authors = Authors.objects.filter(article=notification.article).order_by('author_order')
@@ -48,13 +48,21 @@ def view_notification(request, pk):
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def reject_article(request, pk):
     RAD_ETILDI=State.objects.get(pk=2)
-    article = get_object_or_404(Article, pk=pk)
+    notif = get_object_or_404(Notification, pk=pk)
+
+    article = get_object_or_404(Article, pk=notif.article.id)
     article.state = RAD_ETILDI
     article.save()
+
     my_resends = MyResendArticle.objects.filter(article=article)
     my_resend_last = my_resends.last()
+
     my_resend_last.state = RAD_ETILDI
     my_resend_last.save()
+
+    notif.status = 'Tekshirildi'
+    notif.save()
+
     return redirect('notifications')
 
 
@@ -62,11 +70,40 @@ def reject_article(request, pk):
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def confirm_article(request, pk):
     TASDIQLANDI=State.objects.get(pk=3)
-    article = get_object_or_404(Article, pk=pk)
+    notif = get_object_or_404(Notification, pk=pk)
+
+    article = get_object_or_404(Article, pk=notif.article.id)
     article.state = TASDIQLANDI
     article.save()
+
     my_resends = MyResendArticle.objects.filter(article=article)
     my_resend_last = my_resends.last()
     my_resend_last.state = TASDIQLANDI
     my_resend_last.save()
+
+    notif.status = 'Tekshirildi'
+    notif.save()
+
+    return redirect('notifications')
+
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+def resend_a(request, pk):
+    QAYTAYUBORISH=State.objects.get(pk=5)
+    notif = get_object_or_404(Notification, pk=pk)
+
+    article = get_object_or_404(Article, pk=notif.article.id)
+    article.state = QAYTAYUBORISH
+    article.save()
+
+    my_resends = MyResendArticle.objects.filter(article=article)
+    my_resend_last = my_resends.last()
+    my_resend_last.state = QAYTAYUBORISH
+    my_resend_last.save()
+
+    notif.status = 'Tekshirildi'
+    notif.save()
+    
     return redirect('notifications')

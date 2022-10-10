@@ -6,6 +6,7 @@ from user_app.decorators import allowed_users
 from user_app.models import User
 from django.db.models.query_utils import Q
 from user_app.forms import UpdateUserForm
+from django.http import HttpResponse
 
 
 @login_required(login_url='login')
@@ -82,37 +83,39 @@ def update_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         form = UpdateUserForm(request.POST, instance=user)
-        person = form.save(commit=False)
-        person.save()
+        if form.is_valid():    
+            form.save()
 
-        if user.role.name == MASTER:
-            if not user.groups.exists():
-                new_group, created = Group.objects.get_or_create(name=MASTER)
-                new_group.user_set.add(user)
+            if user.role.name == MASTER:
+                if not user.groups.exists():
+                    new_group, created = Group.objects.get_or_create(name=MASTER)
+                    new_group.user_set.add(user)
 
-        if user.role.name == ADMIN:
-            change_group(user, ADMIN)
+            if user.role.name == ADMIN:
+                change_group(user, ADMIN)
 
-        if user.role.name == USER:
-            change_group(user, USER)
+            if user.role.name == USER:
+                change_group(user, USER)
 
-        if user.role.name == TAHLILCHI:
-            change_group(user, TAHLILCHI)
+            if user.role.name == TAHLILCHI:
+                change_group(user, TAHLILCHI)
 
-        if user.role.name == BOSH_MUHARRIR:
-            change_group(user, BOSH_MUHARRIR)
+            if user.role.name == BOSH_MUHARRIR:
+                change_group(user, BOSH_MUHARRIR)
 
-        if user.role.name == MASUL_KOTIB:
-            change_group(user, MASUL_KOTIB)
+            if user.role.name == MASUL_KOTIB:
+                change_group(user, MASUL_KOTIB)
 
-        if request.FILES.get('avatar', None) is not None:
-            try:
-                os.remove(user.avatar.url)
-            except Exception as e:
-                print('Exception in removing old profile image: ', e)
-            user.avatar = request.FILES['avatar']
-            user.save()
-        return redirect('users')
+            if request.FILES.get('avatar', None) is not None:
+                try:
+                    os.remove(user.avatar.url)
+                except Exception as e:
+                    print('Exception in removing old profile image: ', e)
+                user.avatar = request.FILES['avatar']
+                user.save()
+            return redirect('users')
+        else:
+            return HttpResponse("Forma valid emas!")
 
     else:
         form = UpdateUserForm(instance=user)

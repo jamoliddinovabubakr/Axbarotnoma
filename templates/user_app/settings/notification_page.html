@@ -1,5 +1,6 @@
 {% extends 'user_app/base.html' %}
 {% load static %}
+{% load pages_tags %}
 {% block title %}
     Xabarlar
 {% endblock %}
@@ -18,7 +19,7 @@
         <!-- begin panel -->
         <div class="panel panel-default forshadow">
             <!-- begin panel-heading -->
-            <div class="panel-heading" style="background-color: #b4b4b4">
+            <div class="panel-heading">
                 <h4 class="panel-title">
                 </h4>
                 <div class="panel-heading-btn">
@@ -39,11 +40,11 @@
                                 <label style="margin-right: 5px"><strong>Show</strong></label>
                                 <select id="id_n_show" name="n_show" class="form-control selectpicker"
                                         data-style="btn-white">
-<!--{#                                    {% get_pages as all_pages %}#}-->
-<!--{#                                    {% for item in all_pages %}#}-->
-<!--{#                                        <option  {% if n_show == item.value %} selected {% endif %}#}-->
-<!--{#                                                                               value="{{ item.value }}">{{ item.name }}</option>#}-->
-<!--{#                                    {% endfor %}#}-->
+                                   {% get_pages as all_pages %}
+                                   {% for item in all_pages %}
+                                     <option  {% if n_show == item.value %} selected {% endif %}
+                                                                           value="{{ item.value }}">{{ item.name }}</option>
+                                  {% endfor %}
                                 </select>
                             </div>
                             <button {% if p_n == 0 %} disabled {% endif %} type="submit"
@@ -84,13 +85,15 @@
                                     <td>{{ notif.article.author.email }}</td>
                                     <td>{{ notif.title|safe|slice:100 }}</td>
                                     <td>
-                                        {{ notif.status }}
+                                        <span class="badge {% if notif.status == 'Tekshirilmadi' %} badge-danger {% elif notif.status == 'Tekshirildi' %} badge-success {% elif notif.status == 'Tekshirilmoqda' %} badge-blue {% endif %}">
+                                            {{ notif.status }}
+                                        </span>
                                     </td>
                             <td>
                                 <a href="{% url 'view_notification' notif.pk %}" title="Ko'rish"
                                    data-toggle="tooltip"
                                    style="color: #0188d0">
-                                    <i class="fas  fa-fw m-r-15 fa-eye"></i>
+                                    <i class="fas  fa-fw m-r-15 fa-edit"></i>
                                 </a>
 
                             </td>

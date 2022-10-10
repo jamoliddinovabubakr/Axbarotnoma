@@ -32,7 +32,7 @@
                         <tr>
                             <th class="text-nowrap">Tug'ilgan sana</th>
                             <td class="text-nowrap">
-                                <input type="text" value="{{ user.birthday }}" name="birthday"
+                                <input type="text" value="{{ user.birthday|date:"m/d/Y" }}" name="birthday"
                                        class="form-control" id="datepicker-default" placeholder="Select Date"/>
                             </td>
                         </tr>

@@ -164,6 +164,8 @@ def resend_article(request, pk):
 def update_resend_article(request, pk):
     last_resend = MyResendArticle.objects.get(pk=pk)
     article = last_resend.article
+    if request.user.id != article.author.id:
+        return render(request, 'user_app/not_access.html')
     authors = Authors.objects.filter(article=article)
     YUBORILDI = State.objects.get(pk=4)
 
@@ -218,6 +220,8 @@ def sending_article_form(request):
 def add_author(request, pk):
     user = request.user
     article = Article.objects.get(pk=pk)
+    if request.user.id != article.author.id:
+        return render(request, 'user_app/not_access.html')
     last_resent = MyResendArticle.objects.filter(article=article).last()
 
     if request.method == "POST":
@@ -240,13 +244,16 @@ def add_author(request, pk):
 @login_required(login_url='login')
 def edit_author(request, pk):
     author = Authors.objects.get(pk=pk)
-    last_resent = MyResendArticle.objects.filter(article=author.article).last()
+    article = author.article
+    if request.user.id != article.author.id:
+        return render(request, 'user_app/not_access.html')
+    last_resent = MyResendArticle.objects.filter(article=article).last()
     if request.method == "POST":
         form = AddAuthorForm(request.POST, instance=author)
         if form.is_valid():
             form.save()
-            if author.article.state is None :
-                return redirect('update_my_article', pk=pk)
+            if article.state is None:
+                return redirect('update_my_article', pk=article.pk)
             return redirect('update_resend_article', pk=last_resent.pk)
         else:
             return redirect('profile')
@@ -262,7 +269,11 @@ def edit_author(request, pk):
 @login_required(login_url='login')
 def delete_author(request, pk):
     author = Authors.objects.get(pk=pk)
+    article = author.article
+    if request.user.id != article.author.id:
+        return render(request, 'user_app/not_access.html')
     if request.method == "POST":
+
         author.delete()
         return redirect('update_my_article', pk=author.article.id)
     else:

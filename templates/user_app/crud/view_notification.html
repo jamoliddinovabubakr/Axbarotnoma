@@ -19,17 +19,17 @@
                     <table>
                         <tr>
                             <th>
-                                <h4 class="viewArticleFont">{{ notification.article.author.last_name }} {{ notification.article.author.first_name}}</h4>
+                                <h4>{{ notification.article.author.last_name }} {{ notification.article.author.first_name}}</h4>
                             </th>
                         </tr>
                         <tr>
-                            <td class="viewArticleFont"><strong>Email:</strong> {{ notification.article.author.email }}</td>
+                            <td><strong>Email:</strong> {{ notification.article.author.email }}</td>
                         </tr>
                         <tr>
-                            <td class="viewArticleFont"><strong>Tel:</strong> {{ notification.article.author.phone }}</td>
+                            <td><strong>Tel:</strong> {{ notification.article.author.phone }}</td>
                         </tr>
                         <tr>
-                            <td class="viewArticleFont"><strong>Yuborilgan vaqt: </strong> {{ notification.created_at }}</td>
+                            <td><strong>Yuborilgan vaqt: </strong> {{ notification.created_at }}</td>
                         </tr>
                     </table>
                 </div>
@@ -43,34 +43,47 @@
                 <div class="col-md-8">
                     <table>
                         <tr>
-                            <td class="viewArticleFont"><p><b>Mavzu: </b>{{ notification.article.title|safe }}</p></td>
+                            <td><p><b>Mavzu: </b>{{ notification.article.title|safe }}</p></td>
                         </tr>
                         <tr>
-                            <td class="viewArticleFont"><b>Aftorlar: </b></td>
+                            <td><b>Aftorlar: </b></td>
                         </tr>
                         {% for author in authors %}
                         <tr>
-                            <td class="viewArticleFont">{{author.author_order}}. {{ author.last_name }} {{ author.first_name }} ( {{ author.work_place }} )</td>
+                            <td>{{author.author_order}}. {{ author.last_name }} {{ author.first_name }} ({{ author.work_place }})</td>
                         </tr>
                         {% endfor%}
                         <tr>
-                            <td class="viewArticleFont"><p></p><b>Abstract: </b>{{ notification.article.abstract|safe }}</td>
+                            <td><p></p><b>Abstract: </b>{{ notification.article.abstract|safe }}</td>
                         </tr>
                         <tr>
-                            <td class="viewArticleFont"> <b>Kalit so'zlar: </b>{{ notification.article.keywords|safe }}</td>
+                            <td> <b>Kalit so'zlar: </b>{{ notification.article.keywords|safe }}</td>
                         </tr>
                         <br>
-                        <tr><td class="viewArticleFont"><b>MS word fayl: </b>[<a href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a>]</td></tr>
+                        <tr><td><b>MS word fayl: </b>[<a href="{{ notification.article.file.url }}" download role="button"><span>Yuklab olish</span></a>]</td></tr>
                     </table>
                 </div>
                 <div class="col-md-2"></div>
             </div>
             <hr>
             <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 text-center">
+                    <table>
+                        <tr>
+                            <td><b>Tahrirchiga yuborish: </b></td>
+                            <td><a href="{% url 'confirm_article' notification.id %}" class="btn btn-info"><i class="far fa-paper-plane"></i> Send</a></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <hr>
+            <div class="row">
                 <div class="col-md-12 text-center">
-                    <a href="{% url 'reject_article' notification.article.id %}" class="btn btn-danger viewArticleFont" id="cancel_state"><i class="fas fa-circle-notch fa-spin"></i> Rad etish</a>
-                    <a href="{% url 'confirm_article' notification.article.id %}" class="btn btn-warning viewArticleFont" id="success_state"><i class="fas fa-sync fa-spin"></i> Qayta yuborish</a>
-                    <a href="{% url 'confirm_article' notification.article.id %}" class="btn btn-success viewArticleFont" id="success_state"><i class="fas fa-cog fa-spin"></i> Tasdiqlash</a>
+                    <a href="{% url 'reject_article' notification.id %}" class="btn btn-danger {% if notification.my_resend.state.id == 2 or notification.my_resend.state.id == 3 or notification.my_resend.state.id == 5 %} disabled {% endif %}"><i class="fas fa-circle-notch fa-spin"></i> Rad etish</a>
+                    <a href="{% url 'resend_a' notification.id %}" class="btn btn-warning {% if notification.my_resend.state.id == 2 or notification.my_resend.state.id == 3 or notification.my_resend.state.id == 5 %} disabled {% endif %}"><i class="fas fa-sync fa-spin"></i> Qayta yuborish</a>
+                    <a href="{% url 'confirm_article' notification.id %}" class="btn btn-success {% if notification.my_resend.state.id == 2 or notification.my_resend.state.id == 3 or notification.my_resend.state.id == 5 %} disabled {% endif %}"><i class="fas fa-cog fa-spin"></i> Tasdiqlash</a>
                 </div>
             </div>
             <hr>

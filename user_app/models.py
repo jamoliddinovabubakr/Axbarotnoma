@@ -136,16 +136,19 @@ class Menu(models.Model):
 
 
 class Notification(models.Model):
-    READ = 'Read'
-    UNREAD = 'Unread'
+    CHECKED = 'Tekshirildi'
+    UNCHECK = 'Tekshirilmadi'
+    CHECKING = 'Tekshirilmoqda'
+
     STATUS = (
-        (READ, 'read'),
-        (UNREAD, 'unread'),
+        (CHECKED, 'tekshirildi'),
+        (UNCHECK, 'tekshirilmadi'),
+        (CHECKING, 'tekshirilmoqda'),
     )
     article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=50, choices=STATUS, default=UNREAD)
+    status = models.CharField(max_length=50, choices=STATUS, default=UNCHECK)
     created_at = models.DateTimeField(auto_now_add=True)
     my_resend = models.ForeignKey(MyResendArticle, on_delete=models.CASCADE, blank=True, null=True)
 
