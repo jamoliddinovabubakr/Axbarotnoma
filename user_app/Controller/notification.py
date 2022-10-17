@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 from user_app.decorators import allowed_users
-from user_app.models import Notification, State
+from user_app.models import Notification, State, Step
 from article_app.models import Article, Authors, MyResendArticle
 from user_app.forms import CreateNotificationForm
 
@@ -36,6 +36,9 @@ def view_notification(request, pk):
         article.state = UQILMOQDA
         article.save()
 
+        article.step_bosh_muharrir = get_object_or_404(Step, pk=2)
+        article.save()
+
         my_resend_last.save()
         notification.status = 'Tekshirilmoqda'
         notification.save()
@@ -50,14 +53,19 @@ def reject_article(request, pk):
     RAD_ETILDI=State.objects.get(pk=2)
     notif = get_object_or_404(Notification, pk=pk)
 
+    get_msg = request.GET.get('message_author')
+    print(get_msg)
+
     article = get_object_or_404(Article, pk=notif.article.id)
     article.state = RAD_ETILDI
+    article.step_bosh_muharrir = get_object_or_404(Step, pk=3)
     article.save()
 
     my_resends = MyResendArticle.objects.filter(article=article)
     my_resend_last = my_resends.last()
 
     my_resend_last.state = RAD_ETILDI
+    my_resend_last.message = get_msg
     my_resend_last.save()
 
     notif.status = 'Tekshirildi'
@@ -74,6 +82,7 @@ def confirm_article(request, pk):
 
     article = get_object_or_404(Article, pk=notif.article.id)
     article.state = TASDIQLANDI
+    article.step_bosh_muharrir = get_object_or_404(Step, pk=3)
     article.save()
 
     my_resends = MyResendArticle.objects.filter(article=article)
@@ -87,7 +96,6 @@ def confirm_article(request, pk):
     return redirect('notifications')
 
 
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def resend_a(request, pk):
@@ -96,6 +104,7 @@ def resend_a(request, pk):
 
     article = get_object_or_404(Article, pk=notif.article.id)
     article.state = QAYTAYUBORISH
+    article.step_bosh_muharrir = get_object_or_404(Step, pk=3)
     article.save()
 
     my_resends = MyResendArticle.objects.filter(article=article)

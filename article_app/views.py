@@ -1,14 +1,13 @@
-from asyncio.windows_events import NULL
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Magazine, Post, BlankPage, MyResendArticle
-from user_app.models import User, State, Notification
-from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, UpdateMagazineForm, CreateMyResendArticleForm
+from user_app.models import State, Notification, Step
+from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, \
+    UpdateMagazineForm, CreateMyResendArticleForm
 from django.core.paginator import Paginator
-from article_app.merge_multiple_word_files import combine_all_docx
 
 
 def main_page(request):
@@ -25,7 +24,7 @@ def post_detail(request, slug):
         'post': post,
     }
     return render(request, "article_app/post_detail.html", context=context)
-    
+
 
 @login_required(login_url='login')
 def my_articles(request):
@@ -112,6 +111,9 @@ def update_my_article(request, pk):
             ob.state = YUBORILDI
             ob.save()
 
+            article.step_bosh_muharrir = get_object_or_404(Step, pk=1)
+            article.save()
+
             MyResendArticle.objects.create(
                 author=user,
                 article=article,
@@ -146,6 +148,7 @@ def resend_article(request, pk):
             ob.save()
 
             article.state = YUBORILDI
+            article.step_bosh_muharrir = get_object_or_404(Step, pk=1)
             article.save()
 
             last_resend.status = False
@@ -175,6 +178,10 @@ def update_resend_article(request, pk):
             ob = form.save(commit=False)
             ob.state = YUBORILDI
             ob.save()
+
+            article.step_bosh_muharrir = get_object_or_404(Step, pk=1)
+            article.save()
+
             return redirect('sending_article_form')
     else:
         context = {
@@ -185,27 +192,27 @@ def update_resend_article(request, pk):
         return render(request, "article_app/crud/update_resendform.html", context=context)
 
 
-
 @login_required(login_url='login')
 def sending_article_form(request):
     is_have = False
     user = request.user
 
-    get_mylast_articles=send_mylast_article=my_resends=None
+    get_mylast_articles = send_mylast_article = my_resends = None
     last_article = Article.objects.filter(author=user).last()
 
     if last_article:
         get_mylast_articles = MyResendArticle.objects.filter(article=last_article).filter(status=True)
-        is_have=True
+        is_have = True
         if get_mylast_articles.count() > 0:
             send_mylast_article = get_mylast_articles.last()
-            my_resends = MyResendArticle.objects.filter(author=user).exclude(pk=send_mylast_article.pk).filter(status=False).filter(
-                        Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
-                    )
+            my_resends = MyResendArticle.objects.filter(author=user).exclude(pk=send_mylast_article.pk).filter(
+                status=False).filter(
+                Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
+            )
         else:
             my_resends = MyResendArticle.objects.filter(author=user).filter(status=False).filter(
-                        Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
-                    )
+                Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
+            )
 
     context = {
         'is_have': is_have,
@@ -238,7 +245,6 @@ def add_author(request, pk):
             'article': article,
         }
         return render(request, "article_app/crud/add_authors.html", context=context)
-
 
 
 @login_required(login_url='login')
@@ -295,7 +301,8 @@ def delete_myarticle(request, pk):
         notif.delete()
         return redirect('sending_article_form')
     else:
-        return render(request, 'article_app/crud/delete_myarticle.html', {'article': article, 'resend_article': resend_article})
+        return render(request, 'article_app/crud/delete_myarticle.html',
+                      {'article': article, 'resend_article': resend_article})
 
 
 @login_required(login_url='login')
