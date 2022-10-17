@@ -74,41 +74,28 @@
                     <div class="col-md-2"></div>
                 </div>
                 <hr>
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <div class="input-group col-md-12 text-center">
-                                <span class="input-group-addon"><i
-                                        class="fas fa-pencil-alt prefix"> Tahrirchiga xabar</i></span>
-                            <input type="text" class="form-control" name="message_tahrir"
-                                   placeholder="Xabar shu yerga...">
-                        </div>
-                        <br>
-                        <a href="{% url 'confirm_article' notification.id %}" class="btn btn-info"><i
-                                class="far fa-paper-plane"></i> Yuborish</a>
-                    </div>
-                </div>
                 <br>
-                <form action="" method="get">
+                <form action="{% url 'answer_to_author' notification.id %}" method="get">
                     <div class="container">
                         <strong>Quyidagilardan birini tanlang ?</strong><br>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="stateArticle" id="reject"
-                                   value="Rad etish">
-                            <label class="form-check-label" for="exampleRadios1">
+                                   value="1">
+                            <label class="form-check-label">
                                 Rad etish
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="stateArticle" id="resend"
-                                   value="Qayta yuborish">
-                            <label class="form-check-label" for="exampleRadios2">
+                                   value="2">
+                            <label class="form-check-label">
                                 Qayta yuborish
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="stateArticle" id="confirm"
-                                   value="Tasdiqlash">
-                            <label class="form-check-label" for="exampleRadios3">
+                                   value="3">
+                            <label class="form-check-label">
                                 Tasdiqlash
                             </label>
                         </div>
@@ -125,15 +112,15 @@
                         </div>
                     </div>
                     <br>
-                    <script>
-                        const radiobtnValue = document.querySelector("input[name='radio']:checked");
-                        if (radiobtnValue != null) {
+                    {% comment %} <script>
+                        const radiobtn = document.querySelector("input[name='stateArticle']:checked");
+                        if (radiobtn != null) {
 
                         }
-                    </script>
+                    </script> {% endcomment %}
                     <div class="col-md-12 text-center">
                         <button type="submit"
-                                class="btn btn-info {% if notification.my_resend.state.id == 2 or notification.my_resend.state.id == 3 or notification.my_resend.state.id == 5 %} disabled {% endif %}">
+                                class="btn btn-success {% if notification.my_resend.state.id == 2 or notification.my_resend.state.id == 3 or notification.my_resend.state.id == 5 %} disabled {% endif %}">
                             <i
                                     class="fas fa-cog fa-spin"></i> Saqlash
                         </button>

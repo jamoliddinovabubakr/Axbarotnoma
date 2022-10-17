@@ -53,9 +53,6 @@ def reject_article(request, pk):
     RAD_ETILDI=State.objects.get(pk=2)
     notif = get_object_or_404(Notification, pk=pk)
 
-    get_msg = request.GET.get('message_author')
-    print(get_msg)
-
     article = get_object_or_404(Article, pk=notif.article.id)
     article.state = RAD_ETILDI
     article.step_bosh_muharrir = get_object_or_404(Step, pk=3)
@@ -114,5 +111,27 @@ def resend_a(request, pk):
 
     notif.status = 'Tekshirildi'
     notif.save()
+    
+    return redirect('notifications')
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+def answer_to_author(request, pk):
+    notif = get_object_or_404(Notification, pk=pk)
+    article = get_object_or_404(Article, pk=notif.article.id)
+
+    if notif and request.method == 'GET':
+        QAYTAYUBORISH=State.objects.get(pk=5)
+        RAD_ETILDI=State.objects.get(pk=2)
+        TASDIQLANDI=State.objects.get(pk=3)
+
+        msg = request.GET.get('message_author')
+        result = request.GET.get('stateArticle')
+
+        if result == '1':
+             article.state = RAD_ETILDI
+
+        
     
     return redirect('notifications')

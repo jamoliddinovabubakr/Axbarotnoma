@@ -148,3 +148,4 @@ cython_debug/
 static_root
 media_root
 .DS_Store
+aaa.py

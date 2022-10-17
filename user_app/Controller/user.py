@@ -73,8 +73,7 @@ MASTER = 'MASTER'
 ADMIN = 'ADMIN'
 USER = 'USER'
 BOSH_MUHARRIR = 'BOSH MUHARRIR'
-TAHLILCHI = 'TAHLILCHI'
-MASUL_KOTIB = 'MASUL KOTIB'
+TAHRIRCHI = 'TAHRIRCHI'
 
 
 @login_required(login_url='login')
@@ -97,14 +96,12 @@ def update_user(request, pk):
             if user.role.name == USER:
                 change_group(user, USER)
 
-            if user.role.name == TAHLILCHI:
-                change_group(user, TAHLILCHI)
+            if user.role.name == TAHRIRCHI:
+                change_group(user, TAHRIRCHI)
 
             if user.role.name == BOSH_MUHARRIR:
                 change_group(user, BOSH_MUHARRIR)
 
-            if user.role.name == MASUL_KOTIB:
-                change_group(user, MASUL_KOTIB)
 
             if request.FILES.get('avatar', None) is not None:
                 try:

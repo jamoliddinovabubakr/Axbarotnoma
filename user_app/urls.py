@@ -6,7 +6,7 @@ from .views import login_page, logout_user, register_page, profile_page, change_
     update_user, \
     delete_user, edit_menu, delete_menu, edit_gender, delete_gender, edit_role, delete_role, edit_state, \
     delete_state, get_states, edit_region, delete_region, edit_district, delete_district, create_gender, \
-    create_role, create_state, create_district, create_region, get_notifications, view_notification, reject_article, confirm_article, resend_a
+    create_role, create_state, create_district, create_region, get_notifications, view_notification, answer_to_author
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -24,10 +24,9 @@ urlpatterns = [
     path('users/delete/<int:pk>', delete_user, name='delete_user'),
 
     path('notifications/', get_notifications, name='notifications'),
-    path('notifications/view/<int:pk>/', view_notification, name='view_notification'),
-    path('notifications/reject/<int:pk>/', reject_article, name='reject_article'),
-    path('notifications/confirm/<int:pk>/', confirm_article, name='confirm_article'),
-    path('notifications/resend_a/<int:pk>/', resend_a, name='resend_a'),
+    path('notification/view/<int:pk>/', view_notification, name='view_notification'),
+    path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
+
 
     path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),

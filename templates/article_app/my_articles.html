@@ -86,7 +86,7 @@
                                 <tr class="text-center">
                                     <td id="counter_ar">{{ forloop.counter0|add:page.start_index }}</td>
                                     <td>{{ my_article.category.name }}</td>
-                                    <td>{{ my_article.title}}</td>
+                                    <td>{{ my_article.title }}</td>
                                     <td>{{ my_article.created_at }}</td>
                                     <td><span  class="badge {% if my_article.state.id == 3 %} badge-success {% else %} badge-danger {% endif %}" style="font-size: 10px;">{{ my_article.state.name }}</span></td>
                                     <td><span  class="badge {% if my_article.is_publish %} badge-success {% else %} badge-danger {% endif %}" style="font-size: 10px;">{{ my_article.is_publish }}</span></td>
