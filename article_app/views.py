@@ -111,7 +111,6 @@ def update_my_article(request, pk):
             ob.state = YUBORILDI
             ob.save()
 
-            article.step_bosh_muharrir = get_object_or_404(Step, pk=1)
             article.save()
 
             MyResendArticle.objects.create(
@@ -178,9 +177,6 @@ def update_resend_article(request, pk):
             ob = form.save(commit=False)
             ob.state = YUBORILDI
             ob.save()
-
-            article.step_bosh_muharrir = get_object_or_404(Step, pk=1)
-            article.save()
 
             return redirect('sending_article_form')
     else:
@@ -382,7 +378,7 @@ def create_magazine(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def edit_magazine(request, pk):
-    jurnal = Magazine.objects.get(pk=pk)
+    jurnal = Journal.objects.get(pk=pk)
 
     if request.method == "POST":
         form = UpdateMagazineForm(request.POST, request.FILES, instance=jurnal)
@@ -406,10 +402,10 @@ def get_magazines(request):
     n_show = request.GET.get('n_show')
 
     if search is None:
-        magazines = Magazine.objects.all()
+        magazines = Journal.objects.all()
         search = ''
     else:
-        magazines = Magazine.objects.filter(
+        magazines = Journal.objects.filter(
             Q(number_magazine__icontains=search) | Q(category__name__icontains=search)
         )
 
@@ -454,7 +450,7 @@ def talabnoma(request):
 
 
 def magazine_detail(request, pk):
-    magazine = get_object_or_404(Magazine, pk=pk)
+    magazine = get_object_or_404(Journal, pk=pk)
     context = {
         'magazine': magazine
     }
@@ -462,7 +458,7 @@ def magazine_detail(request, pk):
 
 
 def all_magazine_son(request):
-    magazines = Magazine.objects.all()
+    magazines = Journal.objects.all()
     context = {
         'magazines': magazines
     }
