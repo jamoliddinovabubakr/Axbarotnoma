@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Permission
-from user_app.models import Role, Region, District, Gender, State, User, Notification, Menu, Step
+from user_app.models import *
 
 
 @admin.register(Permission)
@@ -28,14 +28,9 @@ class RegionAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'key']
 
 
-@admin.register(District)
-class DistrictAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'region']
-
-
-@admin.register(Gender)
-class GenderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'status']
+# @admin.register(Gender)
+# class GenderAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'name', 'status']
 
 
 @admin.register(Menu)
@@ -52,5 +47,5 @@ class NotificationAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'username', 'first_name', 'last_name', 'middle_name', 'birthday', 'gender', 'avatar', 'email',
-                    'phone', 'passport', 'role', 'region', 'district']
+    list_display = ['id', 'username', 'first_name', 'last_name', 'middle_name', 'birthday', 'avatar', 'email',
+                    'phone', 'passport', 'role', 'region']

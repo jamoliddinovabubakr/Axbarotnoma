@@ -20,24 +20,12 @@ class Region(models.Model):
         verbose_name_plural = _("Viloyatlar")
 
 
-class District(models.Model):
-    name = models.CharField(_('Nomi'), max_length=150)
-    region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name="Viloyat")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = _("Tuman")
-        verbose_name_plural = _("Tumanlar")
-
-
-class Gender(models.Model):
-    name = models.CharField(_('Jins'), max_length=50)
-    status = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
+# class Gender(models.Model):
+#     name = models.CharField(_('Jins'), max_length=50)
+#     status = models.BooleanField(default=True)
+#
+#     def __str__(self):
+#         return self.name
 
 
 class Role(models.Model):
@@ -54,17 +42,13 @@ class User(AbstractUser):
     last_name = models.CharField(_('Familiya'), max_length=100, blank=True, null=True)
     middle_name = models.CharField(_('Otasini ismi'), max_length=30, null=True, blank=True)
     birthday = models.DateField(_('Tugilgan kun'), null=True, blank=True)
-    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True, )
+    # gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True, )
     avatar = models.ImageField(_("Avatar"), upload_to='avatars/', default='user.png')
     email = models.CharField(_('Email address'), max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Telefon raqam', unique=True)
     passport = models.CharField(_('Pasport'), max_length=15, blank=True, null=True)
     role = models.ForeignKey(Role, related_name="user_role", on_delete=models.CASCADE, null=True, blank=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name="Viloyat", null=True, blank=True)
-    district = models.ForeignKey(District, on_delete=models.CASCADE, verbose_name="Tuman", null=True, blank=True)
-
-    # USERNAME_FIELD = "username"
-    # REQUIRED_FIELDS = []
 
     def save(self, *args, **kwargs):
         rollar = Role.objects.all()

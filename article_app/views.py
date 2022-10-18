@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
-from .models import Article, Category, Authors, Magazine, Post, BlankPage, MyResendArticle
+from .models import Article, Category, Authors, Journal, Post, BlankPage, MyResendArticle
 from user_app.models import State, Notification, Step
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, \
     UpdateMagazineForm, CreateMyResendArticleForm
@@ -447,7 +447,7 @@ def about_journal(request):
 
 
 def talabnoma(request):
-    talabnoma = BlankPage.objects.get(id=2)
+    talabnoma = BlankPage.objects.last()
     return render(request, "article_app/talabnoma.html", {
         "ob": talabnoma
     })

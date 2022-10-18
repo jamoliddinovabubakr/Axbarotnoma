@@ -1,12 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
-from .views import login_page, logout_user, register_page, profile_page, change_password, edit_profile, \
-    password_reset, profile, admins, users, get_menus, get_roles, get_districts, get_regions, genders, view_user, \
-    update_user, \
-    delete_user, edit_menu, delete_menu, edit_gender, delete_gender, edit_role, delete_role, edit_state, \
-    delete_state, get_states, edit_region, delete_region, edit_district, delete_district, create_gender, \
-    create_role, create_state, create_district, create_region, get_notifications, view_notification, answer_to_author
+from .views import *
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -34,10 +29,10 @@ urlpatterns = [
     path('menus/edit/<int:pk>', edit_menu, name='edit_menu'),
     path('menus/delete/<int:pk>', delete_menu, name='delete_menu'),
 
-    path('genders/', genders, name='genders'),
-    path('genders/create', create_gender, name='create_gender'),
-    path('genders/edit/<int:pk>', edit_gender, name='edit_gender'),
-    path('genders/delete/<int:pk>', delete_gender, name='delete_gender'),
+    # path('genders/', genders, name='genders'),
+    # path('genders/create', create_gender, name='create_gender'),
+    # path('genders/edit/<int:pk>', edit_gender, name='edit_gender'),
+    # path('genders/delete/<int:pk>', delete_gender, name='delete_gender'),
 
     path('roles/', get_roles, name='roles'),
     path('roles/create', create_role, name='create_role'),
@@ -48,11 +43,6 @@ urlpatterns = [
     path('states/create', create_state, name='create_state'),
     path('states/edit/<int:pk>', edit_state, name='edit_state'),
     path('states/delete/<int:pk>', delete_state, name='delete_state'),
-
-    path('districts/', get_districts, name='districts'),
-    path('districts/create/', create_district, name='create_district'),
-    path('districts/edit/<int:pk>/', edit_district, name='edit_district'),
-    path('districts/delete/<int:pk>/', delete_district, name='delete_district'),
 
     path('regions', get_regions, name='regions'),
     path('regions/create', create_region, name='create_region'),

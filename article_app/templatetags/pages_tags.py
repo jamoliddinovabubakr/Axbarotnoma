@@ -1,5 +1,5 @@
 from django import template
-from article_app.models import Page, Magazine, Post
+from article_app.models import  Journal, Post
 
 register = template.Library()
 

@@ -3,7 +3,7 @@ from operator import mod
 from xmlrpc.client import Boolean
 from django import forms
 from django.forms import CheckboxInput, Select, DateInput, PasswordInput, TextInput, Textarea, FileInput, NumberInput, BooleanField, SelectMultiple
-from .models import Article, Category, Authors, Magazine, MyResendArticle
+from .models import Article, Category, Authors, Journal, MyResendArticle
 
 
 class CreateArticleForm(forms.ModelForm):
@@ -124,7 +124,7 @@ class AddAuthorForm(forms.ModelForm):
 class CreateCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'key', 'status']
+        fields = ['name', 'status']
 
         widgets = {
             'name': TextInput(attrs={
@@ -133,17 +133,12 @@ class CreateCategoryForm(forms.ModelForm):
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
-            'key': NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': "Enter...",
-                'data - parsley - required': "true",
-            }),
         }
 
 
 class CreateMagazineForm(forms.ModelForm):
     class Meta:
-        model = Magazine
+        model = Journal
         fields = ['number_magazine', 'year_magazine']
 
         widgets = {
@@ -164,7 +159,7 @@ class CreateMagazineForm(forms.ModelForm):
 
 class UpdateMagazineForm(forms.ModelForm):
     class Meta:
-        model = Magazine
+        model = Journal
         fields = ['number_magazine', 'year_magazine', 'article', 'status']
 
         widgets = {

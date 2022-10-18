@@ -8,7 +8,7 @@
             {% if menu.type_menu == 0 %}
                 <li class="{% if url_name == menu.url %} active {% endif %}">
                     <a href="{{ menu.get_absolute_url }}">
-                        {% if menu.id == 10 %}
+                        {% if menu.id == 4 %}
                         <span class="badge bg-danger pull-right" style="color: white; font-size:14px;">{{ notifications.count }}</span>
                         {% endif %}
                         <i class="material-icons">{{ menu.icon }}</i>

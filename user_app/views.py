@@ -1,4 +1,4 @@
-from article_app.models import Magazine
+from article_app.models import Journal
 from user_app.Controller.user import *
 from user_app.Controller.register import *
 from user_app.Controller.menu import *
@@ -6,7 +6,6 @@ from user_app.Controller.gender import *
 from user_app.Controller.role import *
 from user_app.Controller.state import *
 from user_app.Controller.region import *
-from user_app.Controller.district import *
 from user_app.Controller.notification import *
 
 
@@ -17,7 +16,7 @@ def profile_page(request):
     tasdiqlanganlar = Article.objects.filter(state=3)
     tasdiqlanmaganlar = Article.objects.filter(state=2)
     kutish_jarayonida = Article.objects.filter(state=1)
-    jurnallar = Magazine.objects.all()
+    jurnallar = Journal.objects.all()
     context = {
         'tasdiqlanganlar': tasdiqlanganlar.count,
         'tasdiqlanmaganlar': tasdiqlanmaganlar.count,

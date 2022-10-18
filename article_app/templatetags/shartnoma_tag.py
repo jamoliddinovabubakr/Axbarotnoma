@@ -1,5 +1,5 @@
 from django import template
-from article_app.models import Shartnoma
+# from article_app.models import Shartnoma
 
 # register = template.Library()
 #
