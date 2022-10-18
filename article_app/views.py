@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import UpdateView
 
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Journal, Post, BlankPage, MyResendArticle
@@ -147,7 +148,6 @@ def resend_article(request, pk):
             ob.save()
 
             article.state = YUBORILDI
-            article.step_bosh_muharrir = get_object_or_404(Step, pk=1)
             article.save()
 
             last_resend.status = False

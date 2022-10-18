@@ -69,7 +69,6 @@ class UpdateArticleForm(forms.ModelForm):
                 'id': 'id_file',
                 'type': 'file',
                 'class': 'form-control',
-                'data - parsley - required': "true",
                 'accept': ".docx, .doc, .pdf"
             }),
         }
