@@ -30,6 +30,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from user_app.decorators import allowed_users
 from user_app.models import Menu
 from user_app.forms import CreateMenuForm
+from user_app.allow_roles import allow
 
 
 @unauthenticated_user
@@ -143,7 +144,7 @@ def logout_user(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHLILCHI'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHRIRCHI'])
 # @admin_only
 def profile_page(request):
     tasdiqlanganlar = Article.objects.filter(state=3)
@@ -160,7 +161,7 @@ def profile_page(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHLILCHI'])
+@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHRIRCHI'])
 def profile(request):
     context = {
 
@@ -368,7 +369,6 @@ def update_user(request, pk):
             if user.role.name == BOSH_MUHARRIR:
                 change_group(user, BOSH_MUHARRIR)
 
-
             if request.FILES.get('avatar', None) is not None:
                 try:
                     os.remove(user.avatar.url)
@@ -462,7 +462,7 @@ def get_notifications(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def view_notification(request, pk):
-    UQILMOQDA = State.objects.get(pk=1)
+    reading = State.objects.get(pk=1)
 
     notification = get_object_or_404(Notification, pk=pk)
     article = notification.article
@@ -470,8 +470,8 @@ def view_notification(request, pk):
     if notification.status == 'Tekshirilmadi':
         my_resends = MyResendArticle.objects.filter(article=article)
         my_resend_last = my_resends.last()
-        my_resend_last.state = UQILMOQDA
-        article.state = UQILMOQDA
+        my_resend_last.state = reading
+        article.state = reading
         article.save()
 
         article.step_bosh_muharrir = get_object_or_404(Step, pk=2)
@@ -492,9 +492,9 @@ def answer_to_author(request, pk):
     article = get_object_or_404(Article, pk=notif.article.id)
 
     if notif and request.method == 'GET':
-        QAYTAYUBORISH = State.objects.get(pk=5)
-        RAD_ETILDI = State.objects.get(pk=2)
-        TASDIQLANDI = State.objects.get(pk=3)
+        re_send = State.objects.get(pk=5)
+        reject = State.objects.get(pk=2)
+        confirm = State.objects.get(pk=3)
 
         msg = request.GET.get('message_author')
         result = request.GET.get('stateArticle')
@@ -503,10 +503,10 @@ def answer_to_author(request, pk):
         my_resend_last = my_resends.last()
 
         if result == '1':
-            article.state = RAD_ETILDI
+            article.state = reject
             article.save()
 
-            my_resend_last.state = RAD_ETILDI
+            my_resend_last.state = reject
             my_resend_last.message = msg
             my_resend_last.save()
 
@@ -514,10 +514,10 @@ def answer_to_author(request, pk):
             notif.save()
 
         elif result == '2':
-            article.state = QAYTAYUBORISH
+            article.state = re_send
             article.save()
 
-            my_resend_last.state = QAYTAYUBORISH
+            my_resend_last.state = re_send
             my_resend_last.message = msg
             my_resend_last.save()
 
@@ -525,10 +525,10 @@ def answer_to_author(request, pk):
             notif.save()
 
         elif result == '3':
-            article.state = TASDIQLANDI
+            article.state = confirm
             article.save()
 
-            my_resend_last.state = TASDIQLANDI
+            my_resend_last.state = confirm
             my_resend_last.message = msg
             my_resend_last.save()
 
@@ -539,7 +539,7 @@ def answer_to_author(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(allowed_roles=allow('menus'))
 def get_menus(request):
     menus = Menu.objects.filter(status=True)
     context = {

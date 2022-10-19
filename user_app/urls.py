@@ -1,7 +1,10 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
-from .views import *
+from .views import profile_page, login_page, logout_user, register_page, change_password, edit_profile, admins, users, \
+    view_user, update_user, delete_user, get_notifications, view_notification, answer_to_author, get_menus, edit_menu, \
+    delete_menu, get_roles, create_role, edit_role, delete_role, get_states, create_state, edit_state, delete_state, \
+    get_regions, create_region, edit_region, delete_region, password_reset, profile
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),

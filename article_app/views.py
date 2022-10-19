@@ -7,6 +7,7 @@ from user_app.models import State, Notification
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, \
     UpdateMagazineForm, CreateMyResendArticleForm
 from django.core.paginator import Paginator
+from user_app.allow_roles import allow
 
 
 def main_page(request):
