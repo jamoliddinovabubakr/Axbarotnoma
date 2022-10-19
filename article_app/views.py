@@ -43,13 +43,8 @@ def my_articles(request):
             Q(title__icontains=search) | Q(category__name__icontains=search)
         )
 
-    if n_show is None:
-        n_show = 10
 
-    if n_show == '0':
-        n_show = get_my_articles.count()
-
-    paginator = Paginator(get_my_articles, int(n_show))
+    paginator = Paginator(get_my_articles, 10)
     page_num = request.GET.get('page')
     page = paginator.get_page(page_num)
     p_n = paginator.count
@@ -129,7 +124,7 @@ def update_my_article(request, pk):
             'form': UpdateArticleForm(instance=article),
             'authors': authors,
             'article': article,
-            'file_name': file_name,
+            'file_name': str(file_name),
         }
         return render(request, "article_app/crud/update_article.html", context=context)
 
@@ -180,10 +175,12 @@ def update_resend_article(request, pk):
 
             return redirect('sending_article_form')
     else:
+        file_name = str(article.file.name).split('/')[-1]
         context = {
             'form': UpdateArticleForm(instance=article),
             'authors': authors,
             'article': article,
+            'file_name': file_name,
         }
         return render(request, "article_app/crud/update_resendform.html", context=context)
 
@@ -409,20 +406,11 @@ def get_magazines(request):
             Q(number_magazine__icontains=search) | Q(category__name__icontains=search)
         )
 
-    if n_show is None:
-        n_show = 10
-
-    if n_show == '0':
-        n_show = magazines.count()
-
-    paginator = Paginator(magazines, int(n_show))
+    paginator = Paginator(magazines, 10)
     page_num = request.GET.get('page')
     page = paginator.get_page(page_num)
     p_n = paginator.count
     page_count = page.paginator.page_range
-
-    if n_show == p_n:
-        n_show = 0
 
     context = {
         'magazines': magazines,
@@ -430,7 +418,6 @@ def get_magazines(request):
         'page': page,
         'p_n': p_n,
         'search': search,
-        'n_show': int(n_show),
     }
     return render(request, "article_app/magazines.html", context=context)
 

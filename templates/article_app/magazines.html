@@ -1,6 +1,5 @@
 {% extends 'user_app/base.html' %}
 {% load static %}
-{% load pages_tags %}
 {% block title %}
     Jurnallar
 {% endblock %}
@@ -36,38 +35,6 @@
             <!-- begin panel-body -->
             <div class="panel-body">
                 <!-- begin table-responsive -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <form class="form-inline justify-content-start">
-                            <div class="form-group mx-sm-3 mb-3">
-                                <label style="margin-right: 5px"><strong>Show</strong></label>
-                                <select id="id_n_show" name="n_show" class="form-control selectpicker"
-                                        data-style="btn-white">
-                                    {% get_pages as all_pages %}
-                                    {% for item in all_pages %}
-                                        <option  {% if n_show == item.value %} selected {% endif %}
-                                                                               value="{{ item.value }}">{{ item.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button {% if p_n == 0 %} disabled {% endif %} type="submit"
-                                                      class="btn btn-outline-warning btn-sm mb-3">Show
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-6">
-                        <form class="form-inline justify-content-end">
-                            <div class="form-group mx-sm-3 mb-3">
-                                <input {% if p_n == 0 %} disabled {% endif %} type="text" name="search"
-                                                         value="{{ search }}" class="form-control "
-                                                         placeholder="Search..." style="width: 250px">
-                            </div>
-                            <button {% if p_n == 0 %} disabled {% endif %} type="submit" class="btn btn-success mb-3"><i
-                                    class="fa fa-search"></i>Search
-                            </button>
-                        </form>
-                    </div>
-                </div>
                 <div class="table-responsive">
                     <table
                             class="table table-striped table-bordered table-td-valign-middle table-hover">

@@ -44,26 +44,33 @@ class UpdateArticleForm(forms.ModelForm):
                 'data-live-search': "true",
                 'data - style': "btn-white",
                 'data - parsley - required': "true",
+                'id': 'category',
             }),
             'title': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
+                'rows': '3',
+                'id': 'title',
             }),
             'abstract': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
                 'rows': '5',
-                'placeholder': 'Enter...'
+                'placeholder': 'Enter...',
+                'id': 'abstract',
             }),
             'keywords': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
+                'id': 'keywords',
             }),
             'references': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
                 'rows': '5',
-                'placeholder': 'Enter...'
+                'placeholder': 'Enter...',
+                'id': 'references',
+
             }),
             'file': FileInput(attrs={
                 'id': 'id_file',

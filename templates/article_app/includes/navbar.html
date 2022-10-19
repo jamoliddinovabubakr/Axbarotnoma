@@ -4,7 +4,7 @@
         <a href="/">
         <img src="{% static 'img/version.png' %}" alt=""  width="80"/></a>
             <span  style="text-transform: uppercase; margin-left: 1em; font-family: Roboto,sans-serif; text-align: center; display: table-cell; vertical-align: middle;">
-                <b>Onlayn axborotnoma jurnali</b>
+                <b>Onlayn axborotnoma jurnal</b>
 			</span>
 
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar">
@@ -17,7 +17,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/">Bosh sahifa</a></li>
                 <li><a href="{% url 'about_journal' %}">Jurnal haqida</a></li>
-                <li><a href="#">Maqolalar</a></li>
+                <li><a href="#">Konferensiya</a></li>
                 <li><a href="{% url 'talabnoma' %}">Talabnoma</a></li>
                 <li><a href="{% url 'contact' %}">Bog'lanish</a></li>
                 {% if request.user.is_authenticated %}

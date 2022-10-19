@@ -487,73 +487,6 @@ def view_notification(request, pk):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
-def reject_article(request, pk):
-    RAD_ETILDI = State.objects.get(pk=2)
-    notif = get_object_or_404(Notification, pk=pk)
-
-    article = get_object_or_404(Article, pk=notif.article.id)
-    article.state = RAD_ETILDI
-    article.step_bosh_muharrir = get_object_or_404(Step, pk=3)
-    article.save()
-
-    my_resends = MyResendArticle.objects.filter(article=article)
-    my_resend_last = my_resends.last()
-
-    my_resend_last.state = RAD_ETILDI
-    my_resend_last.save()
-
-    notif.status = 'Tekshirildi'
-    notif.save()
-
-    return redirect('notifications')
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
-def confirm_article(request, pk):
-    TASDIQLANDI = State.objects.get(pk=3)
-    notif = get_object_or_404(Notification, pk=pk)
-
-    article = get_object_or_404(Article, pk=notif.article.id)
-    article.state = TASDIQLANDI
-    article.step_bosh_muharrir = get_object_or_404(Step, pk=3)
-    article.save()
-
-    my_resends = MyResendArticle.objects.filter(article=article)
-    my_resend_last = my_resends.last()
-    my_resend_last.state = TASDIQLANDI
-    my_resend_last.save()
-
-    notif.status = 'Tekshirildi'
-    notif.save()
-
-    return redirect('notifications')
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
-def resend_a(request, pk):
-    QAYTAYUBORISH = State.objects.get(pk=5)
-    notif = get_object_or_404(Notification, pk=pk)
-
-    article = get_object_or_404(Article, pk=notif.article.id)
-    article.state = QAYTAYUBORISH
-    article.step_bosh_muharrir = get_object_or_404(Step, pk=3)
-    article.save()
-
-    my_resends = MyResendArticle.objects.filter(article=article)
-    my_resend_last = my_resends.last()
-    my_resend_last.state = QAYTAYUBORISH
-    my_resend_last.save()
-
-    notif.status = 'Tekshirildi'
-    notif.save()
-
-    return redirect('notifications')
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def answer_to_author(request, pk):
     notif = get_object_or_404(Notification, pk=pk)
     article = get_object_or_404(Article, pk=notif.article.id)
@@ -566,13 +499,37 @@ def answer_to_author(request, pk):
         msg = request.GET.get('message_author')
         result = request.GET.get('stateArticle')
 
-        if result == '3':
+        my_resends = MyResendArticle.objects.filter(article=article)
+        my_resend_last = my_resends.last()
+
+        if result == '1':
+            article.state = RAD_ETILDI
+            article.save()
+
+            my_resend_last.state = RAD_ETILDI
+            my_resend_last.message = msg
+            my_resend_last.save()
+
+            notif.status = 'Tekshirildi'
+            notif.save()
+
+        elif result == '2':
+            article.state = QAYTAYUBORISH
+            article.save()
+
+            my_resend_last.state = QAYTAYUBORISH
+            my_resend_last.message = msg
+            my_resend_last.save()
+
+            notif.status = 'Tekshirildi'
+            notif.save()
+
+        elif result == '3':
             article.state = TASDIQLANDI
             article.save()
-            my_resends = MyResendArticle.objects.filter(article=article)
-            my_resend_last = my_resends.last()
+
             my_resend_last.state = TASDIQLANDI
-            my_resend_last.message=msg
+            my_resend_last.message = msg
             my_resend_last.save()
 
             notif.status = 'Tekshirildi'
