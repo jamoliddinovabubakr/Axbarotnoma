@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'article_app',
     'user_app',
+    'import_export',
     'ckeditor',
 ]
 

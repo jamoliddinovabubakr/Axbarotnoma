@@ -1,8 +1,3 @@
-from email.policy import default
-from operator import mod
-from pyexpat import model
-from tkinter.tix import Tree
-from turtle import title
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
