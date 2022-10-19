@@ -1,11 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import UpdateView
-
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Journal, Post, BlankPage, MyResendArticle
-from user_app.models import State, Notification, Step
+from user_app.models import State, Notification
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, \
     UpdateMagazineForm, CreateMyResendArticleForm
 from django.core.paginator import Paginator
@@ -30,28 +28,14 @@ def post_detail(request, slug):
 @login_required(login_url='login')
 def my_articles(request):
     user = request.user
-    search = request.GET.get('search')
-    n_show = request.GET.get('n_show')
-
-    if search is None:
-        get_my_articles = Article.objects.filter(author=user).filter(
+    get_my_articles = Article.objects.filter(author=user).filter(
             Q(state__id=2) | Q(state__id=3)
         )
-        search = ''
-    else:
-        get_my_articles = Article.objects.filter(author=user).filter(
-            Q(title__icontains=search) | Q(category__name__icontains=search)
-        )
-
-
     paginator = Paginator(get_my_articles, 10)
     page_num = request.GET.get('page')
     page = paginator.get_page(page_num)
     p_n = paginator.count
     page_count = page.paginator.page_range
-
-    if n_show == p_n:
-        n_show = 0
 
     context = {
         'user': user,
@@ -59,8 +43,6 @@ def my_articles(request):
         'page_count': page_count,
         'page': page,
         'p_n': p_n,
-        'search': search,
-        'n_show': int(n_show),
     }
     return render(request, "article_app/my_articles.html", context=context)
 
@@ -73,7 +55,6 @@ def create_article(request):
         if form.is_valid():
             article = form.save(commit=False)
             article.save()
-            articleId = article.id
 
             Authors.objects.create(
                 article=article,
@@ -84,7 +65,7 @@ def create_article(request):
                 work_place='-',
                 author_order=1
             )
-            return redirect('update_my_article', pk=articleId)
+            return redirect('update_my_article', pk=article.id)
     else:
         context = {
             'form': CreateArticleForm(),
@@ -102,9 +83,9 @@ def update_my_article(request, pk):
         user = request.user
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
-            YUBORILDI = State.objects.get(pk=4)
+            sending = State.objects.get(pk=4)
             ob = form.save(commit=False)
-            ob.state = YUBORILDI
+            ob.state = sending
             ob.save()
 
             article.save()
@@ -114,7 +95,7 @@ def update_my_article(request, pk):
                 article=article,
                 file_word=ob.file,
                 message='Maqolangiz 14 ish kunida ko\'rib chiqladi.',
-                state=YUBORILDI,
+                state=sending,
             )
 
             return redirect('sending_article_form')
@@ -133,16 +114,16 @@ def update_my_article(request, pk):
 def resend_article(request, pk):
     last_resend = MyResendArticle.objects.get(pk=pk)
     article = Article.objects.get(pk=last_resend.article.pk)
-    YUBORILDI = State.objects.get(pk=4)
+    sending = State.objects.get(pk=4)
 
     if request.method == "POST":
         form = CreateMyResendArticleForm(request.POST, request.FILES)
         if form.is_valid():
             ob = form.save(commit=False)
-            ob.state = YUBORILDI
+            ob.state = sending
             ob.save()
 
-            article.state = YUBORILDI
+            article.state = sending
             article.save()
 
             last_resend.status = False
@@ -164,13 +145,13 @@ def update_resend_article(request, pk):
     if request.user.id != article.author.id:
         return render(request, 'user_app/not_access.html')
     authors = Authors.objects.filter(article=article)
-    YUBORILDI = State.objects.get(pk=4)
+    sending = State.objects.get(pk=4)
 
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
             ob = form.save(commit=False)
-            ob.state = YUBORILDI
+            ob.state = sending
             ob.save()
 
             return redirect('sending_article_form')
@@ -190,7 +171,7 @@ def sending_article_form(request):
     is_have = False
     user = request.user
 
-    get_mylast_articles = send_mylast_article = my_resends = None
+    send_mylast_article = my_resends = None
     last_article = Article.objects.filter(author=user).last()
 
     if last_article:
@@ -281,21 +262,21 @@ def delete_author(request, pk):
 
 @login_required(login_url='login')
 def delete_myarticle(request, pk):
-    resend_article = get_object_or_404(MyResendArticle, pk=pk)
-    article = resend_article.article
+    resent_article = get_object_or_404(MyResendArticle, pk=pk)
+    article = resent_article.article
     articles = MyResendArticle.objects.filter(article=article)
     article_count = articles.count()
 
     if request.method == "POST":
-        notif = Notification.objects.get(my_resend__pk=resend_article.pk)
+        notif = Notification.objects.get(my_resend__pk=resent_article.pk)
         if article_count == 1:
             article.delete()
-        resend_article.delete()
+        resent_article.delete()
         notif.delete()
         return redirect('sending_article_form')
     else:
         return render(request, 'article_app/crud/delete_myarticle.html',
-                      {'article': article, 'resend_article': resend_article})
+                      {'article': article, 'resent_article': resent_article})
 
 
 @login_required(login_url='login')
@@ -362,8 +343,7 @@ def create_magazine(request):
         if form.is_valid():
             magazine = form.save(commit=False)
             magazine.save()
-            jurnalId = magazine.id
-            return redirect('edit_magazine', pk=jurnalId)
+            return redirect('edit_magazine', pk=magazine.id)
     else:
         context = {
             'form': CreateMagazineForm(),
@@ -380,7 +360,6 @@ def edit_magazine(request, pk):
     if request.method == "POST":
         form = UpdateMagazineForm(request.POST, request.FILES, instance=jurnal)
         if form.is_valid():
-            choosen_article = form.cleaned_data['article']
             form.save()
 
             return redirect('get_magazines')
@@ -396,16 +375,7 @@ def edit_magazine(request, pk):
 @allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
 def get_magazines(request):
     search = request.GET.get('search')
-    n_show = request.GET.get('n_show')
-
-    if search is None:
-        magazines = Journal.objects.all()
-        search = ''
-    else:
-        magazines = Journal.objects.filter(
-            Q(number_magazine__icontains=search) | Q(category__name__icontains=search)
-        )
-
+    magazines = Journal.objects.all()
     paginator = Paginator(magazines, 10)
     page_num = request.GET.get('page')
     page = paginator.get_page(page_num)
@@ -430,9 +400,9 @@ def about_journal(request):
 
 
 def talabnoma(request):
-    talabnoma = BlankPage.objects.last()
+    t = BlankPage.objects.last()
     return render(request, "article_app/talabnoma.html", {
-        "ob": talabnoma
+        "ob": t,
     })
 
 
