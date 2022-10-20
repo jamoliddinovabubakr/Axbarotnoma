@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
@@ -60,7 +61,6 @@ def create_article(request):
 
             article, created = Article.objects.get_or_create(title=title, author=user)
             for item in category[0]:
-                print(item)
                 article.category.add(int(item))
 
             Authors.objects.create(
@@ -84,6 +84,8 @@ def create_article(request):
 @login_required(login_url='login')
 def update_my_article(request, pk):
     article = Article.objects.get(pk=pk)
+    if request.user != article.author:
+        return render(request, 'user_app/not_access.html')
     authors = Authors.objects.filter(article=article)
 
     if request.method == "POST":
@@ -94,8 +96,6 @@ def update_my_article(request, pk):
             ob = form.save(commit=False)
             ob.state = sending
             ob.save()
-
-            article.save()
 
             MyResendArticle.objects.create(
                 author=user,

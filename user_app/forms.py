@@ -111,9 +111,6 @@ class CreateMenuForm(forms.ModelForm):
             'menu_tr': NumberInput(attrs={
                 'class': 'form-control',
             }),
-            # 'allowed_roles': ModelMultipleChoiceField(attrs={
-            #     'class': 'form-control',
-            # }),
         }
 
 

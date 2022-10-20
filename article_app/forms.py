@@ -37,7 +37,7 @@ class UpdateArticleForm(forms.ModelForm):
         fields = ['title', 'category', 'abstract', 'keywords', 'references', 'file', 'author']
 
         widgets = {
-            'category': Select(attrs={
+            'category': SelectMultiple(attrs={
                 'class': 'form-control selectpicker',
                 'data-live-search': "true",
                 'data - style': "btn-white",
