@@ -54,8 +54,14 @@ def create_article(request):
     if request.method == "POST":
         form = CreateArticleForm(request.POST)
         if form.is_valid():
-            article = form.save(commit=False)
-            article.save()
+
+            title = form.cleaned_data['title'],
+            category = form.cleaned_data['category'],
+
+            article, created = Article.objects.get_or_create(title=title, author=user)
+            for item in category[0]:
+                print(item)
+                article.category.add(int(item))
 
             Authors.objects.create(
                 article=article,

@@ -18,26 +18,11 @@ class CreateArticleForm(forms.Form):
         'data - style': "btn-white",
         'data - parsley - required': "true",
     }))
-    author = forms.CharField(max_length=255, widget=forms.Select(attrs={
-        'class': 'form-control',
-        'data - size': "10",
-    }))
     title = forms.CharField(max_length=255, widget=forms.Textarea(attrs={
         'class': 'form-control',
         'data - size': "10",
         'data - parsley - required': "true",
     }))
-
-    def save(self):
-        cleaned_data = self.cleaned_data
-        title = cleaned_data['title']
-        author = cleaned_data['author']
-        category = cleaned_data['category']
-        Article.objects.create(
-            title=title,
-            author=author,
-            category=category
-        )
 
 
 class CreateMyResendArticleForm(forms.ModelForm):
