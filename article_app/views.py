@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Journal, Post, BlankPage, MyResendArticle
 from user_app.models import State, Notification
 from .forms import CreateArticleForm, UpdateArticleForm, AddAuthorForm, CreateCategoryForm, CreateMagazineForm, \
     UpdateMagazineForm, CreateMyResendArticleForm
 from django.core.paginator import Paginator
-from user_app.allow_roles import allow
 
 
 def main_page(request):
@@ -281,7 +281,7 @@ def delete_myarticle(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(menu_url='get_category')
 def get_category(request):
     categories = Category.objects.all()
     context = {
@@ -291,7 +291,7 @@ def get_category(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(perm='add_category')
 def create_category(request):
     if request.method == "POST":
         form = CreateCategoryForm(request.POST)
@@ -307,7 +307,7 @@ def create_category(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(perm='change_category')
 def edit_category(request, pk):
     category = Category.objects.get(pk=pk)
     if request.method == "POST":
@@ -325,7 +325,7 @@ def edit_category(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(perm='delete_category')
 def delete_category(request, pk):
     category = Category.objects.get(pk=pk)
     if request.method == "POST":
@@ -336,7 +336,7 @@ def delete_category(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(perm='add_magazine')
 def create_magazine(request):
     user = request.user
     if request.method == "POST":
@@ -354,10 +354,9 @@ def create_magazine(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(perm='change_magazine')
 def edit_magazine(request, pk):
     jurnal = Journal.objects.get(pk=pk)
-
     if request.method == "POST":
         form = UpdateMagazineForm(request.POST, request.FILES, instance=jurnal)
         if form.is_valid():
@@ -373,7 +372,7 @@ def edit_magazine(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(menu_url='get_magazines')
 def get_magazines(request):
     search = request.GET.get('search')
     magazines = Journal.objects.all()

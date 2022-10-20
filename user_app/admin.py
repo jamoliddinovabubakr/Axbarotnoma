@@ -20,11 +20,6 @@ class StateAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name', 'status']
 
 
-@admin.register(Step)
-class StepAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'name', 'status']
-
-
 @admin.register(Region)
 class RegionAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name', 'key']

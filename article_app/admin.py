@@ -21,7 +21,7 @@ class PostAdmin(ImportExportActionModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'category', 'title', 'author',
+    list_display = ['id', 'get_categories', 'title', 'author',
                     'file', 'file_pdf', 'state','created_at', 'is_publish']
 
 

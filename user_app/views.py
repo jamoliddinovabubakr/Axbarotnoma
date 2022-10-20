@@ -1,7 +1,7 @@
 from article_app.models import Journal
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
-from user_app.decorators import unauthenticated_user, password_reset_authentification, allowed_users
+from user_app.decorators import unauthenticated_user, password_reset_authentification
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.core.mail import send_mail, BadHeaderError
@@ -10,27 +10,25 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from user_app.forms import CreateUserForm
-from user_app.models import Notification, State, Step
+from user_app.models import Notification, State
 from article_app.models import Article, Authors, MyResendArticle
 from user_app.models import Role
 from user_app.forms import CreateRoleForm
 from user_app.models import State
 from user_app.forms import CreateStateForm
 import os
-from django.contrib.auth.models import Group
 from user_app.models import User
 from django.db.models.query_utils import Q
 from user_app.forms import UpdateUserForm
 from django.http import HttpResponse
 from user_app.models import Region
 from user_app.forms import CreateRegionForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.contrib.auth.models import Group, Permission
 from user_app.decorators import allowed_users
 from user_app.models import Menu
 from user_app.forms import CreateMenuForm
-from user_app.allow_roles import allow
 
 
 @unauthenticated_user
@@ -119,12 +117,12 @@ def password_reset(request):
                     email_template_name = "user_app/register/password_reset_email.txt"
                     c = {
                         "email": user.email,
-                        'domain': '127.0.0.1:8000',
-                        'site_name': '127.0.0.1:8000',
+                        # 'domain': '127.0.0.1:443',
+                        # 'site_name': '127.0.0.1:443',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
                         'token': default_token_generator.make_token(user),
-                        'protocol': 'http',
+                        # 'protocol': 'http',
                     }
                     email = render_to_string(email_template_name, c)
                     try:
@@ -142,10 +140,8 @@ def logout_user(request):
     return redirect('main_page')
 
 
-
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHRIRCHI'])
-# @admin_only
+@allowed_users(menu_url='profile_page')
 def profile_page(request):
     tasdiqlanganlar = Article.objects.filter(state=3)
     tasdiqlanmaganlar = Article.objects.filter(state=2)
@@ -161,7 +157,6 @@ def profile_page(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'USER', 'BOSH MUHARRIR', 'MASUL KOTIB', 'TAHRIRCHI'])
 def profile(request):
     context = {
 
@@ -175,7 +170,7 @@ def handler404(request, exception):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(menu_url='roles')
 def get_roles(request):
     roles = Role.objects.filter(status=True)
     context = {
@@ -185,7 +180,7 @@ def get_roles(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='add_role')
 def create_role(request):
     if request.method == "POST":
         form = CreateRoleForm(request.POST)
@@ -201,7 +196,7 @@ def create_role(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='change_role')
 def edit_role(request, pk):
     role = get_object_or_404(Role, pk=pk)
     if request.method == 'POST':
@@ -215,7 +210,7 @@ def edit_role(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='delete_role')
 def delete_role(request, pk):
     role = get_object_or_404(Role, pk=pk)
     if request.method == "POST":
@@ -226,7 +221,7 @@ def delete_role(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(menu_url='states')
 def get_states(request):
     states = State.objects.filter(status=True)
     context = {
@@ -236,7 +231,7 @@ def get_states(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='add_state')
 def create_state(request):
     if request.method == "POST":
         form = CreateStateForm(request.POST)
@@ -252,7 +247,7 @@ def create_state(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='change_state')
 def edit_state(request, pk):
     state = get_object_or_404(State, pk=pk)
     if request.method == 'POST':
@@ -266,7 +261,7 @@ def edit_state(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='delete_state')
 def delete_state(request, pk):
     state = get_object_or_404(State, pk=pk)
     if request.method == "POST":
@@ -277,7 +272,7 @@ def delete_state(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(menu_url='admins')
 def admins(request):
     adminlar = User.objects.filter(Q(role__name="MASTER") | Q(role__name="ADMIN"))
     context = {
@@ -287,7 +282,7 @@ def admins(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(menu_url='users')
 def users(request):
     userlar = User.objects.all()
     context = {
@@ -297,7 +292,7 @@ def users(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='view_user')
 def view_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     return render(request, 'user_app/crud/view_user.html', {'user': user})
@@ -336,16 +331,14 @@ def change_group(user, new_gr):
     new_group.user_set.add(user)
 
 
-MASTER = 'MASTER'
-ADMIN = 'ADMIN'
-USER = 'USER'
-BOSH_MUHARRIR = 'BOSH MUHARRIR'
-TAHRIRCHI = 'TAHRIRCHI'
-
-
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='change_user')
 def update_user(request, pk):
+    MASTER = 'MASTER'
+    ADMIN = 'ADMIN'
+    USER = 'USER'
+    BOSH_MUHARRIR = 'BOSH MUHARRIR'
+    TAHRIRCHI = 'TAHRIRCHI'
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         form = UpdateUserForm(request.POST, instance=user)
@@ -386,7 +379,7 @@ def update_user(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='delete_user')
 def delete_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
@@ -397,7 +390,7 @@ def delete_user(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(menu_url='regions')
 def get_regions(request):
     regions = Region.objects.all()
     context = {
@@ -407,7 +400,7 @@ def get_regions(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='add_region')
 def create_region(request):
     if request.method == "POST":
         form = CreateRegionForm(request.POST)
@@ -423,7 +416,7 @@ def create_region(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='change_region')
 def edit_region(request, pk):
     region = get_object_or_404(Region, pk=pk)
     if request.method == 'POST':
@@ -437,7 +430,7 @@ def edit_region(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='delete_region')
 def delete_region(request, pk):
     region = get_object_or_404(Region, pk=pk)
     if request.method == "POST":
@@ -448,7 +441,7 @@ def delete_region(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(menu_url='notifications')
 def get_notifications(request):
     notifications = Notification.objects.order_by("-created_at")
     notif_count = notifications.count()
@@ -460,10 +453,9 @@ def get_notifications(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(perm='view_notification')
 def view_notification(request, pk):
     reading = State.objects.get(pk=1)
-
     notification = get_object_or_404(Notification, pk=pk)
     article = notification.article
 
@@ -472,9 +464,6 @@ def view_notification(request, pk):
         my_resend_last = my_resends.last()
         my_resend_last.state = reading
         article.state = reading
-        article.save()
-
-        article.step_bosh_muharrir = get_object_or_404(Step, pk=2)
         article.save()
 
         my_resend_last.save()
@@ -486,7 +475,7 @@ def view_notification(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN', 'BOSH MUHARRIR'])
+@allowed_users(perm='change_notification')
 def answer_to_author(request, pk):
     notif = get_object_or_404(Notification, pk=pk)
     article = get_object_or_404(Article, pk=notif.article.id)
@@ -539,7 +528,7 @@ def answer_to_author(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=allow('menus'))
+@allowed_users(menu_url='menus')
 def get_menus(request):
     menus = Menu.objects.filter(status=True)
     context = {
@@ -549,7 +538,7 @@ def get_menus(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='change_menu')
 def edit_menu(request, pk):
     menu = get_object_or_404(Menu, pk=pk)
     if request.method == 'POST':
@@ -563,7 +552,7 @@ def edit_menu(request, pk):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['MASTER', 'ADMIN'])
+@allowed_users(perm='delete_menu')
 def delete_menu(request, pk):
     menu = get_object_or_404(Menu, pk=pk)
     if request.method == "POST":

@@ -22,7 +22,7 @@ def user_directory_path(instance, filename):
 
 
 class Article(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya", blank=True, null=True)
+    category = models.ManyToManyField(Category,  verbose_name="Kategoriya", blank=True)
     title = models.CharField(max_length=255, blank=True, null=True)
     abstract = RichTextField(blank=True, null=True)
     keywords = RichTextField(blank=True, null=True)
@@ -37,6 +37,9 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_publish = models.BooleanField(default=True)
     # url = models.SlugField(max_length=200, unique=True)
+
+    def get_categories(self):
+        return [p.name for p in self.category.all()]
 
     def __str__(self):
         return self.title

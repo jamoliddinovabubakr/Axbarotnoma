@@ -1,7 +1,7 @@
 from email.policy import default
 from operator import mod
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, GroupManager
+from django.contrib.auth.models import AbstractUser, Group, GroupManager, Permission
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -20,12 +20,11 @@ class Region(models.Model):
         verbose_name_plural = _("Viloyatlar")
 
 
-# class Gender(models.Model):
-#     name = models.CharField(_('Jins'), max_length=50)
-#     status = models.BooleanField(default=True)
-#
-#     def __str__(self):
-#         return self.name
+class Gender(models.Model):
+    name = models.CharField(_('Jins'), max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
 class Role(models.Model):
@@ -63,20 +62,33 @@ class User(AbstractUser):
             self.role_id = rol.id
         super().save(*args, **kwargs)
 
+    @property
+    def full_name(self):
+        # "Returns the person's full name."
+        return '%s %s' % (self.first_name, self.last_name)
+
+    # def get_user_permissions(self):
+    #     if self.is_superuser:
+    #         return Permission.objects.all()
+    #     return Permission.objects.filter(group__user=self)
+
     def __str__(self):
         return self.email
 
+    # def is_master(self) -> bool:
+    #     return self.groups.filter(name='Master').exists()
+    #
     # def is_admin(self) -> bool:
     #     return self.groups.filter(name='ADMIN').exists()
     #
     # def is_user(self):
     #     return self.groups.filter(name='USER').exists()
     #
-    # def is_editor(self):
+    # def is_redactor(self):
     #     return self.groups.filter(name='MUHARRIR').exists()
     #
-    # def is_analitic(self):
-    #     return self.groups.filter(name='TAHLILCHI').exists()
+    # def is_editor(self):
+    #     return self.groups.filter(name='TAHRIRCHI').exists()
 
     class Meta:
         verbose_name = _('Foydalanuvchi')
@@ -84,14 +96,6 @@ class User(AbstractUser):
 
 
 class State(models.Model):
-    name = models.CharField(max_length=100, default=None)
-    status = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Step(models.Model):
     name = models.CharField(max_length=100, default=None)
     status = models.BooleanField(default=True)
 
