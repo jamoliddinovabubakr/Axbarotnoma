@@ -1,3 +1,7 @@
+__pycache__
+/env
+*.env
+.vscode
 Pipfile
 Pipfile.lock
 static/assets/
@@ -113,7 +117,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+config/.env
 .venv
 env/
 venv/
@@ -147,4 +151,4 @@ cython_debug/
 
 static_root
 media_root
-.DS_Store
+*.DS_Store

@@ -22,7 +22,7 @@ def user_directory_path(instance, filename):
 
 
 class Article(models.Model):
-    category = models.ManyToManyField('Category',  verbose_name="Kategoriya", related_name="", blank=True)
+    category = models.ManyToManyField('Category',  verbose_name="Kategoriya", related_name="article_category", blank=True)
     title = models.CharField(max_length=255, blank=True, null=True)
     abstract = RichTextField(blank=True, null=True)
     keywords = RichTextField(blank=True, null=True)
