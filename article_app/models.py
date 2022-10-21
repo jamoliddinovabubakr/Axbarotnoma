@@ -22,7 +22,7 @@ def user_directory_path(instance, filename):
 
 
 class Article(models.Model):
-    category = models.ManyToManyField('Category',  verbose_name="Kategoriya", related_name="article_category", blank=True)
+    category = models.ManyToManyField(Category,  verbose_name="Kategoriya", related_name="article_category")
     title = models.CharField(max_length=255, blank=True, null=True)
     abstract = RichTextField(blank=True, null=True)
     keywords = RichTextField(blank=True, null=True)
@@ -36,10 +36,15 @@ class Article(models.Model):
                               null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_publish = models.BooleanField(default=True)
-    # url = models.SlugField(max_length=200, unique=True)
+    url = models.SlugField(max_length=200, unique=True)
 
     def get_categories(self):
         return [p.name for p in self.category.all()]
+
+    def save(self, *args, **kwargs):
+        if not self.url:
+            self.url = slugify(self.title, allow_unicode=True)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -107,13 +112,13 @@ class Journal(models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
     tag = RichTextField(blank=True, null=True)
     img = models.ImageField(upload_to='blog/')
     desc = RichTextField(blank=True, null=True)
     is_publish = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    url = models.SlugField(max_length=200, null=True, blank=True)
+    url = models.SlugField(max_length=200, unique=True)
 
     def get_absolute_url(self):
         return reverse("post_detail", kwargs={"slug": self.url})

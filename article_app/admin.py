@@ -1,6 +1,7 @@
 from django.contrib import admin
 from article_app.models import *
 from import_export.admin import ImportExportActionModelAdmin
+from modeltranslation.admin import TranslationAdmin
 
 
 @admin.register(Category)
@@ -14,7 +15,7 @@ class MyResendArticleAdmin(ImportExportActionModelAdmin):
 
 
 @admin.register(Post)
-class PostAdmin(ImportExportActionModelAdmin):
+class PostAdmin(ImportExportActionModelAdmin, ):
     list_display = ['id', 'title', 'tag', 'desc', 'img', 'is_publish', 'created_at']
     prepopulated_fields = {'url': ('title', )}
 

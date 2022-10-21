@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser, Group, GroupManager, Permis
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from article_app.models import Article, MyResendArticle
+from article_app.models import Article, MyResendArticle, Category
 
 
 class Region(models.Model):
@@ -46,8 +46,9 @@ class User(AbstractUser):
     email = models.CharField(_('Email address'), max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Telefon raqam', unique=True)
     passport = models.CharField(_('Pasport'), max_length=15, blank=True, null=True)
-    role = models.ForeignKey(Role, related_name="user_role", on_delete=models.CASCADE, null=True, blank=True)
-    region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name="Viloyat", null=True, blank=True)
+    role = models.ForeignKey('Role', related_name="user_role", on_delete=models.CASCADE, null=True, blank=True)
+    region = models.ForeignKey('Region', on_delete=models.CASCADE, verbose_name="Viloyat", null=True, blank=True)
+    speciality = models.ManyToManyField(Category, related_name="user_speciality")
 
     def save(self, *args, **kwargs):
         rollar = Role.objects.all()
@@ -64,7 +65,6 @@ class User(AbstractUser):
 
     @property
     def full_name(self):
-        # "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
 
     # def get_user_permissions(self):

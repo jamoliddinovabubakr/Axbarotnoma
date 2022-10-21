@@ -1,8 +1,11 @@
+from django.conf.urls.i18n import i18n_patterns
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 from .views import main_page, my_articles, create_article, update_my_article, add_author, edit_author, delete_author, \
-    delete_myarticle, get_category, edit_category, delete_category, create_category, create_magazine, get_magazines, edit_magazine, post_detail, about_journal, \
+    delete_myarticle, get_category, edit_category, delete_category, create_category, create_magazine, get_magazines, \
+    edit_magazine, post_detail, about_journal, \
     talabnoma, magazine_detail, all_magazine_son, sending_article_form, resend_article, update_resend_article
+
 
 urlpatterns = [
     path('', main_page, name='main_page'),
@@ -11,9 +14,10 @@ urlpatterns = [
     path('all_magazines/', all_magazine_son, name='all_magazine_son'),
     path('contact/', TemplateView.as_view(template_name="article_app/contact.html"), name='contact'),
     path('aboutdtm/', TemplateView.as_view(template_name="article_app/blank_page/about_dtm.html"), name='aboutdtm'),
-    path('editor_board/', TemplateView.as_view(template_name="article_app/blank_page/editor_board.html"), name='editor_board'),
-    path('post/<slug:slug>/', post_detail, name='post_detail'),
+    path('editor_board/', TemplateView.as_view(template_name="article_app/blank_page/editor_board.html"),
+         name='editor_board'),
 
+    path('post/<slug:slug>/', post_detail, name='post_detail'),
 
     path('articles/', my_articles, name='my_articles'),
     path('sending_article/', sending_article_form, name='sending_article_form'),

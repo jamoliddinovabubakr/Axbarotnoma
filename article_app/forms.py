@@ -1,15 +1,13 @@
-from dataclasses import fields
-from operator import mod
-from xmlrpc.client import Boolean
 from django import forms
-from django.forms import CheckboxInput, Select, DateInput, PasswordInput, TextInput, Textarea, FileInput, NumberInput, \
-    BooleanField, SelectMultiple
+from django.forms import TextInput, Textarea, FileInput, NumberInput, SelectMultiple
 from .models import Article, Category, Authors, Journal, MyResendArticle
 
 
 class CreateArticleForm(forms.Form):
+    choices = [['', '']]
     query = Category.objects.all().values().order_by('name')
-    choices = [[x['id'], x['name']] for x in query]
+    if query:
+        choices = [[x['id'], x['name']] for x in query]
 
     category = forms.MultipleChoiceField(choices=choices, required=True, widget=forms.SelectMultiple(attrs={
         'class': 'form-control selectpicker',
