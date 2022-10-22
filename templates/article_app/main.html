@@ -1,7 +1,8 @@
 {% extends 'article_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
-Bosh sahifa
+{% trans 'Bosh sahifa' %}
 {% endblock %}
 {% block content %}	
 <div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
@@ -12,7 +13,7 @@ Bosh sahifa
 			<i class="fas fa-md fa-fw m-r-10 fa-calendar-alt"></i><span class="text-inverse">{{ post.created_at }}</span><br><br>
 			<center><img src="{{ post.img.url}}"   width="100%" alt="" /></center>
 			<p>{{ post.tag|safe }}</p>
-			<a href="{{ post.get_absolute_url }}" class="btn btn-outline-success">Batafsil>></a>
+			<a href="{{ post.get_absolute_url }}" class="btn btn-outline-success">{% trans 'Batafsil' %}>></a>
 		{% endif %}
 		{% include 'article_app/includes/social_buttons.html' %}
 	</div>		

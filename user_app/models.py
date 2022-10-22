@@ -41,7 +41,7 @@ class User(AbstractUser):
     last_name = models.CharField(_('Familiya'), max_length=100, blank=True, null=True)
     middle_name = models.CharField(_('Otasini ismi'), max_length=30, null=True, blank=True)
     birthday = models.DateField(_('Tugilgan kun'), null=True, blank=True)
-    # gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True, )
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True, )
     avatar = models.ImageField(_("Avatar"), upload_to='avatars/', default='user.png')
     email = models.CharField(_('Email address'), max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Telefon raqam', unique=True)

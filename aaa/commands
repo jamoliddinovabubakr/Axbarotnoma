@@ -1,0 +1,3 @@
+python manage.py update_translation_fields
+django-admin makemessages -l en -e html
+django-admin compilemessages

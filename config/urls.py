@@ -11,17 +11,15 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
+]
+urlpatterns += i18n_patterns(
     path('', include('article_app.urls')),
     path('profile/', include('user_app.urls')),
-    path('admin/', admin.site.urls),
-]
-# urlpatterns += i18n_patterns(
-#     path('i18n/', include('django.conf.urls.i18n')),
-#     path('', include('article_app.urls')),
-#     path('profile/', include('user_app.urls')),
-#     prefix_default_language=False,
-# )
+)
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'user_app.views.handler404'

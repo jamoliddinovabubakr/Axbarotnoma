@@ -5,17 +5,17 @@ from modeltranslation.admin import TranslationAdmin
 
 
 @admin.register(Category)
-class CategoryAdmin(ImportExportActionModelAdmin):
+class CategoryAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'name', 'status']
 
 
 @admin.register(MyResendArticle)
-class MyResendArticleAdmin(ImportExportActionModelAdmin):
+class MyResendArticleAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'article', 'file_word', 'message', 'state', 'created_at']
 
 
 @admin.register(Post)
-class PostAdmin(ImportExportActionModelAdmin, ):
+class PostAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'title', 'tag', 'desc', 'img', 'is_publish', 'created_at']
     prepopulated_fields = {'url': ('title', )}
 
@@ -37,5 +37,5 @@ class MagazineAdmin(ImportExportActionModelAdmin):
 
 
 @admin.register(BlankPage)
-class BlankPageAdmin(ImportExportActionModelAdmin):
+class BlankPageAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'title', 'body', 'is_publish', 'created_at']

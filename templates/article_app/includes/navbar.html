@@ -25,7 +25,7 @@
                     <li class="dropdown navbar-user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>
-                            <span class="d-none d-md-inline">{{ request.user.last_name }} {{ request.user.first_name }}</span>
+                            <span class="d-none d-md-inline">{{ request.user.full_name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="{% url 'profile_page' %}" class="dropdown-item"><i
@@ -37,6 +37,21 @@
                     <li><a href="{% url 'register' %}">Ro'yxatdan o'tish</a></li>
                     <li><a href="{% url 'login' %}">Kirish</a></li>
                 {% endif %}
+                <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                    <input name="next" type="hidden" value="{{ redirect_to }}">
+                    <select name="language">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
+                                    selected{% endif %}>
+                                {{ language.name_local }} ({{ language.code }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="Go">
+                </form>
 
             </ul>
         </div>
