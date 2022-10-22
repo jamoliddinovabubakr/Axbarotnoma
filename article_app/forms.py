@@ -5,9 +5,9 @@ from .models import Article, Category, Authors, Journal, MyResendArticle
 
 class CreateArticleForm(forms.Form):
     choices = [['', '']]
-    # query = Category.objects.all().values().order_by('name')
-    # if query is not None:
-    #     choices = [[x['id'], x['name']] for x in query]
+    query = Category.objects.all().values().order_by('name')
+    if query:
+        choices = [[x['id'], x['name']] for x in query]
 
     category = forms.MultipleChoiceField(choices=choices, required=True, widget=forms.SelectMultiple(attrs={
         'class': 'form-control selectpicker',

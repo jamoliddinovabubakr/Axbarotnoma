@@ -4,8 +4,8 @@ from django.contrib.auth import logout, authenticate, login
 from user_app.decorators import unauthenticated_user, password_reset_authentification
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-from django.core.mail import send_mail, BadHeaderError
-from django.template.loader import render_to_string
+from django.core.mail import send_mail, BadHeaderError, EmailMultiAlternatives
+from django.template.loader import render_to_string, get_template
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
@@ -49,7 +49,6 @@ def login_page(request):
     return render(request, "user_app/register/login.html")
 
 
-@unauthenticated_user
 def register_page(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -61,6 +60,19 @@ def register_page(request):
             user_group.user_set.add(user)
 
             user = authenticate(request, username=user.username, password=request.POST['password1'])
+
+            # with gmail
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            ######################### mail system ####################################
+            htmly = get_template('user_app/Email.html')
+            d = {'username': username}
+            subject, from_email, to = 'welcome', 'abubakrjamoliddinov0055@gmail.com', email
+            html_content = htmly.render(d)
+            msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            messages.success(request, f'Your account has been created ! You are now able to log in')
 
             if user is not None:
                 login(request, user)
@@ -80,6 +92,30 @@ def register_page(request):
             'form': form,
         }
         return render(request, "user_app/register/register.html", context)
+
+
+# @unauthenticated_user
+# def register_page(request):
+#     if request.method == 'POST':
+#         form = CreateUserForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             username = form.cleaned_data.get('username')
+#             email = form.cleaned_data.get('email')
+#             ######################### mail system ####################################
+#             htmly = get_template('user_app/Email.html')
+#             d = {'username': username}
+#             subject, from_email, to = 'welcome', 'abubakrjamoliddinov0055@gmail.com', email
+#             html_content = htmly.render(d)
+#             msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+#             msg.attach_alternative(html_content, "text/html")
+#             msg.send()
+#             ##################################################################
+#             messages.success(request, f'Your account has been created ! You are now able to log in')
+#             return redirect('login')
+#     else:
+#         form = CreateUserForm()
+#     return render(request, 'user_app/register/register.html', {'form': form, 'title': 'register here'})
 
 
 @login_required(login_url='login')
@@ -560,4 +596,3 @@ def delete_menu(request, pk):
         return redirect('menus')
     else:
         return render(request, 'user_app/crud/delete_menu.html', {'menu': menu})
-

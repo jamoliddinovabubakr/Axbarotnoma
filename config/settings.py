@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env = environ.Env()
 environ.Env.read_env()
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY='django-insecure-m1sw+83qh)f=%dzd@ewd+nk_pxwd9c(bdg5!3bc_xr_y#^1vqa'
 
 DEBUG: bool = True
 
@@ -62,11 +62,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env("POSTGRES_DB"),
-        'USER': env("POSTGRES_USER"),
-        'PASSWORD': env("POSTGRES_PASSWORD"),
-        'HOST': env("POSTGRES_HOST"),
-        'PORT': env("POSTGRES_PORT"),
+        'NAME': 'article_db',
+        'USER': 'postgres',
+        'PASSWORD': '0055',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -124,7 +124,7 @@ AUTH_USER_MODEL = 'user_app.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -188,3 +188,12 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'abubakrjamoliddinov0055@gmail.com'  # sender's email-id
+EMAIL_HOST_PASSWORD = 'sbgm chus zabu rtul'  # password associated with above email-id
