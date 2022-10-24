@@ -22,13 +22,13 @@
                 <li><a href="{% url 'talabnoma' %}">Talabnoma</a></li>
                 <li><a href="{% url 'contact' %}">Bog'lanish</a></li>
                 {% if request.user.is_authenticated %}
-                    <li class="dropdown navbar-user">
+                    <li class="dropdown navbar-user" style="border: 1px solid #adadad; border-radius: 5px;">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>
-                            <span class="d-none d-md-inline">{{ request.user.full_name }}</span>
+{#                            <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>#}
+                            <b><span class="d-none d-md-inline">{{ request.user.full_name }}</span></b>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="{% url 'profile_page' %}" class="dropdown-item"><i
+                            <a href="{% url 'sending_article_form' %}" class="dropdown-item"><i
                                     class="icon-pencil  p-r-10"></i><span>Shaxsiy kabinet</span></a>
                             <a href="{% url 'logout' %}" class="dropdown-item"><i class="icon-logout  p-r-10"></i><span>Chiqish</span></a>
                         </div>
@@ -37,7 +37,8 @@
                     <li><a href="{% url 'register' %}">Ro'yxatdan o'tish</a></li>
                     <li><a href="{% url 'login' %}">Kirish</a></li>
                 {% endif %}
-                <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                <li style="padding-left: 10px; padding-top: 10px;">
+                    <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
                     <input name="next" type="hidden" value="{{ redirect_to }}">
                     <select name="language">
                         {% get_current_language as LANGUAGE_CODE %}
@@ -46,12 +47,15 @@
                         {% for language in languages %}
                             <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
                                     selected{% endif %}>
-                                {{ language.name_local }} ({{ language.code }})
+{#                                {{ language.name_local }} (#}
+                                {{ language.code }}
+{#                                )#}
                             </option>
                         {% endfor %}
                     </select>
                     <input type="submit" value="Go">
                 </form>
+                </li><br>
 
             </ul>
         </div>

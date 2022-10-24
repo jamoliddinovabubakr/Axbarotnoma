@@ -11,7 +11,7 @@ Bosh sahifa
 
 			<h1 class="page-header">Bosh sahifa</h1>
 
-			{% if request.user.role.id != 6 %}
+			{% if request.user.role.name != "USER" %}
 			<div class="row">
 				<!-- begin col-3 -->
 				<div class="col-xl-3 col-md-6">
@@ -72,7 +72,7 @@ Bosh sahifa
 			</div>
 			{% endif%}
 
-			{% if request.user.role.id == 6 %}
+			{% if request.user.role.name == "USER" %}
 			<div class="row forshadow" style="padding: 5%;">
 				<h3 style="font-family: Trebuchet MS, Helvetica, sans-serif; align: center;">O'zbekiston Respublikasi Vazirlar mahkamasi huzuridagi Davlat test markazi</h3>
 			</div>

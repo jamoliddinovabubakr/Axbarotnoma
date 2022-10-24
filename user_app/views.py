@@ -41,7 +41,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('profile_page')
+            return redirect('main_page')
         else:
             errors = messages.info(request, 'login yoki parol xato')
             return redirect('login')
