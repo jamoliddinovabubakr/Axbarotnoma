@@ -36,15 +36,15 @@ class Article(models.Model):
                               null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_publish = models.BooleanField(default=True)
-    url = models.SlugField(max_length=200, unique=True)
+    # url = models.SlugField(max_length=200, unique=True, null=True, blank=True)
 
     def get_categories(self):
         return [p.name for p in self.category.all()]
 
-    def save(self, *args, **kwargs):
-        if not self.url:
-            self.url = slugify(self.title, allow_unicode=True)
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.url:
+    #         self.url = slugify(self.title, allow_unicode=True)
+    #     return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -118,7 +118,7 @@ class Post(models.Model):
     desc = RichTextField(blank=True, null=True)
     is_publish = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    url = models.SlugField(max_length=200, unique=True)
+    url = models.SlugField(max_length=200, unique=True, null=True)
 
     def get_absolute_url(self):
         return reverse("post_detail", kwargs={"slug": self.url})

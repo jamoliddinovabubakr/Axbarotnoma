@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-22 16:10+0500\n"
+"POT-Creation-Date: 2022-10-24 18:47+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,38 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\templates\article_app\includes\banner.html:11
+msgid "Axborotnoma jurnali"
+msgstr "Информационный бюллетень журнала"
+
+#: .\templates\article_app\includes\left_sidebar.html:9
+msgid "Qo'llanmalar"
+msgstr "Руководства"
+
+#: .\templates\article_app\includes\left_sidebar.html:11
+msgid "Asosiy"
+msgstr ""
+
+#: .\templates\article_app\includes\left_sidebar.html:12
+msgid "Jurnal haqida"
+msgstr "О журнале"
+
+#: .\templates\article_app\includes\left_sidebar.html:13
+msgid "Tahririyat kengashi"
+msgstr "Редакционная коллегия"
+
+#: .\templates\article_app\includes\left_sidebar.html:14
+msgid "Jurnallar ro'yxati"
+msgstr "Список журналов"
+
+#: .\templates\article_app\includes\left_sidebar.html:15
+msgid "Mualliflar uchun ko'rsatmalar"
+msgstr "Руководство для авторов"
+
+#: .\templates\article_app\includes\left_sidebar.html:16
+msgid "Maqolani yuborish"
+msgstr "Отправить статью"
 
 #: .\templates\article_app\main.html:5
 msgid "Bosh sahifa"

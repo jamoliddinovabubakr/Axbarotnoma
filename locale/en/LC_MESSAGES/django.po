@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-22 16:10+0500\n"
+"POT-Creation-Date: 2022-10-24 18:47+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,38 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\templates\article_app\includes\banner.html:11
+msgid "Axborotnoma jurnali"
+msgstr "Newsletter magazine"
+
+#: .\templates\article_app\includes\left_sidebar.html:9
+msgid "Qo'llanmalar"
+msgstr "Manuals"
+
+#: .\templates\article_app\includes\left_sidebar.html:11
+msgid "Asosiy"
+msgstr ""
+
+#: .\templates\article_app\includes\left_sidebar.html:12
+msgid "Jurnal haqida"
+msgstr ""
+
+#: .\templates\article_app\includes\left_sidebar.html:13
+msgid "Tahririyat kengashi"
+msgstr "About the journal"
+
+#: .\templates\article_app\includes\left_sidebar.html:14
+msgid "Jurnallar ro'yxati"
+msgstr "List of journals"
+
+#: .\templates\article_app\includes\left_sidebar.html:15
+msgid "Mualliflar uchun ko'rsatmalar"
+msgstr "Guidelines for Authors"
+
+#: .\templates\article_app\includes\left_sidebar.html:16
+msgid "Maqolani yuborish"
+msgstr "Submit an article"
 
 #: .\templates\article_app\main.html:5
 msgid "Bosh sahifa"
