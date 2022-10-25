@@ -49,6 +49,16 @@ def login_page(request):
     return render(request, "user_app/register/login.html")
 
 
+def sent_email_message(email_to, result):
+    htmly = get_template('user_app/status_email.html')
+    d = {'result': result}
+    subject, from_email, to = 'welcome', 'abubakrtestjamoliddinov0055@gmail.com', email_to
+    html_content = htmly.render(d)
+    msg_email = EmailMultiAlternatives(subject, html_content, from_email, [email_to])
+    msg_email.attach_alternative(html_content, "text/html")
+    msg_email.send()
+
+
 def register_page(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -67,7 +77,7 @@ def register_page(request):
             ######################### mail system ####################################
             htmly = get_template('user_app/Email.html')
             d = {'username': username}
-            subject, from_email, to = 'welcome', 'abubakrjamoliddinov0055@gmail.com', email
+            subject, from_email, to = 'welcome', 'abubakrtestjamoliddinov0055@gmail.com', email
             html_content = htmly.render(d)
             msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
             msg.attach_alternative(html_content, "text/html")
@@ -510,33 +520,38 @@ def view_notification(request, pk):
     return render(request, 'user_app/crud/view_notification.html', {"notification": notification, 'authors': authors})
 
 
+# send sms to email
+
+
+# add gmail
 @login_required(login_url='login')
 @allowed_users(perm='change_notification')
 def answer_to_author(request, pk):
     notif = get_object_or_404(Notification, pk=pk)
-    article = get_object_or_404(Article, pk=notif.article.id)
-
+    user = User.objects.get(pk=notif.article.author.id)  # user ga email
+    article = get_object_or_404(Article, pk=notif.article.id)  # article
     if notif and request.method == 'GET':
-        re_send = State.objects.get(pk=5)
-        reject = State.objects.get(pk=2)
-        confirm = State.objects.get(pk=3)
+        re_send = State.objects.get(pk=5)  # resend переотправить
+        reject = State.objects.get(pk=2)  # rejected отказ
+        confirm = State.objects.get(pk=3)  # reading прочитенно
 
-        msg = request.GET.get('message_author')
-        result = request.GET.get('stateArticle')
+        msg = request.GET.get('message_author')  # message from editor
+        result = request.GET.get('stateArticle')  # result state
+        my_resends = MyResendArticle.objects.filter(article=article)  # junatgandi hammasini oladi
+        my_resend_last = my_resends.last()  # bu junatilgan dan oxirini oladi
 
-        my_resends = MyResendArticle.objects.filter(article=article)
-        my_resend_last = my_resends.last()
+        if result == '1':  # result this is button 'Rad etish'
+            article.state = reject  # article ni statusini rad etishga tenglayapmiz
+            article.save()  # bo'lgan otkazni saqlayapmiz
 
-        if result == '1':
-            article.state = reject
-            article.save()
+            my_resend_last.state = reject  # oxirgi junatilgan article ni state ni rejected qiladi
+            my_resend_last.message = msg  # va uning sms ni uzing message ga tenglab quyapdi
+            my_resend_last.save()  # rejected ni save qilamiz
 
-            my_resend_last.state = reject
-            my_resend_last.message = msg
-            my_resend_last.save()
+            notif.status = 'Tekshirildi'  # editor dagi xolatni change qilyapmiz
+            notif.save()  # va edit dagi artivle ni save qilyapmiz
 
-            notif.status = 'Tekshirildi'
-            notif.save()
+            sent_email_message(user.email, result)
 
         elif result == '2':
             article.state = re_send
@@ -548,6 +563,7 @@ def answer_to_author(request, pk):
 
             notif.status = 'Tekshirildi'
             notif.save()
+            sent_email_message(user.email, result)
 
         elif result == '3':
             article.state = confirm
@@ -559,6 +575,7 @@ def answer_to_author(request, pk):
 
             notif.status = 'Tekshirildi'
             notif.save()
+            sent_email_message(user.email, result)
 
     return redirect('notifications')
 
