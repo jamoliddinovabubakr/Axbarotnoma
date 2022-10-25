@@ -55,11 +55,11 @@ class User(AbstractUser):
         if rollar and self.role is None:
             rol = None
             if self.is_superuser:
-                rol = rollar.get(name='MASTER')
+                rol = rollar.get(id=2)
             if self.is_staff and not self.is_superuser:
-                rol = rollar.get(name='ADMIN')
+                rol = rollar.get(id=1)
             if not self.is_staff:
-                rol = rollar.get(name='USER')
+                rol = rollar.get(id=5)
             self.role_id = rol.id
         super().save(*args, **kwargs)
 

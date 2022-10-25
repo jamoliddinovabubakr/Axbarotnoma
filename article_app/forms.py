@@ -10,7 +10,8 @@ class CreateArticleForm(forms.Form):
         choices = [[x['id'], x['name']] for x in query]
 
     category = forms.MultipleChoiceField(choices=choices, required=True, widget=forms.SelectMultiple(attrs={
-        'class': 'form-control selectpicker',
+        'class': 'multiple-select2 form-control',
+        'multiple': 'multiple',
         'data - size': "10",
         'data-live-search': "true",
         'data - style': "btn-white",

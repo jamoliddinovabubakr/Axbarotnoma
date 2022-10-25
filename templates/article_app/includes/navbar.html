@@ -22,9 +22,9 @@
                 <li><a href="{% url 'talabnoma' %}">Talabnoma</a></li>
                 <li><a href="{% url 'contact' %}">Bog'lanish</a></li>
                 {% if request.user.is_authenticated %}
-                    <li class="dropdown navbar-user" style="border: 1px solid #adadad; border-radius: 5px;">
+                    <li class="dropdown navbar-user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-{#                            <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>#}
+                            {#                            <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>#}
                             <b><span class="d-none d-md-inline">{{ request.user.full_name }}</span></b>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
@@ -38,26 +38,29 @@
                     <li><a href="{% url 'login' %}">Kirish</a></li>
                 {% endif %}
                 <li style="padding-left: 10px; padding-top: 10px;">
-                    <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
-                    <input name="next" type="hidden" value="{{ redirect_to }}">
-                    <select name="language">
-                        {% get_current_language as LANGUAGE_CODE %}
-                        {% get_available_languages as LANGUAGES %}
-                        {% get_language_info_list for LANGUAGES as languages %}
-                        {% for language in languages %}
-                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
-                                    selected{% endif %}>
-{#                                {{ language.name_local }} (#}
-                                {{ language.code }}
-{#                                )#}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <input type="submit" value="Go">
-                </form>
-                </li><br>
+                    <form action="{% url 'set_language' %}" method="post" id="post-form">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ redirect_to }}">
+                        <select name="language">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                                <option value="{{ language.code }}"
+                                        {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+{#                                                                    {{ language.name_local }} (#}
+                                    {{ language.code }}
+                                    {#                                )#}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="Go">
+                    </form>
+                </li>
+                <br>
 
             </ul>
         </div>
     </div>
 </div>
+<script src="{% static 'assets/plugins/select2/dist/js/select2.min.js' %}"></script>
