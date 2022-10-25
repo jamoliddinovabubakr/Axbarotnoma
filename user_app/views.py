@@ -20,7 +20,7 @@ import os
 from user_app.models import User
 from django.db.models.query_utils import Q
 from user_app.forms import UpdateUserForm
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from user_app.models import Region
 from user_app.forms import CreateRegionForm
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -489,13 +489,13 @@ def delete_region(request, pk):
 @login_required(login_url='login')
 @allowed_users(menu_url='notifications')
 def get_notifications(request):
-    notifications = Notification.objects.order_by("-created_at")
-    notif_count = notifications.count()
-    context = {
-        'notifications': notifications,
-        'notif_count': notif_count,
-    }
-    return render(request, "user_app/settings/notification_page.html", context=context)
+    return render(request, "user_app/settings/notification_page.html")
+
+
+def load_data_notif(request):
+    if request.method == 'GET':
+        notifications = Notification.objects.all().order_by("-created_at")
+        return JsonResponse({"notifications": list(notifications.values())})
 
 
 @login_required(login_url='login')

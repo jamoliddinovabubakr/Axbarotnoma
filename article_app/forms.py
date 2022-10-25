@@ -41,7 +41,7 @@ class UpdateArticleForm(forms.ModelForm):
                 'data-live-search': "true",
                 'data - style': "btn-white",
                 'data - parsley - required': "true",
-                'id': 'category',
+                'name': 'category',
             }),
             'title': Textarea(attrs={
                 'class': 'form-control',

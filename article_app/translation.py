@@ -1,15 +1,10 @@
 from modeltranslation.translator import register, TranslationOptions
-from article_app.models import Category, MyResendArticle, Post, BlankPage
+from article_app.models import Category, Post, BlankPage
 
 
 @register(Category)
 class CategoryTranslationOptions(TranslationOptions):
     fields = ('name',)
-
-
-@register(MyResendArticle)
-class MyResendArticleTranslationOptions(TranslationOptions):
-    fields = ('message',)
 
 
 @register(Post)

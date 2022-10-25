@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from .views import profile_page, login_page, logout_user, register_page, change_password, edit_profile, admins, users, \
     view_user, update_user, delete_user, get_notifications, view_notification, answer_to_author, get_menus, edit_menu, \
     delete_menu, get_roles, create_role, edit_role, delete_role, get_states, create_state, edit_state, delete_state, \
-    get_regions, create_region, edit_region, delete_region, password_reset, profile
+    get_regions, create_region, edit_region, delete_region, password_reset, profile, load_data_notif
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -22,9 +22,9 @@ urlpatterns = [
     path('users/delete/<int:pk>', delete_user, name='delete_user'),
 
     path('notifications/', get_notifications, name='notifications'),
-    path('notification/view/<int:pk>/', view_notification, name='view_notification'),
+    path('load_notif/', load_data_notif, name='load_notif'),
+    path('notification/<int:pk>/view', view_notification, name='view_notification'),
     path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
-
 
     path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),

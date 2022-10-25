@@ -45,27 +45,27 @@
                             <th width="1%">Actions</th>
                         </tr>
                         </thead>
-                        <tbody>
-                            {% for notif in notifications %}
-                                <tr class="text-center">
-                                    <td id="counter_ar">{{ forloop.counter}}</td>
-                                    <td>{{ notif.article.author.email }}</td>
-                                    <td>{{ notif.title|safe|slice:100 }}</td>
-                                    <td>
-                                        <span class="badge {% if notif.status == 'Tekshirilmadi' %} badge-danger {% elif notif.status == 'Tekshirildi' %} badge-success {% elif notif.status == 'Tekshirilmoqda' %} badge-blue {% endif %}">
-                                            {{ notif.status }}
-                                        </span>
-                                    </td>
-                            <td>
-                                <a href="{% url 'view_notification' notif.pk %}" title="Ko'rish"
-                                   data-toggle="tooltip"
-                                   style="color: #0188d0">
-                                    <i class="fas  fa-fw m-r-15 fa-edit"></i>
-                                </a>
-
-                            </td>
-                                </tr>
-                            {% endfor %}
+                        <tbody id="display_table">
+                        {#                            {% for notif in notifications %}#}
+                        {#                                <tr class="text-center">#}
+                        {#                                    <td id="counter_ar">{{ forloop.counter}}</td>#}
+                        {#                                    <td>{{ notif.article.author.email }}</td>#}
+                        {#                                    <td>{{ notif.title|safe|slice:100 }}</td>#}
+                        {#                                    <td>#}
+{#                                                                <span class="badge {% if notif.status == 'Tekshirilmadi' %} badge-danger {% elif notif.status == 'Tekshirildi' %} badge-success {% elif notif.status == 'Tekshirilmoqda' %} badge-blue {% endif %}">#}
+{#                                                                    {{ notif.status }}#}
+{#                                                                </span>#}
+                        {#                                    </td>#}
+                        {#                            <td>#}
+{#                                                        <a href="{% url 'view_notification' notif.pk %}" title="Ko'rish"#}
+{#                                                           data-toggle="tooltip"#}
+{#                                                           style="color: #0188d0">#}
+{#                                                            <i class="fas  fa-fw m-r-15 fa-edit"></i>#}
+{#                                                        </a>#}
+                        {##}
+                        {#                            </td>#}
+                        {#                                </tr>#}
+                        {#                            {% endfor %}#}
                         </tbody>
                     </table>
                 </div>
@@ -81,6 +81,37 @@
         </div>
         <!-- end panel -->
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'load_notif' %}",
+                    success: function (response) {
+                        console.log(response.notifications);
+                        $("#display_table").empty();
+                        let tr = 0;
+                        for (let key in response.notifications) {
+                            tr++;
+                            let temp =
+                                "<tr class='text-center'>" +
+                                "<td>" + tr + "</td>" +
+                                "<td>" + response.notifications[key].article_id + "</td>" +
+                                "<td>" + response.notifications[key].title + "</td>" +
+                                "<td>" + response.notifications[key].status + "</td>" +
+                                "<td>" + `<a href="/profile/notification/${response.notifications[key].id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>" +
+                                "</tr>";
+                            $("#display_table").append(temp);
+                        }
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+
+            }, 1500);
+
+        });
+    </script>
 {% endblock %}
-<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
-<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

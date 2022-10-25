@@ -10,7 +10,7 @@ class CategoryAdmin(ImportExportActionModelAdmin, TranslationAdmin):
 
 
 @admin.register(MyResendArticle)
-class MyResendArticleAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class MyResendArticleAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'article', 'file_word', 'message', 'state', 'created_at']
 
 
