@@ -6,3 +6,8 @@ localization(uz,qq, krill, ru, eng)
 api chiqarish
 ajax
 
+fayl yuklanganda word yoki pdf bo'lsa aynan o'sha tipli faylga tekshirish kk
+
+tranlate:
+-user_app -> Abubakr
+-article_app

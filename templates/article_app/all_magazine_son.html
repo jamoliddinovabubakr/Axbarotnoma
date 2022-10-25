@@ -1,4 +1,5 @@
 {% extends 'article_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
 Barcha jurnallar soni
@@ -7,7 +8,7 @@ Barcha jurnallar soni
 <div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
 	<div class="container">
 		<br>
-		<center><h4 class="title">Barcha jurnallar soni</h2></center>
+		<center><h4 class="title">{% trans 'Barcha jurnallar soni'%} </h4></center>
 			<br>
                 <div class="row">
                 {% for item in magazines%}
