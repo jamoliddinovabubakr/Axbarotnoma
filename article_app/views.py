@@ -59,7 +59,7 @@ def create_article(request):
             title = form.cleaned_data['title'],
             category = form.cleaned_data['category'],
 
-            article, created = Article.objects.get_or_create(title=title, author=user)
+            article, created = Article.objects.get_or_create(title=list(title)[0], author=user)
             for item in category[0]:
                 article.category.add(int(item))
 

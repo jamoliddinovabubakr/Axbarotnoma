@@ -153,3 +153,5 @@ cython_debug/
 static_root
 media_root
 *.DS_Store
+user_app/migrations
+article_app/migrations

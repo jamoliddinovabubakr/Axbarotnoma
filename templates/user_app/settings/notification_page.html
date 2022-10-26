@@ -93,15 +93,15 @@
                         console.log(response.notifications);
                         $("#display_table").empty();
                         let tr = 0;
-                        for (let key in response.notifications) {
+                        for (let item of response.notifications) {
                             tr++;
                             let temp =
                                 "<tr class='text-center'>" +
                                 "<td>" + tr + "</td>" +
-                                "<td>" + response.notifications[key].article_id + "</td>" +
-                                "<td>" + response.notifications[key].title + "</td>" +
-                                "<td>" + response.notifications[key].status + "</td>" +
-                                "<td>" + `<a href="/profile/notification/${response.notifications[key].id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>" +
+                                "<td>" + item.my_resend__author__email + "</td>" +
+                                "<td>" + item.title + "</td>" +
+                                "<td>" + item.status + "</td>" +
+                                "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>" +
                                 "</tr>";
                             $("#display_table").append(temp);
                         }

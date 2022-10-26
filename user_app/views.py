@@ -495,7 +495,9 @@ def get_notifications(request):
 def load_data_notif(request):
     if request.method == 'GET':
         notifications = Notification.objects.all().order_by("-created_at")
-        return JsonResponse({"notifications": list(notifications.values())})
+        return JsonResponse({"notifications": list(notifications.values(
+            'id', 'article_id', 'title', 'my_resend__author__email', 'description', 'status', 'created_at'
+        ))})
 
 
 @login_required(login_url='login')
