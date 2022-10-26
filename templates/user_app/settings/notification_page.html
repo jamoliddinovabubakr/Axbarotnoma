@@ -53,9 +53,7 @@
                         {#                                    <td>{{ notif.article.author.email }}</td>#}
                         {#                                    <td>{{ notif.title|safe|slice:100 }}</td>#}
                         {#                                    <td>#}
-                        {#                                                                <span class="badge {% if notif.status == 'Tekshirilmadi' %} badge-danger {% elif notif.status == 'Tekshirildi' %} badge-success {% elif notif.status == 'Tekshirilmoqda' %} badge-blue {% endif %}">#}
-                        {#                                                                    {{ notif.status }}#}
-                        {#                                                                </span>#}
+{# <span class="badge {% if notif.status == 'Tekshirilmadi' %} badge-danger {% elif notif.status == 'Tekshirildi' %} badge-success {% elif notif.status == 'Tekshirilmoqda' %} badge-blue {% endif %}">{{ notif.status }}</span>#}
                         {#                                    </td>#}
                         {#                            <td>#}
                         {#                                                        <a href="{% url 'view_notification' notif.pk %}" title="Ko'rish"#}
@@ -95,14 +93,19 @@
                         let tr = 0;
                         for (let item of response.notifications) {
                             tr++;
+                            let status = item.status.toString()
                             let temp =
                                 "<tr class='text-center'>" +
                                 "<td>" + tr + "</td>" +
                                 "<td>" + item.my_resend__author__email + "</td>" +
                                 "<td>" + item.title + "</td>" +
-                                "<td>" + item.status + "</td>" +
+                                "<td><span id='state" + item.id + "' class='badge badge-indigo'>" + item.status + "</span></td>" +
                                 "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>" +
                                 "</tr>";
+                            if (status === 'Tekshirilmadi'){
+                                $('#state${item.id}').addClass("class='badge badge-danger'");
+                            }
+
                             $("#display_table").append(temp);
                         }
                     },

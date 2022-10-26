@@ -65,30 +65,14 @@ class User(AbstractUser):
 
     @property
     def full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
-    # def get_user_permissions(self):
-    #     if self.is_superuser:
-    #         return Permission.objects.all()
-    #     return Permission.objects.filter(group__user=self)
+        if self.first_name is not None and self.last_name is not None:
+            full_name_user = '%s %s' % (self.first_name, self.last_name)
+        else:
+            full_name_user = '%s' % self.username
+        return full_name_user
 
     def __str__(self):
         return self.email
-
-    # def is_master(self) -> bool:
-    #     return self.groups.filter(name='Master').exists()
-    #
-    # def is_admin(self) -> bool:
-    #     return self.groups.filter(name='ADMIN').exists()
-    #
-    # def is_user(self):
-    #     return self.groups.filter(name='USER').exists()
-    #
-    # def is_redactor(self):
-    #     return self.groups.filter(name='MUHARRIR').exists()
-    #
-    # def is_editor(self):
-    #     return self.groups.filter(name='TAHRIRCHI').exists()
 
     class Meta:
         verbose_name = _('Foydalanuvchi')

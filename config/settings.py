@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env = environ.Env()
 environ.Env.read_env()
 
-SECRET_KEY='django-insecure-m1sw+83qh)f=%dzd@ewd+nk_pxwd9c(bdg5!3bc_xr_y#^1vqa'
+SECRET_KEY = env("SECRET_KEY")
 
 DEBUG: bool = True
 
@@ -39,6 +39,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.MemoryFileUploadHandler",
+                        "django.core.files.uploadhandler.TemporaryFileUploadHandler"]
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -62,11 +65,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'article_db',
-        'USER': 'postgres',
-        'PASSWORD': '0055',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': env("POSTGRES_DB"),
+        'USER': env("POSTGRES_USER"),
+        'PASSWORD': env("POSTGRES_PASSWORD"),
+        'HOST': env("POSTGRES_HOST"),
+        'PORT': env("POSTGRES_PORT"),
     }
 }
 
@@ -98,6 +101,7 @@ LANGUAGES = [
     ('uz', gettext('Uzbek')),
     ('en', gettext('English')),
     ('ru', gettext('Russia')),
+    # ('qq', gettext('Qoraqalpoq')),
 ]
 #
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
