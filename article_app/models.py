@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
@@ -23,28 +24,24 @@ def user_directory_path(instance, filename):
 
 class Article(models.Model):
     category = models.ManyToManyField(Category,  verbose_name="Kategoriya", related_name="article_category")
-    title = models.CharField(max_length=255, blank=True, null=True)
-    abstract = RichTextField(blank=True, null=True)
-    keywords = RichTextField(blank=True, null=True)
+    title = models.CharField(max_length=255, blank=True)
+    abstract = RichTextField(blank=True)
+    keywords = RichTextField(blank=True)
     references = RichTextField(blank=True, null=True)
     author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE,
                                related_name="article_author")
-    file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True, )
-    file_pdf = models.FileField(_("PDF Fayl"), upload_to=user_directory_path, max_length=255, blank=True, null=True)
+    file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True,
+                            validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])],
+                            help_text='Please upload only .doc or .docx files!')
+    file_pdf = models.FileField(_("PDF Fayl"), upload_to=user_directory_path, max_length=255, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
     state = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state",
                               blank=True,
                               null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_publish = models.BooleanField(default=True)
-    # url = models.SlugField(max_length=200, unique=True)
 
     def get_categories(self):
         return [p.name for p in self.category.all()]
-
-    # def save(self, *args, **kwargs):
-    #     if not self.url:
-    #         self.url = slugify(self.title, allow_unicode=True)
-    #     return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -79,7 +76,7 @@ class MyResendArticle(models.Model):
     author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE, blank=True, null=True,
                                related_name="article_resend_author")
     article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
-    file_word = models.FileField(_("Word Fayl"), upload_to='files/', max_length=255, blank=True, )
+    file_word = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True, validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])])
     message = models.CharField(_("Xabar"), max_length=255, blank=True, null=True)
     state = models.ForeignKey('user_app.State', on_delete=models.CASCADE,
                               blank=True,

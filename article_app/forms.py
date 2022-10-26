@@ -73,7 +73,7 @@ class UpdateArticleForm(forms.ModelForm):
                 'id': 'id_file',
                 'type': 'file',
                 'class': 'form-control',
-                'accept': ".docx, .doc, .pdf"
+                'accept': ".docx, .doc"
             }),
         }
 

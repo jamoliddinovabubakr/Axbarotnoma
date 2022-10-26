@@ -146,10 +146,10 @@
                                             <span
                                                     class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
-                                            <!--                                        <input type="file" id="id_file" name="file" class="form-control"-->
-                                            <!--                                               accept=".docx, .doc, .pdf">-->
                                             {{ form.file }}
-                                            <p id="file_name">{{ file_name }}</p>
+                                            {% if handle_error == 1 %}
+                                                <p class="warning" style="color: red;">{{ form.file.help_text }}</p>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

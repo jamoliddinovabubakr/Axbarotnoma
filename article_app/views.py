@@ -73,6 +73,12 @@ def create_article(request):
                 author_order=1
             )
             return redirect('update_my_article', pk=article.id)
+        else:
+            context = {
+                'form': CreateArticleForm(),
+                'user': user,
+            }
+            return render(request, "article_app/crud/create_article.html", context=context)
     else:
         context = {
             'form': CreateArticleForm(),
@@ -106,12 +112,21 @@ def update_my_article(request, pk):
             )
 
             return redirect('sending_article_form')
+        else:
+            context = {
+                'form': UpdateArticleForm(instance=article),
+                'authors': authors,
+                'article': article,
+                'handle_error': 1,
+            }
+            return render(request, "article_app/crud/update_article.html", context=context)
     else:
         file_name = str(article.file.name).split('/')[-1]
         context = {
             'form': UpdateArticleForm(instance=article),
             'authors': authors,
             'article': article,
+            'handle_error': 0,
             'file_name': str(file_name),
         }
         return render(request, "article_app/crud/update_article.html", context=context)
