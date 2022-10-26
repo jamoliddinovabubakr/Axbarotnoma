@@ -1,4 +1,5 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% block title %}
     Profile
 {% endblock %}
@@ -24,7 +25,8 @@
                 <!-- END profile-header-content -->
                 <!-- BEGIN profile-header-tab -->
                 <ul class="profile-header-tab nav nav-tabs">
-                    <li class="nav-item"><a href="#profile-about" class="nav-link active" data-toggle="tab">ABOUT</a>
+                    <li class="nav-item"><a href="#profile-about" class="nav-link active"
+                                            data-toggle="tab">{% trans "ABOUT" %}</a>
                     </li>
                     <li class="nav-item"><a href="#profile-post" class="nav-link" data-toggle="tab">POSTS</a></li>
                 </ul>
@@ -52,66 +54,66 @@
                             </thead>
                             <tbody>
                             <tr class="highlight">
-                                <td class="field"><b>Username</b></td>
+                                <td class="field"><b>{% trans "Username" %}</b></td>
                                 <td><a>{{ request.user.username }}</a></td>
                             </tr>
                             <tr class="divider">
                                 <td colspan="2"></td>
                             </tr>
                             <tr>
-                                <td class="field"><b>Telefon nomer</b></td>
+                                <td class="field"><b>{% trans "Telefon nomer" %}</b></td>
                                 <td><i class="fa fa-mobile fa-lg m-r-5"></i> {{ request.user.phone }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><b>Familiya</b></td>
+                                <td class="field"><b>{% trans "Familiya" %}</b></td>
                                 <td>{{ request.user.last_name }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><b>Ism</b></td>
+                                <td class="field"><b>{% trans "Ism" %}</b></td>
                                 <td>{{ request.user.first_name }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><b>Otasini ismi</b></td>
+                                <td class="field"><b>{% trans "Otasini ismi" %}</b></td>
                                 <td>{{ request.user.middle_name }}</td>
                             </tr>
                             <tr class="divider">
                                 <td colspan="2"></td>
                             </tr>
                             <tr class="highlight">
-                                <td class="field"><strong>Email</strong></td>
+                                <td class="field"><strong>{% trans "Email" %}</strong></td>
                                 <td>{{ request.user.email }}</td>
                             </tr>
                             <tr class="divider">
                                 <td colspan="2"></td>
                             </tr>
                             <tr>
-                                <td class="field"><strong>Viloyat</strong></td>
+                                <td class="field"><strong>{% trans "Viloyat" %}</strong></td>
                                 <td>
                                     {{ request.user.region.name }}
                                 </td>
                             </tr>
                             <tr>
-                                <td class="field"><strong>Tuman</strong></td>
+                                <td class="field"><strong>{% trans "Tuman" %}</strong></td>
                                 <td>{{ request.user.district }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><strong>Passport</strong></td>
+                                <td class="field"><strong>{% trans "Passport" %}</strong></td>
                                 <td>{{ request.user.passport }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><strong>Gender</strong></td>
+                                <td class="field"><strong>{% trans "Gender" %}</strong></td>
                                 <td>{{ request.user.gender }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><strong>Tug'ilgan kun</strong></td>
+                                <td class="field"><strong>{% trans "Tug'ilgan kun" %}</strong></td>
                                 <td>{{ request.user.birthday }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><strong>Role</strong></td>
+                                <td class="field"><strong>{% trans "Role" %}</strong></td>
                                 <td>{{ request.user.role }}</td>
                             </tr>
                             <tr>
-                                <td class="field"><strong>Avatar</strong></td>
+                                <td class="field"><strong>{% trans "Avatar" %}</strong></td>
                                 <td><img src="{{ request.user.avatar.url }}" width="100" alt=""></td>
                             </tr>
                             <tr class="divider">

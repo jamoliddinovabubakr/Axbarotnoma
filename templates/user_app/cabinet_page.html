@@ -1,82 +1,84 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
-Bosh sahifa
+    Bosh sahifa
 {% endblock %}
 {% block content %}
-<div id="content" class="content">
-			<ol class="breadcrumb float-xl-right">
-				<li class="breadcrumb-item active"><a href="javascript:;">Bosh sahifa</a></li>
-			</ol>
+    <div id="content" class="content">
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item active"><a href="javascript:;">{% trans "Bosh sahifa" %}</a></li>
+        </ol>
 
-			<h1 class="page-header">Bosh sahifa</h1>
+        <h1 class="page-header">{% trans "Bosh sahifa" %}</h1>
 
-			{% if request.user.role.name != "USER" %}
-			<div class="row">
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-blue forshadow">
-						<div class="stats-icon"><i class="fa fa-desktop"></i></div>
-						<div class="stats-info">
-							<h4>UMUMIY TASDIQLANGANLAR</h4>
-							<p>{{ tasdiqlanganlar }}</p>
-						</div>
-						<div class="stats-link">
-							<a href="javascript:;">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- end col-3 -->
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-info forshadow">
-						<div class="stats-icon"><i class="fa fa-link"></i></div>
-						<div class="stats-info">
-							<h4>TASDIQLANMAGANLAR</h4>
-							<p>{{ tasdiqlanmaganlar }}</p>
-						</div>
-						<div class="stats-link">
-							<a href="javascript:;">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- end col-3 -->
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-orange forshadow">
-						<div class="stats-icon"><i class="fa fa-users"></i></div>
-						<div class="stats-info">
-							<h4>TASDIQLANISHNI KUTAYOTGANLAR</h4>
-							<p>{{ kutish_jarayonida }}</p>
-						</div>
-						<div class="stats-link">
-							<a href="javascript:;">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- end col-3 -->
-				<!-- begin col-3 -->
-				<div class="col-xl-3 col-md-6">
-					<div class="widget widget-stats bg-red forshadow">
-						<div class="stats-icon"><i class="fa fa-clock"></i></div>
-						<div class="stats-info">
-							<h4>JURNALLAR SONI</h4>
-							<p>{{ jurnallar }}</p>
-						</div>
-						<div class="stats-link">
-							<a href="javascript:;">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- end col-3 -->
-			</div>
-			{% endif%}
+        {% if request.user.role.name != "USER" %}
+            <div class="row">
+                <!-- begin col-3 -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="widget widget-stats bg-blue forshadow">
+                        <div class="stats-icon"><i class="fa fa-desktop"></i></div>
+                        <div class="stats-info">
+                            <h4>{% trans "UMUMIY TASDIQLANGANLAR" %}</h4>
+                            <p>{{ tasdiqlanganlar }}</p>
+                        </div>
+                        <div class="stats-link">
+                            <a href="javascript:;">{% trans "View Detail" %} <i
+                                    class="fa fa-arrow-alt-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-3 -->
+                <!-- begin col-3 -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="widget widget-stats bg-info forshadow">
+                        <div class="stats-icon"><i class="fa fa-link"></i></div>
+                        <div class="stats-info">
+                            <h4>{% trans "TASDIQLANMAGANLAR" %}</h4>
+                            <p>{{ tasdiqlanmaganlar }}</p>
+                        </div>
+                        <div class="stats-link">
+                            <a href="javascript:;">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-3 -->
+                <!-- begin col-3 -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="widget widget-stats bg-orange forshadow">
+                        <div class="stats-icon"><i class="fa fa-users"></i></div>
+                        <div class="stats-info">
+                            <h4>{% trans "TASDIQLANISHNI KUTAYOTGANLAR" %}</h4>
+                            <p>{{ kutish_jarayonida }}</p>
+                        </div>
+                        <div class="stats-link">
+                            <a href="javascript:;">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-3 -->
+                <!-- begin col-3 -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="widget widget-stats bg-red forshadow">
+                        <div class="stats-icon"><i class="fa fa-clock"></i></div>
+                        <div class="stats-info">
+                            <h4>{% trans "JURNALLAR SONI" %}</h4>
+                            <p>{{ jurnallar }}</p>
+                        </div>
+                        <div class="stats-link">
+                            <a href="javascript:;">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col-3 -->
+            </div>
+        {% endif %}
 
-			{% if request.user.role.name == "USER" %}
-			<div class="row forshadow" style="padding: 5%;">
-				<h3 style="font-family: Trebuchet MS, Helvetica, sans-serif; align: center;">O'zbekiston Respublikasi Vazirlar mahkamasi huzuridagi Davlat test markazi</h3>
-			</div>
-			{% endif %}
+        {% if request.user.role.name == "USER" %}
+            <div class="row forshadow" style="padding: 5%;">
+                <h3 style="font-family: Trebuchet MS, Helvetica, sans-serif; align: center;">{% trans "O'zbekiston Respublikasi Vazirlar mahkamasi huzuridagi Davlat test markazi" %}</h3>
+            </div>
+        {% endif %}
 
-		</div>
+    </div>
 {% endblock %}

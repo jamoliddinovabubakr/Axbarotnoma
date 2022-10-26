@@ -1,4 +1,5 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
     Maqolani o'zgartirish
@@ -7,12 +8,12 @@
     <div id="content" class="content">
         <!-- begin breadcrumb -->
         <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">Bosh sahifa</a></li>
-            <li class="breadcrumb-item active">Maqola ma'lumotlarini o'zgartirish</li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Yopish" %}</a></li>
+            <li class="breadcrumb-item active">{% trans "Maqola ma'lumotlarini o'zgartirish" %}</li>
         </ol>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header">Maqola ma'lumotlarini o'zgartirish</h1>
+        <h1 class="page-header">{% trans "Maqola ma'lumotlarini o'zgartirish" %}</h1>
         <!-- end page-header -->
 
         <!-- begin panel -->
@@ -35,9 +36,10 @@
                     <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}
-                        <p>1-qadam. Aftorlarni qo'shing</p>
+                        <p>x{% trans "Maqola ma'lumotlarini o'zgartirish" %}</p>
                         <button href="{% url 'add_author' article.id %}" data-toggle="modal"
-                                class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Aftor qo'shish
+                                class="addUser btn btn-success btn-sm"><i
+                                class="fa fa-plus mr-1"></i>{% trans "Aftor qo'shish" %}
                         </button>
                         <br>
                         <br>
@@ -46,13 +48,13 @@
                                 <thead>
                                 <tr class="text-center">
                                     <th>#</th>
-                                    <th>Familiya</th>
-                                    <th>Ism</th>
-                                    <th>Sharif</th>
-                                    <th>Email</th>
-                                    <th>Ish joy</th>
-                                    <th>Aftor tartibi</th>
-                                    <th width="100">Action</th>
+                                    <th>{% trans "Familiya" %}</th>
+                                    <th>{% trans "Ism" %}</th>
+                                    <th>{% trans "Sharif" %}</th>
+                                    <th>{% trans "Email" %}</th>
+                                    <th>{% trans "Ish joy" %}</th>
+                                    <th>{% trans "Aftor tartibi" %}</th>
+                                    <th width="100">{% trans "Action" %}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -67,9 +69,9 @@
                                         <td>{{ author.author_order }}</td>
                                         <td class="with-btn" nowrap>
                                             <a href="{% url 'edit_author' author.pk %}"
-                                               class="userModal btn btn-sm btn-primary width-60 m-r-2">Edit</a>
+                                               class="userModal btn btn-sm btn-primary width-60 m-r-2">{% trans "Edit" %}</a>
                                             <a href="{% url 'delete_author' author.pk %}"
-                                               class="userModal btn btn-sm btn-danger width-60">Delete</a>
+                                               class="userModal btn btn-sm btn-danger width-60">{% trans "Delete" %}</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -77,12 +79,12 @@
                             </table>
                         </div>
                         <br>
-                        <p>2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring</p>
+                        <p>{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
                         <div style="padding-left:10%; padding-right: 5%;">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15" style="visibility: hidden;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">Aftor <span
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %} <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
                                             <select id="id_author" name="author" class="form-control">
@@ -93,7 +95,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label"> Kategoriya <span
+                                        <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Kategoriya" %} <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.category }}
@@ -103,7 +105,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">Mavzu <span
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Mavzu" %} <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.title|safe }}
@@ -112,8 +114,9 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">Kalit so'zlar <span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Kalit so'zlar" %}
+                                            <span
+                                                    class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.keywords|safe }}
                                         </div>
@@ -121,7 +124,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">Abstrakt <span
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstrakt" %} <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.abstract|safe }}
@@ -130,7 +133,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">Adabiyotlar <span
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Adabiyotlar" %} <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.references|safe }}
@@ -139,8 +142,9 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">Word fayl yuklang <span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Word fayl yuklang" %}
+                                            <span
+                                                    class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
                                             <!--                                        <input type="file" id="id_file" name="file" class="form-control"-->
                                             <!--                                               accept=".docx, .doc, .pdf">-->
@@ -154,10 +158,10 @@
                                 <div class="col-md-6 col-sm-6"></div>
                                 <div class="col-md-6 col-sm-6">
                                     <button type="submit" style="float: right;" id="submitButtonId" disabled
-                                            class="btn btn btn-success">Saqlash
+                                            class="btn btn btn-success">{% trans "Saqlash" %}
                                     </button>
                                     <a style="float: right; margin-right: 1em" href="{% url 'my_articles' %}"
-                                       class="btn btn-outline-warning">Yopish
+                                       class="btn btn-outline-warning">{% trans "Yopish" %}
                                     </a>
                                 </div>
                             </div>
@@ -173,11 +177,11 @@
         <!-- end panel -->
     </div>
     <script type="text/javascript">
-    let file_name = '{{ file_name }}';
+        let file_name = '{{ file_name }}';
         document.getElementById('id_file').onchange = function () {
             document.getElementById('submitButtonId').disabled = false;
         }
-        if(file_name != ''){
+        if (file_name != '') {
             document.getElementById('submitButtonId').disabled = false;
         }
     </script>

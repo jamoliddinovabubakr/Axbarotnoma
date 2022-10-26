@@ -1,3 +1,4 @@
+{% load i18n %}
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
         <form method="post" enctype="multipart/form-data" action="{% url 'delete_category' category.pk %}">
@@ -10,11 +11,11 @@
                 <div class="modal-body">
                     <b><i>{{ category.name }}</i></b><br>
                     <hr>
-                    <span style="font-size: small">Buni o'chirishga ishonchingiz komilmi?</span>
+                    <span style="font-size: small">{% trans "Buni o'chirishga ishonchingiz komilmi?" %}</span>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yoq</a>
-                    <button type="submit" class="btn btn-primary">Ha</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yoq" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Ha" %}</button>
 
                 </div>
 

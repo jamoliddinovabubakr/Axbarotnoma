@@ -1,23 +1,24 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
-    Holatlar
+    {% trans Holatlar %}
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
         <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">Sozlamalar</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">Yo'nalishlar</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans Bosh Sahifa %}</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans Sozlamalar %}</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans Yo''nalishlar %}</a></li>
         </ol>
-        <h1 class="page-header">Yo'nalishlar ro'yxati</h1>
+        <h1 class="page-header">{% trans Yo''nalishlar ro''yxati %}</h1>
 
         <div class="panel panel-default forshadow">
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #ababab">
                 <h4 class="panel-title">
                     <button href="{% url 'create_category' %}" data-toggle="modal" type="button"
-                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
+                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>{% trans Qo''shish %}
                     </button>
                 </h4>
                 <div class="panel-heading-btn">
@@ -36,10 +37,10 @@
                     <thead>
                     <tr>
                         <th width="1%"></th>
-                        <th class="text-nowrap">Nomi</th>
-                        <th class="text-nowrap">Key</th>
-                        <th class="text-nowrap">Status</th>
-                        <th class="text-nowrap">Action</th>
+                        <th class="text-nowrap">{% trans Nomi %}</th>
+                        <th class="text-nowrap">{% trans Key %}</th>
+                        <th class="text-nowrap">{% trans Status %}</th>
+                        <th class="text-nowrap">{% trans Action %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,11 +51,13 @@
                             <td>{{ category.key }}</td>
                             <td>{{ category.status }}</td>
                             <td>
-                                <a href="{% url 'edit_category' category.id %}" title="O'zgartirish" data-toggle="tooltip"
+                                <a href="{% url 'edit_category' category.id %}" title="O'zgartirish"
+                                   data-toggle="tooltip"
                                    class="userModal"
                                    style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
 
-                                <a href="{% url 'delete_category' category.id %}" title="O'chirish" data-toggle="tooltip"
+                                <a href="{% url 'delete_category' category.id %}" title="O'chirish"
+                                   data-toggle="tooltip"
                                    class="userModal"
                                    style="color: #f83333"><i
                                         class="fas  fa-fw m-r-15 fa-trash-alt"></i></a>

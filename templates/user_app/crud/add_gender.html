@@ -1,30 +1,31 @@
+{% load i18n %}
 <form method="post" action="{% url 'create_gender' %}">
     {% csrf_token %}
     <div class="modal fade" id="addUser">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Yangi jins qo'shish</h5>
+                    <h5 class="modal-title">{% trans "Yangi jins qo'shish" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
-                   <table id="data-table-default"
-                         class="table table-striped table-bordered table-td-valign-middle">
+                    <table id="data-table-default"
+                           class="table table-striped table-bordered table-td-valign-middle">
                         <tbody>
                         <tr>
-                            <th class="text-nowrap">Nomi</th>
+                            <th class="text-nowrap">{% trans "Nomi" %}</th>
                             <td class="text-nowrap">{{ form.name }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Status</th>
+                            <th class="text-nowrap">{% trans "Status" %}</th>
                             <td class="text-nowrap">{{ form.status }}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yopish</a>
-                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </div>

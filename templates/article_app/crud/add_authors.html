@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <form data-parsley-validate="true" method="post" action="{% url 'add_author' article.id %}">
     {% csrf_token %}
@@ -5,12 +6,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Aftorlarni qo'shish</h5>
+                    <h5 class="modal-title">{% trans "Aftorlarni qo'shish" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row m-b-15" hidden>
-                        <label class="col-md-3 col-sm-3 col-form-label">Maqola <span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Maqola" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
                             <select id="id_article" name="article" class="form-control">
@@ -18,52 +19,52 @@
                             </select>
                         </div>
                     </div>
-                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Familiya <span
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Familiya" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                         {{ form.last_name }}
+                            {{ form.last_name }}
                         </div>
                     </div>
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Ism <span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Ism" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                         {{ form.first_name }}
+                            {{ form.first_name }}
                         </div>
                     </div>
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Sharif <span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Sharif" %}<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                        {{ form.middle_name }}
+                            {{ form.middle_name }}
                         </div>
                     </div>
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Email <span
+                        <label class="col-md-3 col-sm-3 col-form-label">}{% trans "Email" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                         {{ form.email }}
+                            {{ form.email }}
                         </div>
                     </div>
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Ish Joyi<span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Ish Joyi" %}<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                        {{ form.work_place }}
+                            {{ form.work_place }}
                         </div>
                     </div>
-                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Aftor tartibi<span
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Aftor tartibi" %}<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                        {{ form.author_order }}
+                            {{ form.author_order }}
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yopish</a>
-                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </div>

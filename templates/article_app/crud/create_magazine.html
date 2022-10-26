@@ -1,35 +1,36 @@
+{% load i18n %}
 {% load static %}
-<form  method="post" action="{% url 'create_magazine' %}">
+<form method="post" action="{% url 'create_magazine' %}">
     {% csrf_token %}
     {{ form.media }}
     <div class="modal fade" id="addUser">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Jurnal qo'shish</h5>
+                    <h5 class="modal-title">{% trans "Jurnal qo'shish" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Jurnal yili <span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Jurnal yili" %}<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                          {{ form.year_magazine}}
-                         
+                            {{ form.year_magazine }}
+
                         </div>
                     </div>
-                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">Jurnal soni <span
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Jurnal soni " %}<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                         {{ form.number_magazine }}
-                       
+                            {{ form.number_magazine }}
+
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yopish</a>
-                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </div>

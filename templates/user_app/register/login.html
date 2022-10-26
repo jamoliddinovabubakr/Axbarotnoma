@@ -1,77 +1,83 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
     Login
 {% endblock %}
 {% block base_content %}
-  <div id="page-container" class="fade">
-		<!-- begin login -->
-		<div class="login login-with-news-feed">
-			<!-- begin news-feed -->
-			<div class="news-feed">
-				<div class="news-image" style="background-image: url({% static '/assets/img/login-bg/login-bg-11.jpg' %})"></div>
-				<div class="news-caption">
-					<h4 class="caption-title"><b>Axborotnoma</b> jurnaliga xush kelibsiz</h4>
-					<p>
-						O'zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Davlat test markazi.
-					</p>
-				</div>
-			</div>
-			<!-- end news-feed -->
-			<!-- begin right-content -->
-			<div class="right-content">
-				<!-- begin login-header -->
-				<div class="login-header">
-					<div class="brand">
+    <div id="page-container" class="fade">
+        <!-- begin login -->
+        <div class="login login-with-news-feed">
+            <!-- begin news-feed -->
+            <div class="news-feed">
+                <div class="news-image"
+                     style="background-image: url({% static '/assets/img/login-bg/login-bg-11.jpg' %})"></div>
+                <div class="news-caption">
+                    <h4 class="caption-title"><b>{% trans "Axborotnoma" %}</b> {% trans "jurnaliga xush kelibsiz" %}
+                    </h4>
+                    <p>
+                        {% trans "O'zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Davlat test markazi." %}
+                    </p>
+                </div>
+            </div>
+            <!-- end news-feed -->
+            <!-- begin right-content -->
+            <div class="right-content">
+                <!-- begin login-header -->
+                <div class="login-header">
+                    <div class="brand">
 						<span class="logo">
 						<span class="text-blue">D</span>
 						<span class="text-blue">T</span>
 						<span class="text-blue">M</span>
 					</span> <b>AXBOROTNOMA</b>
-						<small>DAVLAT TEST MARKAZI</small>
-					</div>
-					<div class="icon">
-						<i class="fa fa-sign-in-alt"></i>
-					</div>
-				</div>
-				<!-- end login-header -->
-				<!-- begin login-content -->
-				<div class="login-content">
-					<form  method="post" class="margin-bottom-0">
+                        <small>DAVLAT TEST MARKAZI</small>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-sign-in-alt"></i>
+                    </div>
+                </div>
+                <!-- end login-header -->
+                <!-- begin login-content -->
+                <div class="login-content">
+                    <form method="post" class="margin-bottom-0">
                         {% csrf_token %}
-						<div class="form-group m-b-15">
-							<input type="text" name="username" class="form-control form-control-lg" placeholder="Username" required />
-						</div>
-						<div class="form-group m-b-15">
-							<input type="password" name="password" class="form-control form-control-lg" placeholder="Password" required />
-						</div>
-						<div class="checkbox checkbox-css m-b-30">
-							<input type="checkbox" id="remember_me_checkbox" value="" />
-							<label for="remember_me_checkbox">
-							Esda saqlash
-							</label>
-						</div>
-						<div class="login-buttons">
-							<button type="submit" class="btn btn-primary btn-block btn-lg">KIRISH</button>
-						</div>
-						<div class="m-t-20 m-b-40 p-b-40 text-inverse">
-							Not a member yet? Click <a href="{% url 'register' %}">here</a> to register.
-                            Are you forgot? Click <a href="{% url 'password_reset' %}">here</a> to reset password.
-						</div>
-						<hr />
-						<p class="text-center text-grey-darker mb-0">
-							&copy; DTM 2022
-						</p>
-					</form>
-				</div>
-				<!-- end login-content -->
-			</div>
-			<!-- end right-container -->
-		</div>
-		<!-- end login -->
+                        <div class="form-group m-b-15">
+                            <input type="text" name="username" class="form-control form-control-lg"
+                                   placeholder="Username" required/>
+                        </div>
+                        <div class="form-group m-b-15">
+                            <input type="password" name="password" class="form-control form-control-lg"
+                                   placeholder="Password" required/>
+                        </div>
+                        <div class="checkbox checkbox-css m-b-30">
+                            <input type="checkbox" id="remember_me_checkbox" value=""/>
+                            <label for="remember_me_checkbox">
+                                {% trans "Esda saqlash" %}
+                            </label>
+                        </div>
+                        <div class="login-buttons">
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">{% trans "KIRISH" %}</button>
+                        </div>
+                        <div class="m-t-20 m-b-40 p-b-40 text-inverse">
+                            Not a member yet? Click <a href="{% url 'register' %}">{% trans "here" %}</a> {% trans "to register." %}
+                            Are you forgot? Click <a href="{% url 'password_reset' %}">{% trans "here" %}</a> {% trans "to reset password." %}
+                        </div>
+                        <hr/>
+                        <p class="text-center text-grey-darker mb-0">
+                            &copy; DTM 2022
+                        </p>
+                    </form>
+                </div>
+                <!-- end login-content -->
+            </div>
+            <!-- end right-container -->
+        </div>
+        <!-- end login -->
 
-		<!-- begin scroll to top btn -->
-		<a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
-		<!-- end scroll to top btn -->
-	</div>
+        <!-- begin scroll to top btn -->
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade"
+           data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+        <!-- end scroll to top btn -->
+    </div>
 {% endblock %}

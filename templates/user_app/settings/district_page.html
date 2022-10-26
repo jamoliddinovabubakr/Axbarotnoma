@@ -1,4 +1,5 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
     Tumanlar
@@ -6,18 +7,18 @@
 {% block content %}
     <div id="content" class="content">
         <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">Sozlamalar</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">Tumanlar</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Bosh Sahifa" %}</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Sozlamalar" %}</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Tumanlar" %}</a></li>
         </ol>
-        <h1 class="page-header">Tumanlar ro'yxati</h1>
+        <h1 class="page-header">{% trans "Tumanlar ro'yxati" %}</h1>
 
         <div class="panel panel-default forshadow">
             <!-- begin panel-heading -->
             <div class="panel-heading" style="background-color: #ababab">
                 <h4 class="panel-title">
                     <button href="{% url 'create_district' %}" data-toggle="modal" type="button"
-                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
+                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>{% trans "Qo'shish" %}
                     </button>
                 </h4>
                 <div class="panel-heading-btn">
@@ -36,9 +37,9 @@
                     <thead>
                     <tr>
                         <th width="1%"></th>
-                        <th class="text-nowrap">Nomi</th>
-                        <th class="text-nowrap">Viloyat</th>
-                        <th class="text-nowrap" width="100">Action</th>
+                        <th class="text-nowrap">{% trans "Nomi" %}</th>
+                        <th class="text-nowrap">{% trans "Viloyat" %}</th>
+                        <th class="text-nowrap" width="100">{% trans "Action" %}</th>
                     </tr>
                     </thead>
                     <tbody>

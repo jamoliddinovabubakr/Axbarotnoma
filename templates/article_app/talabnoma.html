@@ -1,18 +1,19 @@
 {% extends 'article_app/base.html' %}
 {% load static %}
 {% block title %}
-Talabnoma
+    Talabnoma
 {% endblock %}
 {% block content %}
-<div class="row" style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
-	<div class="container">
-		<br>
-		<center><h4 class="title">{{ob.title}}</h2></center>
-			<br>
-		<p>{{ ob.body|safe }}</p>
+    <div class="row"
+         style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
+        <div class="container">
+            <br>
+            <center><h4>class="title">{{ ob.title }}</h4></center>
+            <br>
+            <p>{{ ob.body|safe }}</p>
 
-		{% include 'article_app/includes/social_buttons.html' %}
-	</div>		
-</div>
-<br>
+            {% include 'article_app/includes/social_buttons.html' %}
+        </div>
+    </div>
+    <br>
 {% endblock content %}

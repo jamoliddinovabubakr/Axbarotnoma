@@ -1,4 +1,5 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
     Jurnallar
@@ -7,12 +8,12 @@
     <div id="content" class="content">
         <!-- begin breadcrumb -->
         <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">Bosh sahifa</a></li>
-            <li class="breadcrumb-item active">Jurnallar</li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Bosh sahifa" %}</a></li>
+            <li class="breadcrumb-item active">{% trans "Jurnallar" %}</li>
         </ol>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header">Jurnallar</h1>
+        <h1 class="page-header">{% trans "Jurnallar" %}</h1>
         <!-- end page-header -->
 
         <!-- begin panel -->
@@ -21,7 +22,7 @@
             <div class="panel-heading" style="background-color: #b4b4b4">
                 <h4 class="panel-title">
                     <button href="{% url 'create_magazine' %}" data-toggle="modal"
-                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>Qo'shish
+                            class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>{% trans "Qo'shish" %}
                     </button>
                 </h4>
                 <div class="panel-heading-btn">
@@ -33,7 +34,7 @@
             </div>
             <!-- end panel-heading -->
             <!-- begin panel-body -->
-            <div class="panel-body">
+            <div class="panel-body">{% trans "" %}
                 <!-- begin table-responsive -->
                 <div class="table-responsive">
                     <table
@@ -41,12 +42,12 @@
                         <thead>
                         <tr class="text-center">
                             <th width="1%">Tr</th>
-                            <th>Jurnal yili</th>
-                            <th>Jurnal soni</th>
-                            <th>Yaratilgan vaqt</th>
-                            <th>Tanlangan maqolalar</th>
-                            <th>Holat</th>
-                            <th width="1%">Actions</th>
+                            <th>{% trans "Jurnal yili" %}</th>
+                            <th>{% trans "Jurnal soni" %}</th>
+                            <th>{% trans "Yaratilgan vaqt" %}</th>
+                            <th>{% trans "Tanlangan maqolalar" %}</th>
+                            <th>{% trans "Holat" %}</th>
+                            <th width="1%">{% trans "Actions" %}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -59,20 +60,22 @@
                                     <td>{{ magazine.created_at }}</td>
                                     <td>
                                         {% for article in magazine.article.all %}
-                                        <span>{{ forloop.counter }}. {{ article.title }}</span>
+                                            <span>{{ forloop.counter }}. {{ article.title }}</span>
                                         {% endfor %}
                                     </td>
-                                     <td><span class="badge {% if magazine.status %} badge-success {% else %} badge-warning {% endif%}" style="font-size: 10px;">{{ magazine.status }}</span></td>
+                                    <td><span
+                                            class="badge {% if magazine.status %} badge-success {% else %} badge-warning {% endif %}"
+                                            style="font-size: 10px;">{{ magazine.status }}</span></td>
                                     <td class="with-btn" nowrap>
                                         <a href="{% url 'view_user' user.pk %}" title="Ko'rish" class="userModal"
-                                        data-toggle="tooltip"
-                                        style="color: #0188d0">
-                                         <i class="fas  fa-fw m-r-15 fa-eye"></i>
-                                     </a>
+                                           data-toggle="tooltip"
+                                           style="color: #0188d0">
+                                            <i class="fas  fa-fw m-r-15 fa-eye"></i>
+                                        </a>
 
                                         <a href="#" title="O'zgartirish"
-                                        data-toggle="tooltip"
-                                        style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
+                                           data-toggle="tooltip"
+                                           style="color: #3c9a06"><i class="fas  fa-fw m-r-15 fa-pencil-alt"></i></a>
 
                                         <a href="#" title="O'chirish"
                                            data-toggle="tooltip"
@@ -84,7 +87,11 @@
                             {% endfor %}
                         {% endif %}
                         {% if p_n == 0 %}
-                            <tr class="text-center"><td class="panel-warning" colspan="7"><h2 style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No elements.</h2></td></tr>
+                            <tr class="text-center">
+                                <td class="panel-warning" colspan="7"><h2
+                                        style="font-family: Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol">No
+                                    elements.</h2></td>
+                            </tr>
                         {% endif %}
                         </tbody>
                     </table>

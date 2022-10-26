@@ -1,19 +1,20 @@
+{% load i18n %}
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
         <form method="post" enctype="multipart/form-data" action="{% url 'delete_menu' menu.pk %}">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Menyuni o'chirish</h4>
+                    <h4 class="modal-title">{% trans "Menyuni o'chirish" %}</h4>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
                     <strong>{{ menu.name }}</strong><br>
-                    <span style="font-size: small">Bu menyuni o'chirishga ishonchingiz komilmi?</span>
+                    <span style="font-size: small">{% trans "Bu menyuni o'chirishga ishonchingiz komilmi?" %}</span>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yoq</a>
-                    <button type="submit" class="btn btn-primary">Ha</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yoq" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Ha" %}</button>
                 </div>
 
             </div>

@@ -23,7 +23,7 @@
     <!-- end navbar-header --><!-- begin header-nav -->
     <ul class="navbar-nav d-flex flex-grow-1">
         <li class="navbar-form flex-grow-1"></li>
-     <li style="padding-top: 15px; padding-right: 20px">
+        <li style="padding-top: 15px; padding-right: 20px">
             <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
                 <input name="next" type="hidden" value="{{ redirect_to }}">
                 <select name="language">
@@ -47,9 +47,9 @@
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                     <i class="fa fa-bell"></i>
                     <span class="label label-primary">{{ notifications.count }}</span>
-                <script>
+                    <script>
 
-                </script>
+                    </script>
                 </a>
                 <div class="dropdown-menu media-list dropdown-menu-right">
                     <div class="dropdown-header">Notifications ({{ notifications.count }})</div>
@@ -69,7 +69,7 @@
                         </a>
                     {% endfor %}
                     <div class="dropdown-footer text-center">
-                        <a href="{% url 'notifications' %}">View more</a>
+                        <a href="{% url 'notifications' %}">{% trans "View more" %}</a>
                     </div>
                 </div>
                 </li>
@@ -82,10 +82,11 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a href="{% url 'profile' %}" class="dropdown-item"><i
-                        class="icon-people p-r-10"></i><span>Profile</span></a>
-                <a href="{% url 'main_page' %}" class="dropdown-item"><i class="icon-home p-r-10"></i><span>Asosiy sahifaga qaytish</span></a>
+                        class="icon-people p-r-10"></i><span>{% trans "Profile" %}</span></a>
+                <a href="{% url 'main_page' %}" class="dropdown-item"><i
+                        class="icon-home p-r-10"></i><span>{% trans "Asosiy sahifaga qaytish" %}</span></a>
                 <a href="{% url 'logout' %}" class="dropdown-item"><i
-                        class="icon-logout  p-r-10"></i><span>Chiqish</span></a>
+                        class="icon-logout  p-r-10"></i><span>{% trans "Chiqish" %}</span></a>
             </div>
         </li>
 

@@ -62,11 +62,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env("POSTGRES_DB"),
-        'USER': env("POSTGRES_USER"),
-        'PASSWORD': env("POSTGRES_PASSWORD"),
-        'HOST': env("POSTGRES_HOST"),
-        'PORT': env("POSTGRES_PORT"),
+        'NAME': 'article_db',
+        'USER': 'postgres',
+        'PASSWORD': '0055',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -191,5 +191,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'abubakrjamoliddinov0055@gmail.com'  # sender's email-id
-EMAIL_HOST_PASSWORD = 'sbgm chus zabu rtul'  # password associated with above email-id
+EMAIL_HOST_USER = 'abubakrtestjamoliddinov0055@gmail.com'  # sender's email-id
+EMAIL_HOST_PASSWORD = 'giaa oumf txin xpbk'  # password associated with above email-id

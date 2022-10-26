@@ -1,4 +1,5 @@
 {% extends 'user_app/base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}
     Adminlar
@@ -6,10 +7,10 @@
 {% block content %}
     <div id="content" class="content">
         <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">Bosh Sahifa</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">Adminlar</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Bosh Sahifa" %}</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Adminlar" %}</a></li>
         </ol>
-        <h1 class="page-header">Adminlar ro'yxati</h1>
+        <h1 class="page-header">{% trans "Adminlar ro'yxati" %}</h1>
 
         <div class="panel panel-default forshadow">
             <!-- begin panel-heading -->
@@ -31,16 +32,16 @@
                     <tr>
                         <th width="1%"></th>
                         <th width="1%" data-orderable="false"></th>
-                        <th class="text-nowrap">Familiya</th>
-                        <th class="text-nowrap">Ism</th>
-                        <th class="text-nowrap">Otasini ismi</th>
-                        <th class="text-nowrap">Tug'ilgan kun</th>
-                        <th class="text-nowrap">Pasport</th>
-                        <th class="text-nowrap">Telefon</th>
-                        <th class="text-nowrap">Email</th>
-                        <th class="text-nowrap">Tuman</th>
-                        <th class="text-nowrap">Viloyat</th>
-                        <th class="text-nowrap">Role</th>
+                        <th class="text-nowrap">{% trans "Familiya" %}</th>
+                        <th class="text-nowrap">{% trans "Ism" %}</th>
+                        <th class="text-nowrap">{% trans "Otasini ismi" %}</th>
+                        <th class="text-nowrap">{% trans "Tug'ilgan kun" %}</th>
+                        <th class="text-nowrap">{% trans "Pasport" %}</th>
+                        <th class="text-nowrap">{% trans "Telefon" %}</th>
+                        <th class="text-nowrap">{% trans "Email" %}</th>
+                        <th class="text-nowrap">{% trans "Tuman" %}</th>
+                        <th class="text-nowrap">{% trans "Viloyat" %}</th>
+                        <th class="text-nowrap">{% trans "Role" %}</th>
                     </tr>
                     </thead>
                     <tbody>

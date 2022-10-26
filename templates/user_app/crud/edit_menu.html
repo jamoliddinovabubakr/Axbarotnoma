@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
@@ -5,7 +6,7 @@
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Menyuni o'zgartirish</h5>
+                    <h5 class="modal-title">{% trans "Menyuni o'zgartirish" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
@@ -14,47 +15,47 @@
                            class="table table-striped table-bordered table-td-valign-middle">
                         <tbody>
                         <tr>
-                            <th class="text-nowrap">Nomi</th>
+                            <th class="text-nowrap">{% trans "Nomi" %}</th>
                             <td class="text-nowrap">{{ form.name }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Parent ID</th>
+                            <th class="text-nowrap">{% trans "Parent ID" %}</th>
                             <td class="text-nowrap">{{ form.parent_id }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Icon</th>
+                            <th class="text-nowrap">{% trans "Icon" %}</th>
                             <td class="text-nowrap">{{ form.icon }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Url</th>
+                            <th class="text-nowrap">{% trans "Url" %}</th>
                             <td class="text-nowrap">{{ form.url }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Menyu turi</th>
+                            <th class="text-nowrap">{% trans "Menyu turi" %}</th>
                             <td class="text-nowrap">{{ form.type_menu }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Tartib nomeri</th>
+                            <th class="text-nowrap">{% trans "Tartib nomeri" %}</th>
                             <td class="text-nowrap">{{ form.menu_tr }}</td>
                         </tr>
-                    
+
                         <tr>
-                            <th class="text-nowrap">Status</th>
+                            <th class="text-nowrap">{% trans "Status" %}</th>
                             <td class="text-nowrap">{{ form.status }}</td>
                         </tr>
                         <tr class="text-center">
-                            <th colspan="2">Ruxsatlar</th>
+                            <th colspan="2">{% trans "Ruxsatlar" %}</th>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Aftorlar</th>
+                            <th class="text-nowrap">{% trans "Aftorlar" %}</th>
                             <td class="text-nowrap">{{ form.allowed_roles }}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yopish</a>
-                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </form>

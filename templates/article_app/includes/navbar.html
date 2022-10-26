@@ -5,7 +5,7 @@
         <a href="/">
             <img src="{% static 'img/version.png' %}" alt="" width="80"/></a>
         <span style="text-transform: uppercase; margin-left: 1em; font-family: Roboto,sans-serif; text-align: center; display: table-cell; vertical-align: middle;">
-                <b>Onlayn axborotnoma jurnal</b>
+                <b>{% trans "Onlayn axborotnoma jurnal" %}</b>
 			</span>
 
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar">
@@ -16,11 +16,11 @@
 
         <div class="collapse navbar-collapse" id="header-navbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/">Bosh sahifa</a></li>
-                <li><a href="{% url 'about_journal' %}">Jurnal haqida</a></li>
-                <li><a href="#">Konferensiya</a></li>
-                <li><a href="{% url 'talabnoma' %}">Talabnoma</a></li>
-                <li><a href="{% url 'contact' %}">Bog'lanish</a></li>
+                <li><a href="/">{% trans "Bosh sahifa" %}</a></li>
+                <li><a href="{% url 'about_journal' %}">{% trans "Jurnal haqida" %}</a></li>
+                <li><a href="#">{% trans "Konferensiya" %}</a></li>
+                <li><a href="{% url 'talabnoma' %}">{% trans "Talabnoma" %}</a></li>
+                <li><a href="{% url 'contact' %}">{% trans "Bog'lanish" %}</a></li>
                 {% if request.user.is_authenticated %}
                     <li class="dropdown navbar-user">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -29,13 +29,14 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="{% url 'sending_article_form' %}" class="dropdown-item"><i
-                                    class="icon-pencil  p-r-10"></i><span>Shaxsiy kabinet</span></a>
-                            <a href="{% url 'logout' %}" class="dropdown-item"><i class="icon-logout  p-r-10"></i><span>Chiqish</span></a>
+                                    class="icon-pencil  p-r-10"></i><span>{% trans "Shaxsiy kabinet" %}</span></a>
+                            <a href="{% url 'logout' %}" class="dropdown-item"><i
+                                    class="icon-logout  p-r-10"></i><span>{% trans "Chiqish" %}</span></a>
                         </div>
                     </li>
                 {% else %}
-                    <li><a href="{% url 'register' %}">Ro'yxatdan o'tish</a></li>
-                    <li><a href="{% url 'login' %}">Kirish</a></li>
+                    <li><a href="{% url 'register' %}">{% trans "Ro'yxatdan o'tish" %}</a></li>
+                    <li><a href="{% url 'login' %}">{% trans "Kirish" %}</a></li>
                 {% endif %}
                 <li style="padding-left: 10px; padding-top: 10px;">
                     <form action="{% url 'set_language' %}" method="post" id="post-form">
@@ -48,7 +49,7 @@
                             {% for language in languages %}
                                 <option value="{{ language.code }}"
                                         {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
-{#                                                                    {{ language.name_local }} (#}
+                                    {#                                                                    {{ language.name_local }} (#}
                                     {{ language.code }}
                                     {#                                )#}
                                 </option>

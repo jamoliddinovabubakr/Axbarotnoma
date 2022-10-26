@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <form data-parsley-validate="true" method="post" action="{% url 'create_category' %}">
     {% csrf_token %}
@@ -5,19 +6,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Yo'nalish qo'shish</h5>
+                    <h5 class="modal-title">{% trans "Yo'nalish qo'shish" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
-                     <table id="data-table-default"
+                    <table id="data-table-default"
                            class="table table-striped table-bordered table-td-valign-middle">
                         <tbody>
                         <tr>
-                            <th class="text-nowrap">Nomi</th>
+                            <th class="text-nowrap">{% trans "Nomi" %}</th>
                             <td class="text-nowrap">{{ form.name }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Key</th>
+                            <th class="text-nowrap">{% trans "Key" %}</th>
                             <td class="text-nowrap">{{ form.key }}</td>
                         </tr>
                         <tr>
@@ -28,8 +29,8 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yopish</a>
-                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </div>

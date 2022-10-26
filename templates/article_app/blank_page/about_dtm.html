@@ -1,65 +1,49 @@
 {% extends 'article_app/base.html' %}
+{% load i18n %}
 {% load static %}
-{% block title %} DTM haqida {% endblock %}
+{% block title %}{% trans " DTM haqida" %} {% endblock %}
 {% block content %}
-<div class="row"
-     style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
-    <div class="container">
-        <br>
-        <center><h4 class="title">Davlat test markazi haqida</h4></center>
-        <br>
-        <img src="{% static 'img/dtm.jpeg' %}" alt=""/>
-        <p>
-            O‘zbekiston Respublikasi Prezidentining 1992-yil 11-martdagi “Respublika oliy o‘quv yurtlarining kunduzgi
-            bo‘limlariga qabul qilishni takomillashtirish to‘g‘risida”gi PF-361-sonli farmoni mamalakatimiz oliy ta’lim
-            muassasalariga qobiliyatli yoshlarni tanlab olish sohasida ta’limdagi tub islohotlarni boshlab berdi.
-        </p>
-        <p>
-            Dastlab respublikamizning 6 ta oliy ta’lim muassasasida test sinovi asosida o‘qishga qabul qilish tajribadan
-            o‘tkazilgan edi.
-        </p>
-        <p>
-            O‘zbekiston Respublikasi Prezidenti farmoniga muvofiq 1992-yil 9-aprelda O‘zbekiston Respublikasi Prezidenti
-            huzuridagi Vazirlar Mahkamasining “O‘zbekiston Respublikasi oliy o‘quv yurtlarining kunduzgi bo‘limlariga
-            qabul qilish bo‘yicha eksperimentni tashkil etish va o‘tkazish to‘g‘risida” gi 181-sonli qarori qabul
-            qilindi. Mazkur qarorda O‘zbekiston Respublikasi oliy o‘quv yurtlarining kunduzgi bo‘limlariga qabul qilish
-            bo‘yicha eksperimentni tashkil etish va o‘tkazish belgilandi va 1992-yil 15-apreldan Vazirlar Mahkamasi
-            huzurida Oliy o‘quv yurtlarining kunduzgi bo‘limlariga abiturientlar tanlash bo‘yicha Respublika markazi
-            tashkil etildi. Markaz zimmasiga oliy o‘quv yurtlariga talabalar tanlab olish bo‘yicha yagona davlat
-            siyosatini amalga oshirish va oliy o‘quv yurtlariga o‘qishga kirayotgan yoshlar uchun yagona mezonlar joriy
-            etish, qabul va test texnologiyasi qoidalarini, eng qobiliyatli yoshlarni qidirib topish metodlarini ishlab
-            chiqish kabi vazifalar yuklatildi.
-        </p>
-        <p>
-            1993-yilda 46 ta oliy ta’lim muassasalarining 19 tasida tajriba tariqasida test sinovlari o‘tkazildi.
-        </p>
-            O‘zbekiston Respublikasi Prezidentining qarorlari va farmonlari, O‘zbekiston Respublikasi Vazirlar
-            Mahkamasining qarorlariga muvofiq har yili quyidagi tadbirlarni amalga oshirishda test sinovlari
-            o‘tkaziladi:
-        <ul>
-            <li>Oliy ta’lim muassasalarining bakalavriatiga talabalarni qabul qilish uchun;</li>
+    <div class="row"
+         style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
+        <div class="container">
+            <br>
+            <center><h4 class="title">{% trans "Davlat test markazi haqida" %}</h4></center>
+            <br>
+            <img src="{% static 'img/dtm.jpeg' %}" alt=""/>
+            <p>
+                {% trans " O‘zbekiston Respublikasi Prezidentining 1992-yil 11-martdagi “Respublika oliy o‘quv yurtlarining kunduzgi bo‘limlariga qabul qilishni takomillashtirish to‘g‘risida”gi PF-361-sonli farmoni mamalakatimiz oliy ta’lim muassasalariga qobiliyatli yoshlarni tanlab olish sohasida ta’limdagi tub islohotlarni boshlab berdi. " %}
+            </p>
+            <p>
+                {% trans "Dastlab respublikamizning 6 ta oliy ta’lim muassasasida test sinovi asosida o‘qishga qabul qilish tajribadan o‘tkazilgan edi." %}
+            </p>
+            <p> {% trans "O‘zbekiston Respublikasi Prezidenti farmoniga muvofiq 1992-yil 9-aprelda O‘zbekiston Respublikasi Prezidenti huzuridagi Vazirlar Mahkamasining “O‘zbekiston Respublikasi oliy o‘quv yurtlarining kunduzgi bo‘limlariga qabul qilish bo‘yicha eksperimentni tashkil etish va o‘tkazish to‘g‘risida” gi 181-sonli qarori qabul qilindi. Mazkur qarorda O‘zbekiston Respublikasi oliy o‘quv yurtlarining kunduzgi bo‘limlariga qabul qilish bo‘yicha eksperimentni tashkil etish va o‘tkazish belgilandi va 1992-yil 15-apreldan Vazirlar Mahkamasi huzurida Oliy o‘quv yurtlarining kunduzgi bo‘limlariga abiturientlar tanlash bo‘yicha Respublika markazi tashkil etildi. Markaz zimmasiga oliy o‘quv yurtlariga talabalar tanlab olish bo‘yicha yagona davlat siyosatini amalga oshirish va oliy o‘quv yurtlariga o‘qishga kirayotgan yoshlar uchun yagona mezonlar joriy etish, qabul va test texnologiyasi qoidalarini, eng qobiliyatli yoshlarni qidirib topish metodlarini ishlab chiqish kabi vazifalar yuklatildi. " %}
+            </p>
+            <p>
+                {% trans " 1993-yilda 46 ta oliy ta’lim muassasalarining 19 tasida tajriba tariqasida test sinovlari o‘tkazildi." %}
+            </p>
+            {% trans "O‘zbekiston Respublikasi Prezidentining qarorlari va farmonlari, O‘zbekiston Respublikasi Vazirlar  Mahkamasining qarorlariga muvofiq har yili quyidagi tadbirlarni amalga oshirishda test sinovlari  o‘tkaziladi: " %}
+            <ul>
+                <li>{% trans "Oliy ta’lim muassasalarining bakalavriatiga talabalarni qabul qilish uchun;" %}</li>
 
-            <li>Muddatli harbiy xizmatga chaqiriluvchilarning bilim saviyasini aniqlash uchun;</li>
+                <li>{% trans "Muddatli harbiy xizmatga chaqiriluvchilarning bilim saviyasini aniqlash uchun;" %}</li>
 
-            <li>Muddatli harbiy xizmatni o‘tayotgan harbiy xizmatchilarga oliy ta’lim muassasalariga o‘qishga kirishi
-                uchun tavsiyanomalar berish uchun;
-            </li>
+                <li>{% trans "Muddatli harbiy xizmatni o‘tayotgan harbiy xizmatchilarga oliy ta’lim muassasalariga o‘qishga  kirishi  uchun tavsiyanomalar berish uchun;" %}
+                </li>
 
-            <li>Ayrim fanlar chuqur o‘rganiladigan maktab-internatlarining 5-sinfiga qabul qilish uchun;</li>
+                <li>{% trans "Ayrim fanlar chuqur o‘rganiladigan maktab-internatlarining 5-sinfiga qabul qilish uchun;" %}</li>
 
-            <li>O‘zbekiston Respublikasi Prezidenti stipendiatlarini aniqlash uchun;</li>
+                <li>{% trans "O‘zbekiston Respublikasi Prezidenti stipendiatlarini aniqlash uchun;" %}</li>
 
-            <li>Respublika fan olimpiadalarining 4-bosqichi g‘oliblarini aniqlash uchun;</li>
+                <li>{% trans "Respublika fan olimpiadalarining 4-bosqichi g‘oliblarini aniqlash uchun;" %}</li>
 
-            <li>O‘zbekiston Respublikasi Prezidenti huzuridagi Davlat boshqaruv akademiyasi magistraturasiga qabul
-                qilish uchun;
-            </li>
+                <li>{% trans "O‘zbekiston Respublikasi Prezidenti huzuridagi Davlat boshqaruv akademiyasi magistraturasiga qabul qilish uchun;" %}
+                </li>
 
-            <li>Toshkent tibbiyot akademiyasining harbiy-tibbiyot fakultetiga tanlov uchun.</li>
-        </ul>
-        {% include 'article_app/includes/social_buttons.html' %}
+                <li>{% trans "Toshkent tibbiyot akademiyasining harbiy-tibbiyot fakultetiga tanlov uchun." %}</li>
+            </ul>
+            {% include 'article_app/includes/social_buttons.html' %}
+        </div>
     </div>
-</div>
-<br>
+    <br>
 
 {% endblock content %}

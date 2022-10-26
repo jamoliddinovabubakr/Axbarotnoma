@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <div class="modal fade" id="UserModal">
     <div class="modal-dialog">
@@ -5,7 +6,7 @@
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Foydalanuvchi ma'lumotlarini o'zgartirish</h5>
+                    <h5 class="modal-title">{% trans "Foydalanuvchi ma'lumotlarini o'zgartirish" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
@@ -14,11 +15,11 @@
                            class="table table-bordered table-td-valign-middle">
                         <tbody>
                         <tr>
-                            <th class="text-nowrap">Familiya</th>
+                            <th class="text-nowrap">{% trans "Familiya" %}</th>
                             <td class="text-nowrap">{{ form.last_name }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Ism</th>
+                            <th class="text-nowrap">{% trans "Ism" %}</th>
                             <td class="text-nowrap">{{ form.first_name }}</td>
                         </tr>
                         <tr>
@@ -26,58 +27,59 @@
                             <td class="text-nowrap">{{ form.middle_name }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Username</th>
+                            <th class="text-nowrap">{% trans "Username" %}</th>
                             <td class="text-nowrap">{{ form.username }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Tug'ilgan sana</th>
+                            <th class="text-nowrap">{% trans "Tug'ilgan sana" %}</th>
                             <td class="text-nowrap">
                                 <input type="text" value="{{ user.birthday|date:"m/d/Y" }}" name="birthday"
                                        class="form-control" id="datepicker-default" placeholder="Select Date"/>
                             </td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Jins</th>
+                            <th class="text-nowrap">{% trans "Jins" %}</th>
                             <td class="text-nowrap">{{ form.gender }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Telefon</th>
+                            <th class="text-nowrap">{% trans "Telefon" %}</th>
                             <td class="text-nowrap">{{ form.phone }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Email</th>
+                            <th class="text-nowrap">{% trans "Email" %}</th>
                             <td class="text-nowrap">{{ form.email }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Pasport</th>
+                            <th class="text-nowrap">{% trans "Pasport" %}</th>
                             <td class="text-nowrap">{{ form.passport }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Tuman</th>
+                            <th class="text-nowrap">{% trans "Tuman" %}</th>
                             <td class="text-nowrap">{{ form.district }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Viloyat</th>
+                            <th class="text-nowrap">{% trans "Viloyat" %}</th>
                             <td class="text-nowrap">{{ form.region }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Rol</th>
+                            <th class="text-nowrap">{% trans "Rol" %}</th>
                             <td class="text-nowrap">{{ form.role }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">Rasm</th>
+                            <th class="text-nowrap">{% trans "Rasm" %}</th>
                             <td class="text-nowrap">
-                                 <img src="{{ user.avatar.url }}" width="100" id="image"><hr>
-                                 <input type="file" name="avatar" class="form-control" id="id_avatar"
-                                   accept=".png, .jpg, .jpeg">
+                                <img src="{{ user.avatar.url }}" width="100" id="image">
+                                <hr>
+                                <input type="file" name="avatar" class="form-control" id="id_avatar"
+                                       accept=".png, .jpg, .jpeg">
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Yopish</a>
-                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </form>
