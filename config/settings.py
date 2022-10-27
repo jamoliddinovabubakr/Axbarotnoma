@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'ckeditor',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -94,6 +95,8 @@ TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 gettext = lambda s: s
@@ -103,9 +106,15 @@ LANGUAGES = [
     ('ru', gettext('Russia')),
     # ('qq', gettext('Qoraqalpoq')),
 ]
-#
+
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
-# MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
+
+# MODELTRANSLATION_LANGUAGES = ('uz', 'en')
+#
+# MODELTRANSLATION_FALLBACK_LANGUAGES = ('uz', 'en')
+#
+# MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'uz'
+
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),

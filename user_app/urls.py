@@ -23,8 +23,8 @@ urlpatterns = [
 
     path('notifications/', get_notifications, name='notifications'),
     path('load_notif/', load_data_notif, name='load_notif'),
-    path('notification/<int:pk>/view', view_notification, name='view_notification'),
-    path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
+    path('notifications/<int:pk>/view', view_notification, name='view_notification'),
+    path('notifications/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
 
     path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),

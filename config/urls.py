@@ -14,6 +14,7 @@ urlpatterns += [
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
+
 urlpatterns += i18n_patterns(
     path('', include('article_app.urls')),
     path('profile/', include('user_app.urls')),

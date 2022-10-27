@@ -47,24 +47,7 @@
                         </tr>
                         </thead>
                         <tbody id="display_table">
-                        {#                            {% for notif in notifications %}#}
-                        {#                                <tr class="text-center">#}
-                        {#                                    <td id="counter_ar">{{ forloop.counter}}</td>#}
-                        {#                                    <td>{{ notif.article.author.email }}</td>#}
-                        {#                                    <td>{{ notif.title|safe|slice:100 }}</td>#}
-                        {#                                    <td>#}
-{# <span class="badge {% if notif.status == 'Tekshirilmadi' %} badge-danger {% elif notif.status == 'Tekshirildi' %} badge-success {% elif notif.status == 'Tekshirilmoqda' %} badge-blue {% endif %}">{{ notif.status }}</span>#}
-                        {#                                    </td>#}
-                        {#                            <td>#}
-                        {#                                                        <a href="{% url 'view_notification' notif.pk %}" title="Ko'rish"#}
-                        {#                                                           data-toggle="tooltip"#}
-                        {#                                                           style="color: #0188d0">#}
-                        {#                                                            <i class="fas  fa-fw m-r-15 fa-edit"></i>#}
-                        {#                                                        </a>#}
-                        {##}
-                        {#                            </td>#}
-                        {#                                </tr>#}
-                        {#                            {% endfor %}#}
+
                         </tbody>
                     </table>
                 </div>
@@ -78,8 +61,11 @@
             </div>
             <!-- end panel-body -->
         </div>
-        <!-- end panel -->
+        <span class='badge badge-danger'>1</span> - Tekshirilmadi
+        <span class='badge badge-warning'>2</span> - Tekshirilmoqda
+        <span class='badge badge-success'>3</span> - Tekshirildi
     </div>
+    <!-- end panel -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -88,25 +74,34 @@
                     type: "GET",
                     url: "{% url 'load_notif' %}",
                     success: function (response) {
-                        console.log(response.notifications);
                         $("#display_table").empty();
                         let tr = 0;
+
                         for (let item of response.notifications) {
                             tr++;
-                            let status = item.status.toString()
+                            let status = item.status.toString();
                             let temp =
                                 "<tr class='text-center'>" +
                                 "<td>" + tr + "</td>" +
                                 "<td>" + item.my_resend__author__email + "</td>" +
                                 "<td>" + item.title + "</td>" +
-                                "<td><span id='state" + item.id + "' class='badge badge-indigo'>" + item.status + "</span></td>" +
+                                "<td id='index" + item.id + "'></td>" +
                                 "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>" +
                                 "</tr>";
-                            if (status === 'Tekshirilmadi'){
-                                $('#state${item.id}').addClass("class='badge badge-danger'");
-                            }
 
                             $("#display_table").append(temp);
+
+                            if (status === 'Tekshirilmadi') {
+                                $("#index" + item.id).html("<span class='badge badge-danger'>" + item.status + "</span>");
+                            } else if (status === 'Tekshirildi') {
+                                $("#index" + item.id).html("<span class='badge badge-success'>" + item.status + "</span>");
+                            } else if (status === 'Tekshirilmoqda') {
+                                $("#index" + item.id).html("<span class='badge badge-warning'>" + item.status + "</span>");
+                            } else {
+                                $("#index" + item.id).html("<span class='badge badge-info'>" + item.status + "</span>");
+                            }
+
+
                         }
                     },
                     error: function (response) {

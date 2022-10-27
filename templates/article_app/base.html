@@ -12,14 +12,15 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
     <link href="{% static 'assets/css/forum/app.min.css' %}" rel="stylesheet"/>
     <!-- ================== END BASE CSS STYLE ================== -->
-    <link href="{% static 'assets/plugins/jvectormap-next/jquery-jvectormap.css' %}" rel="stylesheet" />
-	<link href="{% static 'assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css' %}" rel="stylesheet" />
-	<link href="{% static 'assets/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/plugins/jvectormap-next/jquery-jvectormap.css' %}" rel="stylesheet"/>
+    <link href="{% static 'assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css' %}" rel="stylesheet"/>
+    <link href="{% static 'assets/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet"/>
 
     <!-- ================== BEGIN PAGE CSS ================== -->
-	<link href="{% static 'assets/plugins/bootstrap-social/bootstrap-social.css' %}" rel="stylesheet" />
-    <link href="{% static 'assets/plugins/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet" />
-	<!-- ================== END PAGE CSS ================== -->
+    <link href="{% static 'assets/plugins/bootstrap-social/bootstrap-social.css' %}" rel="stylesheet"/>
+    <link href="{% static 'assets/plugins/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet"/>
+    <link href="{% static 'assets/plugins/flag-icon-css/css/flag-icon.min.css' %}" rel="stylesheet"/>
+    <!-- ================== END PAGE CSS ================== -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
 
 </head>
@@ -27,7 +28,7 @@
 {% include 'article_app/includes/navbar.html' %}
 {% include 'article_app/includes/banner.html' %}
 <div class="content">
-	<div class="container">
+    <div class="container">
         <div class="row">
             <div class="col-lg-3">
                 {% include 'article_app/includes/left_sidebar.html' %}<br>
@@ -38,7 +39,7 @@
                 {% endblock content %}
             </div>
             <div class="col-lg-3">
-            {% include 'article_app/includes/right_sidebar.html' %}
+                {% include 'article_app/includes/right_sidebar.html' %}
             </div>
         </div>
     </div>
