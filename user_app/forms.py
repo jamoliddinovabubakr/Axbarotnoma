@@ -1,13 +1,29 @@
 from django import forms
 from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput, ModelMultipleChoiceField
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+
+from article_app.models import Category
 from .models import User, Menu, Role, State, Region, Notification
 
 
 class CreateUserForm(UserCreationForm):
+    choices = [['', '']]
+    query = Category.objects.all().values().order_by('name')
+    if query:
+        choices = [[x['id'], x['name']] for x in query]
+
+    speciality = forms.MultipleChoiceField(choices=choices, required=True, widget=forms.SelectMultiple(attrs={
+        'class': 'multiple-select2 form-control',
+        'multiple': 'multiple',
+        'data - size': "10",
+        'data-live-search': "true",
+        'data - style': "btn-white",
+        'data - parsley - required': "true",
+    }))
+
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'username', 'email', 'speciality', 'password1', 'password2']
 
 
 class UpdateUserForm(UserChangeForm):

@@ -69,7 +69,7 @@ def create_article(request):
                 first_name=user.first_name,
                 middle_name=user.middle_name,
                 email=user.email,
-                work_place='-',
+                work_place='No',
                 author_order=1
             )
             return redirect('update_my_article', pk=article.id)

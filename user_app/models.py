@@ -27,6 +27,14 @@ class Gender(models.Model):
         return self.name
 
 
+class Notifstatus(models.Model):
+    name = models.CharField(_('Nomi'), max_length=50)
+    key = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.name
+
+
 class Role(models.Model):
     name = models.CharField(_('Roli'), max_length=255, unique=True)
     status = models.BooleanField(default=True)
@@ -120,9 +128,16 @@ class Notification(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(blank=True, null=True)
+    # status = models.ForeignKey(Status, on_delete=models.CASCADE, blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUS, default=UNCHECK)
     created_at = models.DateTimeField(auto_now_add=True)
     my_resend = models.ForeignKey(MyResendArticle, on_delete=models.CASCADE, blank=True, null=True)
+
+    # def save(self, *args, **kwargs):
+    #     status = Status.objects.first()
+    #     if status:
+    #         self.status = status
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

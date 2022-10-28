@@ -21,6 +21,7 @@ class StateAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'name', 'status']
 
 
+
 @admin.register(Region)
 class RegionAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'name', 'key']

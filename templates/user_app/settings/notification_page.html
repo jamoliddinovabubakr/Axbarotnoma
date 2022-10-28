@@ -38,12 +38,13 @@
                     <table
                             class="table table-hover table-striped table-bordered">
                         <thead>
-                        <tr class="text-center">
-                            <th width="1%">Tr</th>
-                            <th>{% trans "Aftor" %}</th>
-                            <th>{% trans "Title" %}</th>
-                            <th>{% trans "Status" %}</th>
-                            <th width="1%">{% trans "Actions" %}</th>
+                        <tr>
+                            <th width="1%"><b>Tr</b></th>
+                            <th><b>{% trans "Author" %}</b></th>
+                            <th><b>{% trans "Description" %}</b></th>
+                            <th><b>{% trans "Time" %}</b></th>
+                            <th><b>{% trans "Status" %}</b></th>
+                            <th width="1%"><b>{% trans "Actions" %}</b></th>
                         </tr>
                         </thead>
                         <tbody id="display_table">
@@ -81,13 +82,14 @@
                             tr++;
                             let status = item.status.toString();
                             let temp =
-                                "<tr class='text-center'>" +
+                                "<tr>" +
                                 "<td>" + tr + "</td>" +
                                 "<td>" + item.my_resend__author__email + "</td>" +
-                                "<td>" + item.title + "</td>" +
+                                "<td>" + item.description + "</td>" +
+                                "<td>" + item.created_at + "</td>" +
                                 "<td id='index" + item.id + "'></td>" +
-                                "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>" +
-                                "</tr>";
+                                "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>"
+                                + "</tr>";
 
                             $("#display_table").append(temp);
 

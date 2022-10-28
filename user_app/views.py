@@ -65,6 +65,9 @@ def register_page(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
+            specialities = form.cleaned_data['speciality']
+            for item in specialities:
+                user.speciality.add(int(item))
 
             user_group, created = Group.objects.get_or_create(name='USER')
             user_group.user_set.add(user)
@@ -495,8 +498,19 @@ def get_notifications(request):
 def load_data_notif(request):
     if request.method == 'GET':
         notifications = Notification.objects.all().order_by("-created_at")
+        not_check_count = notifications.filter(status="Tekshirilmadi").count()
+
         return JsonResponse({"notifications": list(notifications.values(
-            'id', 'article_id', 'title', 'my_resend__author__email', 'description', 'status', 'created_at'
+            'id', 'article_id', 'title', 'my_resend__author__email', 'description', 'status', 'created_at',
+        )), 'not_check_count': not_check_count})
+
+
+def count_notif(request):
+    if request.method == 'GET':
+        notifications = Notification.objects.all().order_by("-created_at").filter(status="Tekshirilmadi")
+        return JsonResponse({"count_notif_notread": notifications.count(), "notifications": list(notifications.values(
+            'id', 'my_resend__author__avatar', 'my_resend__author__first_name', 'my_resend__author__last_name',
+            'created_at'
         ))})
 
 

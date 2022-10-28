@@ -26,10 +26,10 @@ def get_allow_menus(role_id: int = None):
     return {'allow_menus': allow_menus}
 
 
-@register.simple_tag()
-def get_editor_notifications():
-    notifications = Notification.objects.order_by("-created_at").filter(status='Tekshirilmadi')
-    return notifications
+# @register.simple_tag()
+# def get_editor_notifications():
+#     notifications = Notification.objects.order_by("-created_at").filter(status='Tekshirilmadi')
+#     return notifications
 
 
 @register.simple_tag()

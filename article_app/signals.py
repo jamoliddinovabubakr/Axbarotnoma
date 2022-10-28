@@ -10,7 +10,7 @@ def create_article(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(
             article=instance.article,
-            title=instance.article.title,
+            title=instance.id,
             description='Yangi maqola',
             my_resend=instance,
         )

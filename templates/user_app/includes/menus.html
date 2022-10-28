@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load menu_tag %}
-{% get_editor_notifications as notifications %}
 {% get_sub_menus as sub_menus %}
 <ul class="nav">
     <li class="nav-header">{% trans "Shaxsiy Kabinet" %}</li>
@@ -9,8 +8,8 @@
             <li>
                 <a href="{{ menu.get_absolute_url }}">
                     {% if menu.id == 4 %}
-                        <span class="badge bg-danger pull-right"
-                              style="color: white; font-size:14px;">{{ notifications.count }}</span>
+                        <span class="notif_count badge bg-danger pull-right"
+                              style="color: white; font-size:14px;"></span>
                     {% endif %}
                     <i class="material-icons">{{ menu.icon }}</i>
                     <span>{{ menu.name }}</span>
