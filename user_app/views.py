@@ -629,3 +629,29 @@ def delete_menu(request, pk):
         return redirect('menus')
     else:
         return render(request, 'user_app/crud/delete_menu.html', {'menu': menu})
+
+
+@login_required(login_url='login')
+# @allowed_users(perm='delete_menu')
+def send_to_review(request, article_id):
+    ob = get_object_or_404(MyResendArticle, article__id=article_id)
+    article = Article.objects.get(pk=article_id)
+    specialities = set(ob.article.get_categories())
+    users = User.objects.filter(role__id=4)
+
+    reviews = []
+
+    for user in users:
+        if specialities.intersection(set(user.get_speciality())):
+            reviews.append(user)
+
+    if len(reviews) > 0:
+        for review in reviews:
+            Notification.objects.create(
+                article=article,
+                user=review,
+                my_resend=ob,
+            )
+        return redirect('view_notification')
+    else:
+        return HttpResponse("Kechirasiz taqrizchilar topilmadi!")

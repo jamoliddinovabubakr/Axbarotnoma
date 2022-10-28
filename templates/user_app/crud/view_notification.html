@@ -78,6 +78,8 @@
                 </div>
                 <hr>
                 <br>
+            <a href="{% url 'send_to_review' notification.article.id %}" class="btn btn-success">Taqrizchilarga yuborish</a>
+                <br>
                 <form action="{% url 'answer_to_author' notification.id %}" method="get">
                     <div class="container">
                         <strong>{% trans "Quyidagilardan birini tanlang ?" %}</strong><br>

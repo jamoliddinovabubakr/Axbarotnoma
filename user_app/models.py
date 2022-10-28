@@ -71,6 +71,9 @@ class User(AbstractUser):
             self.role_id = rol.id
         super().save(*args, **kwargs)
 
+    def get_speciality(self):
+        return [p.name for p in self.speciality.all()]
+
     @property
     def full_name(self):
         if self.first_name is not None and self.last_name is not None:
@@ -132,6 +135,8 @@ class Notification(models.Model):
     status = models.CharField(max_length=50, choices=STATUS, default=UNCHECK)
     created_at = models.DateTimeField(auto_now_add=True)
     my_resend = models.ForeignKey(MyResendArticle, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    result_review = models.BooleanField(default=False)
 
     # def save(self, *args, **kwargs):
     #     status = Status.objects.first()
