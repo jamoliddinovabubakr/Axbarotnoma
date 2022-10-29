@@ -40,14 +40,14 @@
                         <thead>
                         <tr>
                             <th width="1%"><b>Tr</b></th>
-                            <th><b>{% trans "Author" %}</b></th>
+                            <th><b>{% trans "Title" %}</b></th>
                             <th><b>{% trans "Description" %}</b></th>
                             <th><b>{% trans "Time" %}</b></th>
                             <th><b>{% trans "Status" %}</b></th>
                             <th width="1%"><b>{% trans "Actions" %}</b></th>
                         </tr>
                         </thead>
-                        <tbody id="display_table">
+                        <tbody id="revew_table">
 
                         </tbody>
                     </table>
@@ -73,9 +73,9 @@
             setInterval(function () {
                 $.ajax({
                     type: "GET",
-                    url: "{% url 'load_notif' %}",
+                    url: "{% url 'get_review_view_notification' %}",
                     success: function (response) {
-                        $("#display_table").empty();
+                        $("#revew_table").empty();
                         let tr = 0;
 
                         for (let item of response.notifications) {
@@ -84,14 +84,14 @@
                             let temp =
                                 "<tr>" +
                                 "<td>" + tr + "</td>" +
-                                "<td>" + item.my_resend__author__email + "</td>" +
+                                "<td>" + item.title + "</td>" +
                                 "<td>" + item.description + "</td>" +
                                 "<td>" + item.created_at + "</td>" +
                                 "<td id='index" + item.id + "'></td>" +
                                 "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>"
                                 + "</tr>";
 
-                            $("#display_table").append(temp);
+                            $("#revew_table").append(temp);
 
                             if (status === 'Tekshirilmadi') {
                                 $("#index" + item.id).html("<span class='badge badge-danger'>" + item.status + "</span>");

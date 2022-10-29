@@ -497,7 +497,8 @@ def get_notifications(request):
 
 def load_data_notif(request):
     if request.method == 'GET':
-        notifications = Notification.objects.all().order_by("-created_at")
+        notifications = Notification.objects.filter(user__role_id__in=[1, 2, 3]).order_by(
+            "-created_at")
         not_check_count = notifications.filter(status="Tekshirilmadi").count()
 
         return JsonResponse({"notifications": list(notifications.values(
@@ -648,10 +649,28 @@ def send_to_review(request, article_id):
     if len(reviews) > 0:
         for review in reviews:
             Notification.objects.create(
+                title=ob.article.title,
                 article=article,
                 user=review,
                 my_resend=ob,
+                description="Yangi maqola yuborildi",
             )
-        return redirect('view_notification')
+        return redirect('notifications')
     else:
         return HttpResponse("Kechirasiz taqrizchilar topilmadi!")
+
+
+def review_view_notifications(request):
+    return render(request, "user_app/reviews/notif_review.html")
+
+
+def get_review_view_notification(request):
+    notifications = Notification.objects.filter(user=request.user).order_by("-created_at")
+    return JsonResponse({"notifications": list(notifications.values(
+        'id', 'title', 'status', 'created_at', 'result_review', 'my_resend__article', 'description'
+    ))})
+
+
+def review_view_notification(request, pk):
+
+    return render(request, "user_app/reviews/notification_view.html")
