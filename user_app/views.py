@@ -488,7 +488,7 @@ def delete_region(request, pk):
     else:
         return render(request, 'user_app/crud/delete_region.html', {'region': region})
 
-
+# Glavniy redaktor
 @login_required(login_url='login')
 @allowed_users(menu_url='notifications')
 def get_notifications(request):
@@ -595,7 +595,7 @@ def answer_to_author(request, pk):
             sent_email_message(user.email, result)
 
     return redirect('notifications')
-
+# END Glavniy redaktor
 
 @login_required(login_url='login')
 @allowed_users(menu_url='menus')
