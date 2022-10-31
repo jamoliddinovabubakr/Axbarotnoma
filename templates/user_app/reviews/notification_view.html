@@ -19,22 +19,7 @@
                     <div class="col-md-2">
                     </div>
                     <div class="col-md-5">
-                        <table>
-                            <tr>
-                                <th>
-                                    <h4>{{ notification.article.author.last_name }} {{ notification.article.author.first_name }}</h4>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td><strong>Email:</strong> {{ notification.article.author.email }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Tel:</strong> {{ notification.article.author.phone }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>{% trans "Yuborilgan vaqt:" %} </strong> {{ notification.created_at }}</td>
-                            </tr>
-                        </table>
+
                     </div>
                     <div class="col-md-5">
 
@@ -46,28 +31,20 @@
                     <div class="col-md-8">
                         <table>
                             <tr>
-                                <td><p><b>{% trans "Mavzu:" %} </b>{{ notification.article.title|safe }}</p></td>
+                                <td><p><b>{% trans "Mavzu:" %} </b>{{ notif.article.title|safe }}</p></td>
+                            </tr>
+
+
+                            <tr>
+                                <td><p></p><b>{% trans "Abstract:" %} </b>{{ notif.article.abstract|safe }}</td>
                             </tr>
                             <tr>
-                                <td><b>{% trans "Aftorlar:" %} </b></td>
-                            </tr>
-                            {% for author in authors %}
-                                <tr>
-                                    <td>{{ author.author_order }}. {{ author.last_name }} {{ author.first_name }}
-                                        ({{ author.work_place }})
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            <tr>
-                                <td><p></p><b>{% trans "Abstract:" %} </b>{{ notification.article.abstract|safe }}</td>
-                            </tr>
-                            <tr>
-                                <td><b>{% trans "Kalit so'zlar:" %} </b>{{ notification.article.keywords|safe }}</td>
+                                <td><b>{% trans "Kalit so'zlar:" %} </b>{{ notif.article.keywords|safe }}</td>
                             </tr>
                             <br>
                             <tr>
                                 <td><b>{% trans "MS word fayl:" %} </b><a class="btn btn-outline-info btn-sm"
-                                                                          href="{{ notification.article.file.url }}"
+                                                                          href="{{ notif.article.file.url }}"
                                                                           download
                                                                           role="button"><span>{% trans "Yuklab olish" %}</span></a>
                                 </td>
@@ -77,10 +54,8 @@
                     <div class="col-md-2"></div>
                 </div>
                 <hr>
-                <br>
-            <a href="{% url 'send_to_review' notification.article.id %}" class="btn btn-success">Taqrizchilarga yuborish</a>
-                <br>
-                <form action="{% url 'answer_to_author' notification.id %}" method="get">
+
+                <form action="{% url 'answer_to_author' notif.id %}" method="get">
                     <div class="container">
                         <strong>{% trans "Quyidagilardan birini tanlang ?" %}</strong><br>
                         <div class="form-check">
@@ -90,13 +65,7 @@
                                 {% trans "Rad etish" %}
                             </label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="stateArticle" id="resend"
-                                   value="2">
-                            <label class="form-check-label">
-                                {% trans "Qayta yuborish" %}
-                            </label>
-                        </div>
+
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="stateArticle" id="confirm"
                                    value="3">
@@ -121,12 +90,11 @@
                     {% comment %} <script>
                         const radiobtn = document.querySelector("input[name='stateArticle']:checked");
                         if (radiobtn != null) {
-
                         }
                     </script> {% endcomment %}
                     <div class="col-md-12 text-center">
                         <button type="submit"
-                                class="btn btn-success {% if notification.my_resend.state.id == 2 or notification.my_resend.state.id == 3 or notification.my_resend.state.id == 5 %} disabled {% endif %}">
+                                class="btn btn-success {% if notif.my_resend.state.id == 2 or notif.my_resend.state.id == 3 or notif.my_resend.state.id == 5 %} disabled {% endif %}">
                             <i
                                     class="fas fa-cog fa-spin"></i> {% trans "Saqlash" %}
                         </button>

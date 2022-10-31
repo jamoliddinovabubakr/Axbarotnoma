@@ -85,24 +85,28 @@ class AddAuthorForm(forms.ModelForm):
 
         widgets = {
             'first_name': TextInput(attrs={
+                'id': 'author_fname',
                 'class': 'form-control',
                 'type': 'text',
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
             'last_name': TextInput(attrs={
+                'id': 'author_lname',
                 'class': 'form-control',
                 'type': 'text',
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
             'middle_name': TextInput(attrs={
+                'id': 'author_mname',
                 'class': 'form-control',
                 'type': 'text',
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
             'email': TextInput(attrs={
+                'id': 'author_email',
                 'class': 'form-control',
                 'type': 'email',
                 'data-parsley-type': "email",
@@ -110,12 +114,14 @@ class AddAuthorForm(forms.ModelForm):
                 'data - parsley - required': "true",
             }),
             'work_place': TextInput(attrs={
+                'id': 'author_work_place',
                 'class': 'form-control',
                 'type': 'text',
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
             }),
             'author_order': TextInput(attrs={
+                'id': 'author_author_order',
                 'class': 'form-control',
                 'type': 'number',
                 'placeholder': "Enter...",

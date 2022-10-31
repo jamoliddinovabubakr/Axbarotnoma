@@ -27,7 +27,7 @@ urlpatterns = [
     path('article/edit/<int:pk>/', update_my_article, name='update_my_article'),
     path('article/delete/<int:pk>/', delete_myarticle, name='delete_myarticle'),
 
-    path('author/<int:pk>/', add_author, name='add_author'),
+    path('author/<int:pk>', add_author, name='add_author'),
     path('author/edit/<int:pk>/', edit_author, name='edit_author'),
     path('author/delete/<int:pk>/', delete_author, name='delete_author'),
 

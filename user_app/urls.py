@@ -5,7 +5,7 @@ from .views import profile_page, login_page, logout_user, register_page, change_
     view_user, update_user, delete_user, get_notifications, view_notification, answer_to_author, get_menus, edit_menu, \
     delete_menu, get_roles, create_role, edit_role, delete_role, get_states, create_state, edit_state, delete_state, \
     get_regions, create_region, edit_region, delete_region, password_reset, profile, load_data_notif, count_notif, \
-    send_to_review, get_review_view_notification, review_view_notifications, review_view_notification
+    send_to_review, get_review_view_notification, review_notifications, review_view_notification
 
 urlpatterns = [
     path('', profile_page, name='profile_page'),
@@ -30,8 +30,8 @@ urlpatterns = [
     path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
     path('send_to_review/<int:article_id>', send_to_review, name='send_to_review'),
 
-    path('review_view_notification/', review_view_notifications, name='review_view_notifications'),
-    path('review_view_notification/<int:pk>/view', review_view_notification, name='review_view_notification'),
+    path('review_view_notifications/', review_notifications, name='review_view_notifications'),
+    path('review_view_notification/<int:pk>/view', review_view_notification, name='review_notification_view'),
 
     path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),

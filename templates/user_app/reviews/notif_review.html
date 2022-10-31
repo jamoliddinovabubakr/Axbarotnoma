@@ -87,20 +87,20 @@
                                 "<td>" + item.title + "</td>" +
                                 "<td>" + item.description + "</td>" +
                                 "<td>" + item.created_at + "</td>" +
-                                "<td id='index" + item.id + "'></td>" +
-                                "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>"
+                                "<td id='reviewindex" + item.id + "'></td>" +
+                                "<td>" + `<a href="/profile/review_view_notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>"
                                 + "</tr>";
 
                             $("#revew_table").append(temp);
 
                             if (status === 'Tekshirilmadi') {
-                                $("#index" + item.id).html("<span class='badge badge-danger'>" + item.status + "</span>");
+                                $("#reviewindex" + item.id).html("<span class='badge badge-danger'>" + item.status + "</span>");
                             } else if (status === 'Tekshirildi') {
-                                $("#index" + item.id).html("<span class='badge badge-success'>" + item.status + "</span>");
+                                $("#reviewindex" + item.id).html("<span class='badge badge-success'>" + item.status + "</span>");
                             } else if (status === 'Tekshirilmoqda') {
-                                $("#index" + item.id).html("<span class='badge badge-warning'>" + item.status + "</span>");
+                                $("#reviewindex" + item.id).html("<span class='badge badge-warning'>" + item.status + "</span>");
                             } else {
-                                $("#index" + item.id).html("<span class='badge badge-info'>" + item.status + "</span>");
+                                $("#reviewindex" + item.id).html("<span class='badge badge-info'>" + item.status + "</span>");
                             }
 
 

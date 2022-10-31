@@ -36,7 +36,7 @@
                     <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}
-                        <p>x{% trans "Maqola ma'lumotlarini o'zgartirish" %}</p>
+                        <p style="color: red;">{% trans "1-qadam. Mualliflarni kiriting" %}</p>
                         <button href="{% url 'add_author' article.id %}" data-toggle="modal"
                                 class="addUser btn btn-success btn-sm"><i
                                 class="fa fa-plus mr-1"></i>{% trans "Aftor qo'shish" %}
@@ -69,9 +69,9 @@
                                         <td>{{ author.author_order }}</td>
                                         <td class="with-btn" nowrap>
                                             <a href="{% url 'edit_author' author.pk %}"
-                                               class="userModal btn btn-sm btn-primary width-60 m-r-2">{% trans "Edit" %}</a>
+                                               class="userModal btn btn-sm btn-primary width-80 m-r-2">{% trans "Edit" %}</a>
                                             <a href="{% url 'delete_author' author.pk %}"
-                                               class="userModal btn btn-sm btn-danger width-60">{% trans "Delete" %}</a>
+                                               class="userModal btn btn-sm btn-danger width-80">{% trans "Delete" %}</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -79,7 +79,7 @@
                             </table>
                         </div>
                         <br>
-                        <p>{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
+                        <p style="color: red;">{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
                         <div style="padding-left:10%; padding-right: 5%;">
                             <div class="row">
                                 <div class="col-md-12">

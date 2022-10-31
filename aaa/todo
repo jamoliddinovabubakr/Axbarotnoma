@@ -11,3 +11,8 @@ fayl yuklanganda word yoki pdf bo'lsa aynan o'sha tipli faylga tekshirish kk
 translate:
 -user_app -> Abubakr
 -article_app
+
+31.10.2022
+menu add active show(Abubakr)
+author add ajax post(Yusuf)
+notif show reviews(Yusuf)

@@ -488,6 +488,7 @@ def delete_region(request, pk):
     else:
         return render(request, 'user_app/crud/delete_region.html', {'region': region})
 
+
 # Glavniy redaktor
 @login_required(login_url='login')
 @allowed_users(menu_url='notifications')
@@ -499,16 +500,15 @@ def load_data_notif(request):
     if request.method == 'GET':
         notifications = Notification.objects.filter(user__role_id__in=[1, 2, 3]).order_by(
             "-created_at")
-        not_check_count = notifications.filter(status="Tekshirilmadi").count()
 
         return JsonResponse({"notifications": list(notifications.values(
             'id', 'article_id', 'title', 'my_resend__author__email', 'description', 'status', 'created_at',
-        )), 'not_check_count': not_check_count})
+        ))})
 
 
 def count_notif(request):
     if request.method == 'GET':
-        notifications = Notification.objects.all().order_by("-created_at").filter(status="Tekshirilmadi")
+        notifications = Notification.objects.all().order_by("-created_at").filter(user=request.user).filter(status="Tekshirilmadi")
         return JsonResponse({"count_notif_notread": notifications.count(), "notifications": list(notifications.values(
             'id', 'my_resend__author__avatar', 'my_resend__author__first_name', 'my_resend__author__last_name',
             'created_at'
@@ -595,6 +595,8 @@ def answer_to_author(request, pk):
             sent_email_message(user.email, result)
 
     return redirect('notifications')
+
+
 # END Glavniy redaktor
 
 @login_required(login_url='login')
@@ -635,7 +637,9 @@ def delete_menu(request, pk):
 @login_required(login_url='login')
 # @allowed_users(perm='delete_menu')
 def send_to_review(request, article_id):
+    print(f"article_id={article_id}")
     ob = get_object_or_404(MyResendArticle, article__id=article_id)
+    print(ob.id)
     article = Article.objects.get(pk=article_id)
     specialities = set(ob.article.get_categories())
     users = User.objects.filter(role__id=4)
@@ -655,12 +659,15 @@ def send_to_review(request, article_id):
                 my_resend=ob,
                 description="Yangi maqola yuborildi",
             )
+        ob.state = get_object_or_404(State, pk=6)
+        print(ob.state.id)
+        ob.save()
         return redirect('notifications')
     else:
         return HttpResponse("Kechirasiz taqrizchilar topilmadi!")
 
 
-def review_view_notifications(request):
+def review_notifications(request):
     return render(request, "user_app/reviews/notif_review.html")
 
 
@@ -672,5 +679,14 @@ def get_review_view_notification(request):
 
 
 def review_view_notification(request, pk):
+    notif = get_object_or_404(Notification, pk=pk)
 
-    return render(request, "user_app/reviews/notification_view.html")
+    if notif.status == 'Tekshirilmadi':
+        notif.status = 'Tekshirilmoqda'
+        notif.save()
+
+    context = {
+        'notif': notif,
+    }
+
+    return render(request, "user_app/reviews/notification_view.html", context=context)
