@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Q, Model
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from user_app.decorators import allowed_users
@@ -115,7 +116,6 @@ def update_my_article(request, pk):
         else:
             context = {
                 'form': UpdateArticleForm(instance=article),
-                'authors': authors,
                 'article': article,
                 'handle_error': 1,
             }
@@ -124,12 +124,18 @@ def update_my_article(request, pk):
         file_name = str(article.file.name).split('/')[-1]
         context = {
             'form': UpdateArticleForm(instance=article),
-            'authors': authors,
             'article': article,
             'handle_error': 0,
             'file_name': str(file_name),
         }
         return render(request, "article_app/crud/update_article.html", context=context)
+
+
+def get_article_authors(request, pk):
+    authors = Authors.objects.filter(article__id=pk)
+    return JsonResponse({"authors": list(authors.values(
+        'id', 'article', 'first_name', 'last_name', 'middle_name', 'email', 'work_place', 'author_order'
+    ))})
 
 
 @login_required(login_url='login')
@@ -227,13 +233,15 @@ def add_author(request, pk):
         return render(request, 'user_app/not_access.html')
     last_resent = MyResendArticle.objects.filter(article=article).last()
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = AddAuthorForm(request.POST)
         if form.is_valid():
             form.save()
-            if article.state is None:
-                return redirect('update_my_article', pk=pk)
-            return redirect('update_resend_article', pk=last_resent.pk)
+            messages.success(request, "Mualliflar muvaffaqiyatli yaratildi!")
+            data = {
+                'message': 'form is saved'
+            }
+            return JsonResponse(data)
     else:
         context = {
             'form': AddAuthorForm(),

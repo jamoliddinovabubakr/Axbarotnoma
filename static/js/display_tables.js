@@ -1,28 +1,31 @@
 $(document).ready(function () {
-    $('#add_author_btn').one('click', function (e) {
-        e.preventDefault();
-        let article_id = $('#id_article').val();
-        let fname = $('#author_fname').val();
-        let lname = $('#author_lname').val();
-        let mname = $('#author_mname').val();
-        let email = $('#author_email').val();
-        let work = $('#author_work_place').val();
-        let author_tr = $('#author_author_order').val();
+    const $myForm = $('.create_author_form'); // select form class
+    $myForm.submit(function (event) {
+        event.preventDefault();
 
-        if (fname == "" || lname == "" || mname == "" || email == "" || work == "" || author_tr == 0){
-            alert("Please complete fields !");
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "author/"+ article_id,
-                data: "POST",
-                response: "POST",
-                error: "POST",
-            });
+        const $formData = $myForm.serialize(); // get all data from form which will be submitted to database
+        const $thisURL = $myForm.attr('data-url') || window.location.href; // data-url is attribute in form
+        $.ajax({
+            type: 'POST',
+            url: $thisURL,
+            data: $formData,
+            success: handleSuccess,
+            error: handleError,
+        });
+
+        function handleSuccess(data) {
+            $myForm[0].reset();
+            $('#add_author_modal').click();
+            $('#add-author-notif').click();
+
+
         }
 
-
+        function handleError(ThrowError) {
+            console.log('error');
+            console.log(ThrowError);
+        }
     });
-});
 
+});
 

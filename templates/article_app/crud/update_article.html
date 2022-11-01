@@ -32,15 +32,17 @@
             <!-- begin panel-body -->
             <div class="panel-body">
                 <div class="container" style="background-color: #E1E1E1; border-radius: 5px;">
+
                     <br>
                     <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}
                         <p style="color: red;">{% trans "1-qadam. Mualliflarni kiriting" %}</p>
-                        <button href="{% url 'add_author' article.id %}" data-toggle="modal"
+                        <button href="{% url 'add_author' article.id %}" data-toggle="modal" data-target="#Add_Author"
                                 class="addUser btn btn-success btn-sm"><i
                                 class="fa fa-plus mr-1"></i>{% trans "Aftor qo'shish" %}
                         </button>
+
                         <br>
                         <br>
                         <div class="table-responsive">
@@ -54,27 +56,27 @@
                                     <th>{% trans "Email" %}</th>
                                     <th>{% trans "Ish joy" %}</th>
                                     <th>{% trans "Aftor tartibi" %}</th>
-                                    <th width="100">{% trans "Action" %}</th>
+{#                                    <th width="100">{% trans "Action" %}</th>#}
                                 </tr>
                                 </thead>
-                                <tbody>
-                                {% for author in authors %}
-                                    <tr class="text-center">
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ author.last_name }}</td>
-                                        <td>{{ author.first_name }}</td>
-                                        <td>{{ author.middle_name }}</td>
-                                        <td>{{ author.email }}</td>
-                                        <td>{{ author.work_place }}</td>
-                                        <td>{{ author.author_order }}</td>
-                                        <td class="with-btn" nowrap>
-                                            <a href="{% url 'edit_author' author.pk %}"
-                                               class="userModal btn btn-sm btn-primary width-80 m-r-2">{% trans "Edit" %}</a>
-                                            <a href="{% url 'delete_author' author.pk %}"
-                                               class="userModal btn btn-sm btn-danger width-80">{% trans "Delete" %}</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
+                                <tbody id="authors_table">
+                                {#                                {% for author in authors %}#}
+                                {#                                    <tr class="text-center">#}
+                                {#                                        <td>{{ forloop.counter }}</td>#}
+                                {#                                        <td>{{ author.last_name }}</td>#}
+                                {#                                        <td>{{ author.first_name }}</td>#}
+                                {#                                        <td>{{ author.middle_name }}</td>#}
+                                {#                                        <td>{{ author.email }}</td>#}
+                                {#                                        <td>{{ author.work_place }}</td>#}
+                                {#                                        <td>{{ author.author_order }}</td>#}
+                                {#                                        <td class="with-btn" nowrap>#}
+                                {#                                            <a href="{% url 'edit_author' author.pk %}"#}
+                                {#                                               class="userModal btn btn-sm btn-primary width-80 m-r-2">{% trans "Edit" %}</a>#}
+                                {#                                            <a href="{% url 'delete_author' author.pk %}"#}
+                                {#                                               class="userModal btn btn-sm btn-danger width-80">{% trans "Delete" %}</a>#}
+                                {#                                        </td>#}
+                                {#                                    </tr>#}
+                                {#                                {% endfor %}#}
                                 </tbody>
                             </table>
                         </div>
@@ -184,6 +186,42 @@
         if (file_name != '') {
             document.getElementById('submitButtonId').disabled = false;
         }
+
+
+        $(document).ready(function () {
+            setInterval(function () {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/authors/{{ article.id }}",
+                    success: function (response) {
+                        $("#authors_table").empty();
+                        let tr = 0;
+
+                        for (let item of response.authors) {
+                            tr++;
+
+                            let temp =
+                                "<tr>" +
+                                "<td>" + tr + "</td>" +
+                                "<td>" + item.first_name + "</td>" +
+                                "<td>" + item.last_name + "</td>" +
+                                "<td>" + item.midlle_name + "</td>" +
+                                "<td>" + item.email + "</td>" +
+                                "<td>" + item.work_place + "</td>" +
+                                "<td>" + item.author_order + "</td>" +
+                                "</tr>";
+
+                            $("#authors_table").append(temp);
+                        }
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+
+            }, 1500);
+        });
     </script>
 {% endblock %}
 
