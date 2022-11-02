@@ -16,7 +16,8 @@
                     {% if language.code == 'uz' %}
                         O‘zbek
                     {% else %}
-                       <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>{{ language.name_local }}
+                        <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>
+                        {{ language.name_local }}
                     {% endif %}
                 </option>
             {% endfor %}

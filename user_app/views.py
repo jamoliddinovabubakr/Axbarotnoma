@@ -29,6 +29,8 @@ from django.contrib.auth.models import Group, Permission
 from user_app.decorators import allowed_users
 from user_app.models import Menu
 from user_app.forms import CreateMenuForm
+from django.utils.translation import get_language_from_request
+
 
 
 @unauthenticated_user

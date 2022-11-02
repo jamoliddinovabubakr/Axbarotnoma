@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Model
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import translation
 
 from user_app.decorators import allowed_users
 from .models import Article, Category, Authors, Journal, Post, BlankPage, MyResendArticle
@@ -13,6 +15,7 @@ from django.core.paginator import Paginator
 
 
 def main_page(request):
+    user_language = 'uz'
     post = Post.objects.last()
     context = {
         'post': post,

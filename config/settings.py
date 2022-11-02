@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'ckeditor',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -90,6 +89,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'uz'
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
 
 TIME_ZONE = 'Asia/Tashkent'
 
@@ -100,14 +100,13 @@ USE_L10N = True
 USE_TZ = True
 
 gettext = lambda s: s
+
 LANGUAGES = [
     ('uz', gettext('Uzbek')),
     ('en', gettext('English')),
     ('ru', gettext('Russia')),
-    # ('qq', gettext('Qoraqalpoq')),
+    # ('kaa', gettext('Karakalpak')),
 ]
-
-MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
 
 # MODELTRANSLATION_LANGUAGES = ('uz', 'en')
 #
