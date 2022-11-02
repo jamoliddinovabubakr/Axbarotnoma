@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
     <link href="{% static 'assets/css/forum/app.min.css' %}" rel="stylesheet"/>
     <!-- ================== END BASE CSS STYLE ================== -->
+    <link href="{% static '/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css' %}" rel="stylesheet"/>
+    <link href="{% static '/assets/plugins/select2/dist/css/select2.min.css' %}" rel="stylesheet"/>
 
     <link href="{% static 'assets/plugins/jvectormap-next/jquery-jvectormap.css' %}" rel="stylesheet"/>
     <link href="{% static 'assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css' %}" rel="stylesheet"/>
@@ -39,9 +41,9 @@
 
                 {% endblock content %}
             </div>
-{#            <div class="col-lg-2">#}
-{#                {% include 'article_app/includes/right_sidebar.html' %}#}
-{#            </div>#}
+            {#            <div class="col-lg-2">#}
+            {#                {% include 'article_app/includes/right_sidebar.html' %}#}
+            {#            </div>#}
         </div>
     </div>
 </div>
@@ -52,6 +54,8 @@
 <script src="{% static 'assets/js/theme/google.min.js' %}"></script>
 <!-- ================== END BASE JS ================== -->
 
+<script src="{% static '/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+<script src="{% static '/assets/plugins/select2/dist/js/select2.min.js' %}"></script>
 <script src="{% static 'assets/plugins/gritter/js/jquery.gritter.js' %}"></script>
 <script src="{% static 'assets/plugins/flot/jquery.flot.js' %}"></script>
 <script src="{% static 'assets/plugins/flot/jquery.flot.time.js' %}"></script>

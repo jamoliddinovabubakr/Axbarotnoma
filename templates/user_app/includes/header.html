@@ -24,8 +24,11 @@
 			</span>
         </li>
         <li class="navbar-form flex-grow-1"></li>
+        <li class="navbar-brand">
+            {% include "lang.html" %}
+        </li>
         <li class="dropdown">
-            {% if request.user.role.id == 2 or request.user.role.id == 3 or request.user.role.id == 1 %}
+            {% if request.user.role.id == 2 or request.user.role.id == 3 or request.user.role.id == 1 or request.user.role.id == 4 %}
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                     <i class="fa fa-bell"></i>
                     <span class="notif_count label label-primary"></span>
@@ -45,29 +48,11 @@
                 </div>
                 </li>
             {% endif %}
-        <li class="dropdown navbar-language">
-            {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
-            {% get_language_info_list for LANGUAGES as languages %}
-            <a href="#" class="dropdown-toggle pr-1 pl-1 pr-sm-3 pl-sm-3" data-toggle="dropdown">
-                <span class="flag-icon flag-icon-{% if LANGUAGE_CODE == 'en' %}gb{% else %}{{ LANGUAGE_CODE }}{% endif %}"></span>
-                <span class="name d-none d-sm-inline"
-                      style="text-transform: uppercase;"><b>{{ LANGUAGE_CODE }}</b></span><b class="caret"></b>
-            </a>
-            <div class="dropdown-menu">
-                {% for language in languages %}
-                    <a href="/{{ language.code }}/" class="dropdown-item">
-                        <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>
-                        {% if language.code == 'uz' %}
-                            O'zbek
-                        {% else %}  {{ language.name_local }}{% endif %} </a>
-                {% endfor %}
-            </div>
-        </li>
+
         <li class="dropdown navbar-user">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="{{ request.user.avatar.url }}" alt=""/>
-                <span class="d-none d-md-inline">{{ request.user.last_name }} {{ request.user.first_name }}</span> <b
+                <span class="d-none d-md-inline">{{ request.user.full_name }}</span> <b
                     class="caret"></b>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
@@ -90,10 +75,10 @@
                 type: "GET",
                 url: "{% url 'count_notif' %}",
                 success: function (response) {
-                    console.log(response.notifications);
+
                     $('.notif_count').text(response.count_notif_notread);
-                     $("#notif_body").empty();
-                    for (let item of response.notifications ){
+                    $("#notif_body").empty();
+                    for (let item of response.notifications) {
                         let temp = `<a class="dropdown-item media" href='/profile/notification/${item.id}/view'>`
                             + `<div class="media-left">`
                             + `<img src="/media/${item.my_resend__author__avatar}" class='media-object' alt='' /><i class="fab fa-facebook-messenger text-blue media-object-icon"></i>`
@@ -103,11 +88,11 @@
                             + `<div class="text-muted f-s-12">` + item.created_at + `</div>`
                             + `</div>`
                             + `</a>`;
-                         $("#notif_body").append(temp);
+                        $("#notif_body").append(temp);
                     }
                 },
                 error: function (response) {
-                   console.log(response);
+                    console.log(response);
                 }
             });
         }, 1500);

@@ -1,0 +1,25 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% get_current_language as LANGUAGE_CODE %}
+<form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}">
+    <span class="flag-icon flag-icon-{% if LANGUAGE_CODE == 'en' %}gb{% else %}{{ LANGUAGE_CODE }}{% endif %}"></span>
+    <label>
+        <select name="language" onchange="this.form.submit()" class="form-control selectpicker"
+                data-style="btn-white btn-sm">
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+                <option value="{{ language.code }}"
+                        {% if language.code == LANGUAGE_CODE %} selected {% endif %}>
+                    {% if language.code == 'uz' %}
+                        O‘zbek
+                    {% else %}
+                       <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>{{ language.name_local }}
+                    {% endif %}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+</form>

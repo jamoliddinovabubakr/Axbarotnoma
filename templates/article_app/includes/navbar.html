@@ -18,9 +18,9 @@
         <div class="collapse navbar-collapse" id="header-navbar">
             <ul class="nav navbar-nav navbar-right d-flex flex-grow-1">
                 <li><a href="/">{% trans "Bosh sahifa" %}</a></li>
-{#                <li><a href="{% url 'about_journal' %}">{% trans "Jurnal haqida" %}</a></li>#}
+                {#                <li><a href="{% url 'about_journal' %}">{% trans "Jurnal haqida" %}</a></li>#}
                 <li><a href="#">{% trans "Konferensiya" %}</a></li>
-{#                <li><a href="{% url 'talabnoma' %}">{% trans "Talabnoma" %}</a></li>#}
+                {#                <li><a href="{% url 'talabnoma' %}">{% trans "Talabnoma" %}</a></li>#}
                 <li><a href="{% url 'contact' %}">{% trans "Bog'lanish" %}</a></li>
                 {% if request.user.is_authenticated %}
                     <li class="dropdown navbar-user">
@@ -39,23 +39,9 @@
                     <li><a href="{% url 'register' %}">{% trans "Ro'yxatdan o'tish" %}</a></li>
                     <li><a href="{% url 'login' %}">{% trans "Kirish" %}</a></li>
                 {% endif %}
-                <li class="dropdown navbar-language">
-                    {% get_current_language as LANGUAGE_CODE %}
-                    {% get_available_languages as LANGUAGES %}
-                    {% get_language_info_list for LANGUAGES as languages %}
-                    <a href="#" class="dropdown-toggle pr-1 pl-1 pr-sm-3 pl-sm-3" data-toggle="dropdown">
-                        <span class="flag-icon flag-icon-{% if LANGUAGE_CODE == 'en' %}gb{% else %}{{ LANGUAGE_CODE }}{% endif %}"></span>
-                        <span class="name d-none d-sm-inline" style="text-transform: uppercase;"><b>{{ LANGUAGE_CODE }}</b></span>
-                    </a>
-                    <div class="dropdown-menu">
-                        {% for language in languages %}
-                            <a href="/{{ language.code }}/" class="dropdown-item">
-                                <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>
-                                {% if language.code == 'uz' %}
-                                    O'zbek
-                                {% else %}  {{ language.name_local }}{% endif %} </a>
-                        {% endfor %}
-                    </div>
+
+                <li style="margin-top: 1.5%">
+                    {% include 'lang.html' %}
                 </li>
             </ul>
         </div>

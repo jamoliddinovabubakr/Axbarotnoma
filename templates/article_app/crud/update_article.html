@@ -46,37 +46,20 @@
                         <br>
                         <br>
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover  m-b-10">
+                            <table class="table table-striped table-hover table-bordered">
                                 <thead>
-                                <tr class="text-center">
-                                    <th>#</th>
+                                <tr>
+                                    <th>Tr</th>
                                     <th>{% trans "Familiya" %}</th>
                                     <th>{% trans "Ism" %}</th>
                                     <th>{% trans "Sharif" %}</th>
                                     <th>{% trans "Email" %}</th>
                                     <th>{% trans "Ish joy" %}</th>
                                     <th>{% trans "Aftor tartibi" %}</th>
-{#                                    <th width="100">{% trans "Action" %}</th>#}
+                                    <th width="100">{% trans "Action" %}</th>
                                 </tr>
                                 </thead>
                                 <tbody id="authors_table">
-                                {#                                {% for author in authors %}#}
-                                {#                                    <tr class="text-center">#}
-                                {#                                        <td>{{ forloop.counter }}</td>#}
-                                {#                                        <td>{{ author.last_name }}</td>#}
-                                {#                                        <td>{{ author.first_name }}</td>#}
-                                {#                                        <td>{{ author.middle_name }}</td>#}
-                                {#                                        <td>{{ author.email }}</td>#}
-                                {#                                        <td>{{ author.work_place }}</td>#}
-                                {#                                        <td>{{ author.author_order }}</td>#}
-                                {#                                        <td class="with-btn" nowrap>#}
-                                {#                                            <a href="{% url 'edit_author' author.pk %}"#}
-                                {#                                               class="userModal btn btn-sm btn-primary width-80 m-r-2">{% trans "Edit" %}</a>#}
-                                {#                                            <a href="{% url 'delete_author' author.pk %}"#}
-                                {#                                               class="userModal btn btn-sm btn-danger width-80">{% trans "Delete" %}</a>#}
-                                {#                                        </td>#}
-                                {#                                    </tr>#}
-                                {#                                {% endfor %}#}
                                 </tbody>
                             </table>
                         </div>
@@ -187,7 +170,6 @@
             document.getElementById('submitButtonId').disabled = false;
         }
 
-
         $(document).ready(function () {
             setInterval(function () {
 
@@ -204,13 +186,17 @@
                             let temp =
                                 "<tr>" +
                                 "<td>" + tr + "</td>" +
-                                "<td>" + item.first_name + "</td>" +
                                 "<td>" + item.last_name + "</td>" +
-                                "<td>" + item.midlle_name + "</td>" +
+                                "<td>" + item.first_name + "</td>" +
+                                "<td>" + item.middle_name + "</td>" +
                                 "<td>" + item.email + "</td>" +
                                 "<td>" + item.work_place + "</td>" +
                                 "<td>" + item.author_order + "</td>" +
-                                "</tr>";
+                                "<td class='with-btn' nowrap>" +
+                                 `<a class='userModal btn btn-sm btn-outline-primary' href="/author/edit/${item.id}">Edit</a>`  + " " +
+                                `<a href="/author/delete/${item.id}" class="userModal btn btn-sm btn-outline-danger">Delete</a>`  +
+                                "</td>" +
+                            "</tr>";
 
                             $("#authors_table").append(temp);
                         }
@@ -224,6 +210,5 @@
         });
     </script>
 {% endblock %}
-
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

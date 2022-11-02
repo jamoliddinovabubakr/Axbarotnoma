@@ -508,7 +508,11 @@ def load_data_notif(request):
 
 def count_notif(request):
     if request.method == 'GET':
-        notifications = Notification.objects.all().order_by("-created_at").filter(user=request.user).filter(status="Tekshirilmadi")
+        user = User.objects.get(pk=request.user.id)
+        if user.role.id == 4:
+            notifications = Notification.objects.all().order_by("-created_at").filter(user=user).filter(status="Tekshirilmadi")
+        else:
+            notifications = Notification.objects.all().order_by("-created_at").filter(user__role_id__in=[1, 2, 3]).filter(status="Tekshirilmadi")
         return JsonResponse({"count_notif_notread": notifications.count(), "notifications": list(notifications.values(
             'id', 'my_resend__author__avatar', 'my_resend__author__first_name', 'my_resend__author__last_name',
             'created_at'
@@ -638,7 +642,7 @@ def delete_menu(request, pk):
 # @allowed_users(perm='delete_menu')
 def send_to_review(request, article_id):
     print(f"article_id={article_id}")
-    ob = get_object_or_404(MyResendArticle, article__id=article_id)
+    ob = MyResendArticle.objects.filter(article__id=article_id).last()
     print(ob.id)
     article = Article.objects.get(pk=article_id)
     specialities = set(ob.article.get_categories())
