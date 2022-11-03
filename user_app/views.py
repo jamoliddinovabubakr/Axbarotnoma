@@ -574,7 +574,7 @@ def answer_to_author(request, pk):
             notif.status = 'Tekshirildi'  # editor dagi xolatni change qilyapmiz
             notif.save()  # va edit dagi artivle ni save qilyapmiz
 
-            sent_email_message(user.email, result)
+            # sent_email_message(user.email, result)
 
         elif result == '2':
             article.state = re_send
@@ -586,7 +586,7 @@ def answer_to_author(request, pk):
 
             notif.status = 'Tekshirildi'
             notif.save()
-            sent_email_message(user.email, result)
+            # sent_email_message(user.email, result)
 
         elif result == '3':
             article.state = confirm
@@ -598,7 +598,7 @@ def answer_to_author(request, pk):
 
             notif.status = 'Tekshirildi'
             notif.save()
-            sent_email_message(user.email, result)
+            # sent_email_message(user.email, result)
 
     return redirect('notifications')
 

@@ -6,19 +6,12 @@
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
-        <!-- begin breadcrumb -->
         <ol class="breadcrumb float-xl-right">
             <li class="breadcrumb-item"><a href="javascript:;">{% trans "Yopish" %}</a></li>
             <li class="breadcrumb-item active">{% trans "Maqola ma'lumotlarini o'zgartirish" %}</li>
         </ol>
-        <!-- end breadcrumb -->
-        <!-- begin page-header -->
         <h1 class="page-header">{% trans "Maqola ma'lumotlarini o'zgartirish" %}</h1>
-        <!-- end page-header -->
-
-        <!-- begin panel -->
         <div class="panel panel-default forshadow" data-sortable-id="table-basic-7">
-            <!-- begin panel-heading -->
             <div class="panel-heading">
                 <h4 class="panel-title"></h4>
                 <div class="panel-heading-btn">
@@ -28,21 +21,17 @@
                        data-click="panel-remove"><i class="fa fa-times"></i></a>
                 </div>
             </div>
-            <!-- end panel-heading -->
-            <!-- begin panel-body -->
             <div class="panel-body">
                 <div class="container" style="background-color: #E1E1E1; border-radius: 5px;">
-
                     <br>
                     <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.media }}
                         <p style="color: red;">{% trans "1-qadam. Mualliflarni kiriting" %}</p>
-                        <button href="{% url 'add_author' article.id %}" data-toggle="modal" data-target="#Add_Author"
+                        <button href="{% url 'add_author' article.id %}" data-toggle="modal"
                                 class="addUser btn btn-success btn-sm"><i
                                 class="fa fa-plus mr-1"></i>{% trans "Aftor qo'shish" %}
                         </button>
-
                         <br>
                         <br>
                         <div class="table-responsive">
@@ -60,6 +49,7 @@
                                 </tr>
                                 </thead>
                                 <tbody id="authors_table">
+
                                 </tbody>
                             </table>
                         </div>
@@ -87,7 +77,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15">
                                         <label class="col-md-2 col-sm-2 col-form-label">{% trans "Mavzu" %} <span
@@ -157,9 +146,7 @@
                 <br>
                 <hr>
             </div>
-            <!-- end panel-body -->
         </div>
-        <!-- end panel -->
     </div>
     <script type="text/javascript">
         let file_name = '{{ file_name }}';
@@ -169,20 +156,16 @@
         if (file_name != '') {
             document.getElementById('submitButtonId').disabled = false;
         }
-
         $(document).ready(function () {
             setInterval(function () {
-
                 $.ajax({
                     type: "GET",
                     url: "/authors/{{ article.id }}",
                     success: function (response) {
                         $("#authors_table").empty();
                         let tr = 0;
-
                         for (let item of response.authors) {
                             tr++;
-
                             let temp =
                                 "<tr>" +
                                 "<td>" + tr + "</td>" +
@@ -193,19 +176,17 @@
                                 "<td>" + item.work_place + "</td>" +
                                 "<td>" + item.author_order + "</td>" +
                                 "<td class='with-btn' nowrap>" +
-                                 `<a class='userModal btn btn-sm btn-outline-primary' href="/author/edit/${item.id}">Edit</a>`  + " " +
-                                `<a href="/author/delete/${item.id}" class="userModal btn btn-sm btn-outline-danger">Delete</a>`  +
+                                `<a class="userModal btn btn-sm btn-outline-primary" href="/author/edit/${item.id}">Edit</a>` + " " +
+                                `<a class="userModal btn btn-sm btn-outline-danger"  href="/author/delete/${item.id}">Delete</a>` +
                                 "</td>" +
-                            "</tr>";
-
+                                "</tr>";
                             $("#authors_table").append(temp);
                         }
                     },
                     error: function (response) {
-                        alert(response);
+                        console.log(response);
                     }
                 });
-
             }, 1500);
         });
     </script>

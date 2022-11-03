@@ -102,17 +102,13 @@
                             } else {
                                 $("#reviewindex" + item.id).html("<span class='badge badge-info'>" + item.status + "</span>");
                             }
-
-
                         }
                     },
                     error: function (response) {
                         alert(response);
                     }
                 });
-
             }, 1500);
-
         });
     </script>
 {% endblock %}

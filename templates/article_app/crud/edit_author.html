@@ -1,8 +1,8 @@
 {% load i18n %}
 {% load static %}
-<div class="modal fade" id="UserModal">
+<div class="modal fade" id="userModal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_author' author.pk %}">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
@@ -56,6 +56,5 @@
         </form>
     </div>
 </div>
-
-<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static 'assets/js/demo/form-plugins.demo.js' %}"></script>
 

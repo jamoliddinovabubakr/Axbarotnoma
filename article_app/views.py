@@ -286,7 +286,6 @@ def delete_author(request, pk):
     if request.user.id != article.author.id:
         return render(request, 'user_app/not_access.html')
     if request.method == "POST":
-
         author.delete()
         return redirect('update_my_article', pk=author.article.id)
     else:
