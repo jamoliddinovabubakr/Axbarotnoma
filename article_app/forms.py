@@ -1,11 +1,11 @@
 # from django import forms
 # from django.forms import TextInput, Textarea, FileInput, NumberInput, SelectMultiple
-# from .models import Article, Category, Authors, Journal, MyResendArticle
+# from .models import Article, Section, Author, Journal, Submission
 #
 #
 # class CreateArticleForm(forms.Form):
 #     choices = [['', '']]
-#     query = Category.objects.all().values().order_by('name')
+#     query = Section.objects.all().values().order_by('name')
 #     if query:
 #         choices = [[x['id'], x['name']] for x in query]
 #
@@ -26,7 +26,7 @@
 #
 # class CreateMyResendArticleForm(forms.ModelForm):
 #     class Meta:
-#         model = MyResendArticle
+#         model = Submission
 #         fields = ['author', 'article', 'file_word']
 #
 #

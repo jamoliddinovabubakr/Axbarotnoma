@@ -29,15 +29,15 @@ class Role(models.Model):
 
 class User(AbstractUser):
     username = models.CharField(_("Username"), max_length=100, blank=True, unique=True)
-    last_name = models.CharField(_('Surname'), max_length=100, blank=True, null=True)
-    first_name = models.CharField(_('Name'), max_length=100, blank=True, null=True)
+    last_name = models.CharField(_('Surname'), max_length=100, blank=True)
+    first_name = models.CharField(_('Name'), max_length=100, blank=True)
     middle_name = models.CharField(_('Middle Name'), max_length=30, null=True, blank=True)
     birthday = models.DateField(_('Birthday'), null=True, blank=True)
-    gender_id = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True, )
+    gender_id = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True)
     avatar = models.ImageField(_("Avatar"), upload_to='avatars/', default='user.png',
                                validators=[validate_file_size, FileExtensionValidator(['png', 'jpg'])], blank=True,
                                null=True)
-    email = models.EmailField(_('Email address'), max_length=255, blank=True, null=True, unique=True)
+    email = models.EmailField(_('Email address'), max_length=255, blank=True, unique=True)
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Phone number', unique=True)
     pser = models.CharField(_('Passport '), max_length=2, blank=True, null=True)
     pnumber = models.CharField(_('Passport '), max_length=7, blank=True, null=True)
@@ -86,12 +86,13 @@ class Menu(models.Model):
     url = models.CharField(max_length=255, null=True, blank=True)
     menu_tr = models.PositiveSmallIntegerField(default=0)
     status = models.BooleanField(default=True)
+    allowed_roles = models.ManyToManyField('user_app.Role', related_name='allowed_role_menus', blank=True)
 
-    # parent_id = models.PositiveIntegerField(default=0)    # type_menu = models.PositiveSmallIntegerField(default=0)
-    # allowed_roles = models.ManyToManyField('Role', related_name='allowed_role_menus', blank=True)
+    # parent_id = models.PositiveIntegerField(default=0)
+    # type_menu = models.PositiveSmallIntegerField(default=0)
 
-    # def get_roles(self):
-    #     return [p.name for p in self.allowed_roles.all()]
+    def get_roles(self):
+        return [p.name for p in self.allowed_roles.all()]
 
     def save(self, *args, **kwargs):
         menus = self.objects.all()

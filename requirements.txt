@@ -25,3 +25,5 @@ toml==0.10.2
 tzdata==2022.1
 xlrd==2.0.1
 xlwt==1.3.0
+modeltranslation~=0.25
+django-modeltranslation~=0.18.5

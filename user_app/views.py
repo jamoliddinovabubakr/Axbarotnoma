@@ -1,138 +1,91 @@
-# from article_app.models import Journal
-# from django.contrib import messages
-# from django.contrib.auth import logout, authenticate, login
-# from user_app.decorators import unauthenticated_user, password_reset_authentification
-# from django.contrib.auth import update_session_auth_hash
-# from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-# from django.core.mail import send_mail, BadHeaderError, EmailMultiAlternatives
-# from django.template.loader import render_to_string, get_template
-# from django.utils.http import urlsafe_base64_encode
-# from django.contrib.auth.tokens import default_token_generator
-# from django.utils.encoding import force_bytes
-# from user_app.forms import CreateUserForm
-# from user_app.models import Notification, State
-# from article_app.models import Article, Authors, MyResendArticle
-# from user_app.models import Role
+from article_app.models import Journal
+from django.contrib import messages
+from django.contrib.auth import logout, authenticate, login
+from user_app.decorators import unauthenticated_user, password_reset_authentification
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.core.mail import send_mail, BadHeaderError, EmailMultiAlternatives
+from django.template.loader import render_to_string, get_template
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from user_app.forms import CreateUserForm
+from user_app.models import Role
 # from user_app.forms import CreateRoleForm
-# from user_app.models import State
-# from user_app.forms import CreateStateForm
-# import os
-# from user_app.models import User
-# from django.db.models.query_utils import Q
-# from user_app.forms import UpdateUserForm
-# from django.http import HttpResponse, JsonResponse
-# from user_app.models import Region
+import os
+from user_app.models import User
+from django.db.models.query_utils import Q
+from user_app.forms import UpdateUserForm
+from django.http import HttpResponse, JsonResponse
+from user_app.models import Region
 # from user_app.forms import CreateRegionForm
-# from django.contrib.auth.decorators import login_required, user_passes_test
-# from django.shortcuts import render, get_object_or_404, redirect
-# from django.contrib.auth.models import Group, Permission
-# from user_app.decorators import allowed_users
-# from user_app.models import Menu
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.models import Group, Permission
+from user_app.decorators import allowed_users
+from user_app.models import Menu
 # from user_app.forms import CreateMenuForm
-# from django.utils.translation import get_language_from_request
-#
-#
-#
-# @unauthenticated_user
-# def login_page(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#
-#         user = authenticate(request, username=username, password=password)
-#
-#         if user is not None:
-#             login(request, user)
-#             return redirect('main_page')
-#         else:
-#             errors = messages.info(request, 'login yoki parol xato')
-#             return redirect('login')
-#
-#     return render(request, "user_app/register/login.html")
-#
-#
-# def sent_email_message(email_to, result):
-#     htmly = get_template('user_app/status_email.html')
-#     d = {'result': result}
-#     subject, from_email, to = 'welcome', 'abubakrtestjamoliddinov0055@gmail.com', email_to
-#     html_content = htmly.render(d)
-#     msg_email = EmailMultiAlternatives(subject, html_content, from_email, [email_to])
-#     msg_email.attach_alternative(html_content, "text/html")
-#     msg_email.send()
-#
-#
-# def register_page(request):
-#     if request.method == 'POST':
-#         form = CreateUserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.save()
-#             specialities = form.cleaned_data['speciality']
-#             for item in specialities:
-#                 user.speciality.add(int(item))
-#
-#             user_group, created = Group.objects.get_or_create(name='USER')
-#             user_group.user_set.add(user)
-#
-#             user = authenticate(request, username=user.username, password=request.POST['password1'])
-#
-#             # with gmail
-#             username = form.cleaned_data.get('username')
-#             email = form.cleaned_data.get('email')
-#             ######################### mail system ####################################
-#             htmly = get_template('user_app/Email.html')
-#             d = {'username': username}
-#             subject, from_email, to = 'welcome', 'abubakrtestjamoliddinov0055@gmail.com', email
-#             html_content = htmly.render(d)
-#             msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
-#             msg.attach_alternative(html_content, "text/html")
-#             msg.send()
-#             messages.success(request, f'Your account has been created ! You are now able to log in')
-#
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect('main_page')
-#             else:
-#                 messages.info(request, 'login yoki parol xato')
-#                 return redirect('login')
-#         else:
-#             context = {
-#                 'message_error': 'Xatolik!'
-#             }
-#             return render(request, "user_app/register/register.html", context)
-#
-#     else:
-#         form = CreateUserForm()
-#         context = {
-#             'form': form,
-#         }
-#         return render(request, "user_app/register/register.html", context)
-#
-#
-# # @unauthenticated_user
-# # def register_page(request):
-# #     if request.method == 'POST':
-# #         form = CreateUserForm(request.POST)
-# #         if form.is_valid():
-# #             form.save()
-# #             username = form.cleaned_data.get('username')
-# #             email = form.cleaned_data.get('email')
-# #             ######################### mail system ####################################
-# #             htmly = get_template('user_app/Email.html')
-# #             d = {'username': username}
-# #             subject, from_email, to = 'welcome', 'abubakrjamoliddinov0055@gmail.com', email
-# #             html_content = htmly.render(d)
-# #             msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
-# #             msg.attach_alternative(html_content, "text/html")
-# #             msg.send()
-# #             ##################################################################
-# #             messages.success(request, f'Your account has been created ! You are now able to log in')
-# #             return redirect('login')
-# #     else:
-# #         form = CreateUserForm()
-# #     return render(request, 'user_app/register/register.html', {'form': form, 'title': 'register here'})
-#
-#
+from django.utils.translation import get_language_from_request
+
+
+@unauthenticated_user
+def login_page(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('main_page')
+        else:
+            errors = messages.info(request, 'login yoki parol xato')
+            return redirect('login')
+
+    return render(request, "user_app/register/login.html")
+
+
+def sent_email_message(email_to, result):
+    htmly = get_template('user_app/status_email.html')
+    d = {'result': result}
+    subject, from_email, to = 'welcome', 'abubakrtestjamoliddinov0055@gmail.com', email_to
+    html_content = htmly.render(d)
+    msg_email = EmailMultiAlternatives(subject, html_content, from_email, [email_to])
+    msg_email.attach_alternative(html_content, "text/html")
+    msg_email.send()
+
+
+def register_page(request):
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+
+            user_group, created = Group.objects.get_or_create(name='AUTHOR')
+            user_group.user_set.add(user)
+
+            user = authenticate(request, username=user.username, password=request.POST['password1'])
+
+            if user is not None:
+                login(request, user)
+                return redirect('login')
+            else:
+                messages.info(request, 'login yoki parol xato')
+                return redirect('login')
+        else:
+
+            return HttpResponse("Form is not valid!")
+
+    else:
+        form = CreateUserForm()
+        context = {
+            'form': form,
+        }
+        return render(request, "user_app/register/register.html", context)
+
+
 # @login_required(login_url='login')
 # def change_password(request):
 #     if request.method == 'POST':

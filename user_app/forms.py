@@ -1,103 +1,101 @@
-# from django import forms
-# from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput, ModelMultipleChoiceField
-# from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-#
-# from article_app.models import Category
-# from .models import User, Menu, Role, State, Region, Notification
-#
-#
-# class CreateUserForm(UserCreationForm):
-#     choices = [['', '']]
-#     query = Category.objects.all().values().order_by('name')
-#     if query:
-#         choices = [[x['id'], x['name']] for x in query]
-#
-#     speciality = forms.MultipleChoiceField(choices=choices, required=True, widget=forms.SelectMultiple(attrs={
-#         'class': 'multiple-select2 form-control',
-#         'multiple': 'multiple',
-#         'data - size': "10",
-#         'data-live-search': "true",
-#         'data - style': "btn-white",
-#         'data - parsley - required': "true",
-#     }))
-#
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name', 'username', 'email', 'speciality', 'password1', 'password2']
-#
-#
-# class UpdateUserForm(UserChangeForm):
-#     class Meta:
-#         model = User
-#         fields = ['username', 'first_name', 'last_name', 'middle_name', 'birthday', 'avatar', 'email',
-#                   'phone', 'passport', 'region', 'role']
-#
-#         widgets = {
-#             'first_name': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - group': "step-1",
-#             }),
-#             'last_name': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - group': "step-1",
-#             }),
-#             'middle_name': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - group': "step-1",
-#             }),
-#             'username': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - group': "step-1",
-#                 'data - parsley - required': "true",
-#             }),
-#             'phone': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'id': 'masked-input-phone',
-#                 'placeholder': '(99) 999-99-99',
-#                 'data - parsley - group': "step-1",
-#             }),
-#             'passport': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'id': 'masked-input-pasport',
-#                 'placeholder': 'AA 9999999',
-#                 'data - parsley - group': "step-1",
-#             }),
-#             'role': Select(attrs={
-#                 'class': 'form-control selectpicker',
-#                 'data - size': "10",
-#                 'data-live-search': "true",
-#                 'data - style': "btn-white",
-#                 'data - parsley - group': "step-1",
-#             }),
-#             'email': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'email',
-#                 'data-parsley-type': "email",
-#                 'placeholder': 'someone@example.com',
-#                 'data - parsley - group': "step-1",
-#                 'data - parsley - required': "true",
-#             }),
-#
-#             'region': Select(attrs={
-#                 'class': 'form-control selectpicker',
-#                 'data - size': "10",
-#                 'data-live-search': "true",
-#                 'data - style': "btn-white",
-#                 'data - parsley - group': "step-1",
-#             }),
-#         }
-#
-#
+from django import forms
+from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput, ModelMultipleChoiceField
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+
+from user_app.models import *
+
+
+class CreateUserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['last_name', 'first_name', 'username', 'email', 'password1', 'password2']
+
+
+class UpdateUserForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'middle_name', 'birthday', 'avatar', 'email',
+                  'phone', 'pser', 'pnumber', 'region_id', 'gender_id', 'work']
+
+        widgets = {
+            'first_name': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - group': "step-1",
+            }),
+            'last_name': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - group': "step-1",
+            }),
+            'middle_name': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - group': "step-1",
+            }),
+            'username': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - group': "step-1",
+                'data - parsley - required': "true",
+            }),
+            'phone': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'id': 'masked-input-phone',
+                'placeholder': '(99) 999-99-99',
+                'data - parsley - group': "step-1",
+            }),
+            'pser': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'id': 'masked-input-pasport',
+                'placeholder': 'AA',
+                'data - parsley - group': "step-1",
+            }),
+            'pnumber': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'id': 'masked-input-pasport',
+                'placeholder': '9999999',
+                'data - parsley - group': "step-1",
+            }),
+            'email': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'email',
+                'data-parsley-type': "email",
+                'placeholder': 'someone@example.com',
+                'data - parsley - group': "step-1",
+                'data - parsley - required': "true",
+            }),
+
+            'region_id': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data - style': "btn-white",
+                'data - parsley - group': "step-1",
+            }),
+            'gender_id': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data - style': "btn-white",
+                'data - parsley - group': "step-1",
+            }),
+            'work': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': 'Enter',
+                'data - parsley - group': "step-1",
+            }),
+        }
+
+
 # class CreateMenuForm(forms.ModelForm):
 #     class Meta:
 #         model = Menu
@@ -142,20 +140,20 @@
 #             }),
 #         }
 #
+
+# class CreateGenderForm(forms.ModelForm):
+#     class Meta:
+#         model = Gender
+#         fields = ['name', 'status']
 #
-# # class CreateGenderForm(forms.ModelForm):
-# #     class Meta:
-# #         model = Gender
-# #         fields = ['name', 'status']
-# #
-# #         widgets = {
-# #             'name': TextInput(attrs={
-# #                 'class': 'form-control',
-# #                 'placeholder': "Enter...",
-# #             }),
-# #         }
-#
-#
+#         widgets = {
+#             'name': TextInput(attrs={
+#                 'class': 'form-control',
+#                 'placeholder': "Enter...",
+#             }),
+#         }
+
+
 # class CreateStateForm(forms.ModelForm):
 #     class Meta:
 #         model = State
