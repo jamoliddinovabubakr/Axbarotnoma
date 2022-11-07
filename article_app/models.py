@@ -5,17 +5,29 @@ from ckeditor.fields import RichTextField
 from django.urls import reverse
 from django.template.defaultfilters import slugify
 
+from user_app.models import Author
 
-class Category(models.Model):
-    name = models.CharField(_('Nomi'), max_length=150)
-    status = models.BooleanField(default=True)
+
+class Section(models.Model):
+    name = models.CharField(_('Name'), max_length=150, blank=True, default=None)
 
     def __str__(self):
         return self.name
 
-    class Meta:
-        verbose_name = _("Kategoriya")
-        verbose_name_plural = _("Kategoriyalar")
+
+class Stage(models.Model):
+    name = models.CharField(_('Name'), max_length=100, default=None)
+
+    def __str__(self):
+        return self.name
+
+
+class ArticleStatus(models.Model):
+    name = models.CharField(max_length=100, default=None)
+    stage_id = models.ForeignKey('article_app.Stage', on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return self.name
 
 
 def user_directory_path(instance, filename):
@@ -23,69 +35,72 @@ def user_directory_path(instance, filename):
 
 
 class Article(models.Model):
-    category = models.ManyToManyField(Category,  verbose_name="Kategoriya", related_name="article_category")
+    section_id = models.ForeignKey('article_app.Section', verbose_name="Section", related_name="article_section",
+                                on_delete=models.CASCADE, blank=True)
     title = models.CharField(max_length=255, blank=True)
     abstract = RichTextField(blank=True)
     keywords = RichTextField(blank=True)
     references = RichTextField(blank=True, null=True)
-    author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE,
-                               related_name="article_author")
-    file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True,
-                            validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])],
-                            help_text='Please upload only .doc or .docx files!')
-    file_pdf = models.FileField(_("PDF Fayl"), upload_to=user_directory_path, max_length=255, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
-    state = models.ForeignKey('user_app.State', on_delete=models.CASCADE, related_name="article_state",
-                              blank=True,
-                              null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_publish = models.BooleanField(default=True)
-
-    def get_categories(self):
-        return [p.name for p in self.category.all()]
+    updated_at = models.DateTimeField(auto_now=True)
+    is_publish = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
-    # def get_absolute_url(self):
-    #     return reverse("article_detail", kwargs={"slug": self.url})
-
     class Meta:
-        ordering = ['id']
-        verbose_name = _("Maqola")
-        verbose_name_plural = _("Maqolalar")
+        ordering = ['-id']
 
 
-class Authors(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
-    first_name = models.CharField(_("Ism"), max_length=255)
-    last_name = models.CharField(_("Familiya"), max_length=255)
-    middle_name = models.CharField(_("Sharif"), max_length=255, blank=True, null=True)
-    email = models.EmailField(_('Email'), max_length=255)
-    work_place = models.CharField(_('Ish joy'), max_length=255)
-    author_order = models.PositiveSmallIntegerField(default=0)
+class ArticleFile(models.Model):
+    article_id = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
+    file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True,
+                            validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])],
+                            help_text='Please upload only .doc or .docx files!')
+    file_name = models.CharField(max_length=255, default=None)
+    file_size = models.CharField(max_length=255, default=None)
+    file_type = models.CharField(max_length=255, default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.first_name
-
-    class Meta:
-        verbose_name = _("Aftor")
-        verbose_name_plural = _("Aftorlar")
+        return self.file_name
 
 
-class MyResendArticle(models.Model):
-    author = models.ForeignKey('user_app.User', verbose_name='Author', on_delete=models.CASCADE, blank=True, null=True,
-                               related_name="article_resend_author")
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, blank=True, null=True)
-    file_word = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True, validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])])
-    message = models.CharField(_("Xabar"), max_length=255, blank=True, null=True)
-    state = models.ForeignKey('user_app.State', on_delete=models.CASCADE,
+class Submission(models.Model):
+    article_id = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
+    author_id = models.ForeignKey('user_app.Author', on_delete=models.CASCADE, blank=True, null=True)
+    editor_id = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, blank=True, null=True)
+    file_id = models.ForeignKey('article_app.ArticleFile', on_delete=models.CASCADE, blank=True, null=True)
+    article_status_id = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE,
                               blank=True,
                               null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.article)
+        return str(self.id)
+
+
+class NotificationStatus(models.Model):
+    name = models.CharField(_('Name'), max_length=50, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Notification(models.Model):
+    submission_id = models.ForeignKey('article_app.Submission', on_delete=models.CASCADE, blank=True)
+    from_user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user",  blank=True, null=True)
+    to_user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True, null=True)
+    message = models.CharField(_("Message"), max_length=255, null=True, blank=True)
+    notification_status_id = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Journal(models.Model):
@@ -95,6 +110,7 @@ class Journal(models.Model):
     img = models.ImageField(upload_to='jurnal/', default='jurnal_ob.png')
     article = models.ManyToManyField('Article', related_name='articles', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
 
     def get_articles(self):
@@ -104,8 +120,8 @@ class Journal(models.Model):
         return str(self.number_magazine)
 
     class Meta:
-        verbose_name = _("Magazine")
-        verbose_name_plural = _("Magazines")
+        verbose_name = _("Journal")
+        verbose_name_plural = _("Journals")
 
 
 class Post(models.Model):
@@ -129,8 +145,8 @@ class Post(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = _("Elon")
-        verbose_name_plural = _("Elonlar")
+        verbose_name = _("Post")
+        verbose_name_plural = _("Posts")
 
 
 class BlankPage(models.Model):

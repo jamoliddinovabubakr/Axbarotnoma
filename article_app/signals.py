@@ -1,17 +1,16 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
-from .models import MyResendArticle
-from user_app.models import Notification, User
+from article_app.models import Submission, Notification, NotificationStatus
 
 
-@receiver(post_save, sender=MyResendArticle)
+@receiver(post_save, sender=Submission)
 def create_article(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(
-            article=instance.article,
-            title=instance.id,
-            description='Yangi maqola',
-            my_resend=instance,
-            user=User.objects.filter(role__id=3).last()
+            submission_id=instance.id,
+            from_user_id=instance.author_id,
+            to_user_id=instance.editor_id,
+            message="",
+            notification_status_id=NotificationStatus.objects.get_or_create(name="unread"),
         )

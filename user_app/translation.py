@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from user_app.models import Region, Gender, Role, State, Menu
+from user_app.models import *
 
 
 @register(Region)
@@ -14,11 +14,6 @@ class GenderTranslationOptions(TranslationOptions):
 
 @register(Role)
 class RoleTranslationOptions(TranslationOptions):
-    fields = ('name',)
-
-
-@register(State)
-class StateTranslationOptions(TranslationOptions):
     fields = ('name',)
 
 

@@ -1,17 +1,27 @@
 from modeltranslation.translator import register, TranslationOptions
-from article_app.models import Category, Post, BlankPage
+from article_app.models import *
 
 
-@register(Category)
-class CategoryTranslationOptions(TranslationOptions):
+@register(Section)
+class SectionTranslationOptions(TranslationOptions):
     fields = ('name',)
 
 
-@register(Post)
-class PostTranslationOptions(TranslationOptions):
-    fields = ('title', 'tag', 'desc',)
+@register(Stage)
+class StageTranslationOptions(TranslationOptions):
+    fields = ('name',)
 
 
-@register(BlankPage)
-class BlankPageTranslationOptions(TranslationOptions):
-    fields = ('title', 'body',)
+@register(ArticleStatus)
+class ArticleStatusPageTranslationOptions(TranslationOptions):
+    fields = ('name',)
+
+
+@register(NotificationStatus)
+class NotificationStatusTranslationOptions(TranslationOptions):
+    fields = ('name',)
+
+
+@register(Notification)
+class NotificationTranslationOptions(TranslationOptions):
+    fields = ('message',)

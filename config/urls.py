@@ -16,10 +16,10 @@ urlpatterns += [
 
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
-    path('', include('article_app.urls')),
-    path('profile/', include('user_app.urls')),
+    # path('', include('article_app.urls')),
+    # path('profile/', include('user_app.urls')),
     # prefix_default_language=False,
 )
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-handler404 = 'user_app.views.handler404'
+# handler404 = 'user_app.views.handler404'
