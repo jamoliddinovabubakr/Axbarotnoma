@@ -70,6 +70,7 @@ class Editor(models.Model):
 
 
 class Reviewer(models.Model):
+    sections = models.ManyToManyField('article_app.Section', related_name="reviewer_section")
     user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
     role_id = models.ForeignKey('user_app.Role', on_delete=models.CASCADE, blank=True)
     mfile = models.FileField(_("Multiple File"), upload_to='files/reviewer/',
@@ -77,7 +78,6 @@ class Reviewer(models.Model):
     is_reviewer = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    sections = models.ManyToManyField('article_app.Section', related_name="reviewer_section")
 
 
 class Menu(models.Model):

@@ -4,10 +4,10 @@ from django.contrib.auth import views as auth_views
 from user_app.views import *
 
 urlpatterns = [
-    # path('', profile_page, name='profile_page'),
-    path('login', login_page, name='login'),
-    # path('logout', logout_user, name='logout'),
-    path('register', register_page, name='register'),
+    path('dashboard/', profile_page, name='profile_page'),
+    path('login/', login_page, name='login'),
+    path('logout', logout_user, name='logout'),
+    path('register/', register_page, name='register'),
     # path('change_password', change_password, name='change_password'),
     # path('view/', profile, name='profile'),
     # path('edit_profile/', edit_profile, name='edit_profile'),
@@ -18,10 +18,10 @@ urlpatterns = [
     # path('users/update/<int:pk>', update_user, name='update_user'),
     # path('users/delete/<int:pk>', delete_user, name='delete_user'),
     #
-    # path('notifications/', get_notifications, name='notifications'),
-    # path('load_notif/', load_data_notif, name='load_notif'),
-    # path('count_notif/', count_notif, name='count_notif'),
-    # path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),
+    path('notifications/', get_notifications, name='notifications'),
+    path('load_notif/', load_data_notif, name='load_notif'),
+    path('count_notif/', count_notif, name='count_notif'),
+    path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),
     # path('notification/<int:pk>/view', view_notification, name='view_notification'),
     # path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
     # path('send_to_review/<int:article_id>', send_to_review, name='send_to_review'),

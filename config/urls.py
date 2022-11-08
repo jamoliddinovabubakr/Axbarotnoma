@@ -16,7 +16,7 @@ urlpatterns += [
 
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
-    # path('', include('article_app.urls')),
+    path('', include('article_app.urls')),
     path('profile/', include('user_app.urls')),
     # prefix_default_language=False,
 )

@@ -31,7 +31,7 @@ class ArticleStatus(models.Model):
 
 
 def user_directory_path(instance, filename):
-    return 'files/user_{0}/{1}'.format(instance.author.id, filename)
+    return 'files/articles/{0}'.format(filename)
 
 
 class Article(models.Model):
@@ -43,7 +43,6 @@ class Article(models.Model):
     references = RichTextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_publish = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -81,6 +80,18 @@ class Submission(models.Model):
         return str(self.id)
 
 
+class Review(models.Model):
+    submission_id = models.ForeignKey('article_app.Submission', on_delete=models.CASCADE, blank=True, null=True)
+    reviewer_id = models.ForeignKey('user_app.Reviewer', on_delete=models.CASCADE, blank=True, null=True)
+    editor_id = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, blank=True, null=True)
+    file_id = models.ForeignKey('article_app.ArticleFile', on_delete=models.CASCADE, blank=True, null=True)
+    comment = models.TextField(help_text="Message")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
 class NotificationStatus(models.Model):
     name = models.CharField(_('Name'), max_length=50, blank=True)
 
@@ -92,7 +103,7 @@ class Notification(models.Model):
     submission_id = models.ForeignKey('article_app.Submission', on_delete=models.CASCADE, blank=True)
     from_user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user",  blank=True, null=True)
     to_user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True, null=True)
-    message = models.CharField(_("Message"), max_length=255, null=True, blank=True)
+    message = models.TextField(_("Message"), max_length=255, null=True, blank=True)
     notification_status_id = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -105,8 +116,8 @@ class Notification(models.Model):
 
 class Journal(models.Model):
     file_pdf = models.FileField(_("Fayl"), upload_to="files/jurnals/", max_length=255, blank=True, null=True)
-    number_magazine = models.PositiveBigIntegerField(default=0, unique=True)
-    year_magazine = models.CharField(max_length=4, blank=True)
+    journal_number = models.PositiveBigIntegerField(default=0, unique=True)
+    journal_year = models.CharField(max_length=4, blank=True)
     img = models.ImageField(upload_to='jurnal/', default='jurnal_ob.png')
     article = models.ManyToManyField('Article', related_name='articles', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
