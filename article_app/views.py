@@ -2,14 +2,14 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Model
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import translation
 
 from user_app.decorators import allowed_users
 from article_app.models import *
 from user_app.models import Author
-from article_app.forms import CreateArticleForm, UpdateArticleForm
+from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm
 from django.core.paginator import Paginator
 
 
@@ -55,6 +55,7 @@ def my_articles(request):
 @login_required(login_url='login')
 def create_article(request):
     user = request.user
+    author = Author.objects.get(user=user)
     if request.method == "POST":
         form = CreateArticleForm(request.POST)
         if form.is_valid():
@@ -64,13 +65,13 @@ def create_article(request):
         else:
             context = {
                 'form': CreateArticleForm(),
-                'user': user,
+                'author': author,
             }
             return render(request, "article_app/crud/create_article.html", context=context)
     else:
         context = {
             'form': CreateArticleForm(),
-            'user': user,
+            'author': author,
         }
         return render(request, "article_app/crud/create_article.html", context=context)
 
@@ -79,9 +80,9 @@ def create_article(request):
 def update_article(request, pk):
     user = request.user
     article = Article.objects.get(pk=pk)
-    if user != article.author.user:
-        return render(request, 'user_app/not_access.html')
     author = Author.objects.get(user=user)
+    if user != author.user:
+        return render(request, 'user_app/not_access.html')
 
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
@@ -105,14 +106,28 @@ def update_article(request, pk):
             }
             return render(request, "article_app/crud/update_article.html", context=context)
     else:
-        file_name = str(article.file.name).split('/')[-1]
         context = {
             'form': UpdateArticleForm(instance=article),
             'article': article,
             'handle_error': 0,
-            'file_name': str(file_name),
         }
         return render(request, "article_app/crud/update_article.html", context=context)
+
+
+def create_article_file(request, pk):
+    if request.method == "POST":
+        form = CreateArticleFileForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('update_article', pk)
+        else:
+            return HttpResponse('Not valid form!')
+    else:
+        context = {
+            'form': CreateArticleFileForm(),
+            'article': Article.objects.get(pk=pk),
+        }
+        return render(request, "article_app/crud/create_file.html", context=context)
 
 
 def get_article_authors(request, pk):

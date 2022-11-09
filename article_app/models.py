@@ -60,9 +60,9 @@ class ArticleFile(models.Model):
     file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True,
                             validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])],
                             help_text='Please upload only .doc or .docx files!')
-    file_name = models.CharField(max_length=255, default=None)
-    file_size = models.CharField(max_length=255, default=None)
-    file_type = models.CharField(max_length=255, default=None)
+    file_name = models.CharField(max_length=255, blank=True, null=True)
+    file_size = models.CharField(max_length=255, blank=True, null=True)
+    file_type = models.CharField(max_length=255, blank=True, null=True)
     file_status = models.SmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

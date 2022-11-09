@@ -2,150 +2,147 @@
 {% load i18n %}
 {% load static %}
 {% block title %}
-    Maqolani o'zgartirish
+    Update Article
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
-        <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Yopish" %}</a></li>
-            <li class="breadcrumb-item active">{% trans "Maqola ma'lumotlarini o'zgartirish" %}</li>
-        </ol>
-        <h1 class="page-header">{% trans "Maqola ma'lumotlarini o'zgartirish" %}</h1>
-        <div class="panel panel-default forshadow" data-sortable-id="table-basic-7">
-            <div class="panel-heading">
-                <h4 class="panel-title"></h4>
-                <div class="panel-heading-btn">
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning"
-                       data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger"
-                       data-click="panel-remove"><i class="fa fa-times"></i></a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="container" style="background-color: #E1E1E1; border-radius: 5px;">
-                    <br>
-                    <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.media }}
-                        <p style="color: red;">{% trans "1-qadam. Mualliflarni kiriting" %}</p>
-                        <button href="{% url 'add_author' article.id %}" data-toggle="modal"
-                                class="addUser btn btn-success btn-sm"><i
-                                class="fa fa-plus mr-1"></i>{% trans "Aftor qo'shish" %}
-                        </button>
-                        <br>
-                        <br>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>Tr</th>
-                                    <th>{% trans "Familiya" %}</th>
-                                    <th>{% trans "Ism" %}</th>
-                                    <th>{% trans "Sharif" %}</th>
-                                    <th>{% trans "Email" %}</th>
-                                    <th>{% trans "Ish joy" %}</th>
-                                    <th>{% trans "Aftor tartibi" %}</th>
-                                    <th width="100">{% trans "Action" %}</th>
-                                </tr>
-                                </thead>
-                                <tbody id="authors_table">
+        <h3 class="page-header">{% trans "Update Article" %}</h3>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel panel-default forshadow">
+                    <div class="panel-body">
+                        <div class="container">
+                            <br>
+                            <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ form.media }}
+                                <p style="color: red;">{% trans "1-qadam. Mualliflarni kiriting" %}</p>
+                                <button href="{% url 'add_author' article.id %}" data-toggle="modal"
+                                        class="addUser btn btn-success btn-sm"><i
+                                        class="fa fa-plus mr-1"></i>{% trans "Add Author" %}
+                                </button>
+                                <br>
+                                <br>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Tr</th>
+                                            <th>{% trans "Familiya" %}</th>
+                                            <th>{% trans "Ism" %}</th>
+                                            <th>{% trans "Sharif" %}</th>
+                                            <th>{% trans "Email" %}</th>
+                                            <th>{% trans "Ish joy" %}</th>
+                                            <th>{% trans "Aftor tartibi" %}</th>
+                                            <th width="100">{% trans "Action" %}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="authors_table">
 
-                                </tbody>
-                            </table>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                <p style="color: red;">{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
+                                <div style="padding-left:10%; padding-right: 5%;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row m-b-15" style="visibility: hidden;">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    <select id="id_author" name="author" class="form-control">
+                                                        <option selected
+                                                                value="{{ article.author.id }}">{{ article.author.username }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Section" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    {{ form.section }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Title" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    {{ form.title|safe }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Keywords" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    {{ form.keywords|safe }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstract" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    {{ form.abstract|safe }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Reference" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    {{ form.references|safe }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    <button href="{% url 'create_article_file' article.id %}" data-toggle="modal"
+                                                            class="addUser btn btn-info btn-sm"><i
+                                                            class="fa fa-file-word mr-1"></i>{% trans " File" %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 1em">
+                                        <div class="col-md-6 col-sm-6"></div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <button type="submit" style="float: right;" id="submitButtonId" disabled
+                                                    class="btn btn btn-success">{% trans "Saqlash" %}
+                                            </button>
+                                            <a style="float: right; margin-right: 1em" href="{% url 'my_articles' %}"
+                                               class="btn btn-outline-warning">{% trans "Yopish" %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <br>
                         </div>
                         <br>
-                        <p style="color: red;">{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
-                        <div style="padding-left:10%; padding-right: 5%;">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15" style="visibility: hidden;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %} <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-md-10 col-sm-10">
-                                            <select id="id_author" name="author" class="form-control">
-                                                <option selected
-                                                        value="{{ article.author.id }}">{{ article.author.username }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Kategoriya" %} <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.category }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Mavzu" %} <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.title|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Kalit so'zlar" %}
-                                            <span
-                                                    class="text-danger">*</span></label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.keywords|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstrakt" %} <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.abstract|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Adabiyotlar" %} <span
-                                                class="text-danger">*</span></label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.references|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Word fayl yuklang" %}
-                                            <span
-                                                    class="text-danger">*</span></label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.file }}
-                                            {% if handle_error == 1 %}
-                                                <p class="warning" style="color: red;">{{ form.file.help_text }}</p>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="padding-top: 1em">
-                                <div class="col-md-6 col-sm-6"></div>
-                                <div class="col-md-6 col-sm-6">
-                                    <button type="submit" style="float: right;" id="submitButtonId" disabled
-                                            class="btn btn btn-success">{% trans "Saqlash" %}
-                                    </button>
-                                    <a style="float: right; margin-right: 1em" href="{% url 'my_articles' %}"
-                                       class="btn btn-outline-warning">{% trans "Yopish" %}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <br>
+                        <hr>
+                    </div>
                 </div>
-                <br>
-                <hr>
             </div>
+            <div class="col-md-3"></div>
         </div>
     </div>
     <script type="text/javascript">

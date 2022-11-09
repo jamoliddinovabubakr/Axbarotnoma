@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load static %}
-<form method="post" action="{% url 'create_article' %}">
+<form method="post" action="{% url 'create_article_file' article.id %}">
     {% csrf_token %}
     {{ form.media }}
     <div class="modal fade" id="addUser">
@@ -11,21 +11,14 @@
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
-                    <select id="id_author" name="author" class="form-control" style="visibility: hidden">
-                        <option selected value="{{ author.id }}"></option>
+                    <select id="id_author" name="article" class="form-control" style="visibility: hidden">
+                        <option selected value="{{ article.id }}"></option>
                     </select>
                     <div class="form-group row m-b-15">
                         <label class="col-md-3 col-sm-3 col-form-label">{% trans "Section" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                            {{ form.section }}
-                        </div>
-                    </div>
-                    <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Mavzu" %} <span
-                                class="text-danger">*</span></label>
-                        <div class="col-md-9 col-sm-9">
-                            {{ form.title|safe }}
+                            {{ form.file }}
                         </div>
                     </div>
                 </div>

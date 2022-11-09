@@ -20,9 +20,12 @@ urlpatterns = [
     path('sending_article/', sending_article_form, name='sending_article_form'),
     path('resend_article/<int:pk>/', resend_article, name='resend_article'),
     path('update_resend_article/<int:pk>/', update_resend_article, name='update_resend_article'),
+
     path('article/create', create_article, name='create_article'),
     path('article/edit/<int:pk>/', update_article, name='update_article'),
     path('article/delete/<int:pk>/', delete_article, name='delete_article'),
+
+    path('article/file/create/<int:pk>/', create_article_file, name='create_article_file'),
 
     path('authors/<int:pk>', get_article_authors, name='get_article_authors'),
     path('add_author/<int:pk>', add_author, name='add_author'),

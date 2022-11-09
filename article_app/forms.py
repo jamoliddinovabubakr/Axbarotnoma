@@ -24,6 +24,21 @@ class CreateArticleForm(forms.ModelForm):
         }
 
 
+class CreateArticleFileForm(forms.ModelForm):
+    class Meta:
+        model = ArticleFile
+        fields = ['article', 'file']
+
+        widgets = {
+            'file': FileInput(attrs={
+                'id': 'id_file',
+                'type': 'file',
+                'class': 'form-control',
+                'accept': ".docx, .doc"
+            }),
+        }
+
+
 class UpdateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
@@ -63,12 +78,6 @@ class UpdateArticleForm(forms.ModelForm):
                 'id': 'references',
 
             }),
-            # 'file': FileInput(attrs={
-            #     'id': 'id_file',
-            #     'type': 'file',
-            #     'class': 'form-control',
-            #     'accept': ".docx, .doc"
-            # }),
         }
 
 
