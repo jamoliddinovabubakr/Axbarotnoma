@@ -1,10 +1,7 @@
 from django.conf.urls.i18n import i18n_patterns
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
-from .views import main_page, my_articles, create_article, update_my_article, add_author, edit_author, delete_author, \
-    delete_myarticle, get_category, edit_category, delete_category, create_category, create_magazine, get_magazines, \
-    edit_magazine, post_detail, about_journal, \
-    talabnoma, magazine_detail, all_magazine_son, sending_article_form, resend_article, update_resend_article, get_article_authors
+from .views import *
 
 
 urlpatterns = [
@@ -24,8 +21,8 @@ urlpatterns = [
     path('resend_article/<int:pk>/', resend_article, name='resend_article'),
     path('update_resend_article/<int:pk>/', update_resend_article, name='update_resend_article'),
     path('article/create', create_article, name='create_article'),
-    path('article/edit/<int:pk>/', update_my_article, name='update_my_article'),
-    path('article/delete/<int:pk>/', delete_myarticle, name='delete_myarticle'),
+    path('article/edit/<int:pk>/', update_article, name='update_article'),
+    path('article/delete/<int:pk>/', delete_article, name='delete_article'),
 
     path('authors/<int:pk>', get_article_authors, name='get_article_authors'),
     path('add_author/<int:pk>', add_author, name='add_author'),

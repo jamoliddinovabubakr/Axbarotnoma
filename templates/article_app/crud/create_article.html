@@ -11,18 +11,21 @@
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
+                    <label for="id_author">Author</label>
+                    <select id="id_author" name="author" class="form-control">
+                        <option selected value="{{ user.id }}">{{ user.username }}</option>
+                    </select>
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Kategoriya" %} <span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Section" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                            {{ form.category }}
+                            {{ form.section }}
                         </div>
                     </div>
                     <div class="form-group row m-b-15">
                         <label class="col-md-3 col-sm-3 col-form-label">{% trans "Mavzu" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-
                             {{ form.title|safe }}
                         </div>
                     </div>
@@ -36,8 +39,6 @@
     </div>
 </form>
 <div id="emailModal" class="modal fade" role="dialog">
-
 </div>
-
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

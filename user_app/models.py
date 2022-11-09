@@ -33,46 +33,59 @@ class User(AbstractUser):
     first_name = models.CharField(_('Name'), max_length=100, blank=True)
     middle_name = models.CharField(_('Middle Name'), max_length=30, null=True, blank=True)
     birthday = models.DateField(_('Birthday'), null=True, blank=True)
-    gender_id = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True)
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True)
     avatar = models.ImageField(_("Avatar"), upload_to='avatars/', default='user.png',
                                validators=[validate_file_size, FileExtensionValidator(['png', 'jpg'])], blank=True,
                                null=True)
     email = models.EmailField(_('Email address'), max_length=255, blank=True, unique=True)
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name='Phone number', unique=True)
     pser = models.CharField(_('Passport '), max_length=2, blank=True, null=True)
-    pnumber = models.CharField(_('Passport '), max_length=7, blank=True, null=True)
+    pnum = models.CharField(_('Passport '), max_length=7, blank=True, null=True)
     work = models.CharField(max_length=255, null=True, blank=True)
-    region_id = models.ForeignKey('user_app.Region', on_delete=models.CASCADE, verbose_name="Region", null=True,
+    region = models.ForeignKey('user_app.Region', on_delete=models.CASCADE, verbose_name="Region", null=True,
                                   blank=True)
+    role = models.ManyToManyField('user_app.Role', related_name="user_roles", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # def save(self, *args, **kwargs):
+    #     if self.role is None:
+    #         admin = Role.objects.get(pk=1)
+    #         author = Role.objects.get(pk=4)
+    #         if self.is_superuser:
+    #             self.role.add(admin)
+    #     super().save(*args, **kwargs)
 
     @property
     def full_name(self):
         if self.first_name is not None and self.last_name is not None:
-            full_name_user = '%s %s' % (self.first_name, self.last_name)
+            full_name_user = '%s %s' % (self.last_name, self.first_name)
         else:
             full_name_user = '%s' % self.username
         return full_name_user
+
+    @property
+    def get_roles(self):
+        roles = []
+        for role in self.role.all():
+            roles.append(role.id)
+        return roles
 
     def __str__(self):
         return self.username
 
 
 class Author(models.Model):
-    user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
-    role_id = models.ForeignKey('user_app.Role', on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
 
 
 class Editor(models.Model):
-    user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
-    role_id = models.ForeignKey('user_app.Role', on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
 
 
 class Reviewer(models.Model):
-    sections = models.ManyToManyField('article_app.Section', related_name="reviewer_section")
-    user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
-    role_id = models.ForeignKey('user_app.Role', on_delete=models.CASCADE, blank=True)
+    section = models.ManyToManyField('article_app.Section', related_name="reviewer_sections", blank=True)
+    user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
     mfile = models.FileField(_("Multiple File"), upload_to='files/reviewer/',
                              validators=[FileExtensionValidator(['doc', 'docx', 'pdf'])], blank=True)
     is_reviewer = models.BooleanField(default=False)

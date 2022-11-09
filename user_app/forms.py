@@ -15,7 +15,7 @@ class UpdateUserForm(UserChangeForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'middle_name', 'birthday', 'avatar', 'email',
-                  'phone', 'pser', 'pnumber', 'region_id', 'gender_id', 'work']
+                  'phone', 'pser', 'pnum', 'region', 'gender', 'work']
 
         widgets = {
             'first_name': TextInput(attrs={
@@ -57,7 +57,7 @@ class UpdateUserForm(UserChangeForm):
                 'placeholder': 'AA',
                 'data - parsley - group': "step-1",
             }),
-            'pnumber': TextInput(attrs={
+            'pnum': TextInput(attrs={
                 'class': 'form-control',
                 'type': 'text',
                 'id': 'masked-input-pasport',
@@ -73,14 +73,14 @@ class UpdateUserForm(UserChangeForm):
                 'data - parsley - required': "true",
             }),
 
-            'region_id': Select(attrs={
+            'region': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data - size': "10",
                 'data-live-search': "true",
                 'data - style': "btn-white",
                 'data - parsley - group': "step-1",
             }),
-            'gender_id': Select(attrs={
+            'gender': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data - size': "10",
                 'data-live-search': "true",
@@ -94,7 +94,6 @@ class UpdateUserForm(UserChangeForm):
                 'data - parsley - group': "step-1",
             }),
         }
-
 
 # class CreateMenuForm(forms.ModelForm):
 #     class Meta:

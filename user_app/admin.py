@@ -1,49 +1,53 @@
-# from django.contrib import admin
-# from django.contrib.auth.models import Permission
-# from import_export.admin import ImportExportActionModelAdmin
-# from modeltranslation.admin import TranslationAdmin
-#
-# from user_app.models import *
-#
-#
-# @admin.register(Permission)
-# class PermissionAdmin(ImportExportActionModelAdmin):
-#     list_display = ['id', 'name']
-#
-#
-# @admin.register(Role)
-# class RoleAdmin(ImportExportActionModelAdmin, TranslationAdmin):
-#     list_display = ['id', 'name', 'status']
-#
-#
-# @admin.register(State)
-# class StateAdmin(ImportExportActionModelAdmin, TranslationAdmin):
-#     list_display = ['id', 'name', 'status']
-#
-#
-# @admin.register(Region)
-# class RegionAdmin(ImportExportActionModelAdmin, TranslationAdmin):
-#     list_display = ['id', 'name']
-#
-#
-# @admin.register(Gender)
-# class GenderAdmin(ImportExportActionModelAdmin, TranslationAdmin):
-#     list_display = ['id', 'name']
-#
-#
-# @admin.register(Menu)
-# class MenuAdmin(ImportExportActionModelAdmin, TranslationAdmin):
-#     list_display = ['id', 'name', 'parent_id', 'status',
-#                     'url', 'type_menu', 'icon', 'menu_tr', 'get_roles']
-#
-#
-# @admin.register(Notification)
-# class NotificationAdmin(ImportExportActionModelAdmin):
-#     list_display = ['id', 'article', 'title',
-#                     'description', 'status', 'created_at', 'my_resend']
-#
-#
-# @admin.register(User)
-# class UserAdmin(ImportExportActionModelAdmin):
-#     list_display = ['id', 'username', 'first_name', 'last_name', 'middle_name', 'birthday', 'avatar', 'email',
-#                     'phone', 'passport', 'role', 'region']
+from django.contrib import admin
+from django.contrib.auth.models import Permission
+from import_export.admin import ImportExportActionModelAdmin
+from modeltranslation.admin import TranslationAdmin
+
+from user_app.models import *
+
+
+@admin.register(Permission)
+class PermissionAdmin(ImportExportActionModelAdmin):
+    list_display = ['id', 'name', 'content_type', 'codename']
+
+
+@admin.register(Region)
+class RegionAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+    list_display = ['id', 'name']
+
+
+@admin.register(Gender)
+class GenderAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+    list_display = ['id', 'name']
+
+
+@admin.register(Role)
+class RoleAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+    list_display = ['id', 'name']
+
+
+@admin.register(Menu)
+class MenuAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+    list_display = ['id', 'name', 'status',
+                    'url', 'icon', 'menu_tr', 'get_roles']
+
+
+@admin.register(User)
+class UserAdmin(ImportExportActionModelAdmin):
+    list_display = ['id', 'username', 'last_name', 'first_name', 'middle_name', 'birthday', 'gender', 'avatar', 'email',
+                    'phone', 'pser', 'pnum', 'region', 'work', 'get_roles', 'created_at', 'updated_at']
+
+
+@admin.register(Author)
+class AuthorAdmin(ImportExportActionModelAdmin):
+    list_display = ['id', 'user']
+
+
+@admin.register(Editor)
+class EditorAdmin(ImportExportActionModelAdmin):
+    list_display = ['id', 'user']
+
+
+@admin.register(Reviewer)
+class ReviewerAdmin(ImportExportActionModelAdmin):
+    list_display = ['id', 'user', 'mfile', 'is_reviewer', 'created_at', 'updated_at']

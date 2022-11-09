@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="{% url 'profile_page' %}" class="navbar-brand">
+        <a href="{% url 'dashboard' %}" class="navbar-brand">
             <img src="{% static 'img/dtm.jpeg' %}" style="width: 100px; visibility: hidden;" alt="">
             <img src="{% static 'img/version.png' %}" alt=""/>
         </a>
@@ -55,7 +55,7 @@
                     class="caret"></b>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{% url 'profile_page' %}" class="dropdown-item"><i
+                <a href="{% url 'dashboard' %}" class="dropdown-item"><i
                         class="icon-people p-r-10"></i><span>{% trans "Profile" %}</span></a>
                 <a href="{% url 'main_page' %}" class="dropdown-item"><i
                         class="icon-home p-r-10"></i><span>{% trans "Asosiy sahifaga qaytish" %}</span></a>

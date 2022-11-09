@@ -6,16 +6,31 @@ from article_app.models import *
 class CreateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title', 'section_id']
+        fields = ['section', 'title', 'author']
+
+        widgets = {
+            'section': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data - style': "btn-white",
+                'data - parsley - required': "true",
+            }),
+            'title': Textarea(attrs={
+                'class': 'form-control',
+                'data - size': "10",
+                'data - parsley - required': "true",
+            }),
+        }
 
 
 class UpdateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title', 'section_id', 'abstract', 'keywords', 'references']
+        fields = ['title', 'section', 'abstract', 'keywords', 'references']
 
         widgets = {
-            'section_id': Select(attrs={
+            'section': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data-live-search': "true",
                 'data - style': "btn-white",

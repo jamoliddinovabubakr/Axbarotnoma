@@ -24,7 +24,7 @@ class Stage(models.Model):
 
 class ArticleStatus(models.Model):
     name = models.CharField(max_length=100, default=None)
-    stage_id = models.ForeignKey('article_app.Stage', on_delete=models.CASCADE, default=None)
+    stage = models.ForeignKey('article_app.Stage', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -35,12 +35,16 @@ def user_directory_path(instance, filename):
 
 
 class Article(models.Model):
-    section_id = models.ForeignKey('article_app.Section', verbose_name="Section", related_name="article_section",
+    section = models.ForeignKey('article_app.Section', verbose_name="Section", related_name="article_section",
                                 on_delete=models.CASCADE, blank=True)
+    author = models.ForeignKey('user_app.Author', blank=True, on_delete=models.CASCADE, null=True)
+    file = models.ForeignKey('article_app.ArticleFile', related_name="article_file", blank=True, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=255, blank=True)
     abstract = RichTextField(blank=True)
     keywords = RichTextField(blank=True)
     references = RichTextField(blank=True, null=True)
+    article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
+    is_publish = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -52,13 +56,14 @@ class Article(models.Model):
 
 
 class ArticleFile(models.Model):
-    article_id = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
+    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
     file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True,
                             validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])],
                             help_text='Please upload only .doc or .docx files!')
     file_name = models.CharField(max_length=255, default=None)
     file_size = models.CharField(max_length=255, default=None)
     file_type = models.CharField(max_length=255, default=None)
+    file_status = models.SmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,25 +72,30 @@ class ArticleFile(models.Model):
 
 
 class Submission(models.Model):
-    article_id = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
-    author_id = models.ForeignKey('user_app.Author', on_delete=models.CASCADE, blank=True, null=True)
-    editor_id = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, blank=True, null=True)
-    file_id = models.ForeignKey('article_app.ArticleFile', on_delete=models.CASCADE, blank=True, null=True)
-    article_status_id = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE,
-                              blank=True,
-                              null=True)
+    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
+    author = models.ForeignKey('user_app.Author', on_delete=models.CASCADE, blank=True, null=True)
+    file = models.ForeignKey('article_app.ArticleFile', related_name="submission_file", blank=True, on_delete=models.CASCADE, null=True)
+    article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.id)
 
 
-class Review(models.Model):
-    submission_id = models.ForeignKey('article_app.Submission', on_delete=models.CASCADE, blank=True, null=True)
-    reviewer_id = models.ForeignKey('user_app.Reviewer', on_delete=models.CASCADE, blank=True, null=True)
-    editor_id = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, blank=True, null=True)
-    file_id = models.ForeignKey('article_app.ArticleFile', on_delete=models.CASCADE, blank=True, null=True)
+class StatusReviewer(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class ReviewerArticle(models.Model):
+    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
+    reviewer = models.ForeignKey('user_app.Reviewer', on_delete=models.CASCADE, blank=True, null=True)
+    editor = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, blank=True, null=True)
     comment = models.TextField(help_text="Message")
+    status = models.ForeignKey('article_app.StatusReviewer', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -100,11 +110,11 @@ class NotificationStatus(models.Model):
 
 
 class Notification(models.Model):
-    submission_id = models.ForeignKey('article_app.Submission', on_delete=models.CASCADE, blank=True)
-    from_user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user",  blank=True, null=True)
-    to_user_id = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True, null=True)
+    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
+    from_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user",  blank=True, null=True)
+    to_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True, null=True)
     message = models.TextField(_("Message"), max_length=255, null=True, blank=True)
-    notification_status_id = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True, null=True)
+    notification_status = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

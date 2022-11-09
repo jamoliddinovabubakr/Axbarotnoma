@@ -1,4 +1,4 @@
-from article_app.models import Journal, Notification
+from article_app.models import Journal, Notification, Article
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from user_app.decorators import unauthenticated_user, password_reset_authentification
@@ -10,7 +10,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from user_app.forms import CreateUserForm
-from user_app.models import Role
+from user_app.models import *
 import os
 from user_app.models import User
 from django.db.models.query_utils import Q
@@ -35,22 +35,12 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('main_page')
+            return redirect('dashboard')
         else:
             errors = messages.info(request, 'login yoki parol xato')
             return redirect('login')
 
     return render(request, "user_app/register/login.html")
-
-
-def sent_email_message(email_to, result):
-    htmly = get_template('user_app/status_email.html')
-    d = {'result': result}
-    subject, from_email, to = 'welcome', 'abubakrtestjamoliddinov0055@gmail.com', email_to
-    html_content = htmly.render(d)
-    msg_email = EmailMultiAlternatives(subject, html_content, from_email, [email_to])
-    msg_email.attach_alternative(html_content, "text/html")
-    msg_email.send()
 
 
 def register_page(request):
@@ -64,13 +54,16 @@ def register_page(request):
             user_group.user_set.add(user)
 
             user = authenticate(request, username=user.username, password=request.POST['password1'])
+            Author.objects.create(user=user)
+            rol = Role.objects.get(pk=4)
+            user.role.add(rol)
 
             if user is not None:
                 login(request, user)
-                return redirect('profile_page')
+                return redirect('dashboard')
             else:
                 messages.info(request, 'login yoki parol xato')
-                return redirect('login')
+                return redirect('register')
         else:
 
             return HttpResponse("Form is not valid!")
@@ -143,18 +136,17 @@ def logout_user(request):
 
 @login_required(login_url='login')
 # @allowed_users(menu_url='profile_page')
-def profile_page(request):
-    # tasdiqlanganlar = Article.objects.filter(state=3)
-    # tasdiqlanmaganlar = Article.objects.filter(state=2)
-    # kutish_jarayonida = Article.objects.filter(state=1)
-    # jurnallar = Journal.objects.all()
-    # context = {
-    #     'tasdiqlanganlar': tasdiqlanganlar.count,
-    #     'tasdiqlanmaganlar': tasdiqlanmaganlar.count,
-    #     'kutish_jarayonida': kutish_jarayonida.count,
-    #     'jurnallar': jurnallar.count,
-    # }
-    return render(request, "user_app/cabinet_page.html")
+def dashboard(request):
+    # author = Author.objects.get(user=request.user)
+    # article_myqueues = Article.objects.filter(author=author).filter(article_status_id=1)
+    context = {
+        # 'tasdiqlanganlar': tasdiqlanganlar.count,
+        # 'tasdiqlanmaganlar': tasdiqlanmaganlar.count,
+        # 'kutish_jarayonida': kutish_jarayonida.count,
+        # 'jurnallar': jurnallar.count,
+        # 'roles': roles,
+    }
+    return render(request, "user_app/user_dashboard.html", context=context)
 
 
 # @login_required(login_url='login')
@@ -461,10 +453,13 @@ def load_data_notif(request):
 def count_notif(request):
     if request.method == 'GET':
         user = User.objects.get(pk=request.user.id)
-        if user.role.id == 4:
+        roles = []
+        for item in user.role.all():
+            roles.append(item.id)
+        if "Reviewer" in roles:
             notifications = Notification.objects.all().order_by("-created_at").filter(user=user).filter(status="Tekshirilmadi")
         else:
-            notifications = Notification.objects.all().order_by("-created_at").filter(user__role_id__in=[1, 2, 3]).filter(status="Tekshirilmadi")
+            notifications = Notification.objects.all().order_by("-created_at").filter(roles in [1, 2]).filter(status="Tekshirilmadi")
         return JsonResponse({"count_notif_notread": notifications.count(), "notifications": list(notifications.values(
             'id', 'my_resend__author__avatar', 'my_resend__author__first_name', 'my_resend__author__last_name',
             'created_at'

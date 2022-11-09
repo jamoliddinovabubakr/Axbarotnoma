@@ -6,13 +6,10 @@
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
-        <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item active"><a href="javascript:;">{% trans "Bosh sahifa" %}</a></li>
-        </ol>
 
-        <h1 class="page-header">{% trans "Bosh sahifa" %}</h1>
+        <h1 class="page-header">{% trans "Submissions" %}</h1>
 
-        {% if request.user.role.name != "USER" %}
+        {% if 1 in request.user.get_roles or 2 in request.user.get_roles %}
             <div class="row">
                 <!-- begin col-3 -->
                 <div class="col-xl-3 col-md-6">
@@ -73,12 +70,52 @@
                 <!-- end col-3 -->
             </div>
         {% endif %}
-
-        {% if request.user.role.name == "USER" %}
-            <div class="row forshadow" style="padding: 5%;">
-                <h3 style="font-family: Trebuchet MS, Helvetica, sans-serif; align: center;">{% trans "O'zbekiston Respublikasi Vazirlar mahkamasi huzuridagi Davlat test markazi" %}</h3>
+        <br>
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a href="#default-tab-1" data-toggle="tab" class="nav-link active">
+                            <span class="d-sm-none">Tab 1</span>
+                            <span class="d-sm-block d-none">My Queue</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#default-tab-2" data-toggle="tab" class="nav-link">
+                            <span class="d-sm-none">Tab 2</span>
+                            <span class="d-sm-block d-none">Archives</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="default-tab-1">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6"><h5 class="m-t-10"><i class="fa fa-star"></i> My Assigned</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{% url 'create_article' %}" class="addUser btn btn-outline-primary"
+                                   style="float: right">New Submission</a>
+                            </div>
+                        </div>
+                        <hr>
+                        <br>
+                        <p></p>
+                    </div>
+                    <div class="tab-pane fade" id="default-tab-2">
+                        <h4>Lorem ipsum dolor sit amet</h4>
+                        <p>
+                            Nullam ac sapien justo. Nam augue mauris, malesuada non magna sed, feugiat blandit
+                            ligula.
+                            In tristique tincidunt purus id iaculis. Pellentesque volutpat tortor a mauris
+                            convallis,
+                            sit amet scelerisque lectus adipiscing.
+                        </p>
+                    </div>
+                </div>
             </div>
-        {% endif %}
+            <div class="col-md-2"></div>
+        </div>
 
     </div>
 {% endblock %}

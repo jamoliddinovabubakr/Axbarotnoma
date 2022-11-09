@@ -9,7 +9,7 @@ from django.utils import translation
 from user_app.decorators import allowed_users
 from article_app.models import *
 from user_app.models import Author
-from article_app.forms import CreateArticleForm
+from article_app.forms import CreateArticleForm, UpdateArticleForm
 from django.core.paginator import Paginator
 
 
@@ -60,7 +60,7 @@ def create_article(request):
         if form.is_valid():
             article = form.save(commit=False)
             article.save()
-            return redirect('update_my_article', pk=article.id)
+            return redirect('update_article', pk=article.id)
         else:
             context = {
                 'form': CreateArticleForm(),
@@ -76,30 +76,27 @@ def create_article(request):
 
 
 @login_required(login_url='login')
-def update_my_article(request, pk):
+def update_article(request, pk):
+    user = request.user
     article = Article.objects.get(pk=pk)
-    if request.user != article.author:
+    if user != article.author.user:
         return render(request, 'user_app/not_access.html')
-    authors = Authors.objects.filter(article=article)
+    author = Author.objects.get(user=user)
 
     if request.method == "POST":
-        user = request.user
         form = UpdateArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
-            sending = State.objects.get(pk=4)
+            submit = ArticleStatus.objects.get(pk=1)
             ob = form.save(commit=False)
-            ob.state = sending
+            ob.article_status = submit
             ob.save()
 
-            MyResendArticle.objects.create(
-                author=user,
-                article=article,
-                file_word=ob.file,
-                message='Maqolangiz 14 ish kunida ko\'rib chiqladi.',
-                state=sending,
-            )
+            # Submission.objects.create(
+            #     author=author,
+            #     article=article,
+            # )
 
-            return redirect('sending_article_form')
+            return redirect('dashboard')
         else:
             context = {
                 'form': UpdateArticleForm(instance=article),
@@ -277,7 +274,7 @@ def delete_author(request, pk):
 
 
 @login_required(login_url='login')
-def delete_myarticle(request, pk):
+def delete_article(request, pk):
     resent_article = get_object_or_404(MyResendArticle, pk=pk)
     article = resent_article.article
     articles = MyResendArticle.objects.filter(article=article)
