@@ -12,20 +12,15 @@ $(document).ready(function () {
             success: handleSuccess,
             error: handleError,
         });
-
         function handleSuccess(data) {
             $myForm[0].reset();
             $('#add_author_modal').click();
             $('#add-author-notif').click();
-
-
         }
-
         function handleError(ThrowError) {
             console.log('error');
             console.log(ThrowError);
         }
     });
-
 });
 

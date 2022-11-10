@@ -57,7 +57,7 @@ class Article(models.Model):
 
 class ArticleFile(models.Model):
     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
-    file = models.FileField(_("Word Fayl"), upload_to=user_directory_path, max_length=255, blank=True,
+    file = models.FileField(_("Word Fayl"), upload_to="files/articles/", max_length=255, blank=True,
                             validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])],
                             help_text='Please upload only .doc or .docx files!')
     file_name = models.CharField(max_length=255, blank=True, null=True)
@@ -68,7 +68,7 @@ class ArticleFile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.file_name
+        return str(self.article)
 
 
 class Submission(models.Model):
@@ -87,7 +87,7 @@ class StatusReviewer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.name)
 
 
 class ReviewerArticle(models.Model):
@@ -118,7 +118,7 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.message
+        return str(self.id)
 
     class Meta:
         ordering = ['-id']
@@ -138,7 +138,7 @@ class Journal(models.Model):
         return [p.title for p in self.article.all()]
 
     def __str__(self):
-        return str(self.number_magazine)
+        return str(self.journal_number)
 
     class Meta:
         verbose_name = _("Journal")

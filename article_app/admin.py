@@ -1,21 +1,20 @@
 from django.contrib import admin
 from article_app.models import *
 from import_export.admin import ImportExportActionModelAdmin
-from modeltranslation.admin import TranslationAdmin
 
 
 @admin.register(Section)
-class SectionAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class SectionAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name']
 
 
 @admin.register(Stage)
-class StageAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class StageAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name']
 
 
 @admin.register(ArticleStatus)
-class ArticleStatusAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class ArticleStatusAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name', 'stage']
 
 
@@ -48,12 +47,12 @@ class ReviewerArticleAdmin(ImportExportActionModelAdmin):
 
 
 @admin.register(NotificationStatus)
-class NotificationStatusAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class NotificationStatusAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name']
 
 
 @admin.register(Notification)
-class NotificationAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class NotificationAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'article', 'from_user', 'to_user', 'message', 'notification_status',
                     'created_at']
 

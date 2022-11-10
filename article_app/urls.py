@@ -18,10 +18,10 @@ urlpatterns = [
 
     path('articles/', my_articles, name='my_articles'),
     path('sending_article/', sending_article_form, name='sending_article_form'),
-    path('resend_article/<int:pk>/', resend_article, name='resend_article'),
-    path('update_resend_article/<int:pk>/', update_resend_article, name='update_resend_article'),
+    # path('resend_article/<int:pk>/', resend_article, name='resend_article'),
+    # path('update_resend_article/<int:pk>/', update_resend_article, name='update_resend_article'),
 
-    path('article/create', create_article, name='create_article'),
+    path('article/create/', create_article, name='create_article'),
     path('article/edit/<int:pk>/', update_article, name='update_article'),
     path('article/delete/<int:pk>/', delete_article, name='delete_article'),
 
@@ -38,7 +38,7 @@ urlpatterns = [
     path('magazine/edit/<int:pk>', edit_magazine, name='edit_magazine'),
 
     path('categories/', get_category, name='get_category'),
-    path('category/create/', create_category, name='create_category'),
+    # path('category/create/', create_category, name='create_category'),
     path('category/edit/<int:pk>/', edit_category, name='edit_category'),
     path('category/delete/<int:pk>/', delete_category, name='delete_category'),
 

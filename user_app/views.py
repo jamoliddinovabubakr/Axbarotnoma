@@ -30,16 +30,13 @@ def login_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
             login(request, user)
             return redirect('dashboard')
         else:
             errors = messages.info(request, 'login yoki parol xato')
             return redirect('login')
-
     return render(request, "user_app/register/login.html")
 
 
@@ -51,12 +48,13 @@ def register_page(request):
             user.save()
 
             user_group, created = Group.objects.get_or_create(name='AUTHOR')
-            user_group.user_set.add(user)
-
-            user = authenticate(request, username=user.username, password=request.POST['password1'])
+            if not user.groups.filter(name__in=['AUTHOR']).exists():
+                user_group.user_set.add(user)
             Author.objects.create(user=user)
             rol = Role.objects.get(pk=4)
             user.role.add(rol)
+
+            user = authenticate(request, username=user.username, password=request.POST['password1'])
 
             if user is not None:
                 login(request, user)
@@ -65,8 +63,17 @@ def register_page(request):
                 messages.info(request, 'login yoki parol xato')
                 return redirect('register')
         else:
-
-            return HttpResponse("Form is not valid!")
+            username = request.POST['username']
+            email = request.POST['email']
+            usr = authenticate(request, username=username, email=email, password=request.POST['password1'])
+            error = "Formani to'g'ri to'ldiring!"
+            if usr is not None:
+                error = "Bu foydalanuvchi bor!"
+            context = {
+                    "error": error,
+                    "form": form,
+                }
+            return render(request, "user_app/register/register.html", context=context)
 
     else:
         form = CreateUserForm()
@@ -137,14 +144,11 @@ def logout_user(request):
 @login_required(login_url='login')
 # @allowed_users(menu_url='profile_page')
 def dashboard(request):
-    # author = Author.objects.get(user=request.user)
-    # article_myqueues = Article.objects.filter(author=author).filter(article_status_id=1)
+    user = request.user
+    author = Author.objects.get(user=user)
+    articles = Article.objects.filter(author=author).filter(Q(article_status_id=1) | Q(article_status_id=7)).order_by('created_at')
     context = {
-        # 'tasdiqlanganlar': tasdiqlanganlar.count,
-        # 'tasdiqlanmaganlar': tasdiqlanmaganlar.count,
-        # 'kutish_jarayonida': kutish_jarayonida.count,
-        # 'jurnallar': jurnallar.count,
-        # 'roles': roles,
+        'articles': articles,
     }
     return render(request, "user_app/user_dashboard.html", context=context)
 
@@ -435,35 +439,35 @@ def dashboard(request):
 
 # Glavniy redaktor
 @login_required(login_url='login')
-@allowed_users(menu_url='notifications')
+# @allowed_users(menu_url='notifications')
 def get_notifications(request):
     return render(request, "user_app/settings/notification_page.html")
 
 
-def load_data_notif(request):
-    if request.method == 'GET':
-        notifications = Notification.objects.filter(user__role_id__in=[1, 2, 3]).order_by(
-            "-created_at")
+# def load_data_notif(request):
+#     if request.method == 'GET':
+#         notifications = Notification.objects.filter(user__role_id__in=[1, 2, 3]).order_by(
+#             "-created_at")
+#
+#         return JsonResponse({"notifications": list(notifications.values(
+#             'id', 'article_id', 'title', 'my_resend__author__email', 'description', 'status', 'created_at',
+#         ))})
 
-        return JsonResponse({"notifications": list(notifications.values(
-            'id', 'article_id', 'title', 'my_resend__author__email', 'description', 'status', 'created_at',
-        ))})
 
-
-def count_notif(request):
-    if request.method == 'GET':
-        user = User.objects.get(pk=request.user.id)
-        roles = []
-        for item in user.role.all():
-            roles.append(item.id)
-        if "Reviewer" in roles:
-            notifications = Notification.objects.all().order_by("-created_at").filter(user=user).filter(status="Tekshirilmadi")
-        else:
-            notifications = Notification.objects.all().order_by("-created_at").filter(roles in [1, 2]).filter(status="Tekshirilmadi")
-        return JsonResponse({"count_notif_notread": notifications.count(), "notifications": list(notifications.values(
-            'id', 'my_resend__author__avatar', 'my_resend__author__first_name', 'my_resend__author__last_name',
-            'created_at'
-        ))})
+# def count_notif(request):
+#     if request.method == 'GET':
+#         user = User.objects.get(pk=request.user.id)
+#         roles = []
+#         for item in user.role.all():
+#             roles.append(item.id)
+#         if "Reviewer" in roles:
+#             notifications = Notification.objects.all().order_by("-created_at").filter(user=user).filter(status="Tekshirilmadi")
+#         else:
+#             notifications = Notification.objects.all().order_by("-created_at").filter(roles in [1, 2]).filter(status="Tekshirilmadi")
+#         return JsonResponse({"count_notif_notread": notifications.count(), "notifications": list(notifications.values(
+#             'id', 'my_resend__author__avatar', 'my_resend__author__first_name', 'my_resend__author__last_name',
+#             'created_at'
+#         ))})
 
 
 # @login_required(login_url='login')
@@ -618,26 +622,26 @@ def count_notif(request):
 #         return HttpResponse("Kechirasiz taqrizchilar topilmadi!")
 #
 #
-def review_notifications(request):
-    return render(request, "user_app/reviews/notif_review.html")
-
-
-def get_review_view_notification(request):
-    notifications = Notification.objects.filter(user=request.user).order_by("-created_at")
-    return JsonResponse({"notifications": list(notifications.values(
-        'id', 'title', 'status', 'created_at', 'result_review', 'my_resend__article', 'description'
-    ))})
-
-
-def review_view_notification(request, pk):
-    notif = get_object_or_404(Notification, pk=pk)
-
-    if notif.status == 'Tekshirilmadi':
-        notif.status = 'Tekshirilmoqda'
-        notif.save()
-
-    context = {
-        'notif': notif,
-    }
-
-    return render(request, "user_app/reviews/notification_view.html", context=context)
+# def review_notifications(request):
+#     return render(request, "user_app/reviews/notif_review.html")
+#
+#
+# def get_review_view_notification(request):
+#     notifications = Notification.objects.filter(user=request.user).order_by("-created_at")
+#     return JsonResponse({"notifications": list(notifications.values(
+#         'id', 'title', 'status', 'created_at', 'result_review', 'my_resend__article', 'description'
+#     ))})
+#
+#
+# def review_view_notification(request, pk):
+#     notif = get_object_or_404(Notification, pk=pk)
+#
+#     if notif.status == 'Tekshirilmadi':
+#         notif.status = 'Tekshirilmoqda'
+#         notif.save()
+#
+#     context = {
+#         'notif': notif,
+#     }
+#
+#     return render(request, "user_app/reviews/notification_view.html", context=context)

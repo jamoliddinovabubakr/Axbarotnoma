@@ -12,22 +12,22 @@ class PermissionAdmin(ImportExportActionModelAdmin):
 
 
 @admin.register(Region)
-class RegionAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class RegionAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name']
 
 
 @admin.register(Gender)
-class GenderAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class GenderAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name']
 
 
 @admin.register(Role)
-class RoleAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class RoleAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name']
 
 
 @admin.register(Menu)
-class MenuAdmin(ImportExportActionModelAdmin, TranslationAdmin):
+class MenuAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name', 'status',
                     'url', 'icon', 'menu_tr', 'get_roles']
 

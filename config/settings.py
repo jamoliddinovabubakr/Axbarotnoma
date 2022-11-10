@@ -15,7 +15,7 @@ DEBUG: bool = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
-    'modeltranslation',
+    # 'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -88,8 +88,8 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-LANGUAGE_CODE = 'uz'
-MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
+LANGUAGE_CODE = 'en'
+# MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
 
 TIME_ZONE = 'Asia/Tashkent'
 
@@ -99,14 +99,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-gettext = lambda s: s
-
-LANGUAGES = [
-    ('uz', gettext('Uzbek')),
-    ('en', gettext('English')),
-    ('ru', gettext('Russia')),
-    # ('kaa', gettext('Karakalpak')),
-]
+# gettext = lambda s: s
+#
+# LANGUAGES = [
+#     ('uz', gettext('Uzbek')),
+#     ('en', gettext('English')),
+#     ('ru', gettext('Russia')),
+#     # ('kaa', gettext('Karakalpak')),
+# ]
 
 # MODELTRANSLATION_LANGUAGES = ('uz', 'en')
 #
@@ -115,9 +115,9 @@ LANGUAGES = [
 # MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'uz'
 
 
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
+# LOCALE_PATHS = [
+#     os.path.join(BASE_DIR, 'locale'),
+# ]
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = 'login'

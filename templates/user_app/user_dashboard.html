@@ -2,13 +2,11 @@
 {% load i18n %}
 {% load static %}
 {% block title %}
-    Bosh sahifa
+    Dashboard
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
-
-        <h1 class="page-header">{% trans "Submissions" %}</h1>
-
+        <h3 class="page-header">{% trans "Submissions" %}</h3>
         {% if 1 in request.user.get_roles or 2 in request.user.get_roles %}
             <div class="row">
                 <!-- begin col-3 -->
@@ -75,47 +73,80 @@
             <div class="col-md-10">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a href="#default-tab-1" data-toggle="tab" class="nav-link active">
+                        <a href="#myqueue" data-toggle="tab" class="nav-link active">
                             <span class="d-sm-none">Tab 1</span>
                             <span class="d-sm-block d-none">My Queue</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#default-tab-2" data-toggle="tab" class="nav-link">
+                        <a href="#archives" data-toggle="tab" class="nav-link">
                             <span class="d-sm-none">Tab 2</span>
                             <span class="d-sm-block d-none">Archives</span>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane fade active show" id="default-tab-1">
-                        <br>
+                    <div class="tab-pane fade active show" id="myqueue">
                         <div class="row">
-                            <div class="col-md-6"><h5 class="m-t-10"><i class="fa fa-star"></i> My Assigned</h5>
+                            <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5>
                             </div>
                             <div class="col-md-6">
-                                <a href="{% url 'create_article' %}" class="addUser btn btn-outline-primary"
-                                   style="float: right">New Submission</a>
+                                <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
+                                   class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
                             </div>
                         </div>
-                        <hr>
-                        <br>
-                        <p></p>
+                    <br>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                {% for article in articles %}
+                                    <tr>
+                                        <td>{{ article.id }}</td>
+                                        <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
+                                        <td>
+                                            {% if article.article_status_id == 7 %}
+                                                <button class="btn btn-outline-danger btn-sm" style="margin: 10px; border-radius: 20px; float: right"><i class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}</button>
+                                            {% else %}
+                                                <button class="btn btn-outline-warning btn-sm" style="margin: 10px; border-radius: 20px; float: right"><i class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}</button>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" style="margin: 10px; float: right"><i class="fa fa-eye mr-1"></i>View</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
                     </div>
-                    <div class="tab-pane fade" id="default-tab-2">
-                        <h4>Lorem ipsum dolor sit amet</h4>
-                        <p>
-                            Nullam ac sapien justo. Nam augue mauris, malesuada non magna sed, feugiat blandit
-                            ligula.
-                            In tristique tincidunt purus id iaculis. Pellentesque volutpat tortor a mauris
-                            convallis,
-                            sit amet scelerisque lectus adipiscing.
-                        </p>
+                    <div class="tab-pane fade" id="archives">
+                        <div class="row">
+                            <div class="col-md-6"><h5 class="m-t-10"> Archived Submissions</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
+                                   class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
+                            </div>
+                        </div>
+                    <br>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                {% for article in articles %}
+                                    <tr>
+                                        <td>{{ article.id }}</td>
+                                        <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm" style="margin: 10px; border-radius: 20px; float: right"><i class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}</button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" style="margin: 10px; float: right"><i class="fa fa-eye mr-1"></i>View</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-2"></div>
         </div>
-
     </div>
 {% endblock %}

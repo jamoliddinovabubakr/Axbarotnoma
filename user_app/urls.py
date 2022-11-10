@@ -19,9 +19,9 @@ urlpatterns = [
     # path('users/delete/<int:pk>', delete_user, name='delete_user'),
     #
     path('notifications/', get_notifications, name='notifications'),
-    path('load_notif/', load_data_notif, name='load_notif'),
-    path('count_notif/', count_notif, name='count_notif'),
-    path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),
+    # path('load_notif/', load_data_notif, name='load_notif'),
+    # path('count_notif/', count_notif, name='count_notif'),
+    # path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),
     # path('notification/<int:pk>/view', view_notification, name='view_notification'),
     # path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
     # path('send_to_review/<int:article_id>', send_to_review, name='send_to_review'),

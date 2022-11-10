@@ -27,7 +27,7 @@
             {% include "lang.html" %}
         </li>
         <li class="dropdown">
-            {% if request.user.role.id == 2 or request.user.role.id == 3 or request.user.role.id == 1 or request.user.role.id == 4 %}
+            {% if 1 in request.user.get_roles or 2 in request.user.get_roles %}
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                     <i class="fa fa-bell"></i>
                     <span class="notif_count label label-primary"></span>
@@ -67,33 +67,33 @@
     <!-- end header-nav -->
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        setInterval(function () {
-            $.ajax({
-                type: "GET",
-                url: "{% url 'count_notif' %}",
-                success: function (response) {
-
-                    $('.notif_count').text(response.count_notif_notread);
-                    $("#notif_body").empty();
-                    for (let item of response.notifications) {
-                        let temp = `<a class="dropdown-item media" href='/profile/notification/${item.id}/view'>`
-                            + `<div class="media-left">`
-                            + `<img src="/media/${item.my_resend__author__avatar}" class='media-object' alt='' /><i class="fab fa-facebook-messenger text-blue media-object-icon"></i>`
-                            + `</div>`
-                            + `<div class="media-body">`
-                            + `<h6 class="media-heading">` + item.my_resend__author__first_name + ` ` + item.my_resend__author__last_name + `</h6>`
-                            + `<div class="text-muted f-s-12">` + item.created_at + `</div>`
-                            + `</div>`
-                            + `</a>`;
-                        $("#notif_body").append(temp);
-                    }
-                },
-                error: function (response) {
-                    console.log(response);
-                }
-            });
-        }, 1500);
-    });
-</script>
+{#<script type="text/javascript">#}
+{#    $(document).ready(function () {#}
+{#        setInterval(function () {#}
+{#            $.ajax({#}
+{#                type: "GET",#}
+{#                url: "{% url 'count_notif' %}",#}
+{#                success: function (response) {#}
+{##}
+{#                    $('.notif_count').text(response.count_notif_notread);#}
+{#                    $("#notif_body").empty();#}
+{#                    for (let item of response.notifications) {#}
+{#                        let temp = `<a class="dropdown-item media" href='/profile/notification/${item.id}/view'>`#}
+{#                            + `<div class="media-left">`#}
+{#                            + `<img src="/media/${item.my_resend__author__avatar}" class='media-object' alt='' /><i class="fab fa-facebook-messenger text-blue media-object-icon"></i>`#}
+{#                            + `</div>`#}
+{#                            + `<div class="media-body">`#}
+{#                            + `<h6 class="media-heading">` + item.my_resend__author__first_name + ` ` + item.my_resend__author__last_name + `</h6>`#}
+{#                            + `<div class="text-muted f-s-12">` + item.created_at + `</div>`#}
+{#                            + `</div>`#}
+{#                            + `</a>`;#}
+{#                        $("#notif_body").append(temp);#}
+{#                    }#}
+{#                },#}
+{#                error: function (response) {#}
+{#                    console.log(response);#}
+{#                }#}
+{#            });#}
+{#        }, 1500);#}
+{#    });#}
+{#</script>#}
