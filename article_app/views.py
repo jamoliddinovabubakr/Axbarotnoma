@@ -93,11 +93,6 @@ def update_article(request, pk):
             ob.article_status = submit
             ob.save()
 
-            # Submission.objects.create(
-            #     author=author,
-            #     article=article,
-            # )
-
             return redirect('dashboard')
         else:
             context = {
@@ -116,19 +111,68 @@ def update_article(request, pk):
 
 
 def create_article_file(request, pk):
+    article = Article.objects.get(pk=pk)
+    form = CreateArticleFileForm()
     if request.method == "POST":
         form = CreateArticleFileForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            file = form.save(commit=False)
+            file.save()
+            article.file = file
+            article.save()
             return redirect('update_article', pk)
         else:
             return HttpResponse('Not valid form!')
     else:
         context = {
-            'form': CreateArticleFileForm(),
-            'article': Article.objects.get(pk=pk),
+            'form': form,
+            'article': article,
         }
         return render(request, "article_app/crud/create_file.html", context=context)
+
+
+@login_required(login_url='login')
+def article_view(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    document = None
+    if article.file is not None:
+        ob = ArticleFile.objects.filter(article_id=article.id).filter(file_status=1).last()
+        document = ob.file.url
+
+    data = {
+        "id": article.id,
+        "author": article.author.user.full_name,
+        "section": article.section.name,
+        "file": f"{document}",
+        "title": article.title,
+        "abstract": article.abstract,
+        "keywords": article.keywords,
+        "references": article.references,
+        "article_status": article.article_status.name,
+        "is_publish": article.is_publish,
+        "created_at": article.created_at,
+        "updated_at": article.updated_at,
+    }
+    return JsonResponse(data=data)
+
+
+@login_required(login_url='login')
+def delete_article(request, pk):
+    resent_article = get_object_or_404(Submission, pk=pk)
+    article = resent_article.article
+    articles = Submission.objects.filter(article=article)
+    article_count = articles.count()
+
+    if request.method == "POST":
+        notif = Notification.objects.get(my_resend__pk=resent_article.pk)
+        if article_count == 1:
+            article.delete()
+        resent_article.delete()
+        notif.delete()
+        return redirect('sending_article_form')
+    else:
+        return render(request, 'article_app/crud/delete_myarticle.html',
+                      {'article': article, 'resent_article': resent_article})
 
 
 def get_article_authors(request, pk):
@@ -136,37 +180,6 @@ def get_article_authors(request, pk):
     return JsonResponse({"authors": list(authors.values(
         'id', 'article', 'first_name', 'last_name', 'middle_name', 'email', 'work_place', 'author_order'
     ))})
-
-
-@login_required(login_url='login')
-def sending_article_form(request):
-    is_have = False
-    user = request.user
-
-    send_mylast_article = my_resends = None
-    last_article = Article.objects.filter(author=user).last()
-
-    if last_article:
-        get_mylast_articles = Submission.objects.filter(article=last_article).filter(status=True)
-        is_have = True
-        if get_mylast_articles.count() > 0:
-            send_mylast_article = get_mylast_articles.last()
-            my_resends = Submission.objects.filter(author=user).exclude(pk=send_mylast_article.pk).filter(
-                status=False).filter(
-                Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
-            )
-        else:
-            my_resends = Submission.objects.filter(author=user).filter(status=False).filter(
-                Q(state__name='Rad etildi') | Q(state__name='Tasdiqlandi') | Q(state__name='Qayta yuborish')
-            )
-
-    context = {
-        'is_have': is_have,
-        'last_article': last_article,
-        'my_resends': my_resends,
-        'send_mylast_article': send_mylast_article,
-    }
-    return render(request, "article_app/sending_article_form.html", context=context)
 
 
 @login_required(login_url='login')
@@ -231,25 +244,6 @@ def delete_author(request, pk):
         return redirect('update_my_article', pk=author.article.id)
     else:
         return render(request, 'article_app/crud/delete_author.html', {'author': author})
-
-
-@login_required(login_url='login')
-def delete_article(request, pk):
-    resent_article = get_object_or_404(Submission, pk=pk)
-    article = resent_article.article
-    articles = Submission.objects.filter(article=article)
-    article_count = articles.count()
-
-    if request.method == "POST":
-        notif = Notification.objects.get(my_resend__pk=resent_article.pk)
-        if article_count == 1:
-            article.delete()
-        resent_article.delete()
-        notif.delete()
-        return redirect('sending_article_form')
-    else:
-        return render(request, 'article_app/crud/delete_myarticle.html',
-                      {'article': article, 'resent_article': resent_article})
 
 
 @login_required(login_url='login')

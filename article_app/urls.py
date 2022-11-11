@@ -17,14 +17,11 @@ urlpatterns = [
     path('post/<slug:slug>/', post_detail, name='post_detail'),
 
     path('articles/', my_articles, name='my_articles'),
-    path('sending_article/', sending_article_form, name='sending_article_form'),
-    # path('resend_article/<int:pk>/', resend_article, name='resend_article'),
-    # path('update_resend_article/<int:pk>/', update_resend_article, name='update_resend_article'),
 
     path('article/create/', create_article, name='create_article'),
+    path('article/view/<int:pk>/', article_view, name='article_view'),
     path('article/edit/<int:pk>/', update_article, name='update_article'),
     path('article/delete/<int:pk>/', delete_article, name='delete_article'),
-
     path('article/file/create/<int:pk>/', create_article_file, name='create_article_file'),
 
     path('authors/<int:pk>', get_article_authors, name='get_article_authors'),

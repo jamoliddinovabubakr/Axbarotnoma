@@ -46,6 +46,19 @@
                                 <p style="color: red;">{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
                                 <div style="padding-left:10%; padding-right: 5%;">
                                     <div class="row">
+                                         <div class="col-md-12">
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    <button href="{% url 'create_article_file' article.id %}" data-toggle="modal"
+                                                            class="addUser btn btn-outline-secondary" style="width: 300px"><i
+                                                            class="fa fa-file-word mr-1"></i>{% trans " File" %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-12">
                                             <div class="form-group row m-b-15" style="visibility: hidden;">
                                                 <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %}
@@ -108,19 +121,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group row m-b-15">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    <button href="{% url 'create_article_file' article.id %}" data-toggle="modal"
-                                                            class="addUser btn btn-info btn-sm"><i
-                                                            class="fa fa-file-word mr-1"></i>{% trans " File" %}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="row" style="padding-top: 1em">
                                         <div class="col-md-6 col-sm-6"></div>
@@ -128,7 +128,7 @@
                                             <button type="submit" style="float: right;" id="submitButtonId"
                                                     class="btn btn btn-success">{% trans "Saqlash" %}
                                             </button>
-                                            <a style="float: right; margin-right: 1em" href="{% url 'my_articles' %}"
+                                            <a style="float: right; margin-right: 1em" href="{% url 'dashboard' %}"
                                                class="btn btn-outline-warning">{% trans "Yopish" %}
                                             </a>
                                         </div>

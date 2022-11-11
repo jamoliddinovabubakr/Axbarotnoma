@@ -1,3 +1,5 @@
+import os
+
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
@@ -83,11 +85,33 @@ class Editor(models.Model):
     user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
 
 
+class ReviewerFile(models.Model):
+    file = models.FileField(_("Fayl"), upload_to="files/reviewer/%Y/%m/%d", max_length=255, blank=True,
+                            validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx', 'pdf'])],
+                            help_text='Please upload only .doc, .docx or .pdf files!')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def file_name(self):
+        return self.file.name.split("/")[1].replace('_', ' ').replace('-', ' ')
+
+    @property
+    def file_size(self):
+        return self.file.size
+
+    @property
+    def file_type(self):
+        name, type = os.path.splitext(self.file.name)
+        return type
+
+    def __str__(self):
+        return self.file_name
+
+
 class Reviewer(models.Model):
     section = models.ManyToManyField('article_app.Section', related_name="reviewer_sections", blank=True)
     user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
-    mfile = models.FileField(_("Multiple File"), upload_to='files/reviewer/',
-                             validators=[FileExtensionValidator(['doc', 'docx', 'pdf'])], blank=True)
+    mfile = models.ForeignKey('user_app.ReviewerFile', on_delete=models.CASCADE, blank=True, null=True)
     is_reviewer = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -5,13 +5,9 @@
     {% trans "Ro'yxatdan o'tish" %}
 {% endblock %}
 {% block base_content %}
-    <!-- begin #page-container -->
     <div id="page-container" class="fade">
-        <!-- begin login -->
         <div class="login login-v1">
-            <!-- begin login-container -->
             <div class="login-container">
-                <!-- begin login-header -->
                 <div class="login-header">
                     <div class="brand">
 						<span class="logo">
@@ -26,10 +22,7 @@
                         <img src="{% static 'img/version.png' %}" width="100" alt=""/>
                     </div>
                 </div>
-                <!-- end login-header -->
-                <!-- begin login-body -->
                 <div class="login-body">
-                    <!-- begin login-content -->
                     <div class="login-content">
                         <form action="" method="POST" class="margin-bottom-0">
                             {% csrf_token %}
@@ -66,7 +59,7 @@
                             </div>
                             <div class="login-buttons">
                                 <button type="submit"
-                                        class="btn btn-primary btn-block btn-lg">{% trans "Ro'yxatdan o'tish" %}</button>
+                                        class="UserModal btn btn-primary btn-block btn-lg">{% trans "Ro'yxatdan o'tish" %}</button>
                             </div>
                             <div class="m-t-30 m-b-30 p-b-30">
                                 {% trans "Already a member? Click" %} <a
@@ -79,18 +72,10 @@
                             </p>
                         </form>
                     </div>
-                    <!-- end login-content -->
                 </div>
-                <!-- end login-body -->
             </div>
-            <!-- end login-container -->
         </div>
-        <!-- end login -->
-
-        <!-- begin scroll to top btn -->
         <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade"
            data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
-        <!-- end scroll to top btn -->
     </div>
-    <!-- end page container -->
 {% endblock base_content %}

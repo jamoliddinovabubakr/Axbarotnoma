@@ -95,25 +95,41 @@
                                    class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
                             </div>
                         </div>
-                    <br>
+                        <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% for article in articles %}
-                                    <tr>
-                                        <td>{{ article.id }}</td>
-                                        <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
-                                        <td>
-                                            {% if article.article_status_id == 7 %}
-                                                <button class="btn btn-outline-danger btn-sm" style="margin: 10px; border-radius: 20px; float: right"><i class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}</button>
-                                            {% else %}
-                                                <button class="btn btn-outline-warning btn-sm" style="margin: 10px; border-radius: 20px; float: right"><i class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}</button>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm" style="margin: 10px; float: right"><i class="fa fa-eye mr-1"></i>View</button>
-                                        </td>
+                                {% if myqueues %}
+                                    {% for article in myqueues %}
+                                        <tr>
+                                            <td>{{ article.id }}</td>
+                                            <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
+                                            <td>
+                                                {% if article.article_status_id == 7 %}
+                                                    <button class="btn btn-outline-danger btn-sm"
+                                                            style="margin: 10px; border-radius: 20px; float: right"><i
+                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                    </button>
+                                                {% else %}
+                                                    <button class="btn btn-outline-warning btn-sm"
+                                                            style="margin: 10px; border-radius: 20px; float: right"><i
+                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button onclick="OnClickViewArticle({{ article.id }})"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="margin: 10px; float: right"><i
+                                                        class="fa fa-eye mr-1"></i>View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center">
+                                        <td colspan="4"><h3>NO DATA</h3></td>
                                     </tr>
-                                {% endfor %}
+                                {% endif %}
                             </table>
                         </div>
                     </div>
@@ -126,21 +142,33 @@
                                    class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
                             </div>
                         </div>
-                    <br>
+                        <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% for article in articles %}
-                                    <tr>
-                                        <td>{{ article.id }}</td>
-                                        <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm" style="margin: 10px; border-radius: 20px; float: right"><i class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}</button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm" style="margin: 10px; float: right"><i class="fa fa-eye mr-1"></i>View</button>
-                                        </td>
+                                {% if myarchives %}
+                                    {% for article in myarchives %}
+                                        <tr>
+                                            <td>{{ article.id }}</td>
+                                            <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm"
+                                                        style="margin: 10px; border-radius: 20px; float: right"><i
+                                                        class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm"
+                                                        style="margin: 10px; float: right"><i
+                                                        class="fa fa-eye mr-1"></i>View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center">
+                                        <td colspan="4"><h3>NO DATA</h3></td>
                                     </tr>
-                                {% endfor %}
+                                {% endif %}
                             </table>
                         </div>
                     </div>
@@ -148,5 +176,55 @@
             </div>
             <div class="col-md-2"></div>
         </div>
+        <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
+            <div class="col-md-10 forshadow" style="padding: 2%;">
+                <table class="table table-responsive">
+                    <thead>
+                    <tr>
+                        <th width="1%"><b>ID</b></th>
+                        <th><b>{% trans "File" %}</b></th>
+                        <th><b>{% trans "Title" %}</b></th>
+                        <th><b>{% trans "created_at" %}</b></th>
+                        <th width="1%"><b>{% trans "Actions" %}</b></th>
+                    </tr>
+                    </thead>
+                    <tbody id="articleDetail">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        function OnClickViewArticle(id) {
+            $.ajax({
+                type: "GET",
+                url: "/article/view/" + id + "/",
+                success: function (response) {
+                    $("#articleDetail").empty();
+                    $("#articleView").css("display", "block");
+
+                    console.log(response);
+                    let fileID = response['file'];
+                    let FileArticle = "File Not Exists";
+                    if (fileID != "None"){
+                        FileArticle = `<a href='${response['file']}' download role='button'>`+ `<span>Yuklab olish</span></a>`
+                    }
+                    let temp = "<tr><td>" +
+                         response['id'] + "</td><td>" + FileArticle
+                         + `</td><td>` +
+                        response['title'] + `</td><td>` +
+                        response['created_at']
+                        + "</td></tr>";
+                    $("#articleDetail").append(temp);
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        }
+    </script>
 {% endblock %}
+<a href="{{ notification.article.file.url }}" download role="button"><span>{% trans "Yuklab olish" %}</span></a>

@@ -1,3 +1,5 @@
+import os
+
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -38,7 +40,8 @@ class Article(models.Model):
     section = models.ForeignKey('article_app.Section', verbose_name="Section", related_name="article_section",
                                 on_delete=models.CASCADE, blank=True)
     author = models.ForeignKey('user_app.Author', blank=True, on_delete=models.CASCADE, null=True)
-    file = models.ForeignKey('article_app.ArticleFile', related_name="article_file", blank=True, on_delete=models.CASCADE, null=True)
+    file = models.ForeignKey('article_app.ArticleFile', related_name="article_file", blank=True,
+                             on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=255, blank=True)
     abstract = RichTextField(blank=True)
     keywords = RichTextField(blank=True)
@@ -57,15 +60,28 @@ class Article(models.Model):
 
 class ArticleFile(models.Model):
     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
-    file = models.FileField(_("Word Fayl"), upload_to="files/articles/", max_length=255, blank=True,
+    file = models.FileField(_("Word Fayl"), upload_to="files/articles/%Y/%m/%d", max_length=255, blank=True,
                             validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx'])],
                             help_text='Please upload only .doc or .docx files!')
-    file_name = models.CharField(max_length=255, blank=True, null=True)
-    file_size = models.CharField(max_length=255, blank=True, null=True)
-    file_type = models.CharField(max_length=255, blank=True, null=True)
     file_status = models.SmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def file_name(self):
+        return self.file.name.split("/")[1].replace('_', ' ').replace('-', ' ')
+
+    @property
+    def file_size(self):
+        return self.file.size
+
+    @property
+    def file_type(self):
+        name, type = os.path.splitext(self.file.name)
+        return type
+
+    # def get_absolute_url(self):
+    #     return reverse('article_app:document-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return str(self.article)
@@ -74,7 +90,8 @@ class ArticleFile(models.Model):
 class Submission(models.Model):
     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
     author = models.ForeignKey('user_app.Author', on_delete=models.CASCADE, blank=True, null=True)
-    file = models.ForeignKey('article_app.ArticleFile', related_name="submission_file", blank=True, on_delete=models.CASCADE, null=True)
+    file = models.ForeignKey('article_app.ArticleFile', related_name="submission_file", blank=True,
+                             on_delete=models.CASCADE, null=True)
     article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -111,10 +128,13 @@ class NotificationStatus(models.Model):
 
 class Notification(models.Model):
     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
-    from_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user",  blank=True, null=True)
-    to_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True, null=True)
+    from_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user", blank=True,
+                                  null=True)
+    to_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True,
+                                null=True)
     message = models.TextField(_("Message"), max_length=255, null=True, blank=True)
-    notification_status = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True, null=True)
+    notification_status = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True,
+                                            null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

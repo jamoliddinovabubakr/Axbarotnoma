@@ -9,7 +9,7 @@ from django.template.loader import render_to_string, get_template
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from user_app.forms import CreateUserForm
+from user_app.forms import CreateUserForm, AddReviewerForm
 from user_app.models import *
 import os
 from user_app.models import User
@@ -33,13 +33,14 @@ def login_page(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')
+            return redirect('main_page')
         else:
             errors = messages.info(request, 'login yoki parol xato')
             return redirect('login')
     return render(request, "user_app/register/login.html")
 
 
+@unauthenticated_user
 def register_page(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -58,7 +59,7 @@ def register_page(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('dashboard')
+                return redirect('main_page')
             else:
                 messages.info(request, 'login yoki parol xato')
                 return redirect('register')
@@ -81,6 +82,22 @@ def register_page(request):
             'form': form,
         }
         return render(request, "user_app/register/register.html", context)
+
+
+def choose_roles(request):
+    if request.method == "POST":
+        form = AddReviewerForm(request.POST, request.FILES)
+        if form.is_valid():
+            reviewer = form.save(commit=False)
+            # if request.FILES:
+            #     for f in request.FILES.getlist('mfile'):
+
+            return redirect('main_page')
+    context = {
+        'user': User.objects.get(pk=request.user.id),
+        'form': AddReviewerForm()
+    }
+    return render(request, "user_app/crud/choose_role.html", context=context)
 
 
 # @login_required(login_url='login')
@@ -146,9 +163,11 @@ def logout_user(request):
 def dashboard(request):
     user = request.user
     author = Author.objects.get(user=user)
-    articles = Article.objects.filter(author=author).filter(Q(article_status_id=1) | Q(article_status_id=7)).order_by('created_at')
+    myqueues = Article.objects.filter(author=author).filter(Q(article_status_id=1) | Q(article_status_id=7)).order_by('created_at')
+    myarchives = Article.objects.filter(author=author).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by('created_at')
     context = {
-        'articles': articles,
+        'myqueues': myqueues,
+        'myarchives': myarchives,
     }
     return render(request, "user_app/user_dashboard.html", context=context)
 

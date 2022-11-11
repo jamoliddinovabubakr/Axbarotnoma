@@ -95,6 +95,30 @@ class UpdateUserForm(UserChangeForm):
             }),
         }
 
+
+class AddReviewerForm(forms.ModelForm):
+    class Meta:
+        model = Reviewer
+        fields = ['user', 'mfile', 'section']
+
+        widgets = {
+            'section': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'text',
+                'id': 'masked-input-phone',
+                'placeholder': '(99) 999-99-99',
+                'data - parsley - group': "step-1",
+            }),
+            'mfile': TextInput(attrs={
+                'class': 'form-control',
+                'type': 'email',
+                'data-parsley-type': "email",
+                'placeholder': 'someone@example.com',
+                'data - parsley - group': "step-1",
+                'data - parsley - required': "true",
+            }),
+        }
+
 # class CreateMenuForm(forms.ModelForm):
 #     class Meta:
 #         model = Menu
