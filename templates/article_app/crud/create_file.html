@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load static %}
-<form method="post" action="{% url 'create_article_file' article.id %}" enctype="multipart/form-data">
+<form class="form-control-file" data-parsley-validate="true" method="post" id="create_articleFile_form" action="{% url 'create_article_file' article.id %}"
+      enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
     <div class="modal fade" id="addUser">
@@ -18,13 +19,34 @@
                         <label class="col-md-3 col-sm-3 col-form-label">{% trans "File" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
-                            {{ form.file }}
+                            <div class="input-group">
+                                <div class="input-group-prepend"></div>
+                                <input type="file" name="file" id="id_file" class="form-control" required="true"
+                                       accept=".docx, .doc"/>
+                                {% if message %}
+                                <div class="invalid-feedback">Form is invalid!</div>
+                                    {% else %}
+                                <div class="valid-feedback">File is ready for upload!</div>
+                                {% endif %}
+                            </div>
+                            <div id="spinner" style="display: none;">
+                                <div class="f_circleG" id="frotateG_01"></div>
+                                <div class="f_circleG" id="frotateG_02"></div>
+                                <div class="f_circleG" id="frotateG_03"></div>
+                                <div class="f_circleG" id="frotateG_04"></div>
+                                <div class="f_circleG" id="frotateG_05"></div>
+                                <div class="f_circleG" id="frotateG_06"></div>
+                                <div class="f_circleG" id="frotateG_07"></div>
+                                <div class="f_circleG" id="frotateG_08"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
-                    <button type="submit" class="btn btn-primary" id="my_article">{% trans "Saqlash" %}</button>
+                    <a class="close btn btn-outline-info" id="createArticleFile_modal"
+                       data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary"
+                            id="btn_createFile">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </div>
@@ -32,5 +54,37 @@
 </form>
 <div id="emailModal" class="modal fade" role="dialog">
 </div>
+<script type="text/javascript">
+    $(document).ajaxStart(function () {
+        $('#spinner').show();
+        console.log("ajax start")
+    });
+
+    $(document).ajaxStop(function () {
+        $('#spinner').hide();
+    });
+    $(document).ready(function () {
+        $('#id_file').on('change', function () {
+            $('#id_file').addClass("is-valid");
+        });
+    });
+    $(document).on('submit', '#create_articleFile_form', function () {
+        let form_data = new FormData($(this)[0]);
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'create_article_file' article.id %}",
+            processData: false,
+            data: form_data,
+            success: function (response) {
+                alert(response['message']);
+                form_data.reset();
+                console.log(response);
+            },
+            error: function (response) {
+             console.log(response);
+            }
+        });
+    });
+</script>
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

@@ -29,14 +29,15 @@ class CreateArticleFileForm(forms.ModelForm):
         model = ArticleFile
         fields = ['article', 'file']
 
-        widgets = {
-            'file': FileInput(attrs={
-                'id': 'id_file',
-                'type': 'file',
-                'class': 'form-control',
-                'accept': ".docx, .doc"
-            }),
-        }
+        # widgets = {
+        #     'file': FileInput(attrs={
+        #         'class': 'form-control',
+        #         'type': 'file',
+        #         'name': 'file',
+        #         'accept': ".docx, .doc",
+        #         'data - parsley - required': "true",
+        #     }),
+        # }
 
 
 class UpdateArticleForm(forms.ModelForm):

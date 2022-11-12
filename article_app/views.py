@@ -112,7 +112,6 @@ def update_article(request, pk):
 
 def create_article_file(request, pk):
     article = Article.objects.get(pk=pk)
-    form = CreateArticleFileForm()
     if request.method == "POST":
         form = CreateArticleFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -120,12 +119,21 @@ def create_article_file(request, pk):
             file.save()
             article.file = file
             article.save()
-            return redirect('update_article', pk)
+            data = {
+                'result': 'success',
+                'message': 'Created File Successfully!.'
+            }
+            return redirect('update_article', article.id)
         else:
-            return HttpResponse('Not valid form!')
+            context = {
+                'form': UpdateArticleForm(instance=article),
+                'article': article,
+                'message': "Form invalid!",
+            }
+            return render(request, "article_app/crud/update_article.html", context=context)
     else:
         context = {
-            'form': form,
+            'form': CreateArticleFileForm(),
             'article': article,
         }
         return render(request, "article_app/crud/create_file.html", context=context)
@@ -178,7 +186,7 @@ def delete_article(request, pk):
 def get_article_authors(request, pk):
     authors = Author.objects.filter(article__id=pk)
     return JsonResponse({"authors": list(authors.values(
-        'id', 'article', 'first_name', 'last_name', 'middle_name', 'email', 'work_place', 'author_order'
+        'id', 'article'
     ))})
 
 

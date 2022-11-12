@@ -16,7 +16,7 @@
                             <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form.media }}
-                                <p style="color: red;">{% trans "1-qadam. Mualliflarni kiriting" %}</p>
+                                <p>{% trans "1-qadam. Mualliflarni kiriting" %}</p>
                                 <button href="{% url 'add_author' article.id %}" data-toggle="modal"
                                         class="addUser btn btn-success btn-sm"><i
                                         class="fa fa-plus mr-1"></i>{% trans "Add Author" %}
@@ -43,19 +43,24 @@
                                     </table>
                                 </div>
                                 <br>
-                                <p style="color: red;">{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
+                                <p>{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
                                 <div style="padding-left:10%; padding-right: 5%;">
                                     <div class="row">
-                                         <div class="col-md-12">
+                                        <div class="col-md-12">
                                             <div class="form-group row m-b-15">
                                                 <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
                                                     <span
                                                             class="text-danger">*</span></label>
                                                 <div class="col-md-10 col-sm-10">
-                                                    <button href="{% url 'create_article_file' article.id %}" data-toggle="modal"
-                                                            class="addUser btn btn-outline-secondary" style="width: 300px"><i
+                                                    <button href="{% url 'create_article_file' article.id %}"
+                                                            data-toggle="modal"
+                                                            class="addUser btn btn-outline-secondary"
+                                                            style="width: 300px"><i
                                                             class="fa fa-file-word mr-1"></i>{% trans " File" %}
                                                     </button>
+                                                    {% if message %}
+                                                        <span class="text-danger">Faqat .doc yoki .docx fayl yuklay olasiz!</span>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
@@ -146,13 +151,6 @@
         </div>
     </div>
     <script type="text/javascript">
-        {#let file_name = '{{ file_name }}';#}
-        {#document.getElementById('id_file').onchange = function () {#}
-        {#    document.getElementById('submitButtonId').disabled = false;#}
-
-        {#if (file_name != '') {#}
-        {#    document.getElementById('submitButtonId').disabled = false;#}
-
         $(document).ready(function () {
             setInterval(function () {
                 $.ajax({
@@ -184,7 +182,7 @@
                         console.log(response);
                     }
                 });
-            }, 1500);
+            }, 150000);
         });
     </script>
 {% endblock %}
