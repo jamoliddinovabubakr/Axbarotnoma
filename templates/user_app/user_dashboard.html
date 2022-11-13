@@ -185,7 +185,7 @@
                         <th><b>{% trans "File" %}</b></th>
                         <th><b>{% trans "Title" %}</b></th>
                         <th><b>{% trans "created_at" %}</b></th>
-                        <th width="1%"><b>{% trans "Actions" %}</b></th>
+                        <th><b>{% trans "Action" %}</b></th>
                     </tr>
                     </thead>
                     <tbody id="articleDetail">
@@ -216,7 +216,9 @@
                          response['id'] + "</td><td>" + FileArticle
                          + `</td><td>` +
                         response['title'] + `</td><td>` +
-                        response['created_at']
+                        response['created_at'] + `</td><td>` +
+                        `<a class="userModal btn btn-sm btn-outline-warning" href="/article/edit/${response['id']}/">Edit</a>` + " " +
+                        `<a class="userModal btn btn-sm btn-outline-danger"  href="/article/delete/${response['id']}/">Delete</a>`
                         + "</td></tr>";
                     $("#articleDetail").append(temp);
                 },
@@ -230,4 +232,5 @@
         }
     </script>
 {% endblock %}
-<a href="{{ notification.article.file.url }}" download role="button"><span>{% trans "Yuklab olish" %}</span></a>
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

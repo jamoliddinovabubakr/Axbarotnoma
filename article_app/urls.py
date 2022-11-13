@@ -24,6 +24,7 @@ urlpatterns = [
     path('article/delete/<int:pk>/', delete_article, name='delete_article'),
     path('article/file/create/<int:pk>/', create_article_file, name='create_article_file'),
 
+    path('search/author/', search_author, name='search_author'),
     path('authors/<int:pk>', get_article_authors, name='get_article_authors'),
     path('add_author/<int:pk>', add_author, name='add_author'),
     path('author/edit/<int:pk>/', edit_author, name='edit_author'),

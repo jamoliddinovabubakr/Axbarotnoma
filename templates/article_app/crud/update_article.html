@@ -12,11 +12,35 @@
                 <div class="panel panel-default forshadow">
                     <div class="panel-body">
                         <div class="container">
+                         <p>{% trans "1-qadam. Mualliflarni kiriting" %}</p>
                             <br>
+                            <form class="search_author_form" method="get" action="{% url 'search_author' %}">
+                                <label for="author_email">Add author by email searching</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input type="email" class="form-control" id="author_email" style="color: black;"
+                                                                                 name="author_email"
+                                                                                 placeholder=" Email" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-success btn-md" type="submit"> Search
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text" id="author_email_exists"></span>
+                                        <br>
+                                        <div id="add_author_div"></div>
+                                    </div>
+                                </div>
+                                <br>
+
+                            </form>
+                        <hr>
+                        <label for="author_email">Create new author</label>
+                        <label for="author_email">Add author by email searching</label>
                             <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form.media }}
-                                <p>{% trans "1-qadam. Mualliflarni kiriting" %}</p>
                                 <button href="{% url 'add_author' article.id %}" data-toggle="modal"
                                         class="addUser btn btn-success btn-sm"><i
                                         class="fa fa-plus mr-1"></i>{% trans "Add Author" %}
@@ -42,7 +66,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <br>
+                                <hr>
                                 <p>{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
                                 <div style="padding-left:10%; padding-right: 5%;">
                                     <div class="row">
@@ -152,6 +176,41 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
+            const $SearchAuthorForm = $('.search_author_form');
+            $SearchAuthorForm.submit(function (event) {
+                event.preventDefault();
+                const $SearchAuthorFormData = $SearchAuthorForm.serialize();
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'search_author' %}",
+                    data: $SearchAuthorFormData,
+                    success: handleSuccess,
+                    error: handleError,
+                });
+
+                function handleSuccess(response) {
+                    $SearchAuthorForm[0].reset();
+                    console.log(response);
+                    if (response['is_have_author'] == 1) {
+                        $('#author_email_exists').css('color', 'green');
+                        $('#author_email_exists').text(response.email + " is exists!.");
+                        $('#add_author_div').html(`<a href="#" class="btn btn-info btn-sm" id="add_author_by_email">Add Author</a>`);
+                    } else {
+                        $('#author_email_exists').css('color', 'red');
+                        $('#author_email_exists').text("Bu author tizimda yo'q");
+                        $('#add_author_by_email').css("display", "none");
+                    }
+                }
+
+                function handleError(ThrowError) {
+                    console.log('error');
+                    console.log(ThrowError);
+                }
+            });
+
+        });
+
+        $(document).ready(function () {
             setInterval(function () {
                 $.ajax({
                     type: "GET",
@@ -182,7 +241,8 @@
                         console.log(response);
                     }
                 });
-            }, 150000);
+            }, 1500);
+
         });
     </script>
 {% endblock %}

@@ -6,7 +6,7 @@ from article_app.models import *
 class CreateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['section', 'title', 'author']
+        fields = ['section', 'title']
 
         widgets = {
             'section': Select(attrs={

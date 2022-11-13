@@ -1,16 +1,18 @@
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Model
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils import translation
+from django.views.decorators.csrf import requires_csrf_token
 
 from user_app.decorators import allowed_users
 from article_app.models import *
 from user_app.models import Author
 from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm
 from django.core.paginator import Paginator
+from user_app.models import User
 
 
 def main_page(request):
@@ -34,8 +36,8 @@ def post_detail(request, slug):
 def my_articles(request):
     user = request.user
     get_my_articles = Article.objects.filter(author=user).filter(
-            Q(state__id=2) | Q(state__id=3)
-        )
+        Q(state__id=2) | Q(state__id=3)
+    )
     paginator = Paginator(get_my_articles, 10)
     page_num = request.GET.get('page')
     page = paginator.get_page(page_num)
@@ -60,15 +62,12 @@ def create_article(request):
         form = CreateArticleForm(request.POST)
         if form.is_valid():
             article = form.save(commit=False)
-            article.article_status_id = 7
+            article.article_status_id = 6
             article.save()
-            return redirect('update_article', pk=article.id)
+            article.authors.add(author)
+            return redirect('update_article', article.id)
         else:
-            context = {
-                'form': CreateArticleForm(),
-                'author': author,
-            }
-            return render(request, "article_app/crud/create_article.html", context=context)
+            return HttpResponse("Form is invalid!")
     else:
         context = {
             'form': CreateArticleForm(),
@@ -116,6 +115,11 @@ def create_article_file(request, pk):
         form = CreateArticleFileForm(request.POST, request.FILES)
         if form.is_valid():
             file = form.save(commit=False)
+            files = ArticleFile.objects.filter(article_id=pk)
+            if files.count() > 0:
+                for f in files:
+                    f.file_status = 0
+                    f.save()
             file.save()
             article.file = file
             article.save()
@@ -158,7 +162,7 @@ def article_view(request, pk):
         "references": article.references,
         "article_status": article.article_status.name,
         "is_publish": article.is_publish,
-        "created_at": article.created_at,
+        "created_at": article.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
         "updated_at": article.updated_at,
     }
     return JsonResponse(data=data)
@@ -166,25 +170,32 @@ def article_view(request, pk):
 
 @login_required(login_url='login')
 def delete_article(request, pk):
-    resent_article = get_object_or_404(Submission, pk=pk)
-    article = resent_article.article
-    articles = Submission.objects.filter(article=article)
-    article_count = articles.count()
-
+    article = get_object_or_404(Article, pk=pk)
     if request.method == "POST":
-        notif = Notification.objects.get(my_resend__pk=resent_article.pk)
-        if article_count == 1:
-            article.delete()
-        resent_article.delete()
-        notif.delete()
-        return redirect('sending_article_form')
+        article.delete()
+        return redirect('dashboard')
     else:
-        return render(request, 'article_app/crud/delete_myarticle.html',
-                      {'article': article, 'resent_article': resent_article})
+        return render(request, 'article_app/crud/delete_article.html', {'article': article})
+
+
+def search_author(request):
+    q = request.GET.get('author_email', None)
+    is_have_author = User.objects.filter(email=q).exists()
+
+    if is_have_author:
+        data = {
+            'is_have_author': 1, 'email': q
+        }
+    else:
+        data = {
+            'is_have_author': 0, 'email': q
+        }
+    return JsonResponse(data)
 
 
 def get_article_authors(request, pk):
-    authors = Author.objects.filter(article__id=pk)
+    article = Article.objects.get(pk=pk)
+    authors = Author.objects.filter(pk=article.author.id)
     return JsonResponse({"authors": list(authors.values(
         'id', 'article'
     ))})
@@ -192,28 +203,29 @@ def get_article_authors(request, pk):
 
 @login_required(login_url='login')
 def add_author(request, pk):
-    # user = request.user
-    # article = Article.objects.get(pk=pk)
-    # if request.user.id != article.author.id:
-    #     return render(request, 'user_app/not_access.html')
-    # last_resent = Submission.objects.filter(article=article).last()
-    #
-    # if request.method == 'POST':
-    #     form = AddAuthorForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(request, "Mualliflar muvaffaqiyatli yaratildi!")
-    #         data = {
-    #             'message': 'form is saved'
-    #         }
-    #         return JsonResponse(data)
-    # else:
-        context = {
-            # 'form': AddAuthorForm(),
-            # 'user': user,
-            # 'article': article,
-        }
-        return render(request, "article_app/crud/add_authors.html", context=context)
+    user = request.user
+    article = Article.objects.get(pk=pk)
+    if request.user.id != article.author.id:
+        return render(request, 'user_app/not_access.html')
+    last_resent = Submission.objects.filter(article=article).last()
+
+    if request.method == 'POST':
+        form = AddAuthorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Mualliflar muvaffaqiyatli yaratildi!")
+            data = {
+                'message': 'form is saved'
+            }
+            return JsonResponse(data)
+    else:
+        pass
+    context = {
+        'form': AddAuthorForm(),
+        'user': user,
+        'article': article,
+    }
+    return render(request, "article_app/crud/add_authors.html", context=context)
 
 
 @login_required(login_url='login')
@@ -234,11 +246,11 @@ def edit_author(request, pk):
     #         return redirect('profile')
     # else:
     #     form = AddAuthorForm(instance=author)
-        context = {
-            # 'form': form,
-            # 'author': author,
-        }
-        return render(request, "article_app/crud/edit_author.html", context=context)
+    context = {
+        # 'form': form,
+        # 'author': author,
+    }
+    return render(request, "article_app/crud/edit_author.html", context=context)
 
 
 @login_required(login_url='login')
@@ -274,10 +286,10 @@ def create_section(request):
     #         category.save()
     #         return redirect('get_category')
     # else:
-        context = {
-            # 'form': CreateCategoryForm(),
-        }
-        return render(request, "article_app/crud/add_category.html", context=context)
+    context = {
+        # 'form': CreateCategoryForm(),
+    }
+    return render(request, "article_app/crud/add_category.html", context=context)
 
 
 @login_required(login_url='login')
@@ -291,11 +303,11 @@ def edit_category(request, pk):
     #         category.save()
     #         return redirect('get_category')
     # else:
-        context = {
-            # 'form': CreateCategoryForm(instance=category),
-            # 'category': category,
-        }
-        return render(request, "article_app/crud/edit_category.html", context=context)
+    context = {
+        # 'form': CreateCategoryForm(instance=category),
+        # 'category': category,
+    }
+    return render(request, "article_app/crud/edit_category.html", context=context)
 
 
 @login_required(login_url='login')
@@ -320,11 +332,11 @@ def create_magazine(request):
     #         magazine.save()
     #         return redirect('edit_magazine', pk=magazine.id)
     # else:
-        context = {
-            # 'form': CreateMagazineForm(),
-            # 'user': user,
-        }
-        return render(request, "article_app/crud/create_magazine.html", context=context)
+    context = {
+        # 'form': CreateMagazineForm(),
+        # 'user': user,
+    }
+    return render(request, "article_app/crud/create_magazine.html", context=context)
 
 
 @login_required(login_url='login')
@@ -338,11 +350,11 @@ def edit_magazine(request, pk):
     #
     #         return redirect('get_magazines')
     # else:
-        context = {
-            # 'form': UpdateMagazineForm(instance=jurnal),
-            # 'jurnal': jurnal,
-        }
-        return render(request, "article_app/crud/edit_magazine.html", context=context)
+    context = {
+        # 'form': UpdateMagazineForm(instance=jurnal),
+        # 'jurnal': jurnal,
+    }
+    return render(request, "article_app/crud/edit_magazine.html", context=context)
 
 
 @login_required(login_url='login')
