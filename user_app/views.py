@@ -163,10 +163,8 @@ def logout_user(request):
 def dashboard(request):
     user = request.user
     author = Author.objects.get(user=user)
-    myqueues = Article.objects.filter(author=author).filter(Q(article_status_id=1) | Q(article_status_id=6))\
-        .order_by('-created_at')
-    myarchives = Article.objects.filter(author=author).filter(Q(article_status_id=2) | Q(article_status_id=3))\
-        .order_by('-created_at')
+    myqueues = Article.objects.filter(authors=author).filter(Q(article_status_id=1) | Q(article_status_id=6)).order_by('-created_at')
+    myarchives = Article.objects.filter(authors=author).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by('-created_at')
 
     context = {
         'myqueues': myqueues,

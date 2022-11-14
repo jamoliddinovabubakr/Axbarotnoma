@@ -1,7 +1,7 @@
 from psycopg2 import connect, Error
 
 user = "postgres"
-password = "4144"
+password = "6868"
 host = "localhost"
 port = "5432"
 database = "article_db"

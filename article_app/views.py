@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
 from django.db.models import Q, Model
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -114,27 +115,27 @@ def create_article_file(request, pk):
     if request.method == "POST":
         form = CreateArticleFileForm(request.POST, request.FILES)
         if form.is_valid():
-            file = form.save(commit=False)
             files = ArticleFile.objects.filter(article_id=pk)
             if files.count() > 0:
                 for f in files:
                     f.file_status = 0
                     f.save()
-            file.save()
-            article.file = file
+
+            new_file = form.save(commit=False)
+            new_file.save()
+            article.file = new_file
             article.save()
             data = {
-                'result': 'success',
-                'message': 'Created File Successfully!.'
+                'result': True,
+                'message': 'Success!'
             }
-            return redirect('update_article', article.id)
+            return JsonResponse(data=data)
         else:
-            context = {
-                'form': UpdateArticleForm(instance=article),
-                'article': article,
-                'message': "Form invalid!",
+            data = {
+                'result': True,
+                'message': "Invalid!"
             }
-            return render(request, "article_app/crud/update_article.html", context=context)
+            return JsonResponse(data=data)
     else:
         context = {
             'form': CreateArticleFileForm(),
@@ -147,13 +148,14 @@ def create_article_file(request, pk):
 def article_view(request, pk):
     article = get_object_or_404(Article, pk=pk)
     document = None
+    author = article.authors.first()
     if article.file is not None:
-        ob = ArticleFile.objects.filter(article_id=article.id).filter(file_status=1).last()
+        ob = ArticleFile.objects.filter(article_id=article.id).filter(file_status=1).first()
         document = ob.file.url
 
     data = {
         "id": article.id,
-        "author": article.author.user.full_name,
+        "author": author.user.full_name,
         "section": article.section.name,
         "file": f"{document}",
         "title": article.title,
@@ -195,7 +197,7 @@ def search_author(request):
 
 def get_article_authors(request, pk):
     article = Article.objects.get(pk=pk)
-    authors = Author.objects.filter(pk=article.author.id)
+    authors = Author.objects.filter(pk=1)
     return JsonResponse({"authors": list(authors.values(
         'id', 'article'
     ))})

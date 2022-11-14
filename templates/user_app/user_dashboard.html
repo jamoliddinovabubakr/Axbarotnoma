@@ -102,9 +102,10 @@
                                     {% for article in myqueues %}
                                         <tr>
                                             <td>{{ article.id }}</td>
-                                            <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
+                                            <td><b>{{ article.authors.first.user.full_name }}</b><br>{{ article.title }}
+                                            </td>
                                             <td>
-                                                {% if article.article_status_id == 7 %}
+                                                {% if article.article_status_id == 6 %}
                                                     <button class="btn btn-outline-danger btn-sm"
                                                             style="margin: 10px; border-radius: 20px; float: right"><i
                                                             class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
@@ -149,7 +150,8 @@
                                     {% for article in myarchives %}
                                         <tr>
                                             <td>{{ article.id }}</td>
-                                            <td><b>{{ article.author.user.full_name }}</b><br>{{ article.title }}</td>
+                                            <td><b>{{ article.authors.first.user.full_name }}</b><br>{{ article.title }}
+                                            </td>
                                             <td>
                                                 <button class="btn btn-danger btn-sm"
                                                         style="margin: 10px; border-radius: 20px; float: right"><i
@@ -195,6 +197,7 @@
             </div>
             <div class="col-md-2"></div>
         </div>
+
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>
@@ -209,12 +212,12 @@
                     console.log(response);
                     let fileID = response['file'];
                     let FileArticle = "File Not Exists";
-                    if (fileID != "None"){
-                        FileArticle = `<a href='${response['file']}' download role='button'>`+ `<span>Yuklab olish</span></a>`
+                    if (fileID != "None") {
+                        FileArticle = `<a href='${response['file']}' download role='button'>` + `<span>Yuklab olish</span></a>`
                     }
                     let temp = "<tr><td>" +
-                         response['id'] + "</td><td>" + FileArticle
-                         + `</td><td>` +
+                        response['id'] + "</td><td>" + FileArticle
+                        + `</td><td>` +
                         response['title'] + `</td><td>` +
                         response['created_at'] + `</td><td>` +
                         `<a class="userModal btn btn-sm btn-outline-warning" href="/article/edit/${response['id']}/">Edit</a>` + " " +
@@ -227,6 +230,7 @@
                 }
             });
         }
+
         function OnClickSubmissionTab() {
             $('#articleView').css("display", "none");
         }

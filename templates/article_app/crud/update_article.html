@@ -78,7 +78,7 @@
                                                 <div class="col-md-10 col-sm-10">
                                                     <button href="{% url 'create_article_file' article.id %}"
                                                             data-toggle="modal"
-                                                            class="addUser btn btn-outline-secondary"
+                                                            class="addUser btn btn-info"
                                                             style="width: 300px"><i
                                                             class="fa fa-file-word mr-1"></i>{% trans " File" %}
                                                     </button>
@@ -188,7 +188,7 @@
                     error: handleError,
                 });
 
-                function handleSuccess(response) {
+                function handleSuccess(response){
                     $SearchAuthorForm[0].reset();
                     console.log(response);
                     if (response['is_have_author'] == 1) {
@@ -241,7 +241,7 @@
                         console.log(response);
                     }
                 });
-            }, 1500);
+            }, 150000);
 
         });
     </script>

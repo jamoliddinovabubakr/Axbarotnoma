@@ -27,17 +27,29 @@ class CreateArticleForm(forms.ModelForm):
 class CreateArticleFileForm(forms.ModelForm):
     class Meta:
         model = ArticleFile
-        fields = ['article', 'file']
+        fields = ['file', 'article']
+        labels = {
+            'file': 'Writer',
+        }
+        help_texts = {
+            'file': 'Word yuklang!',
+        }
+        error_messages = {
+            'file': {
+                'max_length': "This writer's name is too long.",
+            },
+        }
 
-        # widgets = {
-        #     'file': FileInput(attrs={
-        #         'class': 'form-control',
-        #         'type': 'file',
-        #         'name': 'file',
-        #         'accept': ".docx, .doc",
-        #         'data - parsley - required': "true",
-        #     }),
-        # }
+        widgets = {
+            'file': FileInput(attrs={
+                'class': 'form-control',
+                'type': 'file',
+                'name': 'file',
+                'id': 'id_file',
+                'accept': ".docx, .doc",
+                'data - parsley - required': "true",
+            }),
+        }
 
 
 class UpdateArticleForm(forms.ModelForm):
