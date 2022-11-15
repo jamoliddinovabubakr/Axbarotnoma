@@ -65,15 +65,15 @@ def create_article(request):
             article.author = user
             article.article_status_id = 6
             article.save()
-            if article.author.work:
-                ExtraAuthor.objects.create(
-                    article=article,
-                    lname=article.author.last_name,
-                    fname=article.author.first_name,
-                    mname=article.author.middle_name,
-                    email=article.author.email,
-                    work=article.author.work,
-                )
+            # if article.author.work:
+            ExtraAuthor.objects.create(
+                article=article,
+                lname=article.author.last_name,
+                fname=article.author.first_name,
+                mname=article.author.middle_name,
+                email=article.author.email,
+                work=article.author.work,
+            )
             return redirect('update_article', article.id)
         else:
             return HttpResponse("Form is invalid!")
@@ -221,7 +221,7 @@ def add_author(request, pk):
     if request.method == 'POST':
         form = AddAuthorForm(request.POST)
         if form.is_valid():
-            if ExtraAuthor.objects.filter(article_id=pk).count() < 5:
+            if ExtraAuthor.objects.filter(article_id=pk).count() > 4:
                 data = {'result': "limit_author", 'message': 'Mualliflarni qoshish limiti 4 ta!'}
                 return JsonResponse(data)
             form.save()

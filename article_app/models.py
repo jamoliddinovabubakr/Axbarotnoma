@@ -37,7 +37,7 @@ def user_directory_path(instance, filename):
 class Article(models.Model):
     section = models.ForeignKey('article_app.Section', verbose_name="Section", related_name="article_section",
                                 on_delete=models.CASCADE, blank=True)
-    author = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="article_authors", blank=True)
+    author = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="article_author", blank=True)
     file = models.ForeignKey('article_app.ArticleFile', related_name="article_file", blank=True,
                              on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=255, blank=True)
@@ -91,7 +91,7 @@ class ExtraAuthor(models.Model):
     fname = models.CharField(max_length=50, blank=True)
     mname = models.CharField(max_length=50, blank=True)
     email = models.EmailField(blank=True)
-    work = models.CharField(max_length=255, blank=True)
+    work = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.fname
