@@ -12,83 +12,24 @@
                 <div class="panel panel-default forshadow">
                     <div class="panel-body">
                         <div class="container">
-                         <p>{% trans "1-qadam. Mualliflarni kiriting" %}</p>
-                            <br>
-                            <form class="search_author_form" method="get" action="{% url 'search_author' %}">
-                                <label for="author_email">Add author by email searching</label>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input type="email" class="form-control" id="author_email" style="color: black;"
-                                                                                 name="author_email"
-                                                                                 placeholder=" Email" required>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-success btn-md" type="submit"> Search
-                                        </button>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <span class="text" id="author_email_exists"></span>
-                                        <br>
-                                        <div id="add_author_div"></div>
-                                    </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    {% if handle_error == 1 %}
+                                        <h2 class="text-danger text-center">Formani to'liq to'ldiring!</h2>
+                                    {% endif %}
                                 </div>
-                                <br>
-
-                            </form>
-                        <hr>
-                        <label for="author_email">Create new author</label>
-                        <label for="author_email">Add author by email searching</label>
-                            <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
+                            </div>
+                            <hr>
+                            <form class="update_article_form" data-parsley-validate="true" method="post">
                                 {% csrf_token %}
                                 {{ form.media }}
-                                <button href="{% url 'add_author' article.id %}" data-toggle="modal"
-                                        class="addUser btn btn-success btn-sm"><i
-                                        class="fa fa-plus mr-1"></i>{% trans "Add Author" %}
-                                </button>
                                 <br>
-                                <br>
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th>Tr</th>
-                                            <th>{% trans "Familiya" %}</th>
-                                            <th>{% trans "Ism" %}</th>
-                                            <th>{% trans "Sharif" %}</th>
-                                            <th>{% trans "Email" %}</th>
-                                            <th>{% trans "Ish joy" %}</th>
-                                            <th>{% trans "Aftor tartibi" %}</th>
-                                            <th width="100">{% trans "Action" %}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="authors_table">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <hr>
-                                <p>{% trans "2-qadam. Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</p>
                                 <div style="padding-left:10%; padding-right: 5%;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="form-group row m-b-15">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    <button href="{% url 'create_article_file' article.id %}"
-                                                            data-toggle="modal"
-                                                            class="addUser btn btn-info"
-                                                            style="width: 300px"><i
-                                                            class="fa fa-file-word mr-1"></i>{% trans " File" %}
-                                                    </button>
-                                                    {% if message %}
-                                                        <span class="text-danger">Faqat .doc yoki .docx fayl yuklay olasiz!</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
+                                            <h5 class="text-center"
+                                                style="color: green">{% trans "Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</h5>
                                             <div class="form-group row m-b-15" style="visibility: hidden;">
                                                 <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %}
                                                     <span
@@ -150,17 +91,60 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 1em">
-                                        <div class="col-md-6 col-sm-6"></div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <button type="submit" style="float: right;" id="submitButtonId"
-                                                    class="btn btn btn-success">{% trans "Saqlash" %}
-                                            </button>
-                                            <a style="float: right; margin-right: 1em" href="{% url 'dashboard' %}"
-                                               class="btn btn-outline-warning">{% trans "Yopish" %}
-                                            </a>
+                                        <div class="col-md-12">
+                                            <div class="form-group row m-b-15">
+                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
+                                                    <span
+                                                            class="text-danger">*</span></label>
+                                                <div class="col-md-10 col-sm-10">
+                                                    <button href="{% url 'create_article_file' article.id %}"
+                                                            data-toggle="modal"
+                                                            class="addUser btn btn-primary btn-sm"><i
+                                                            class="fa fa-file mr-1"></i>{% trans " File" %}
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <br>
+                                <h5 class="text-center"
+                                    style="color: green">{% trans "Maqolaga mualliflarni qo'shish" %}</h5>
+                                <button href="{% url 'add_author' article.id %}" data-toggle="modal"
+                                        class="addUser btn btn-primary btn-sm"><i
+                                        class="fa fa-plus mr-1"></i>{% trans "Add Author" %}
+                                </button>
+                                <br>
+                                <br>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>Tr</th>
+                                            <th>{% trans "Familiya" %}</th>
+                                            <th>{% trans "Ism" %}</th>
+                                            <th>{% trans "Sharif" %}</th>
+                                            <th>{% trans "Email" %}</th>
+                                            <th>{% trans "Ish" %}</th>
+                                            <th width="100">{% trans "Action" %}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="authors_table">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row" style="padding-top: 1em">
+                                    <div class="col-md-6 col-sm-6"></div>
+                                    <div class="col-md-6 col-sm-6">
+                                        <button type="submit" style="float: right;" id="submitButtonId"
+                                                class="btn btn-success"><i
+                                                class="fa fa-paper-plane mr-2"></i>{% trans "Maqolani saqlash va yuborish" %}
+                                        </button>
+                                        <a style="float: right; margin-right: 1em" href="{% url 'dashboard' %}"
+                                           class="btn btn-outline-warning">{% trans "Yopish" %}
+                                        </a>
                                     </div>
                                 </div>
                             </form>
@@ -176,45 +160,10 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            const $SearchAuthorForm = $('.search_author_form');
-            $SearchAuthorForm.submit(function (event) {
-                event.preventDefault();
-                const $SearchAuthorFormData = $SearchAuthorForm.serialize();
-                $.ajax({
-                    type: 'GET',
-                    url: "{% url 'search_author' %}",
-                    data: $SearchAuthorFormData,
-                    success: handleSuccess,
-                    error: handleError,
-                });
-
-                function handleSuccess(response){
-                    $SearchAuthorForm[0].reset();
-                    console.log(response);
-                    if (response['is_have_author'] == 1) {
-                        $('#author_email_exists').css('color', 'green');
-                        $('#author_email_exists').text(response.email + " is exists!.");
-                        $('#add_author_div').html(`<a href="#" class="btn btn-info btn-sm" id="add_author_by_email">Add Author</a>`);
-                    } else {
-                        $('#author_email_exists').css('color', 'red');
-                        $('#author_email_exists').text("Bu author tizimda yo'q");
-                        $('#add_author_by_email').css("display", "none");
-                    }
-                }
-
-                function handleError(ThrowError) {
-                    console.log('error');
-                    console.log(ThrowError);
-                }
-            });
-
-        });
-
-        $(document).ready(function () {
             setInterval(function () {
                 $.ajax({
                     type: "GET",
-                    url: "/authors/{{ article.id }}",
+                    url: "{% url 'get_article_authors' article.id %}",
                     success: function (response) {
                         $("#authors_table").empty();
                         let tr = 0;
@@ -223,15 +172,14 @@
                             let temp =
                                 "<tr>" +
                                 "<td>" + tr + "</td>" +
-                                "<td>" + item.last_name + "</td>" +
-                                "<td>" + item.first_name + "</td>" +
-                                "<td>" + item.middle_name + "</td>" +
+                                "<td>" + item.lname + "</td>" +
+                                "<td>" + item.fname + "</td>" +
+                                "<td>" + item.mname + "</td>" +
                                 "<td>" + item.email + "</td>" +
-                                "<td>" + item.work_place + "</td>" +
-                                "<td>" + item.author_order + "</td>" +
+                                "<td>" + item.work + "</td>" +
                                 "<td class='with-btn' nowrap>" +
-                                `<a class="userModal btn btn-sm btn-outline-primary" href="/author/edit/${item.id}">Edit</a>` + " " +
-                                `<a class="userModal btn btn-sm btn-outline-danger"  href="/author/delete/${item.id}">Delete</a>` +
+                                `<a class="userModal btn btn-sm btn-outline-primary" href="/author/edit/${item.id}/">Edit</a>` + " " +
+                                `<a data-toggle="modal" class="userModal btn btn-sm btn-outline-danger"  href="/author/delete/${item.id}/">Delete</a>` +
                                 "</td>" +
                                 "</tr>";
                             $("#authors_table").append(temp);
@@ -241,10 +189,31 @@
                         console.log(response);
                     }
                 });
-            }, 150000);
+            }, 1500);
 
+        });
+        $(document).ready(function () {
+            $('#update_article_form').submit(function (e) {
+                e.preventDefault();
+                const $form = $(this)
+                let formData = new FormData(this);
+                $.ajax({
+                    url: "{% url 'update_article' article.id %}",
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        console.log(response.message);
+                        $form[0].reset();
+                        swal({
+                            title: response.message,
+                            timer: 2000,
+                        });
+                    },
+                });
+            });
         });
     </script>
 {% endblock %}
-<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
-<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

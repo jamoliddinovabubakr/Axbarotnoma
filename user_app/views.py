@@ -51,9 +51,10 @@ def register_page(request):
             user_group, created = Group.objects.get_or_create(name='Author')
             if not user.groups.filter(name__in=['Author']).exists():
                 user_group.user_set.add(user)
-            Author.objects.create(user=user)
-            rol = Role.objects.get(pk=4)
-            user.role.add(rol)
+            # Author.objects.create(user=user)
+            roles = Role.objects.filter(pk=4)
+            if roles.count() > 0:
+                user.role.add(roles.first())
 
             user = authenticate(request, username=user.username, password=request.POST['password1'])
 
@@ -61,7 +62,6 @@ def register_page(request):
                 login(request, user)
                 return redirect('main_page')
             else:
-                messages.info(request, 'login yoki parol xato')
                 return redirect('register')
         else:
             username = request.POST['username']
@@ -162,9 +162,8 @@ def logout_user(request):
 # @allowed_users(menu_url='profile_page')
 def dashboard(request):
     user = request.user
-    author = Author.objects.get(user=user)
-    myqueues = Article.objects.filter(authors=author).filter(Q(article_status_id=1) | Q(article_status_id=6)).order_by('-created_at')
-    myarchives = Article.objects.filter(authors=author).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by('-created_at')
+    myqueues = Article.objects.filter(author=user).filter(Q(article_status_id=1) | Q(article_status_id=6)).order_by('-created_at')
+    myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by('-created_at')
 
     context = {
         'myqueues': myqueues,

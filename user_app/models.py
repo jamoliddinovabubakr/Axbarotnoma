@@ -46,7 +46,7 @@ class User(AbstractUser):
     work = models.CharField(max_length=255, null=True, blank=True)
     region = models.ForeignKey('user_app.Region', on_delete=models.CASCADE, verbose_name="Region", null=True,
                                   blank=True)
-    role = models.ManyToManyField('user_app.Role', related_name="user_roles", blank=True)
+    roles = models.ManyToManyField('user_app.Role', related_name="user_roles", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -69,16 +69,12 @@ class User(AbstractUser):
     @property
     def get_roles(self):
         roles = []
-        for role in self.role.all():
+        for role in self.roles.all():
             roles.append(role.id)
         return roles
 
     def __str__(self):
         return self.username
-
-
-class Author(models.Model):
-    user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
 
 
 class Editor(models.Model):

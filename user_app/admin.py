@@ -38,11 +38,6 @@ class UserAdmin(ImportExportActionModelAdmin):
                     'phone', 'pser', 'pnum', 'region', 'work', 'get_roles', 'created_at', 'updated_at']
 
 
-@admin.register(Author)
-class AuthorAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'user']
-
-
 @admin.register(Editor)
 class EditorAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'user']

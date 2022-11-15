@@ -1,9 +1,9 @@
 {% load i18n %}
 {% load static %}
-<div class="modal fade" id="userModal">
-    <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_author' author.pk %}">
-            {% csrf_token %}
+<form class="form-control editAuthorForm" data-parsley-validate="true" method="post" action="{% url 'edit_author' author.pk %}">
+    {% csrf_token %}
+    <div class="modal fade" id="userModal">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{% trans "Aftor ma'lumotlarini o'zgartirish" %}</h5>
@@ -23,15 +23,15 @@
                         </tr>
                         <tr>
                             <th class="text-nowrap">{% trans "Familiya" %}</th>
-                            <td class="text-nowrap">{{ form.last_name }}</td>
+                            <td class="text-nowrap">{{ form.lname }}</td>
                         </tr>
                         <tr>
                             <th class="text-nowrap">{% trans "Ism" %}</th>
-                            <td class="text-nowrap">{{ form.first_name }}</td>
+                            <td class="text-nowrap">{{ form.fname }}</td>
                         </tr>
                         <tr>
                             <th class="text-nowrap">{% trans "Otasini ismi" %}</th>
-                            <td class="text-nowrap">{{ form.middle_name }}</td>
+                            <td class="text-nowrap">{{ form.mname }}</td>
                         </tr>
                         <tr>
                             <th class="text-nowrap">{% trans "Email" %}</th>
@@ -39,22 +39,39 @@
                         </tr>
                         <tr>
                             <th class="text-nowrap">{% trans "Ish joy" %}</th>
-                            <td class="text-nowrap">{{ form.work_place }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Aftor tartib" %}</th>
-                            <td class="text-nowrap">{{ form.author_order }}</td>
+                            <td class="text-nowrap">{{ form.work }}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
-                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
+                    <a class="btn btn-white" data-dismiss="modal" id="id_editAuthorModal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary" id="id_editAuthorBtn">{% trans "Saqlash" %}</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-<script src="{% static 'assets/js/demo/form-plugins.demo.js' %}"></script>
-
+</form>
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#editAuthorForm').submit(function (e) {
+            e.preventDefault();
+            const $form = $(this)
+            let formData = new FormData(this);
+            $.ajax({
+                url: "{% url 'edit_author' author.id %}",
+                type: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log(response);
+                    $('#id_editAuthorModal').click();
+                },
+            });
+        });
+    });
+</script>

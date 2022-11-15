@@ -10,8 +10,8 @@ from django.views.decorators.csrf import requires_csrf_token
 
 from user_app.decorators import allowed_users
 from article_app.models import *
-from user_app.models import Author
-from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm
+from article_app.models import ExtraAuthor
+from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm, AddAuthorForm
 from django.core.paginator import Paginator
 from user_app.models import User
 
@@ -57,22 +57,29 @@ def my_articles(request):
 
 @login_required(login_url='login')
 def create_article(request):
-    user = request.user
-    author = Author.objects.get(user=user)
+    user = User.objects.get(pk=request.user.id)
     if request.method == "POST":
         form = CreateArticleForm(request.POST)
         if form.is_valid():
             article = form.save(commit=False)
+            article.author = user
             article.article_status_id = 6
             article.save()
-            article.authors.add(author)
+            if article.author.work:
+                ExtraAuthor.objects.create(
+                    article=article,
+                    lname=article.author.last_name,
+                    fname=article.author.first_name,
+                    mname=article.author.middle_name,
+                    email=article.author.email,
+                    work=article.author.work,
+                )
             return redirect('update_article', article.id)
         else:
             return HttpResponse("Form is invalid!")
     else:
         context = {
             'form': CreateArticleForm(),
-            'author': author,
         }
         return render(request, "article_app/crud/create_article.html", context=context)
 
@@ -80,32 +87,48 @@ def create_article(request):
 @login_required(login_url='login')
 def update_article(request, pk):
     user = request.user
-    article = Article.objects.get(pk=pk)
-    author = Author.objects.get(user=user)
-    if user != author.user:
+    articles = Article.objects.filter(pk=pk)
+    if articles.count() == 0:
+        return render(request, 'user_app/not_access.html')
+    article = articles.first()
+    if user != article.author:
         return render(request, 'user_app/not_access.html')
 
     if request.method == "POST":
-        form = UpdateArticleForm(request.POST, request.FILES, instance=article)
+        form = UpdateArticleForm(request.POST, instance=article)
         if form.is_valid():
-            submit = ArticleStatus.objects.get(pk=1)
-            ob = form.save(commit=False)
-            ob.article_status = submit
-            ob.save()
+            abstrk = str(request.POST.get('abstract')).replace('<p>', '').replace('</p>', '')
+            keywords = str(request.POST.get('keywords')).replace('<p>', '').replace('</p>', '')
+            references = str(request.POST.get('references')).replace('<p>', '').replace('</p>', '')
+
+            if len(abstrk) == 0 or len(keywords) == 0 or len(references) == 0:
+                context = {
+                    'form': UpdateArticleForm(instance=article),
+                    'article': article,
+                    'handle_error': 1,
+                }
+                return render(request, "article_app/crud/update_article.html", context=context)
+
+            objects = ArticleStatus.objects.filter(pk=1)
+            if objects.count() == 1:
+                submit = objects.first()
+                ob = form.save(commit=False)
+                ob.article_status = submit
+                ob.save()
+            else:
+                return JsonResponse(f"id=1 ArticleStatus mavjud emas!")
 
             return redirect('dashboard')
         else:
-            context = {
-                'form': UpdateArticleForm(instance=article),
-                'article': article,
-                'handle_error': 1,
+            data = {
+                'result': 0,
+                'message': "Formani to'liq to'ldiring!",
             }
-            return render(request, "article_app/crud/update_article.html", context=context)
+            return JsonResponse(data=data)
     else:
         context = {
             'form': UpdateArticleForm(instance=article),
             'article': article,
-            'handle_error': 0,
         }
         return render(request, "article_app/crud/update_article.html", context=context)
 
@@ -114,7 +137,8 @@ def create_article_file(request, pk):
     article = Article.objects.get(pk=pk)
     if request.method == "POST":
         form = CreateArticleFileForm(request.POST, request.FILES)
-        if form.is_valid():
+        get_file = request.FILES.get('file', None)
+        if form.is_valid() and get_file is not None:
             files = ArticleFile.objects.filter(article_id=pk)
             if files.count() > 0:
                 for f in files:
@@ -148,14 +172,14 @@ def create_article_file(request, pk):
 def article_view(request, pk):
     article = get_object_or_404(Article, pk=pk)
     document = None
-    author = article.authors.first()
+    author = article.author
     if article.file is not None:
         ob = ArticleFile.objects.filter(article_id=article.id).filter(file_status=1).first()
         document = ob.file.url
 
     data = {
         "id": article.id,
-        "author": author.user.full_name,
+        "author": author.full_name,
         "section": article.section.name,
         "file": f"{document}",
         "title": article.title,
@@ -180,26 +204,10 @@ def delete_article(request, pk):
         return render(request, 'article_app/crud/delete_article.html', {'article': article})
 
 
-def search_author(request):
-    q = request.GET.get('author_email', None)
-    is_have_author = User.objects.filter(email=q).exists()
-
-    if is_have_author:
-        data = {
-            'is_have_author': 1, 'email': q
-        }
-    else:
-        data = {
-            'is_have_author': 0, 'email': q
-        }
-    return JsonResponse(data)
-
-
 def get_article_authors(request, pk):
-    article = Article.objects.get(pk=pk)
-    authors = Author.objects.filter(pk=1)
+    authors = ExtraAuthor.objects.filter(article_id=pk).order_by('id')
     return JsonResponse({"authors": list(authors.values(
-        'id', 'article'
+        'id', 'lname', 'fname', 'mname', 'email', 'work'
     ))})
 
 
@@ -207,21 +215,24 @@ def get_article_authors(request, pk):
 def add_author(request, pk):
     user = request.user
     article = Article.objects.get(pk=pk)
-    if request.user.id != article.author.id:
+    if user.id != article.author.id:
         return render(request, 'user_app/not_access.html')
-    last_resent = Submission.objects.filter(article=article).last()
 
     if request.method == 'POST':
         form = AddAuthorForm(request.POST)
         if form.is_valid():
+            if ExtraAuthor.objects.filter(article_id=pk).count() < 5:
+                data = {'result': "limit_author", 'message': 'Mualliflarni qoshish limiti 4 ta!'}
+                return JsonResponse(data)
             form.save()
-            messages.success(request, "Mualliflar muvaffaqiyatli yaratildi!")
             data = {
-                'message': 'form is saved'
+                'result': True,
+                'message': 'Mualliflar muvaffaqiyatli yaratildi!'
             }
             return JsonResponse(data)
-    else:
-        pass
+        else:
+            data = {'result': False, 'message': 'Mualliflar muvaffaqiyatli yaratildi!'}
+            return JsonResponse(data)
     context = {
         'form': AddAuthorForm(),
         'user': user,
@@ -232,25 +243,24 @@ def add_author(request, pk):
 
 @login_required(login_url='login')
 def edit_author(request, pk):
-    # author = Author.objects.get(pk=pk)
-    # article = author.article
-    # if request.user.id != article.author.id:
-    #     return render(request, 'user_app/not_access.html')
-    # last_resent = Submission.objects.filter(article=article).last()
-    # if request.method == "POST":
-    #     form = AddAuthorForm(request.POST, instance=author)
-    #     if form.is_valid():
-    #         form.save()
-    #         if article.state is None:
-    #             return redirect('update_my_article', pk=article.pk)
-    #         return redirect('update_resend_article', pk=last_resent.pk)
-    #     else:
-    #         return redirect('profile')
-    # else:
-    #     form = AddAuthorForm(instance=author)
+    author = ExtraAuthor.objects.get(pk=pk)
+    article = author.article
+
+    if request.user.id != article.author.id:
+        return render(request, 'user_app/not_access.html')
+
+    if request.method == "POST":
+        form = AddAuthorForm(request.POST, instance=author)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"message": "Editing author successfully!"})
+        else:
+            return redirect('profile')
+
+    form = AddAuthorForm(instance=author)
     context = {
-        # 'form': form,
-        # 'author': author,
+        'form': form,
+        'author': author,
     }
     return render(request, "article_app/crud/edit_author.html", context=context)
 

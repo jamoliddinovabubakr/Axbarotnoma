@@ -63,87 +63,86 @@ class UpdateArticleForm(forms.ModelForm):
                 'data-live-search': "true",
                 'data - style': "btn-white",
                 'data - parsley - required': "true",
-                'name': 'category',
+                'name': 'section',
+                'id': 'id_section',
             }),
             'title': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
                 'rows': '3',
-                'id': 'title',
+                'name': 'title',
+                'id': 'id_title',
             }),
             'abstract': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
                 'rows': '5',
                 'placeholder': 'Enter...',
-                'id': 'abstract',
+                'name': 'abstract',
+                'id': 'id_abstract',
             }),
             'keywords': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
-                'id': 'keywords',
+                'name': 'keywords',
+                'id': 'id_keywords',
             }),
             'references': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
                 'rows': '5',
                 'placeholder': 'Enter...',
-                'id': 'references',
+                'name': 'references',
+                'id': 'id_references',
 
             }),
         }
 
 
-# class AddAuthorForm(forms.ModelForm):
-#     class Meta:
-#         model = Authors
-#         fields = ['article', 'first_name', 'last_name', 'middle_name', 'email', 'work_place', 'author_order']
-#
-#         widgets = {
-#             'first_name': TextInput(attrs={
-#                 'id': 'author_fname',
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#             'last_name': TextInput(attrs={
-#                 'id': 'author_lname',
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#             'middle_name': TextInput(attrs={
-#                 'id': 'author_mname',
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#             'email': TextInput(attrs={
-#                 'id': 'author_email',
-#                 'class': 'form-control',
-#                 'type': 'email',
-#                 'data-parsley-type': "email",
-#                 'placeholder': 'someone@example.com',
-#                 'data - parsley - required': "true",
-#             }),
-#             'work_place': TextInput(attrs={
-#                 'id': 'author_work_place',
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#             'author_order': TextInput(attrs={
-#                 'id': 'author_author_order',
-#                 'class': 'form-control',
-#                 'type': 'number',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#         }
+class AddAuthorForm(forms.ModelForm):
+    class Meta:
+        model = ExtraAuthor
+        fields = ['article', 'fname', 'lname', 'mname', 'email', 'work']
+
+        widgets = {
+            'fname': TextInput(attrs={
+                'id': 'author_fname',
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'lname': TextInput(attrs={
+                'id': 'author_lname',
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'mname': TextInput(attrs={
+                'id': 'author_mname',
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+            'email': TextInput(attrs={
+                'id': 'author_email',
+                'class': 'form-control',
+                'type': 'email',
+                'data-parsley-type': "email",
+                'placeholder': 'someone@example.com',
+                'data - parsley - required': "true",
+            }),
+            'work': TextInput(attrs={
+                'id': 'author_work',
+                'class': 'form-control',
+                'type': 'text',
+                'placeholder': "Enter...",
+                'data - parsley - required': "true",
+            }),
+
+        }
 
 
 class CreateSectionForm(forms.ModelForm):

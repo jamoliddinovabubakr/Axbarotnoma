@@ -7,8 +7,6 @@ from ckeditor.fields import RichTextField
 from django.urls import reverse
 from django.template.defaultfilters import slugify
 
-from user_app.models import Author
-
 
 class Section(models.Model):
     name = models.CharField(_('Name'), max_length=150, blank=True, default=None)
@@ -39,7 +37,7 @@ def user_directory_path(instance, filename):
 class Article(models.Model):
     section = models.ForeignKey('article_app.Section', verbose_name="Section", related_name="article_section",
                                 on_delete=models.CASCADE, blank=True)
-    authors = models.ManyToManyField('user_app.Author', related_name="article_authors", blank=True)
+    author = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="article_authors", blank=True)
     file = models.ForeignKey('article_app.ArticleFile', related_name="article_file", blank=True,
                              on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=255, blank=True)
@@ -50,9 +48,6 @@ class Article(models.Model):
     is_publish = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def get_article_authors(self):
-        return [author.id for author in self.authors.all()]
 
     def __str__(self):
         return self.title
@@ -90,9 +85,21 @@ class ArticleFile(models.Model):
         return str(self.article)
 
 
+class ExtraAuthor(models.Model):
+    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
+    lname = models.CharField(max_length=50, blank=True)
+    fname = models.CharField(max_length=50, blank=True)
+    mname = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(blank=True)
+    work = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.fname
+
+
 class Submission(models.Model):
     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
-    author = models.ForeignKey('user_app.Author', on_delete=models.CASCADE, blank=True, null=True)
+    author = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True, null=True)
     file = models.ForeignKey('article_app.ArticleFile', related_name="submission_file", blank=True,
                              on_delete=models.CASCADE, null=True)
     article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
@@ -117,7 +124,6 @@ class ReviewerArticle(models.Model):
     comment = models.TextField(help_text="Message")
     status = models.ForeignKey('article_app.StatusReviewer', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return str(self.id)

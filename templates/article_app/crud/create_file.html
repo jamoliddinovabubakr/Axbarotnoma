@@ -62,23 +62,12 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    $form[0].reset();
-                    $('#createArticleFile_modal').click();
-                    if (response.result) {
-                        swal({
+                      swal({
                             title: response.message,
-                            text: "File Created Successfully!",
-                            type: "success",
                             timer: 2000,
                         });
-                    } else {
-                        swal({
-                            title: response.message,
-                            text: "Form is invalid",
-                            type: "danger",
-                            timer: 2000,
-                        });
-                    }
+                     $form[0].reset();
+                     $('#createArticleFile_modal').click();
                 },
             });
         });

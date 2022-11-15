@@ -98,11 +98,11 @@
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% if myqueues %}
+                                {% if myqueues.count > 0 %}
                                     {% for article in myqueues %}
                                         <tr>
                                             <td>{{ article.id }}</td>
-                                            <td><b>{{ article.authors.first.user.full_name }}</b><br>{{ article.title }}
+                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
                                             </td>
                                             <td>
                                                 {% if article.article_status_id == 6 %}
@@ -146,11 +146,11 @@
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% if myarchives %}
+                                {% if myarchives.count > 0 %}
                                     {% for article in myarchives %}
                                         <tr>
                                             <td>{{ article.id }}</td>
-                                            <td><b>{{ article.authors.first.user.full_name }}</b><br>{{ article.title }}
+                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
                                             </td>
                                             <td>
                                                 <button class="btn btn-danger btn-sm"
@@ -160,6 +160,7 @@
                                             </td>
                                             <td>
                                                 <button class="btn btn-primary btn-sm"
+                                                        onclick="OnClickViewArticle({{ article.id }})"
                                                         style="margin: 10px; float: right"><i
                                                         class="fa fa-eye mr-1"></i>View
                                                 </button>
@@ -220,8 +221,8 @@
                         + `</td><td>` +
                         response['title'] + `</td><td>` +
                         response['created_at'] + `</td><td>` +
-                        `<a class="userModal btn btn-sm btn-outline-warning" href="/article/edit/${response['id']}/">Edit</a>` + " " +
-                        `<a class="userModal btn btn-sm btn-outline-danger"  href="/article/delete/${response['id']}/">Delete</a>`
+                        `<a class="btn btn-sm btn-outline-warning" href="/article/edit/${response['id']}/">Edit</a>` + " " +
+                        `<a class="btn btn-sm btn-outline-danger"  href="/article/delete/${response['id']}/">Delete</a>`
                         + "</td></tr>";
                     $("#articleDetail").append(temp);
                 },
