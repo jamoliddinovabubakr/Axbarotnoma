@@ -3,7 +3,6 @@ from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 from .views import *
 
-
 urlpatterns = [
     path('', main_page, name='main_page'),
     path('about_journal/', about_journal, name='about_journal'),
@@ -36,7 +35,7 @@ urlpatterns = [
 
     path('categories/', get_category, name='get_category'),
     # path('category/create/', create_category, name='create_category'),
-    path('category/edit/<int:pk>/', edit_category, name='edit_category'),
+    # path('category/edit/<int:pk>/', edit_category, name='edit_category'),
     path('category/delete/<int:pk>/', delete_category, name='delete_category'),
 
 ]

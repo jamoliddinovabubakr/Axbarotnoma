@@ -6,58 +6,54 @@
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
-        <h3 class="page-header">{% trans "Submissions" %}</h3>
+        <h3 class="page-header">{% trans "Editor Dashboard" %}</h3>
         <br>
         <div class="row">
             <div class="col-md-10">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a href="#myqueue" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
+                        <a href="#uncheck" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
                             <span class="d-sm-none">Tab 1</span>
-                            <span class="d-sm-block d-none">My Queue</span>
+                            <span class="d-sm-block d-none">Unchecks</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#archives" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
+                        <a href="#check" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
                             <span class="d-sm-none">Tab 2</span>
-                            <span class="d-sm-block d-none">Archives</span>
+                            <span class="d-sm-block d-none">Checked History</span>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane fade active show" id="myqueue">
+                    <div class="tab-pane fade active show" id="uncheck">
                         <div class="row">
-                            <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
-                                   class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
+                            <div class="col-md-6"><h5 class="m-t-10"> Tekshirilishi kerak xabarlar</h5>
                             </div>
                         </div>
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% if myqueues.count > 0 %}
-                                    {% for article in myqueues %}
+                                {% if uncheck.count > 0 %}
+                                    {% for notif in uncheck %}
                                         <tr>
-                                            <td>{{ article.id }}</td>
-                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
+                                            <td>{{ notif.id }}</td>
+                                            <td><b>{{ notif.article.author.full_name }}</b><br>{{ notif.article.title|slice:100 }}
                                             </td>
+                                        <td>{{ notif.created_at }}</td>
                                             <td>
-                                                {% if article.article_status_id == 6 %}
-                                                    <button class="btn btn-outline-danger btn-sm"
-                                                            style="margin: 10px; border-radius: 20px; float: right"><i
-                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                                    </button>
+                                                <button {% if notif.notification_status_id == 1 %}
+                                                    class="btn btn-danger btn-xs"
+                                                {% elif notif.notification_status_id == 2 %}
+                                                    class="btn btn-warning btn-xs"
                                                 {% else %}
-                                                    <button class="btn btn-outline-warning btn-sm"
-                                                            style="margin: 10px; border-radius: 20px; float: right"><i
-                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
-                                                    </button>
+                                                    class="btn btn-success btn-xs"
                                                 {% endif %}
+                                                    style="margin: 10px; border-radius: 20px; float: right"><i
+                                                        class="fa fa-circle-notch mr-1"></i>{{ notif.notification_status.name }}
+                                                </button>
                                             </td>
                                             <td>
-                                                <button onclick="OnClickViewArticle({{ article.id }})"
+                                                <button onclick="OnClickViewArticle({{ notif.article.id }})"
                                                         class="btn btn-primary btn-sm"
                                                         style="margin: 10px; float: right"><i
                                                         class="fa fa-eye mr-1"></i>View
@@ -73,33 +69,35 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="archives">
+                    <div class="tab-pane fade" id="check">
                         <div class="row">
-                            <div class="col-md-6"><h5 class="m-t-10"> Archived Submissions</h5>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
-                                   class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
+                            <div class="col-md-6"><h5 class="m-t-10"> Tekshirilganlar tarixi</h5>
                             </div>
                         </div>
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% if myarchives.count > 0 %}
-                                    {% for article in myarchives %}
+                                {% if check.count > 0 %}
+                                    {% for notif in check %}
                                         <tr>
-                                            <td>{{ article.id }}</td>
-                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
+                                            <td>{{ notif.id }}</td>
+                                            <td><b>{{ notif.article.author.full_name }}</b><br>{{ notif.article.title }}
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger btn-sm"
-                                                        style="margin: 10px; border-radius: 20px; float: right"><i
-                                                        class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                <button {% if notif.notification_status_id == 1 %}
+                                                    class="btn btn-danger btn-xs"
+                                                {% elif notif.notification_status_id == 2 %}
+                                                    class="btn btn-warning btn-xs"
+                                                {% else %}
+                                                    class="btn btn-success btn-xs"
+                                                {% endif %}
+                                                    style="margin: 10px; border-radius: 20px; float: right"><i
+                                                        class="fa fa-circle-notch mr-1"></i>{{ notif.notification_status.name }}
                                                 </button>
                                             </td>
                                             <td>
-                                                <button class="btn btn-primary btn-sm"
-                                                        onclick="OnClickViewArticle({{ article.id }})"
+                                                <button onclick="OnClickViewArticle({{ notif.article.id }})"
+                                                        class="btn btn-primary btn-sm"
                                                         style="margin: 10px; float: right"><i
                                                         class="fa fa-eye mr-1"></i>View
                                                 </button>
@@ -118,7 +116,7 @@
             </div>
             <div class="col-md-2"></div>
         </div>
-        <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
+        <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="notificationView">
             <div class="col-md-10 forshadow" style="padding: 2%; background-color: #fff;">
                 <table class="table table-responsive">
                     <thead>
@@ -137,16 +135,55 @@
             </div>
             <div class="col-md-2"></div>
         </div>
-<script>
-$(document).ready(function(){
-  $(".close").click(function(){
-    $("#myAlert").alert("close");
-  });
-});
-</script>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'load_notification' %}",
+                    success: function (response) {
+                        $("#display_table").empty();
+                        let tr = 0;
+
+                        for (let item of response.notifications) {
+                            tr++;
+                            let status = item.status.toString();
+                            let temp =
+                                "<tr>" +
+                                "<td>" + tr + "</td>" +
+                                "<td>" + item.my_resend__author__email + "</td>" +
+                                "<td>" + item.description + "</td>" +
+                                "<td>" + item.created_at + "</td>" +
+                                "<td id='index" + item.id + "'></td>" +
+                                "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>"
+                                + "</tr>";
+
+                            $("#display_table").append(temp);
+
+                            if (status === 'Tekshirilmadi') {
+                                $("#index" + item.id).html("<span class='badge badge-danger'>" + item.status + "</span>");
+                            } else if (status === 'Tekshirildi') {
+                                $("#index" + item.id).html("<span class='badge badge-success'>" + item.status + "</span>");
+                            } else if (status === 'Tekshirilmoqda') {
+                                $("#index" + item.id).html("<span class='badge badge-warning'>" + item.status + "</span>");
+                            } else {
+                                $("#index" + item.id).html("<span class='badge badge-info'>" + item.status + "</span>");
+                            }
+
+
+                        }
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+
+            }, 1500);
+
+        });
+
         function OnClickViewArticle(id) {
             $.ajax({
                 type: "GET",

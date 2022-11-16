@@ -115,10 +115,10 @@ def update_article(request, pk):
                 ob = form.save(commit=False)
                 ob.article_status = submit
                 ob.save()
+                return redirect('dashboard')
             else:
                 return JsonResponse(f"id=1 ArticleStatus mavjud emas!")
 
-            return redirect('dashboard')
         else:
             data = {
                 'result': 0,
@@ -253,9 +253,13 @@ def edit_author(request, pk):
         form = AddAuthorForm(request.POST, instance=author)
         if form.is_valid():
             form.save()
-            return JsonResponse({"message": "Editing author successfully!"})
+            data = {
+                'result': True,
+                'message': 'Editing author successfully!'
+            }
+            return JsonResponse(data)
         else:
-            return redirect('profile')
+            return JsonResponse("Form is invalid")
 
     form = AddAuthorForm(instance=author)
     context = {
@@ -267,13 +271,13 @@ def edit_author(request, pk):
 
 @login_required(login_url='login')
 def delete_author(request, pk):
-    author = Author.objects.get(pk=pk)
+    author = ExtraAuthor.objects.get(pk=pk)
     article = author.article
     if request.user.id != article.author.id:
         return render(request, 'user_app/not_access.html')
     if request.method == "POST":
         author.delete()
-        return redirect('update_my_article', pk=author.article.id)
+        return JsonResponse({"message": "Successfully"})
     else:
         return render(request, 'article_app/crud/delete_author.html', {'author': author})
 
@@ -302,24 +306,6 @@ def create_section(request):
         # 'form': CreateCategoryForm(),
     }
     return render(request, "article_app/crud/add_category.html", context=context)
-
-
-@login_required(login_url='login')
-# @allowed_users(perm='change_category')
-def edit_category(request, pk):
-    # category = Category.objects.get(pk=pk)
-    # if request.method == "POST":
-    #     form = CreateCategoryForm(request.POST, instance=category)
-    #     if form.is_valid():
-    #         category = form.save(commit=False)
-    #         category.save()
-    #         return redirect('get_category')
-    # else:
-    context = {
-        # 'form': CreateCategoryForm(instance=category),
-        # 'category': category,
-    }
-    return render(request, "article_app/crud/edit_category.html", context=context)
 
 
 @login_required(login_url='login')

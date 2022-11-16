@@ -11,10 +11,10 @@ $(document).ready(function () {
             data: $formData,
             success: function (response) {
                 console.log(response);
-                 swal({
-                            title: response.message,
-                            timer: 2000,
-                        });
+                swal({
+                    title: response.message,
+                    timer: 2000,
+                });
                 $myForm[0].reset();
                 $('#add_author_modal').click();
                 // $('#add-author-notif').click();

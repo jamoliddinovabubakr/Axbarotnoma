@@ -1,9 +1,11 @@
 {% load i18n %}
 {% load static %}
-<form class="form-control editAuthorForm" data-parsley-validate="true" method="post" action="{% url 'edit_author' author.pk %}">
+<form class="form-control edit-author-form" data-parsley-validate="true" method="post" data-id="{{ author.id }}"
+      action="{% url 'edit_author' author.id %}"
+      id="edit_author_form">
     {% csrf_token %}
-    <div class="modal fade" id="userModal">
-        <div class="modal-dialog">
+    <div class="modal fade" id="edit-author-modal">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{% trans "Aftor ma'lumotlarini o'zgartirish" %}</h5>
@@ -14,10 +16,10 @@
                            class="table table-striped table-bordered table-td-valign-middle">
                         <tbody>
                         <tr hidden>
-                            <th class="text-nowrap">{% trans "Maqola" %}</th>
                             <td class="text-nowrap">
                                 <select id="id_article" name="article" class="form-control">
-                                    <option selected value="{{ author.article.id }}">{{ author.article.title }}</option>
+                                    <option selected
+                                            value="{{ author.article.id }}">{{ author.article.title }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -45,33 +47,12 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-white" data-dismiss="modal" id="id_editAuthorModal">{% trans "Yopish" %}</a>
-                    <button type="submit" class="btn btn-primary" id="id_editAuthorBtn">{% trans "Saqlash" %}</button>
+                    <a class="close btn btn-outline-info" id="edit_author_modal"
+                       data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary"
+                            id="btn_editing_author">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </div>
     </div>
 </form>
-<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
-<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#editAuthorForm').submit(function (e) {
-            e.preventDefault();
-            const $form = $(this)
-            let formData = new FormData(this);
-            $.ajax({
-                url: "{% url 'edit_author' author.id %}",
-                type: 'POST',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    console.log(response);
-                    $('#id_editAuthorModal').click();
-                },
-            });
-        });
-    });
-</script>

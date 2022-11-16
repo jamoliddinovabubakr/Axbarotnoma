@@ -51,10 +51,10 @@ def register_page(request):
             user_group, created = Group.objects.get_or_create(name='Author')
             if not user.groups.filter(name__in=['Author']).exists():
                 user_group.user_set.add(user)
-            # Author.objects.create(user=user)
+
             roles = Role.objects.filter(pk=4)
             if roles.count() > 0:
-                user.role.add(roles.first())
+                user.roles.add(roles.first())
 
             user = authenticate(request, username=user.username, password=request.POST['password1'])
 
@@ -71,9 +71,9 @@ def register_page(request):
             if usr is not None:
                 error = "Bu foydalanuvchi bor!"
             context = {
-                    "error": error,
-                    "form": form,
-                }
+                "error": error,
+                "form": form,
+            }
             return render(request, "user_app/register/register.html", context=context)
 
     else:
@@ -162,14 +162,35 @@ def logout_user(request):
 # @allowed_users(menu_url='profile_page')
 def dashboard(request):
     user = request.user
-    myqueues = Article.objects.filter(author=user).filter(Q(article_status_id=1) | Q(article_status_id=6)).order_by('-created_at')
-    myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by('-created_at')
+    myqueues = Article.objects.filter(author=user).filter(Q(article_status_id=1) | Q(article_status_id=6)).order_by(
+        '-updated_at')
+    myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by(
+        '-updated_at')
 
     context = {
         'myqueues': myqueues,
         'myarchives': myarchives,
     }
     return render(request, "user_app/user_dashboard.html", context=context)
+
+
+@login_required(login_url='login')
+# @allowed_users(menu_url='profile_page')
+def editor_dashboard(request):
+    user = User.objects.get(id=request.user.id)
+    role_e = Role.objects.get(id=2)
+    if role_e.id not in user.get_roles:
+        return render(request, 'user_app/not_access.html')
+    unread = Notification.objects.filter(to_user=user).filter(
+        Q(notification_status_id=1) | Q(notification_status_id=2)).order_by('-created_at')
+    read = Notification.objects.filter(to_user=user).filter(notification_status_id=3).order_by('-created_at')
+    print(unread)
+    print(read)
+    context = {
+        'uncheck': unread,
+        'check': read,
+    }
+    return render(request, "user_app/editor_dashboard.html", context=context)
 
 
 # @login_required(login_url='login')
@@ -463,32 +484,44 @@ def get_notifications(request):
     return render(request, "user_app/settings/notification_page.html")
 
 
-# def load_data_notif(request):
-#     if request.method == 'GET':
-#         notifications = Notification.objects.filter(user__role_id__in=[1, 2, 3]).order_by(
-#             "-created_at")
-#
-#         return JsonResponse({"notifications": list(notifications.values(
-#             'id', 'article_id', 'title', 'my_resend__author__email', 'description', 'status', 'created_at',
-#         ))})
+def load_notification(request):
+    if request.method == 'GET':
+        user = User.objects.get(pk=request.user.id)
+
+        uncheck_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
+            Q(notification_status_id=1) | Q(notification_status_id=2))
+        check_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
+            Q(notification_status_id=3))
+
+        data = {
+            "uncheck_notifications": list(uncheck_notifications.values(
+                'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
+                'created_at'
+            )),
+            "check_notifications": list(check_notifications.values(
+                'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
+                'created_at'
+            ))
+        }
+
+        return JsonResponse(data)
+    else:
+        return JsonResponse()
 
 
-# def count_notif(request):
-#     if request.method == 'GET':
-#         user = User.objects.get(pk=request.user.id)
-#         roles = []
-#         for item in user.role.all():
-#             roles.append(item.id)
-#         if "Reviewer" in roles:
-#             notifications = Notification.objects.all().order_by("-created_at").filter(user=user).filter(status="Tekshirilmadi")
-#         else:
-#             notifications = Notification.objects.all().order_by("-created_at").filter(roles in [1, 2]).filter(status="Tekshirilmadi")
-#         return JsonResponse({"count_notif_notread": notifications.count(), "notifications": list(notifications.values(
-#             'id', 'my_resend__author__avatar', 'my_resend__author__first_name', 'my_resend__author__last_name',
-#             'created_at'
-#         ))})
+def count_notification(request):
+    if request.method == 'GET':
+        user = User.objects.get(pk=request.user.id)
 
+        unread_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
+            notification_status_id=1)
 
+        return JsonResponse(
+            {"count_unread_notifications": unread_notifications.count(),
+             "notifications": list(unread_notifications.values(
+                 'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
+                 'created_at'
+             ))})
 # @login_required(login_url='login')
 # @allowed_users(perm='view_notification')
 # def view_notification(request, pk):

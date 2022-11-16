@@ -89,7 +89,7 @@ class ExtraAuthor(models.Model):
     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
     lname = models.CharField(max_length=50, blank=True)
     fname = models.CharField(max_length=50, blank=True)
-    mname = models.CharField(max_length=50, blank=True)
+    mname = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(blank=True)
     work = models.CharField(max_length=255, blank=True, null=True)
 

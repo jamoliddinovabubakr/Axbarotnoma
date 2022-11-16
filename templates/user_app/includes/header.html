@@ -58,42 +58,41 @@
                 <a href="{% url 'dashboard' %}" class="dropdown-item"><i
                         class="icon-people p-r-10"></i><span>{% trans "Profile" %}</span></a>
                 <a href="{% url 'main_page' %}" class="dropdown-item"><i
-                        class="icon-home p-r-10"></i><span>{% trans "Bosh Sahifa" %}</span></a>
+                        class="icon-home p-r-10"></i><span>{% trans "Home" %}</span></a>
                 <a href="{% url 'logout' %}" class="dropdown-item"><i
-                        class="icon-logout  p-r-10"></i><span>{% trans "Chiqish" %}</span></a>
+                        class="icon-logout  p-r-10"></i><span>{% trans "Log out" %}</span></a>
             </div>
         </li>
     </ul>
     <!-- end header-nav -->
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-{#<script type="text/javascript">#}
-{#    $(document).ready(function () {#}
-{#        setInterval(function () {#}
-{#            $.ajax({#}
-{#                type: "GET",#}
-{#                url: "{% url 'count_notif' %}",#}
-{#                success: function (response) {#}
-{##}
-{#                    $('.notif_count').text(response.count_notif_notread);#}
-{#                    $("#notif_body").empty();#}
-{#                    for (let item of response.notifications) {#}
-{#                        let temp = `<a class="dropdown-item media" href='/profile/notification/${item.id}/view'>`#}
-{#                            + `<div class="media-left">`#}
-{#                            + `<img src="/media/${item.my_resend__author__avatar}" class='media-object' alt='' /><i class="fab fa-facebook-messenger text-blue media-object-icon"></i>`#}
-{#                            + `</div>`#}
-{#                            + `<div class="media-body">`#}
-{#                            + `<h6 class="media-heading">` + item.my_resend__author__first_name + ` ` + item.my_resend__author__last_name + `</h6>`#}
-{#                            + `<div class="text-muted f-s-12">` + item.created_at + `</div>`#}
-{#                            + `</div>`#}
-{#                            + `</a>`;#}
-{#                        $("#notif_body").append(temp);#}
-{#                    }#}
-{#                },#}
-{#                error: function (response) {#}
-{#                    console.log(response);#}
-{#                }#}
-{#            });#}
-{#        }, 1500);#}
-{#    });#}
-{#</script>#}
+<script type="text/javascript">
+    $(document).ready(function () {
+        setInterval(function () {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'count_notification' %}",
+                success: function (response) {
+                    $('.notif_count').text(response.count_unread_notifications);
+                    $("#notif_body").empty();
+                    for (let item of response.notifications) {
+                        let temp = `<a class="dropdown-item media" href='/profile/notification/${item.id}/view'>`
+                            + `<div class="media-left">`
+                            + `<img src="/media/${item.from_user__avatar}" class='media-object' alt='' /><i class="fab fa-facebook-messenger text-blue media-object-icon"></i>`
+                            + `</div>`
+                            + `<div class="media-body">`
+                            + `<h6 class="media-heading">` + item.from_user__last_name + ` ` + item.from_user__first_name + `</h6>`
+                            + `<div class="text-muted f-s-12"><span>` + item.created_at + `</span></div>`
+                            + `</div>`
+                            + `</a>`;
+                        $("#notif_body").append(temp);
+                    }
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        }, 1500);
+    });
+</script>

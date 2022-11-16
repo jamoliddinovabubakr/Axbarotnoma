@@ -4,11 +4,14 @@ from django.contrib.auth import views as auth_views
 from user_app.views import *
 
 urlpatterns = [
-    path('dashboard/', dashboard, name='dashboard'),
+    path('user_dashboard/', dashboard, name='dashboard'),
+    path('editor_dashboard/', editor_dashboard, name='editor_dashboard'),
+
     path('login/', login_page, name='login'),
     path('logout', logout_user, name='logout'),
     path('register/', register_page, name='register'),
     path('choose_role/', choose_roles, name='choose_role'),
+
     # path('change_password', change_password, name='change_password'),
     # path('view/', profile, name='profile'),
     # path('edit_profile/', edit_profile, name='edit_profile'),
@@ -20,8 +23,8 @@ urlpatterns = [
     # path('users/delete/<int:pk>', delete_user, name='delete_user'),
     #
     path('notifications/', get_notifications, name='notifications'),
-    # path('load_notif/', load_data_notif, name='load_notif'),
-    # path('count_notif/', count_notif, name='count_notif'),
+    path('load_notif/', load_notification, name='load_notification'),
+    path('count_notif/', count_notification, name='count_notification'),
     # path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),
     # path('notification/<int:pk>/view', view_notification, name='view_notification'),
     # path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
@@ -31,15 +34,15 @@ urlpatterns = [
     # path('review_view_notification/<int:pk>/view', review_view_notification, name='review_notification_view'),
     #
     # path('menus/', get_menus, name='menus'),
-    # # path('menus/create', create_menu, name='create_menu'),
-    # # path('menus/view/<int:pk>', view_menu, name='view_menu'),
+    # path('menus/create', create_menu, name='create_menu'),
+    # path('menus/view/<int:pk>', view_menu, name='view_menu'),
     # path('menus/edit/<int:pk>', edit_menu, name='edit_menu'),
     # path('menus/delete/<int:pk>', delete_menu, name='delete_menu'),
     #
-    # # path('genders/', genders, name='genders'),
-    # # path('genders/create', create_gender, name='create_gender'),
-    # # path('genders/edit/<int:pk>', edit_gender, name='edit_gender'),
-    # # path('genders/delete/<int:pk>', delete_gender, name='delete_gender'),
+    # path('genders/', genders, name='genders'),
+    # path('genders/create', create_gender, name='create_gender'),
+    # path('genders/edit/<int:pk>', edit_gender, name='edit_gender'),
+    # path('genders/delete/<int:pk>', delete_gender, name='delete_gender'),
     #
     # path('roles/', get_roles, name='roles'),
     # path('roles/create', create_role, name='create_role'),
