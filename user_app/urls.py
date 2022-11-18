@@ -22,7 +22,7 @@ urlpatterns = [
     # path('users/update/<int:pk>', update_user, name='update_user'),
     # path('users/delete/<int:pk>', delete_user, name='delete_user'),
     #
-    path('notifications/', get_notifications, name='notifications'),
+    path('article_notification/view/<int:pk>/', user_notofication_view, name='user_notofication_view'),
     path('load_notif/', load_notification, name='load_notification'),
     path('count_notif/', count_notification, name='count_notification'),
     # path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),

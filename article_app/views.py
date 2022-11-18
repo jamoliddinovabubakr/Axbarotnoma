@@ -277,7 +277,11 @@ def delete_author(request, pk):
         return render(request, 'user_app/not_access.html')
     if request.method == "POST":
         author.delete()
-        return JsonResponse({"message": "Successfully"})
+        data = {
+            "result": True,
+            "message": "Deleted Author Successfully"
+        }
+        return JsonResponse(data)
     else:
         return render(request, 'article_app/crud/delete_author.html', {'author': author})
 

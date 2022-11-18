@@ -150,9 +150,6 @@ class Notification(models.Model):
     def __str__(self):
         return str(self.id)
 
-    class Meta:
-        ordering = ['-id']
-
 
 class Journal(models.Model):
     file_pdf = models.FileField(_("Fayl"), upload_to="files/jurnals/", max_length=255, blank=True, null=True)

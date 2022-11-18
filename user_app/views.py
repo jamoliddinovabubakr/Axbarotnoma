@@ -56,7 +56,8 @@ def register_page(request):
             if roles.count() > 0:
                 user.roles.add(roles.first())
 
-            user = authenticate(request, username=user.username, password=request.POST['password1'])
+            user = authenticate(request, username=user.username,
+                                password=request.POST['password1'])
 
             if user is not None:
                 login(request, user)
@@ -66,7 +67,8 @@ def register_page(request):
         else:
             username = request.POST['username']
             email = request.POST['email']
-            usr = authenticate(request, username=username, email=email, password=request.POST['password1'])
+            usr = authenticate(request, username=username,
+                               email=email, password=request.POST['password1'])
             error = "Formani to'g'ri to'ldiring!"
             if usr is not None:
                 error = "Bu foydalanuvchi bor!"
@@ -183,7 +185,8 @@ def editor_dashboard(request):
         return render(request, 'user_app/not_access.html')
     unread = Notification.objects.filter(to_user=user).filter(
         Q(notification_status_id=1) | Q(notification_status_id=2)).order_by('-created_at')
-    read = Notification.objects.filter(to_user=user).filter(notification_status_id=3).order_by('-created_at')
+    read = Notification.objects.filter(to_user=user).filter(
+        notification_status_id=3).order_by('-created_at')
     print(unread)
     print(read)
     context = {
@@ -480,8 +483,27 @@ def editor_dashboard(request):
 # Glavniy redaktor
 @login_required(login_url='login')
 # @allowed_users(menu_url='notifications')
-def get_notifications(request):
-    return render(request, "user_app/settings/notification_page.html")
+def user_notofication_view(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.method == "GET":
+        from_user_notifications = Notification.objects.filter(
+            article_id=pk).filter(from_user_id=request.user.id)
+        to_user_notifications = Notification.objects.filter(
+            article_id=pk).filter(to_user_id=request.user.id)
+        notifications = from_user_notifications.union(
+            to_user_notifications).order_by('created_at')
+
+        data = {
+            "article_title": article.title,
+            "current_user_id": request.user.id,
+            "notifications": list(
+                notifications.values(
+                    'id', 'article__id', 'from_user__username', 'from_user__id', 'message', 'to_user__username',
+                    'to_user__id', 'created_at',
+                )
+            ),
+        }
+        return JsonResponse(data)
 
 
 def load_notification(request):
@@ -506,7 +528,7 @@ def load_notification(request):
 
         return JsonResponse(data)
     else:
-        return JsonResponse()
+        return JsonResponse("Error")
 
 
 def count_notification(request):

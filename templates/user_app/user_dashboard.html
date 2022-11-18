@@ -2,151 +2,217 @@
 {% load i18n %}
 {% load static %}
 {% block title %}
-    Dashboard
+Dashboard
 {% endblock %}
 {% block content %}
-    <div id="content" class="content">
-        <h3 class="page-header">{% trans "Submissions" %}</h3>
-        <br>
-        <div class="row">
-            <div class="col-md-10">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a href="#myqueue" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
-                            <span class="d-sm-none">Tab 1</span>
-                            <span class="d-sm-block d-none">My Queue</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#archives" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
-                            <span class="d-sm-none">Tab 2</span>
-                            <span class="d-sm-block d-none">Archives</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade active show" id="myqueue">
-                        <div class="row">
-                            <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
-                                   class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                {% if myqueues.count > 0 %}
-                                    {% for article in myqueues %}
-                                        <tr>
-                                            <td>{{ article.id }}</td>
-                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
-                                            </td>
-                                            <td>
-                                                {% if article.article_status_id == 6 %}
-                                                    <button class="btn btn-outline-danger btn-sm"
-                                                            style="margin: 10px; border-radius: 20px; float: right"><i
-                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                                    </button>
-                                                {% else %}
-                                                    <button class="btn btn-outline-warning btn-sm"
-                                                            style="margin: 10px; border-radius: 20px; float: right"><i
-                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
-                                                    </button>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <button onclick="OnClickViewArticle({{ article.id }})"
-                                                        class="btn btn-primary btn-sm"
-                                                        style="margin: 10px; float: right"><i
-                                                        class="fa fa-eye mr-1"></i>View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr class="text-center">
-                                        <td colspan="4"><h3>NO DATA</h3></td>
-                                    </tr>
-                                {% endif %}
-                            </table>
+<div id="content" class="content">
+    <h3 class="page-header">{% trans "Submissions" %}</h3>
+    <br>
+    <div class="row">
+        <div class="col-md-10">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="#myqueue" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
+                        <span class="d-sm-none">Tab 1</span>
+                        <span class="d-sm-block d-none">My Queue</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#archives" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
+                        <span class="d-sm-none">Tab 2</span>
+                        <span class="d-sm-block d-none">Archives</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active show" id="myqueue">
+                    <div class="row">
+                        <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5></div>
+                        <div class="col-md-6">
+                            <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
+                               class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="archives">
-                        <div class="row">
-                            <div class="col-md-6"><h5 class="m-t-10"> Archived Submissions</h5>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
-                                   class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
-                            </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            {% if myqueues.count > 0 %}
+                            {% for article in myqueues %}
+                            <tr>
+                                <td>{{ article.id }}</td>
+                                <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
+                                </td>
+                                <td>
+                                    {% if article.article_status_id == 6 %}
+                                    <button class="btn btn-outline-danger btn-sm"
+                                            style="border-radius: 20px; float: right"><i
+                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-outline-warning btn-sm"
+                                            style="border-radius: 20px; float: right"><i
+                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
+                                    </button>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button onclick="OnClickViewArticle({{ article.id }})"
+                                            class="btn btn-primary btn-sm"
+                                            style="float: right"><i
+                                            class="fa fa-eye mr-1"></i>View
+                                    </button>
+                                </td>
+                                <td>
+                                    <button onclick="OnClickViewArticleMessage({{ article.id }})"
+                                            class="btn btn-warning btn-sm"
+                                            style="float: left"><i class="fa fa-comment"></i> Messages
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr class="text-center">
+                                <td colspan="4"><h3>NO DATA</h3></td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="archives">
+                    <div class="row">
+                        <div class="col-md-6"><h5 class="m-t-10"> Archived Submissions</h5>
                         </div>
-                        <br>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                {% if myarchives.count > 0 %}
-                                    {% for article in myarchives %}
-                                        <tr>
-                                            <td>{{ article.id }}</td>
-                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-danger btn-sm"
-                                                        style="margin: 10px; border-radius: 20px; float: right"><i
-                                                        class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-primary btn-sm"
-                                                        onclick="OnClickViewArticle({{ article.id }})"
-                                                        style="margin: 10px; float: right"><i
-                                                        class="fa fa-eye mr-1"></i>View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr class="text-center">
-                                        <td colspan="4"><h3>NO DATA</h3></td>
-                                    </tr>
-                                {% endif %}
-                            </table>
+                        <div class="col-md-6">
+                            <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
+                               class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
                         </div>
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            {% if myarchives.count > 0 %}
+                            {% for article in myarchives %}
+                            <tr>
+                                <td>{{ article.id }}</td>
+                                <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
+                                </td>
+                                <td>
+                                    {% if article.article_status_id == 2 or article.article_status_id == 1 %}
+                                    <button class="btn btn-success btn-sm"
+                                            style="margin: 10px; border-radius: 20px; float: right"><i
+                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                    </button>
+                                    {% endif %}
+                                    {% if article.article_status_id == 3 %}
+                                    <button class="btn btn-danger btn-sm"
+                                            style="margin: 10px; border-radius: 20px; float: right"><i
+                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                    </button>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                            onclick="OnClickViewArticle({{ article.id }})"
+                                            style="margin: 10px; float: right"><i
+                                            class="fa fa-eye mr-1"></i>View
+                                    </button>
+                                </td>
+                                <td>
+                                    <button onclick="OnClickViewArticleMessage({{ article.id }})"
+                                            class="btn btn-warning btn-sm"
+                                            style="float: left"><i class="fa fa-comment"></i> Messages
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr class="text-center">
+                                <td colspan="4"><h3>NO DATA</h3></td>
+                            </tr>
+                            {% endif %}
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2"></div>
         </div>
-        <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
-            <div class="col-md-10 forshadow" style="padding: 2%; background-color: #fff;">
-                <table class="table table-responsive">
-                    <thead>
-                    <tr>
-                        <th width="1%"><b>ID</b></th>
-                        <th><b>{% trans "File" %}</b></th>
-                        <th><b>{% trans "Title" %}</b></th>
-                        <th><b>{% trans "created_at" %}</b></th>
-                        <th><b>{% trans "Action" %}</b></th>
-                    </tr>
-                    </thead>
-                    <tbody id="articleDetail">
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-<script>
-$(document).ready(function(){
-  $(".close").click(function(){
-    $("#myAlert").alert("close");
-  });
-});
-</script>
+        <div class="col-md-2"></div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script>
+    <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
+        <div class="col-md-10 forshadow" style="padding: 2%; background-color: #fff;">
+            <table class="table table-responsive">
+                <thead>
+                <tr>
+                    <th width="1%"><b>ID</b></th>
+                    <th><b>{% trans "File" %}</b></th>
+                    <th><b>{% trans "Title" %}</b></th>
+                    <th><b>{% trans "created_at" %}</b></th>
+                    <th><b>{% trans "Action" %}</b></th>
+                </tr>
+                </thead>
+                <tbody id="articleDetail">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="col-xl-12 col-lg-6" id="MessageBox" style="display: none;">
+            <!-- begin widget-chat -->
+            <div class="m-b-10 m-t-10 f-s-12">
+                <h5 class="text-inverse">Messages</h5>
+            </div>
+            <div class="widget-chat widget-chat-rounded m-b-30" data-id="widget">
+
+                <!-- begin widget-chat-header -->
+                <div class="widget-chat-header">
+                    <div class="widget-chat-header-icon">
+                        <i class="fa fa-book width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
+                           style="line-height: 30px"></i>
+                    </div>
+                    <div class="widget-chat-header-content">
+                        <h4 class="widget-chat-header-title" id="article_title"></h4>
+                    </div>
+                </div>
+                <!-- end widget-chat-header -->
+
+                <!-- begin widget-chat-body -->
+                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="user_chat_body">
+
+
+
+                </div>
+                <!-- end widget-chat-body -->
+
+                <!-- begin widget-input -->
+                <div class="widget-input widget-input-rounded">
+                    <form method="POST" class="add-message">
+
+                        <div class="widget-input-container">
+                            <div class="widget-input-icon"><i class="fa fa-pen"></i></div>
+                            <div class="widget-input-box">
+                                <input type="text" name="message" class="form-control"
+                                       placeholder="Write a message..."/>
+                            </div>
+                            <div class="widget-input-icon"></div>
+                            <div class="widget-input-icon">
+                                <button type="submit" class="btn btn-success btn-md">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- end widget-input -->
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
         function OnClickViewArticle(id) {
             $.ajax({
                 type: "GET",
@@ -176,11 +242,51 @@ $(document).ready(function(){
                 }
             });
         }
+        function OnClickViewArticleMessage(id) {
+                $.ajax({
+                    type: "GET",
+                    url: "/profile/article_notification/view/" + id + "/",
+                    success: function (response) {
+                        console.log(response);
+                        $('#MessageBox').css("display", "block");
+                        $('#article_title').text(response.article_title);
+                        $('#user_chat_body').empty();
+    
+                       for(let item of response.notifications){
+    
+                        let time_tz = new Date(item.created_at);
+                        let time_string = time_tz.toLocaleString();
+                        console.log(time_string);
+    
+                            if(response.current_user_id === item.from_user__id){
+                                console.log("mendan");
+    
+                                let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+    
+                                $('#user_chat_body').append(temp1); 
+                            }
+    
+                            if(response.current_user_id === item.to_user__id){
+                                console.log("menga");
+    
+                                let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+                                $('#user_chat_body').append(temp2); 
+                            }
+                        }          
+                    
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+        }
 
         function OnClickSubmissionTab() {
             $('#articleView').css("display", "none");
+            $('#MessageBox').css("display", "none");
         }
-    </script>
-{% endblock %}
+
+</script>
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>
+{% endblock %}
