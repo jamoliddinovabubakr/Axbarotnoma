@@ -537,10 +537,12 @@ def count_notification(request):
 
         unread_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
             notification_status_id=1)
+        count_unread_notifications = unread_notifications.count()
+        notifications = unread_notifications[:5]
 
         return JsonResponse(
-            {"count_unread_notifications": unread_notifications.count(),
-             "notifications": list(unread_notifications.values(
+            {"count_unread_notifications": count_unread_notifications,
+             "notifications": list(notifications.values(
                  'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
                  'created_at'
              ))})

@@ -28,12 +28,13 @@ urlpatterns = [
     path('author/edit/<int:pk>/', edit_author, name='edit_author'),
     path('author/delete/<int:pk>/', delete_author, name='delete_author'),
 
+    path('send_message/<int:pk>/', send_message, name='send_message'),
+
     path('magazines/', get_magazines, name='get_magazines'),
     path('magazine/create', create_magazine, name='create_magazine'),
     path('magazine/view/<int:pk>/', magazine_detail, name='view_magazine'),
     path('magazine/edit/<int:pk>', edit_magazine, name='edit_magazine'),
 
-    path('categories/', get_category, name='get_category'),
     # path('category/create/', create_category, name='create_category'),
     # path('category/edit/<int:pk>/', edit_category, name='edit_category'),
     path('category/delete/<int:pk>/', delete_category, name='delete_category'),

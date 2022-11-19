@@ -156,17 +156,14 @@ Dashboard
         </div>
         <div class="col-md-2"></div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <div class="col-xl-12 col-lg-6" id="MessageBox" style="display: none;">
+        <div class="col-lg-12 col-lg-6" id="MessageBox" style="display: none;">
             <!-- begin widget-chat -->
             <div class="m-b-10 m-t-10 f-s-12">
                 <h5 class="text-inverse">Messages</h5>
             </div>
-            <div class="widget-chat widget-chat-rounded m-b-30" data-id="widget">
+
+            <div class="widget-chat widget-chat-rounded m-b-30" style="width:600px;" data-id="widget">
 
                 <!-- begin widget-chat-header -->
                 <div class="widget-chat-header">
@@ -187,32 +184,38 @@ Dashboard
 
                 </div>
                 <!-- end widget-chat-body -->
-
-                <!-- begin widget-input -->
-                <div class="widget-input widget-input-rounded">
-                    <form method="POST" class="add-message">
-
-                        <div class="widget-input-container">
-                            <div class="widget-input-icon"><i class="fa fa-pen"></i></div>
-                            <div class="widget-input-box">
-                                <input type="text" name="message" class="form-control"
-                                       placeholder="Write a message..."/>
-                            </div>
-                            <div class="widget-input-icon"></div>
-                            <div class="widget-input-icon">
-                                <button type="submit" class="btn btn-success btn-md">Send</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- end widget-input -->
             </div>
+            <div class="m-b-10 m-t-10 f-s-12 write-message-div"></div>
         </div>
-    </div>
-    <div class="col-md-4"></div>
 </div>
+<div id="write_message_div_form"></div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script>
+    $('body').on('click', '.write-message-btn', function (e) {
+        e.preventDefault();
+
+        let id = $(this).data('id');
+
+        $.ajax({
+            type: 'GET',
+            url: "/send_message/" + id + "/",
+            success: function (response) {
+                console.log(response);
+                if(response.result){
+                    $('#write_message_div_form').html(response);
+                    $('#send-message-modal').modal('show');
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        return false;
+    });
+
         function OnClickViewArticle(id) {
             $.ajax({
                 type: "GET",
@@ -243,42 +246,45 @@ Dashboard
             });
         }
         function OnClickViewArticleMessage(id) {
-                $.ajax({
-                    type: "GET",
-                    url: "/profile/article_notification/view/" + id + "/",
-                    success: function (response) {
-                        console.log(response);
-                        $('#MessageBox').css("display", "block");
-                        $('#article_title').text(response.article_title);
-                        $('#user_chat_body').empty();
-    
-                       for(let item of response.notifications){
-    
-                        let time_tz = new Date(item.created_at);
-                        let time_string = time_tz.toLocaleString();
-                        console.log(time_string);
-    
-                            if(response.current_user_id === item.from_user__id){
-                                console.log("mendan");
-    
-                                let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
-    
-                                $('#user_chat_body').append(temp1); 
-                            }
-    
-                            if(response.current_user_id === item.to_user__id){
-                                console.log("menga");
-    
-                                let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
-                                $('#user_chat_body').append(temp2); 
-                            }
-                        }          
-                    
-                    },
-                    error: function (response) {
-                        console.log(response);
-                    }
-                });
+            $('#MessageBox').css("display", "block");
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/profile/article_notification/view/" + id + "/",
+                        success: function (response) {
+                            console.log(response);
+                            $('#article_title').text(response.article_title);
+                            $('#user_chat_body').empty();
+        
+                           for(let item of response.notifications){
+        
+                            let time_tz = new Date(item.created_at);
+                            let time_string = time_tz.toLocaleDateString();
+                            console.log(time_string);
+        
+                                if(response.current_user_id === item.from_user__id){
+                                    console.log("mendan");
+        
+                                    let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+        
+                                    $('#user_chat_body').append(temp1); 
+                                }
+        
+                                if(response.current_user_id === item.to_user__id){
+                                    console.log("menga");
+        
+                                    let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+                                    $('#user_chat_body').append(temp2); 
+                                }
+                            }   
+                            $('.write-message-div').empty();
+                            $('.write-message-div').append(`<button data-id="${id}" type="button" class="btn btn-success btn-sm write-message-btn" style="float: left"><i class="fa fa-comment"></i> Write Message </button>`);
+                        
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
         }
 
         function OnClickSubmissionTab() {

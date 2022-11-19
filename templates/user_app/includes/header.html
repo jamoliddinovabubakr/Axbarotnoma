@@ -31,14 +31,12 @@
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                     <i class="fa fa-bell"></i>
                     <span class="notif_count label label-primary"></span>
-                    <script>
-
-                    </script>
+                   
                 </a>
                 <div class="dropdown-menu media-list dropdown-menu-right">
                     <div class="dropdown-header">Notifications (<span class="notif_count"></span>)</div>
 
-                    <div id="notif_body">
+                    <div id="notif_body" class="widget-chat-body">
 
                     </div>
                     <div class="dropdown-footer text-center">
@@ -76,14 +74,17 @@
                 success: function (response) {
                     $('.notif_count').text(response.count_unread_notifications);
                     $("#notif_body").empty();
+                    
                     for (let item of response.notifications) {
+                        let time_tz = new Date(item.created_at);
+                        let time = time_tz.toLocaleString();
                         let temp = `<a class="dropdown-item media" href='/profile/notification/${item.id}/view'>`
                             + `<div class="media-left">`
                             + `<img src="/media/${item.from_user__avatar}" class='media-object' alt='' /><i class="fab fa-facebook-messenger text-blue media-object-icon"></i>`
                             + `</div>`
                             + `<div class="media-body">`
                             + `<h6 class="media-heading">` + item.from_user__last_name + ` ` + item.from_user__first_name + `</h6>`
-                            + `<div class="text-muted f-s-12"><span>` + item.created_at + `</span></div>`
+                            + `<div class="text-muted f-s-12"><span>` + time + `</span></div>`
                             + `</div>`
                             + `</a>`;
                         $("#notif_body").append(temp);
@@ -93,6 +94,6 @@
                     console.log(response);
                 }
             });
-        }, 5000);
+        }, 1500);
     });
 </script>

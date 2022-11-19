@@ -145,6 +145,21 @@ class AddAuthorForm(forms.ModelForm):
         }
 
 
+class SendMessageForm(forms.ModelForm):
+    class Meta:
+        model = Notification
+        fields = ['article', 'from_user', 'to_user', 'message']
+
+        widgets = {
+            'message': Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': "Write a message...",
+                'data - parsley - required': "true",
+                'name': 'message',
+            }),
+        }
+
+
 class CreateSectionForm(forms.ModelForm):
     class Meta:
         model = Section

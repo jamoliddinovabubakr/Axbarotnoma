@@ -11,7 +11,7 @@ from django.views.decorators.csrf import requires_csrf_token
 from user_app.decorators import allowed_users
 from article_app.models import *
 from article_app.models import ExtraAuthor
-from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm, AddAuthorForm
+from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm, AddAuthorForm, SendMessageForm
 from django.core.paginator import Paginator
 from user_app.models import User
 
@@ -287,13 +287,52 @@ def delete_author(request, pk):
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='get_category')
-def get_category(request):
-    # categories = Category.objects.all()
+def send_message(request, pk):
+    article = Article.objects.get(pk=pk)
+    from_user = User.objects.get(id=request.user.id)
+
+    if from_user.id != article.author.id:
+        return render(request, 'user_app/not_access.html')
+
+    messages = Notification.objects.filter(article_id=pk).filter(to_user_id=from_user.id)
+
+    if messages.count() == 0:
+        messages = Notification.objects.filter(article_id=pk).filter(from_user_id=from_user.id)
+        if messages.count() == 0:
+            data = {
+                'result': False,
+                'message': 'You can not send message!'
+            }
+            return JsonResponse(data)
+        message = messages.last()
+        to_user = message.to_user
+
+    else:
+        message = messages.last()
+        to_user = message.from_user
+
+    if request.method == "POST":
+        form = SendMessageForm(request.POST)
+        if form.is_valid():
+            notif = form.save(commit=False)
+            notif.notification_status = NotificationStatus.objects.get(pk=1)
+            notif.save()
+            data = {
+                'result': True,
+                'message': 'Send Message Successfully!'
+            }
+            return JsonResponse(data)
+        else:
+            return JsonResponse("Form is invalid")
+
+    form = SendMessageForm()
     context = {
-        # 'categories': categories,
+        'form': form,
+        'article': article,
+        'from_user': from_user,
+        'to_user': to_user,
     }
-    return render(request, 'article_app/categories_page.html', context=context)
+    return render(request, 'article_app/message/send_message.html', context=context)
 
 
 @login_required(login_url='login')
