@@ -6,6 +6,12 @@ from user_app.views import *
 urlpatterns = [
     path('user_dashboard/', dashboard, name='dashboard'),
     path('editor_dashboard/', editor_dashboard, name='editor_dashboard'),
+    path('editor_notifications/', editor_notifications, name='editor_notifications'),
+    path('editor_check_article/<int:pk>/', editor_check_article, name='editor_check_article'),
+
+    path('article_notification/view/<int:pk>/', user_notofication_view, name='user_notofication_view'),
+    path('load_notif/', load_notification, name='load_notification'),
+    path('count_notif/', count_notification, name='count_notification'),
 
     path('login/', login_page, name='login'),
     path('logout', logout_user, name='logout'),
@@ -21,44 +27,8 @@ urlpatterns = [
     # path('users/view/<int:pk>', view_user, name='view_user'),
     # path('users/update/<int:pk>', update_user, name='update_user'),
     # path('users/delete/<int:pk>', delete_user, name='delete_user'),
-    #
-    path('article_notification/view/<int:pk>/', user_notofication_view, name='user_notofication_view'),
-    path('load_notif/', load_notification, name='load_notification'),
-    path('count_notif/', count_notification, name='count_notification'),
-    # path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),
-    # path('notification/<int:pk>/view', view_notification, name='view_notification'),
-    # path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
-    # path('send_to_review/<int:article_id>', send_to_review, name='send_to_review'),
-    #
-    # path('review_view_notifications/', review_notifications, name='review_view_notifications'),
-    # path('review_view_notification/<int:pk>/view', review_view_notification, name='review_notification_view'),
-    #
-    # path('menus/', get_menus, name='menus'),
-    # path('menus/create', create_menu, name='create_menu'),
-    # path('menus/view/<int:pk>', view_menu, name='view_menu'),
-    # path('menus/edit/<int:pk>', edit_menu, name='edit_menu'),
-    # path('menus/delete/<int:pk>', delete_menu, name='delete_menu'),
-    #
-    # path('genders/', genders, name='genders'),
-    # path('genders/create', create_gender, name='create_gender'),
-    # path('genders/edit/<int:pk>', edit_gender, name='edit_gender'),
-    # path('genders/delete/<int:pk>', delete_gender, name='delete_gender'),
-    #
-    # path('roles/', get_roles, name='roles'),
-    # path('roles/create', create_role, name='create_role'),
-    # path('roles/edit/<int:pk>', edit_role, name='edit_role'),
-    # path('roles/delete/<int:pk>', delete_role, name='delete_role'),
-    #
-    # path('states/', get_states, name='states'),
-    # path('states/create', create_state, name='create_state'),
-    # path('states/edit/<int:pk>', edit_state, name='edit_state'),
-    # path('states/delete/<int:pk>', delete_state, name='delete_state'),
-    #
-    # path('regions', get_regions, name='regions'),
-    # path('regions/create', create_region, name='create_region'),
-    # path('regions/edit/<int:pk>', edit_region, name='edit_region'),
-    # path('regions/delete/<int:pk>', delete_region, name='delete_region'),
-    #
+
+    
     # path('password_reset/', password_reset, name='password_reset'),
     # path('password_reset/done/',
     #      auth_views.PasswordResetDoneView.as_view(

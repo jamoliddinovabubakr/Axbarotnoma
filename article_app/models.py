@@ -143,6 +143,7 @@ class Notification(models.Model):
     message = models.TextField(_("Message"), blank=True)
     notification_status = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_update_article = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)

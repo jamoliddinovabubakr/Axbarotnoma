@@ -16,4 +16,5 @@ def create_article(sender, instance, created, **kwargs):
             to_user=editor.user,
             message="Assalomu aleykum. Men sizlarga o'z maqolamni yubordim!",
             notification_status=NotificationStatus.objects.get(id=1),
+            is_update_article=True,
         )

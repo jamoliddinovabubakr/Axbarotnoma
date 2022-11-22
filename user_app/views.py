@@ -1,4 +1,4 @@
-from article_app.models import Journal, Notification, Article
+from article_app.models import Journal, Notification, Article, NotificationStatus, ExtraAuthor
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from user_app.decorators import unauthenticated_user, password_reset_authentification
@@ -181,19 +181,35 @@ def dashboard(request):
 def editor_dashboard(request):
     user = User.objects.get(id=request.user.id)
     role_e = Role.objects.get(id=2)
+
     if role_e.id not in user.get_roles:
         return render(request, 'user_app/not_access.html')
-    unread = Notification.objects.filter(to_user=user).filter(
+    return render(request, "user_app/editor_dashboard.html")
+
+
+@login_required(login_url='login')
+# @allowed_users(menu_url='profile_page')
+def editor_notifications(request):
+    user = User.objects.get(id=request.user.id)
+
+    uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
         Q(notification_status_id=1) | Q(notification_status_id=2)).order_by('-created_at')
-    read = Notification.objects.filter(to_user=user).filter(
+
+    check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
         notification_status_id=3).order_by('-created_at')
-    print(unread)
-    print(read)
-    context = {
-        'uncheck': unread,
-        'check': read,
+
+    data = {
+        "uncheck_notifications": list(uncheck_notifications.values(
+            'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
+            'article__author__email', 'is_update_article'
+        )),
+        "check_notifications": list(check_notifications.values(
+            'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
+            'article__author__email', 'is_update_article'
+        ))
     }
-    return render(request, "user_app/editor_dashboard.html", context=context)
+
+    return JsonResponse(data)
 
 
 # @login_required(login_url='login')
@@ -506,6 +522,7 @@ def user_notofication_view(request, pk):
         return JsonResponse(data)
 
 
+@login_required(login_url='login')
 def load_notification(request):
     if request.method == 'GET':
         user = User.objects.get(pk=request.user.id)
@@ -531,6 +548,7 @@ def load_notification(request):
         return JsonResponse("Error")
 
 
+@login_required(login_url='login')
 def count_notification(request):
     if request.method == 'GET':
         user = User.objects.get(pk=request.user.id)
@@ -546,32 +564,24 @@ def count_notification(request):
                  'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
                  'created_at'
              ))})
-# @login_required(login_url='login')
-# @allowed_users(perm='view_notification')
-# def view_notification(request, pk):
-#     reading = State.objects.get(pk=1)
-#     notification = get_object_or_404(Notification, pk=pk)
-#     article = notification.article
-#
-#     if notification.status == 'Tekshirilmadi':
-#         my_resends = MyResendArticle.objects.filter(article=article)
-#         my_resend_last = my_resends.last()
-#         my_resend_last.state = reading
-#         article.state = reading
-#         article.save()
-#
-#         my_resend_last.save()
-#         notification.status = 'Tekshirilmoqda'
-#         notification.save()
-#
-#     authors = Authors.objects.filter(article=notification.article).order_by('author_order')
-#     return render(request, 'user_app/crud/view_notification.html', {"notification": notification, 'authors': authors})
-#
-#
-# # send sms to email
-#
-#
-# # add gmail
+
+
+@login_required(login_url='login')
+def editor_check_article(request, pk):
+    notifification = get_object_or_404(Notification, pk=pk)
+    notifification.notification_status = NotificationStatus.objects.get(id=2)
+    notifification.save()
+    article = Article.objects.get(pk=notifification.article.id)
+    authors = ExtraAuthor.objects.filter(article=article)
+
+    context = {
+        "article": article,
+        "authors": authors,
+    }
+    return render(request, 'user_app/check_article_by_editor.html', context=context)
+
+
+
 # @login_required(login_url='login')
 # @allowed_users(perm='change_notification')
 # def answer_to_author(request, pk):

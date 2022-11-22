@@ -63,8 +63,8 @@ Dashboard
                                     </button>
                                 </td>
                                 <td>
-                                    <button onclick="OnClickViewArticleMessage({{ article.id }})"
-                                            class="btn btn-warning btn-sm"
+                                    <button data-id="{{article.id}}" type="button"
+                                            class="btn btn-warning btn-sm view_message_btn"
                                             style="float: left"><i class="fa fa-comment"></i> Messages
                                     </button>
                                 </td>
@@ -118,8 +118,8 @@ Dashboard
                                     </button>
                                 </td>
                                 <td>
-                                    <button onclick="OnClickViewArticleMessage({{ article.id }})"
-                                            class="btn btn-warning btn-sm"
+                                    <button data-id="{{article.id}}" type="button"
+                                            class="btn btn-warning btn-sm view_message_btn"
                                             style="float: left"><i class="fa fa-comment"></i> Messages
                                     </button>
                                 </td>
@@ -181,7 +181,6 @@ Dashboard
                 <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="user_chat_body">
 
 
-
                 </div>
                 <!-- end widget-chat-body -->
             </div>
@@ -190,7 +189,7 @@ Dashboard
 </div>
 <div id="write_message_div_form"></div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script>
+<script type="text/javascript">
     $('body').on('click', '.write-message-btn', function (e) {
         e.preventDefault();
 
@@ -200,15 +199,11 @@ Dashboard
             type: 'GET',
             url: "/send_message/" + id + "/",
             success: function (response) {
-                console.log(response);
-                if(response.result){
-                    $('#write_message_div_form').html(response);
-                    $('#send-message-modal').modal('show');
-                } else {
-                    alert(response.message);
-                }
+                $('#write_message_div_form').html(response);
+                $('#send-message-modal').modal('show');
             },
             error: function (error) {
+                console.log("Xatolik");
                 console.log(error);
             }
         });
@@ -245,9 +240,16 @@ Dashboard
                 }
             });
         }
-        function OnClickViewArticleMessage(id) {
+
+        $('body').on('click', '.view_message_btn', function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
             $('#MessageBox').css("display", "block");
 
+            ViewMessageBtn(id);
+        
+
+                function ViewMessageBtn(id){
                     $.ajax({
                         type: "GET",
                         url: "/profile/article_notification/view/" + id + "/",
@@ -265,7 +267,13 @@ Dashboard
                                 if(response.current_user_id === item.from_user__id){
                                     console.log("mendan");
         
-                                    let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+                                    let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
+                                         + item.from_user__username + 
+                                         `</div><div class="widget-chat-message">` 
+                                            + item.message + 
+                                            `</div><div class="widget-chat-time">` 
+                                                + time_string + 
+                                                `</div></div></div></div>`;
         
                                     $('#user_chat_body').append(temp1); 
                                 }
@@ -285,7 +293,10 @@ Dashboard
                             console.log(response);
                         }
                     });
-        }
+                }
+
+                    return false;
+        });
 
         function OnClickSubmissionTab() {
             $('#articleView').css("display", "none");
