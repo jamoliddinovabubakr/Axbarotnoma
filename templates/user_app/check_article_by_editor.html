@@ -1,0 +1,138 @@
+{% extends 'user_app/base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Maqola tekshirish" %}{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+
+        <h2 class="page-header viewArticleFont">
+            {% trans "Maqola tekshirish" %}
+        </h2>
+
+        <div class="panel panel-default forshadow">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <table>
+                            <tr>
+                                <td><p><b>{% trans "Mavzu:" %} </b>{{ article.title|safe }}</p></td>
+                            </tr>
+                            <tr>
+                                <td><b>{% trans "Aftorlar:" %} </b></td>
+                            </tr>
+                            {% for author in authors %}
+                                <tr>
+                                    <td>{{ forloop.counter }}. {{ author.lname }} {{ author.fname }}
+                                        ({{ author.work }})
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td><p></p><b>{% trans "Abstract:" %} </b>{{ article.abstract|safe }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>{% trans "Kalit so'zlar:" %} </b>{{ article.keywords|safe }}</td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td><b>{% trans "MS word fayl:" %} </b><a class="btn btn-outline-info btn-sm"
+                                                                          href="{{ article.file.url }}"
+                                                                          download
+                                                                          role="button"><span>{% trans "Yuklab olish" %}</span></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div> 
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" data-id="{{ article.id }}" id="view-article-messages" class="btn btn-sm btn-info">Load Messages</button>
+                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxEditor">
+                            <!-- begin widget-chat -->
+                            <div class="m-b-10 m-t-10 f-s-12">
+                                <h5 class="text-inverse">Messages</h5>
+                            </div>
+                
+                            <div class="widget-chat widget-chat-rounded m-b-30" style="width:600px;" data-id="widget">
+                
+                                <!-- begin widget-chat-header -->
+                                <div class="widget-chat-header">
+                                    <div class="widget-chat-header-icon">
+                                        <i class="fa fa-book width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
+                                           style="line-height: 30px"></i>
+                                    </div>
+                                    <div class="widget-chat-header-content">
+                                        <h4 class="widget-chat-header-title">Ilmiy Markaz</h4>
+                                    </div>
+                                    <div class="widget-chat-header-content">
+                                        <button class="btn btn-sm btn-info" style="float:right;">SEND</button>
+                                    </div>
+                                </div>
+                                <!-- end widget-chat-header -->
+                
+                                <!-- begin widget-chat-body -->
+                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="editor_chat_body">
+                
+                
+                                </div>
+                                <!-- end widget-chat-body -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('body').on('click', '#view-article-messages', function(e){
+            e.preventDefault();
+            $('#MessageBoxEditor').css('display', 'block');
+            let id = $(this).data('id');
+        
+                    $.ajax({
+                        type: "GET",
+                        url: "/profile/article_notification/view/" + id + "/",
+                        success: function (response) {
+                            console.log(response);
+                            $('#editor_chat_body').empty();
+        
+                           for(let item of response.notifications){
+        
+                            let time_tz = new Date(item.created_at);
+                            let time_string = time_tz.toLocaleString();
+                            console.log(time_string);
+        
+                                if(response.current_user_id === item.from_user__id){
+        
+                                    let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
+                                         + item.from_user__username + 
+                                         `</div><div class="widget-chat-message">` 
+                                            + item.message + 
+                                            `</div><div class="widget-chat-time">` 
+                                                + time_string + 
+                                                `</div></div></div></div>`;
+        
+                                    $('#editor_chat_body').append(temp1); 
+                                }
+        
+                                if(response.current_user_id === item.to_user__id){
+                                    console.log("menga");
+        
+                                    let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+                                    $('#editor_chat_body').append(temp2); 
+                                }
+                            }
+                        
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
+
+        });
+    </script>
+{% endblock %}
