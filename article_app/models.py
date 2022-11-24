@@ -138,10 +138,13 @@ class NotificationStatus(models.Model):
 
 class Notification(models.Model):
     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True)
-    from_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user", blank=True, null=True)
-    to_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True, null=True)
+    from_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="sender_user", blank=True,
+                                  null=True)
+    to_user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="recieve_user", blank=True,
+                                null=True)
     message = models.TextField(_("Message"), blank=True)
-    notification_status = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True, null=True)
+    notification_status = models.ForeignKey('article_app.NotificationStatus', on_delete=models.CASCADE, blank=True,
+                                            null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_update_article = models.BooleanField(default=False)
 

@@ -290,9 +290,10 @@ def delete_author(request, pk):
 def send_message(request, pk):
     article = Article.objects.get(pk=pk)
     from_user = User.objects.get(id=request.user.id)
+    roles = from_user.get_roles
 
-    if from_user.id != article.author.id:
-        return render(request, 'user_app/not_access.html')
+    # if from_user.id != article.author.id:
+    #     return render(request, 'user_app/not_access.html')
 
     messages = Notification.objects.filter(article_id=pk).filter(to_user_id=from_user.id)
 
@@ -319,6 +320,7 @@ def send_message(request, pk):
             notif.save()
             data = {
                 'result': True,
+                'roles': roles,
                 'message': 'Send Message Successfully!'
             }
             return JsonResponse(data)

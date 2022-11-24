@@ -245,11 +245,7 @@ Dashboard
             e.preventDefault();
             let id = $(this).data('id');
             $('#MessageBox').css("display", "block");
-
-            ViewMessageBtn(id);
         
-
-                function ViewMessageBtn(id){
                     $.ajax({
                         type: "GET",
                         url: "/profile/article_notification/view/" + id + "/",
@@ -262,13 +258,11 @@ Dashboard
         
                             let time_tz = new Date(item.created_at);
                             let time_string = time_tz.toLocaleDateString();
-                            console.log(time_string);
         
                                 if(response.current_user_id === item.from_user__id){
-                                    console.log("mendan");
         
                                     let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
-                                         + item.from_user__username + 
+                                         + item.from_user__email + 
                                          `</div><div class="widget-chat-message">` 
                                             + item.message + 
                                             `</div><div class="widget-chat-time">` 
@@ -279,9 +273,8 @@ Dashboard
                                 }
         
                                 if(response.current_user_id === item.to_user__id){
-                                    console.log("menga");
         
-                                    let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__username + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+                                    let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
                                     $('#user_chat_body').append(temp2); 
                                 }
                             }   
@@ -293,7 +286,6 @@ Dashboard
                             console.log(response);
                         }
                     });
-                }
 
                     return false;
         });

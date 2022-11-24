@@ -12,6 +12,8 @@ urlpatterns = [
     path('article_notification/view/<int:pk>/', user_notofication_view, name='user_notofication_view'),
     path('load_notif/', load_notification, name='load_notification'),
     path('count_notif/', count_notification, name='count_notification'),
+    path('load_reviewers/', load_reviewers, name='load_reviewers'),
+    path('sending_reviewer/', sending_reviewer, name='sending_reviewer'),
 
     path('login/', login_page, name='login'),
     path('logout', logout_user, name='logout'),

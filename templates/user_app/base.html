@@ -41,11 +41,6 @@
     <link href="{% static '/assets/plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}"
           rel="stylesheet"/>
     <link href="{% static '/assets/plugins/bootstrap-colorpalette/css/bootstrap-colorpalette.css' %}" rel="stylesheet"/>
-    <link href="{% static '/assets/plugins/jquery-simplecolorpicker/jquery.simplecolorpicker.css' %}" rel="stylesheet"/>
-    <link href="{% static '/assets/plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-fontawesome.css' %}"
-          rel="stylesheet"/>
-    <link href="{% static '/assets/plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-glyphicons.css' %}"
-          rel="stylesheet"/>
     <!-- ================== END PAGE LEVEL STYLE ================== -->
     <link href="{% static '/assets/plugins/gritter/css/jquery.gritter.css' %}" rel="stylesheet"/>
 
@@ -70,20 +65,20 @@
     <span class="spinner"></span>
 </div>
 {% block base_content %}
-    <div id="page-container"
-         class="fade page-sidebar-fixed page-header-fixed page-with-wide-sidebar page-with-light-sidebar viewArticleFont">
-        {% include 'user_app/includes/header.html' %}
+<div id="page-container"
+     class="fade page-sidebar-fixed page-header-fixed page-with-wide-sidebar page-with-light-sidebar viewArticleFont">
+    {% include 'user_app/includes/header.html' %}
     {% if 1 in request.user.get_roles %}
-        {% include 'user_app/includes/sidebar.html' %}
+    {% include 'user_app/includes/sidebar.html' %}
     {% endif %}
 
-        {% block content %}
-        {% endblock content %}
+    {% block content %}
+    {% endblock content %}
 
-        <div id="show_res"></div>
-        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade"
-           data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
-    </div>
+    <div id="show_res"></div>
+    <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade"
+       data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+</div>
 {% endblock base_content %}
 
 <!-- end page container -->

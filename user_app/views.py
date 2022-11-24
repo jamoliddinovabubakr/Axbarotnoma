@@ -1,4 +1,4 @@
-from article_app.models import Journal, Notification, Article, NotificationStatus, ExtraAuthor
+from article_app.models import Journal, Notification, Article, NotificationStatus, ExtraAuthor, ArticleStatus
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from user_app.decorators import unauthenticated_user, password_reset_authentification
@@ -210,6 +210,191 @@ def editor_notifications(request):
     }
 
     return JsonResponse(data)
+
+
+@login_required(login_url='login')
+# @allowed_users(menu_url='notifications')
+def user_notofication_view(request, pk):  #author-editor and editor-author comments
+    article = Article.objects.get(pk=pk)
+    current_user_id = request.user.id
+    author_id = article.author.id
+
+    if request.method == "GET":
+        from_user_author_vs_editor = Notification.objects.filter(
+            article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=author_id)
+
+        to_user_author_vs_editor = Notification.objects.filter(
+            article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=author_id)
+
+        notifications = from_user_author_vs_editor.union(
+            to_user_author_vs_editor).order_by('created_at')
+
+        messages = Notification.objects.filter(
+            article=article).filter(is_update_article=False)
+
+        for item in messages:
+            item.notification_status = NotificationStatus.objects.get(pk=3)
+            item.save()
+
+        data = {
+            "article_title": article.title,
+            "current_user_id": request.user.id,
+            "notifications": list(
+                notifications.values(
+                    'id', 'article__id', 'from_user__username', 'from_user__email', 'from_user__id', 'message',
+                    'to_user__username', 'to_user__email', 'to_user__id', 'created_at',
+                )
+            ),
+        }
+        return JsonResponse(data)
+
+
+@login_required(login_url='login')
+# @allowed_users(menu_url='notifications')
+def editor_vs_reviewer(request, pk):  #editor-reviewer and reviewer-editor comments
+    article = Article.objects.get(pk=pk)
+    if request.method == "GET":
+        from_user_notifications = Notification.objects.filter(
+            article_id=pk).filter(from_user_id=request.user.id)
+
+        to_user_notifications = Notification.objects.filter(
+            article_id=pk).filter(to_user_id=request.user.id)
+
+        notifications = from_user_notifications.union(
+            to_user_notifications).order_by('created_at')
+
+        messages = Notification.objects.filter(
+            article=article).filter(is_update_article=False)
+
+        for item in messages:
+            item.notification_status = NotificationStatus.objects.get(pk=3)
+            item.save()
+
+        data = {
+            "article_title": article.title,
+            "current_user_id": request.user.id,
+            "notifications": list(
+                notifications.values(
+                    'id', 'article__id', 'from_user__username', 'from_user__email', 'from_user__id', 'message', 'to_user__username', 'to_user__email',
+                    'to_user__id', 'created_at',
+                )
+            ),
+        }
+        return JsonResponse(data)
+
+
+
+
+@login_required(login_url='login')
+def load_notification(request):
+    if request.method == 'GET':
+        user = User.objects.get(pk=request.user.id)
+
+        uncheck_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
+            Q(notification_status_id=1) | Q(notification_status_id=2))
+        check_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
+            Q(notification_status_id=3))
+
+        data = {
+            "uncheck_notifications": list(uncheck_notifications.values(
+                'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
+                'created_at'
+            )),
+            "check_notifications": list(check_notifications.values(
+                'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
+                'created_at'
+            ))
+        }
+
+        return JsonResponse(data)
+    else:
+        return JsonResponse("Error")
+
+
+@login_required(login_url='login')
+def count_notification(request):
+    if request.method == 'GET':
+        user = User.objects.get(pk=request.user.id)
+
+        unread_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
+            notification_status_id=1)
+        count_unread_notifications = unread_notifications.count()
+        notifications = unread_notifications[:5]
+
+        return JsonResponse(
+            {"count_unread_notifications": count_unread_notifications,
+             "notifications": list(notifications.values(
+                 'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
+                 'created_at'
+             ))})
+
+
+@login_required(login_url='login')
+def editor_check_article(request, pk):
+    notifification = get_object_or_404(Notification, pk=pk)
+    notifification.notification_status = NotificationStatus.objects.get(id=2)
+    notifification.save()
+    article = Article.objects.get(pk=notifification.article.id)
+
+    authors = ExtraAuthor.objects.filter(article=article)
+
+    context = {
+        "article": article,
+        "authors": authors,
+        "n_id": pk,
+    }
+    return render(request, 'user_app/check_article_by_editor.html', context=context)
+
+
+
+@login_required(login_url='login')
+def load_reviewers(request):
+    reviewers = Reviewer.objects.filter(is_reviewer=True)
+
+    data = {
+        "reviewers": list(reviewers.values(
+            'id', 'user__id', 'user__first_name', 'user__last_name', 'user__email'
+        ))
+    }
+    return JsonResponse(data=data)
+
+
+
+@login_required(login_url='login')
+def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
+    user = get_object_or_404(User, pk=request.user.id)
+    if request.method == 'POST':
+        selected = request.POST.getlist('reviewers[]')
+        token = request.POST['csrfmiddlewaretoken']
+        article_id = request.POST['article_id']
+
+        if len(selected) > 0 and token and article_id:
+            article = Article.objects.get(pk=int(article_id))
+            for item in selected:
+                reviewer = get_object_or_404(Reviewer, pk=int(item))
+                reviewer_user = get_object_or_404(User, pk=reviewer.user.id)
+                
+                Notification.objects.create(
+                    article=article,
+                    from_user=user,
+                    to_user=reviewer_user,
+                    message="Tekshirish uchun sizga maqola yuborildi.",
+                    notification_status=NotificationStatus.objects.get(id=1),
+                    is_update_article=True,
+                )
+            article.article_status = get_object_or_404(ArticleStatus, pk=4)
+            article.save()
+            data = {
+                "is_valid": True,
+                "message": "Taqrizchilarga muvaffaqiyatli yuborildi!",
+            }
+            return JsonResponse(data=data)
+        else:
+            data = {
+                "is_valid": False,
+                "message": "Taqrizchilarni to'liq tanlang!",
+            }
+            return JsonResponse()
 
 
 # @login_required(login_url='login')
@@ -497,237 +682,3 @@ def editor_notifications(request):
 
 
 # Glavniy redaktor
-@login_required(login_url='login')
-# @allowed_users(menu_url='notifications')
-def user_notofication_view(request, pk):
-    article = Article.objects.get(pk=pk)
-    if request.method == "GET":
-        from_user_notifications = Notification.objects.filter(
-            article_id=pk).filter(from_user_id=request.user.id)
-        to_user_notifications = Notification.objects.filter(
-            article_id=pk).filter(to_user_id=request.user.id)
-        notifications = from_user_notifications.union(
-            to_user_notifications).order_by('created_at')
-
-        data = {
-            "article_title": article.title,
-            "current_user_id": request.user.id,
-            "notifications": list(
-                notifications.values(
-                    'id', 'article__id', 'from_user__username', 'from_user__id', 'message', 'to_user__username',
-                    'to_user__id', 'created_at',
-                )
-            ),
-        }
-        return JsonResponse(data)
-
-
-@login_required(login_url='login')
-def load_notification(request):
-    if request.method == 'GET':
-        user = User.objects.get(pk=request.user.id)
-
-        uncheck_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
-            Q(notification_status_id=1) | Q(notification_status_id=2))
-        check_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
-            Q(notification_status_id=3))
-
-        data = {
-            "uncheck_notifications": list(uncheck_notifications.values(
-                'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
-                'created_at'
-            )),
-            "check_notifications": list(check_notifications.values(
-                'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
-                'created_at'
-            ))
-        }
-
-        return JsonResponse(data)
-    else:
-        return JsonResponse("Error")
-
-
-@login_required(login_url='login')
-def count_notification(request):
-    if request.method == 'GET':
-        user = User.objects.get(pk=request.user.id)
-
-        unread_notifications = Notification.objects.all().order_by("-created_at").filter(to_user=user).filter(
-            notification_status_id=1)
-        count_unread_notifications = unread_notifications.count()
-        notifications = unread_notifications[:5]
-
-        return JsonResponse(
-            {"count_unread_notifications": count_unread_notifications,
-             "notifications": list(notifications.values(
-                 'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
-                 'created_at'
-             ))})
-
-
-@login_required(login_url='login')
-def editor_check_article(request, pk):
-    notifification = get_object_or_404(Notification, pk=pk)
-    notifification.notification_status = NotificationStatus.objects.get(id=2)
-    notifification.save()
-    article = Article.objects.get(pk=notifification.article.id)
-    authors = ExtraAuthor.objects.filter(article=article)
-
-    context = {
-        "article": article,
-        "authors": authors,
-    }
-    return render(request, 'user_app/check_article_by_editor.html', context=context)
-
-
-
-# @login_required(login_url='login')
-# @allowed_users(perm='change_notification')
-# def answer_to_author(request, pk):
-#     notif = get_object_or_404(Notification, pk=pk)
-#     user = User.objects.get(pk=notif.article.author.id)  # user ga email
-#     article = get_object_or_404(Article, pk=notif.article.id)  # article
-#     if notif and request.method == 'GET':
-#         re_send = State.objects.get(pk=5)  # resend переотправить
-#         reject = State.objects.get(pk=2)  # rejected отказ
-#         confirm = State.objects.get(pk=3)  # reading прочитенно
-#
-#         msg = request.GET.get('message_author')  # message from editor
-#         result = request.GET.get('stateArticle')  # result state
-#         my_resends = MyResendArticle.objects.filter(article=article)  # junatgandi hammasini oladi
-#         my_resend_last = my_resends.last()  # bu junatilgan dan oxirini oladi
-#
-#         if result == '1':  # result this is button 'Rad etish'
-#             article.state = reject  # article ni statusini rad etishga tenglayapmiz
-#             article.save()  # bo'lgan otkazni saqlayapmiz
-#
-#             my_resend_last.state = reject  # oxirgi junatilgan article ni state ni rejected qiladi
-#             my_resend_last.message = msg  # va uning sms ni uzing message ga tenglab quyapdi
-#             my_resend_last.save()  # rejected ni save qilamiz
-#
-#             notif.status = 'Tekshirildi'  # editor dagi xolatni change qilyapmiz
-#             notif.save()  # va edit dagi artivle ni save qilyapmiz
-#
-#             # sent_email_message(user.email, result)
-#
-#         elif result == '2':
-#             article.state = re_send
-#             article.save()
-#
-#             my_resend_last.state = re_send
-#             my_resend_last.message = msg
-#             my_resend_last.save()
-#
-#             notif.status = 'Tekshirildi'
-#             notif.save()
-#             # sent_email_message(user.email, result)
-#
-#         elif result == '3':
-#             article.state = confirm
-#             article.save()
-#
-#             my_resend_last.state = confirm
-#             my_resend_last.message = msg
-#             my_resend_last.save()
-#
-#             notif.status = 'Tekshirildi'
-#             notif.save()
-#             # sent_email_message(user.email, result)
-#
-#     return redirect('notifications')
-#
-#
-# # END Glavniy redaktor
-#
-# @login_required(login_url='login')
-# @allowed_users(menu_url='menus')
-# def get_menus(request):
-#     menus = Menu.objects.filter(status=True)
-#     context = {
-#         'menus': menus
-#     }
-#     return render(request, "user_app/settings/menus_page.html", context=context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='change_menu')
-# def edit_menu(request, pk):
-#     menu = get_object_or_404(Menu, pk=pk)
-#     if request.method == 'POST':
-#         form = CreateMenuForm(request.POST, instance=menu)
-#         form.save()
-#         return redirect('menus')
-#
-#     else:
-#         form = CreateMenuForm(instance=menu)
-#         return render(request, 'user_app/crud/edit_menu.html', {"menu": menu, 'form': form})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='delete_menu')
-# def delete_menu(request, pk):
-#     menu = get_object_or_404(Menu, pk=pk)
-#     if request.method == "POST":
-#         menu.delete()
-#         return redirect('menus')
-#     else:
-#         return render(request, 'user_app/crud/delete_menu.html', {'menu': menu})
-#
-#
-# @login_required(login_url='login')
-# # @allowed_users(perm='delete_menu')
-# def send_to_review(request, article_id):
-#     print(f"article_id={article_id}")
-#     ob = MyResendArticle.objects.filter(article__id=article_id).last()
-#     print(ob.id)
-#     article = Article.objects.get(pk=article_id)
-#     specialities = set(ob.article.get_categories())
-#     users = User.objects.filter(role__id=4)
-#
-#     reviews = []
-#
-#     for user in users:
-#         if specialities.intersection(set(user.get_speciality())):
-#             reviews.append(user)
-#
-#     if len(reviews) > 0:
-#         for review in reviews:
-#             Notification.objects.create(
-#                 title=ob.article.title,
-#                 article=article,
-#                 user=review,
-#                 my_resend=ob,
-#                 description="Yangi maqola yuborildi",
-#             )
-#         ob.state = get_object_or_404(State, pk=6)
-#         print(ob.state.id)
-#         ob.save()
-#         return redirect('notifications')
-#     else:
-#         return HttpResponse("Kechirasiz taqrizchilar topilmadi!")
-#
-#
-# def review_notifications(request):
-#     return render(request, "user_app/reviews/notif_review.html")
-#
-#
-# def get_review_view_notification(request):
-#     notifications = Notification.objects.filter(user=request.user).order_by("-created_at")
-#     return JsonResponse({"notifications": list(notifications.values(
-#         'id', 'title', 'status', 'created_at', 'result_review', 'my_resend__article', 'description'
-#     ))})
-#
-#
-# def review_view_notification(request, pk):
-#     notif = get_object_or_404(Notification, pk=pk)
-#
-#     if notif.status == 'Tekshirilmadi':
-#         notif.status = 'Tekshirilmoqda'
-#         notif.save()
-#
-#     context = {
-#         'notif': notif,
-#     }
-#
-#     return render(request, "user_app/reviews/notification_view.html", context=context)
