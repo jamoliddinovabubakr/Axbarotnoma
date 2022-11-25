@@ -29,8 +29,8 @@ Dashboard
                     <div class="row">
                         <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5></div>
                         <div class="col-md-6">
-                            <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
-                               class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
+                            <button type="button" data-id="create_article"  style="float: right"
+                               class="btn btn-success btn-sm create_article_btn"><i class="fa fa-plus mr-1"></i>New Submission</a>
                         </div>
                     </div>
                     <br>
@@ -156,41 +156,68 @@ Dashboard
         </div>
         <div class="col-md-2"></div>
     </div>
-
-        <div class="col-lg-12 col-lg-6" id="MessageBox" style="display: none;">
-            <!-- begin widget-chat -->
-            <div class="m-b-10 m-t-10 f-s-12">
-                <h5 class="text-inverse">Messages</h5>
-            </div>
-
-            <div class="widget-chat widget-chat-rounded m-b-30" style="width:600px;" data-id="widget">
-
-                <!-- begin widget-chat-header -->
-                <div class="widget-chat-header">
-                    <div class="widget-chat-header-icon">
-                        <i class="fa fa-book width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
-                           style="line-height: 30px"></i>
+    <div class="row">
+            <div class="col-md-10">
+                <div class="col-md-12 col-md-6" style="display: none;" id="MessageBoxAuthor">
+                    <!-- begin widget-chat -->
+                    <div class="m-b-10 m-t-10 f-s-12">
+                        <h5 class="text-inverse">Messages</h5>
                     </div>
-                    <div class="widget-chat-header-content">
-                        <h4 class="widget-chat-header-title" id="article_title"></h4>
+                
+                    <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
+                
+                        <!-- begin widget-chat-header -->
+                        <div class="widget-chat-header">
+                            <div class="widget-chat-header-icon">
+                                <i class="fa fa-book width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
+                                           style="line-height: 30px"></i>
+                            </div>
+                            <div class="widget-chat-header-content">
+                                <h4 class="widget-chat-header-title" id="article_title">Ilmiy Markaz</h4>
+                            </div>
+                            <div class="widget-chat-header-content write-message-div">
+                                        
+                            </div>
+                        </div>
+                        <!-- end widget-chat-header -->
+                
+                        <!-- begin widget-chat-body -->
+                        <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="user_chat_body">
+                
+                
+                        </div>
+                        <!-- end widget-chat-body -->
                     </div>
                 </div>
-                <!-- end widget-chat-header -->
-
-                <!-- begin widget-chat-body -->
-                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="user_chat_body">
-
-
-                </div>
-                <!-- end widget-chat-body -->
             </div>
-            <div class="m-b-10 m-t-10 f-s-12 write-message-div"></div>
-        </div>
+        <div class="col-md-2"></div>
+    </div>
+
 </div>
 <div id="write_message_div_form"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<div id="create_article_div"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
-    $('body').on('click', '.write-message-btn', function (e) {
+    $('body').on('click', '.create_article_btn', function (e) {
+        e.preventDefault();
+
+        let id = $(this).data('id');
+
+        $.ajax({
+            type: 'GET',
+            url: "/article/create/",
+            success: function (response) {
+                $('#create_article_div').html(response);
+                $('#create_article_modal').modal('show');
+            },
+            error: function (error) {
+                console.log("Xatolik");
+                console.log(error);
+            }
+        });
+    });
+
+    $('body').on('click', '.authorWrite-message-btn', function (e) {
         e.preventDefault();
 
         let id = $(this).data('id');
@@ -212,6 +239,7 @@ Dashboard
     });
 
         function OnClickViewArticle(id) {
+            $('#MessageBoxAuthor').css("display", "none");
             $.ajax({
                 type: "GET",
                 url: "/article/view/" + id + "/",
@@ -230,8 +258,8 @@ Dashboard
                         + `</td><td>` +
                         response['title'] + `</td><td>` +
                         response['created_at'] + `</td><td>` +
-                        `<a class="btn btn-sm btn-outline-warning" href="/article/edit/${response['id']}/">Edit</a>` + " " +
-                        `<a class="btn btn-sm btn-outline-danger"  href="/article/delete/${response['id']}/">Delete</a>`
+                        `<a class="btn btn-sm btn-outline-warning edit_article_btn" href="/article/edit/${response['id']}/">Edit</a>` + " " +
+                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-danger remove_article_btn">Delete</button>`
                         + "</td></tr>";
                     $("#articleDetail").append(temp);
                 },
@@ -244,43 +272,56 @@ Dashboard
         $('body').on('click', '.view_message_btn', function(e){
             e.preventDefault();
             let id = $(this).data('id');
-            $('#MessageBox').css("display", "block");
         
                     $.ajax({
                         type: "GET",
                         url: "/profile/article_notification/view/" + id + "/",
                         success: function (response) {
                             console.log(response);
-                            $('#article_title').text(response.article_title);
-                            $('#user_chat_body').empty();
-        
-                           for(let item of response.notifications){
-        
-                            let time_tz = new Date(item.created_at);
-                            let time_string = time_tz.toLocaleDateString();
-        
-                                if(response.current_user_id === item.from_user__id){
-        
-                                    let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
-                                         + item.from_user__email + 
-                                         `</div><div class="widget-chat-message">` 
-                                            + item.message + 
-                                            `</div><div class="widget-chat-time">` 
-                                                + time_string + 
-                                                `</div></div></div></div>`;
-        
-                                    $('#user_chat_body').append(temp1); 
-                                }
-        
-                                if(response.current_user_id === item.to_user__id){
-        
-                                    let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
-                                    $('#user_chat_body').append(temp2); 
-                                }
-                            }   
-                            $('.write-message-div').empty();
-                            $('.write-message-div').append(`<button data-id="${id}" type="button" class="btn btn-success btn-sm write-message-btn" style="float: left"><i class="fa fa-comment"></i> Write Message </button>`);
-                        
+                            if(response.is_visible_comment){
+                                $('#MessageBoxAuthor').css("display", "block");
+
+                                $('#article_title').text(response.article_title);
+                                $('#user_chat_body').empty();
+            
+                               for(let item of response.notifications){
+            
+                                    let time_tz = new Date(item.created_at);
+                                    let time_string = time_tz.toLocaleString();
+            
+                                    if(response.current_user_id === item.from_user__id){
+            
+                                        let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
+                                             + item.from_user__email + 
+                                             `</div><div class="widget-chat-message">` 
+                                                + item.message + 
+                                                `</div><div class="widget-chat-time">` 
+                                                    + time_string + 
+                                                    `</div></div></div></div>`;
+            
+                                        $('#user_chat_body').append(temp1); 
+                                    }
+            
+                                    if(response.current_user_id === item.to_user__id){
+            
+                                        let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
+                                             + item.from_user__email + `</div><div class="widget-chat-message">`
+                                                 + item.message + `</div><div class="widget-chat-time">`
+                                                     + time_string + `</div></div></div></div>`;
+                                        $('#user_chat_body').append(temp2); 
+                                    }
+                                }   
+    
+                                $('.write-message-div').empty();
+                                $('.write-message-div').append(`<button data-id="${id}" type="button" class="btn btn-sm btn-info authorWrite-message-btn" style="float: right"><i class="fa fa-comment"></i> Write Message </button>`);
+                            
+                            } else {
+                                swal({
+                                    title: response.message,
+                                    timer: 3000,
+                                });
+                            }
+                           
                         },
                         error: function (response) {
                             console.log(response);
@@ -289,6 +330,27 @@ Dashboard
 
                     return false;
         });
+
+        $('body').on('click', '.remove_article_btn', function (e) {
+            e.preventDefault();
+    
+            let id = $(this).data('id');
+    
+            $.ajax({
+                type: 'GET',
+                url: "/article/delete/" + id + "/",
+                success: function (response) {
+                    $('#create_article_div').html(response);
+                    $('#delete_article_modal').modal('show');
+                
+                },
+                error: function (error) {
+                    console.log("Xatolik");
+                    console.log(error);
+                }
+            });
+        });
+        
 
         function OnClickSubmissionTab() {
             $('#articleView').css("display", "none");

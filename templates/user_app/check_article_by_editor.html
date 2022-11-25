@@ -49,15 +49,16 @@
                 <hr>
                 <div class="row d-flex justify-content-center">
                     <button type="button" data-id="{{ article.id }}" id="view-article-messages" class="btn btn-md btn-info">
-                        <i class="fa fa-comment"></i>  LOAD MESSAGES OF AUTHOR AND REVIEWER</button>
+                        <i class="fa fa-comment"></i>  LOAD MESSAGES</button>
                 </div>
                 <hr>
                 <div class="row">
+
                     <div class="col-lg-6">
                         <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxEditor1">
                             <!-- begin widget-chat -->
                             <div class="m-b-10 m-t-10 f-s-12">
-                                <h5 class="text-inverse">Author Messages</h5>
+                                <h5 class="text-inverse">Messages</h5>
                             </div>
                 
                             <div class="widget-chat widget-chat-rounded m-b-30" data-id="widget">
@@ -69,10 +70,10 @@
                                            style="line-height: 30px"></i>
                                     </div>
                                     <div class="widget-chat-header-content">
-                                        <h4 class="widget-chat-header-title">Ilmiy Markaz</h4>
+                                        <h4 class="widget-chat-header-title">Sending Message To Author</h4>
                                     </div>
                                     <div class="widget-chat-header-content">
-                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info editorWrite-message-btn" style="float:right;">SEND MESSAGE</button>
+                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info editorWrite-message-btn1" style="float:right;">SEND MESSAGE</button>
                                     </div>
                                 </div>
                                 <!-- end widget-chat-header -->
@@ -86,11 +87,12 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-6">
                         <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxEditor2">
                             <!-- begin widget-chat -->
                             <div class="m-b-10 m-t-10 f-s-12">
-                                <h5 class="text-inverse">Reviewer Messages</h5>
+                                <h5 class="text-inverse">Messages</h5>
                             </div>
                 
                             <div class="widget-chat widget-chat-rounded m-b-30" data-id="widget">
@@ -102,10 +104,10 @@
                                            style="line-height: 30px"></i>
                                     </div>
                                     <div class="widget-chat-header-content">
-                                        <h4 class="widget-chat-header-title">Ilmiy Markaz</h4>
+                                        <h4 class="widget-chat-header-title">Sending Message To Reviewer</h4>
                                     </div>
                                     <div class="widget-chat-header-content">
-                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info editorWrite-message-btn2" style="float:right;" {% if article.article_status.id == 1 %} disabled {% endif%}>SEND MESSAGE</button>
+                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info editorWrite-message-btn2" style="float:right;">SEND MESSAGE</button>
                                     </div>
                                 </div>
                                 <!-- end widget-chat-header -->
@@ -119,6 +121,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="col-lg-12">
                         <div class="col-lg-12 col-lg-6">
                             <br>
@@ -209,7 +212,6 @@
             }
 
             if (n >= 2 && n <=5){
-                $('.editorWrite-message-btn2').removeAttr('disabled');
                 $.ajax({
                     type : "POST", 
                     url: "/profile/sending_reviewer/",
@@ -280,8 +282,7 @@
 
         $('body').on('click', '#view-article-messages', function(e){
             e.preventDefault();
-            $('#MessageBoxEditor1').css('display', 'block');
-            $('#MessageBoxEditor2').css('display', 'block');
+            
             let id = $(this).data('id');
         
                     $.ajax({
@@ -289,8 +290,8 @@
                         url: "/profile/article_notification/view/" + id + "/",
                         success: function (response) {
                             console.log(response);
+                            $('#MessageBoxEditor1').css('display', 'block');
                             $('#editor_chat_body1').empty();
-                            $('#editor_chat_body2').empty();
         
                            for(let item of response.notifications){
         
@@ -309,7 +310,6 @@
                                                 `</div></div></div></div>`;
         
                                     $('#editor_chat_body1').append(temp1); 
-                                    $('#editor_chat_body2').append(temp1); 
                                 }
         
                                 if(response.current_user_id === item.to_user__id){
@@ -317,8 +317,51 @@
         
                                     let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
                                     $('#editor_chat_body1').append(temp2); 
-                                    $('#editor_chat_body2').append(temp2); 
                                 }
+                            }
+                        
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/profile/comment_editor_vs_reviewer/" + id + "/",
+                        success: function (response) {
+                            console.log(response);
+                            $('#MessageBoxEditor2').css('display', 'block');
+                            $('#editor_chat_body2').empty();
+        
+                            if(response.is_visible_comment){
+                                for(let item of response.notifications){
+        
+                                    let time_tz = new Date(item.created_at);
+                                    let time_string = time_tz.toLocaleDateString();
+                                    console.log(time_string);
+                
+                                        if(response.current_user_id === item.from_user__id){
+                
+                                            let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
+                                                 + item.from_user__email + 
+                                                 `</div><div class="widget-chat-message">` 
+                                                    + item.message + 
+                                                    `</div><div class="widget-chat-time">` 
+                                                        + time_string + 
+                                                        `</div></div></div></div>`;
+                
+                                            $('#editor_chat_body2').append(temp1); 
+                                        }
+                
+                                        if(response.current_user_id === item.to_user__id){
+                
+                                            let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
+                                            $('#editor_chat_body2').append(temp2); 
+                                        }
+                                    }
+                            } else {
+                                $('#editor_chat_body2').append("<h3 class='text-danger'>" + response.message + "</h3>");
                             }
                         
                         },
@@ -329,7 +372,26 @@
 
         });
 
-        $('body').on('click', '.editorWrite-message-btn', function (e) {
+        $('body').on('click', '.editorWrite-message-btn1', function (e) {
+            e.preventDefault();
+    
+            let id = $(this).data('id');
+
+            $.ajax({
+                type: 'GET',
+                url: "/send_message/" + id + "/",
+                success: function (response) {
+                    $('#writeeditor_message_div').html(response);
+                    $('#send-message-modal').modal('show');
+                },
+                error: function (error) {
+                    console.log("Xatolik");
+                    console.log(error);
+                }
+            });
+        });
+
+        $('body').on('click', '.editorWrite-message-btn2', function (e) {
             e.preventDefault();
     
             let id = $(this).data('id');

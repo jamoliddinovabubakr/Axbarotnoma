@@ -21,7 +21,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Group, Permission
 from user_app.decorators import allowed_users
-from user_app.models import Menu
+from user_app.models import Menu, ReviewerArticle, StatusReview
 from django.utils.translation import get_language_from_request
 
 
@@ -164,7 +164,7 @@ def logout_user(request):
 # @allowed_users(menu_url='profile_page')
 def dashboard(request):
     user = request.user
-    myqueues = Article.objects.filter(author=user).filter(Q(article_status_id=1) | Q(article_status_id=6)).order_by(
+    myqueues = Article.objects.filter(author=user).filter(Q(article_status_id=1) | Q(article_status_id=4) | Q(article_status_id=5) | Q(article_status_id=6)).order_by(
         '-updated_at')
     myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by(
         '-updated_at')
@@ -214,20 +214,39 @@ def editor_notifications(request):
 
 @login_required(login_url='login')
 # @allowed_users(menu_url='notifications')
-def user_notofication_view(request, pk):  #author-editor and editor-author comments
+def author_vs_editor(request, pk):  #author-editor and editor-author comments
     article = Article.objects.get(pk=pk)
-    current_user_id = request.user.id
+    user = get_object_or_404(User, pk=request.user.id)
+    current_user_id = user.id
     author_id = article.author.id
 
     if request.method == "GET":
-        from_user_author_vs_editor = Notification.objects.filter(
+        if min(user.get_roles) == 2 and user.id != author_id:
+            current_user_from = Notification.objects.filter(
             article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=author_id)
 
-        to_user_author_vs_editor = Notification.objects.filter(
+
+            current_user_to = Notification.objects.filter(
             article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=author_id)
 
-        notifications = from_user_author_vs_editor.union(
-            to_user_author_vs_editor).order_by('created_at')
+        if min(user.get_roles) == 2 and user.id == author_id:
+            data = {
+            "is_visible_comment": False,
+            "message": "Siz bu tizimda Editor bo'lganiz uchun Cooment qismiga ruxsat yo'q!",
+            }
+            return JsonResponse(data)
+
+
+        if min(user.get_roles) == 4:
+            current_user_from = Notification.objects.filter(
+            article_id=pk).filter(from_user_id=current_user_id)
+
+
+            current_user_to = Notification.objects.filter(
+            article_id=pk).filter(to_user_id=current_user_id)
+
+        notifications = current_user_from.union(
+            current_user_to).order_by('created_at')
 
         messages = Notification.objects.filter(
             article=article).filter(is_update_article=False)
@@ -238,7 +257,9 @@ def user_notofication_view(request, pk):  #author-editor and editor-author comme
 
         data = {
             "article_title": article.title,
-            "current_user_id": request.user.id,
+            "current_user_id": current_user_id,
+            "author_id": author_id,
+            "is_visible_comment": True,
             "notifications": list(
                 notifications.values(
                     'id', 'article__id', 'from_user__username', 'from_user__email', 'from_user__id', 'message',
@@ -251,20 +272,58 @@ def user_notofication_view(request, pk):  #author-editor and editor-author comme
 
 @login_required(login_url='login')
 # @allowed_users(menu_url='notifications')
-def editor_vs_reviewer(request, pk):  #editor-reviewer and reviewer-editor comments
+def editor_vs_reviewer(request, pk):  #review-editor and editor-reviewer comments
     article = Article.objects.get(pk=pk)
+    user = get_object_or_404(User, pk=request.user.id)
+    current_user_id = user.id
+    author_id = article.author.id
+
     if request.method == "GET":
-        from_user_notifications = Notification.objects.filter(
-            article_id=pk).filter(from_user_id=request.user.id)
+        querysets = []
+        if min(user.get_roles) == 2:
+            editor = Editor.objects.get(user_id=current_user_id)
+            article_revieing = ReviewerArticle.objects.filter(editor_id=editor.id).filter(article=article)
+            print("Editor")
+            print(article_revieing)
 
-        to_user_notifications = Notification.objects.filter(
-            article_id=pk).filter(to_user_id=request.user.id)
+            for item in article_revieing:
+                reviewer = item.reviewer
+                current_user_from = Notification.objects.filter(article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=reviewer.user.id)
+                current_user_to = Notification.objects.filter(article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=reviewer.user.id)
 
-        notifications = from_user_notifications.union(
-            to_user_notifications).order_by('created_at')
+                querysets.append(current_user_from.union(current_user_to))
 
-        messages = Notification.objects.filter(
-            article=article).filter(is_update_article=False)
+        if min(user.get_roles) == 3:
+            print("Taqriz")
+            reviewer = Reviewer.objects.get(user_id=current_user_id)
+            article_revieing = ReviewerArticle.objects.filter(reviewer_id=reviewer.id).filter(article=article)
+            print(article_revieing)
+
+            for item in article_revieing:
+                editor = item.editor
+                current_user_from = Notification.objects.filter(article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=editor.user.id)
+                current_user_to = Notification.objects.filter(article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=editor.user.id)
+
+                querysets.append(current_user_from.union(current_user_to))
+
+        if len(querysets) == 0:
+            data = {
+            "is_visible_comment": False,
+            "message": "Reviewers no comments!",
+            }
+            return JsonResponse(data)
+        elif len(querysets) == 1:
+            notifications = querysets[0]
+        elif len(querysets) == 2:
+             notifications = querysets[0].union(querysets[1])
+        else:
+            notifications = querysets[0]
+            for i in range(1, len(querysets)):
+                notifications = notifications.union(querysets[i])
+
+        notifications = notifications.order_by('created_at')
+
+        messages = notifications.filter(to_user_id=current_user_id).filter(is_update_article=False)
 
         for item in messages:
             item.notification_status = NotificationStatus.objects.get(pk=3)
@@ -272,17 +331,16 @@ def editor_vs_reviewer(request, pk):  #editor-reviewer and reviewer-editor comme
 
         data = {
             "article_title": article.title,
-            "current_user_id": request.user.id,
+            "current_user_id": current_user_id,
+            "is_visible_comment": True,
             "notifications": list(
                 notifications.values(
-                    'id', 'article__id', 'from_user__username', 'from_user__email', 'from_user__id', 'message', 'to_user__username', 'to_user__email',
-                    'to_user__id', 'created_at',
+                    'id', 'article__id', 'from_user__username', 'from_user__email', 'from_user__id', 'message',
+                    'to_user__username', 'to_user__email', 'to_user__id', 'created_at',
                 )
             ),
         }
         return JsonResponse(data)
-
-
 
 
 @login_required(login_url='login')
@@ -346,7 +404,6 @@ def editor_check_article(request, pk):
     return render(request, 'user_app/check_article_by_editor.html', context=context)
 
 
-
 @login_required(login_url='login')
 def load_reviewers(request):
     reviewers = Reviewer.objects.filter(is_reviewer=True)
@@ -357,7 +414,6 @@ def load_reviewers(request):
         ))
     }
     return JsonResponse(data=data)
-
 
 
 @login_required(login_url='login')
@@ -378,10 +434,19 @@ def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
                     article=article,
                     from_user=user,
                     to_user=reviewer_user,
-                    message="Tekshirish uchun sizga maqola yuborildi.",
+                    message=f"Xurmatli Taqrizchi({reviewer_user.email}). Tekshirish uchun sizga maqola yuborildi.",
                     notification_status=NotificationStatus.objects.get(id=1),
                     is_update_article=True,
                 )
+
+                ReviewerArticle.objects.create(
+                    article=article,
+                    editor=user,
+                    reviewer=reviewer_user,
+                    status=StatusReview.objects.get(pk=1),
+                    comment="",
+                )
+
             article.article_status = get_object_or_404(ArticleStatus, pk=4)
             article.save()
             data = {
@@ -394,7 +459,7 @@ def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
                 "is_valid": False,
                 "message": "Taqrizchilarni to'liq tanlang!",
             }
-            return JsonResponse()
+            return JsonResponse(data=data)
 
 
 # @login_required(login_url='login')

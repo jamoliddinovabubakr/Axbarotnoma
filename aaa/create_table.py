@@ -107,6 +107,26 @@ def insert_to_notificationstatus(records):
             print("PostgreSQL connection is closed")
 
 
+def insert_to_reviewstatus(records):
+    try:
+        conn = connect(host=host, user=user, password=password, database=database, port=port)
+        cursor = conn.cursor()
+        conn.autocommit = True
+        sql = """ INSERT INTO user_app_statusreview (name) VALUES (%s) """
+
+        cursor.executemany(sql, records)
+        print(cursor.rowcount, "Record inserted successfully into user_app_statusreview table")
+
+    except (Exception, Error) as error:
+        print("Failed inserting record into user_app_statusreview table {}".format(error))
+
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+            print("PostgreSQL connection is closed")
+
+
 if __name__ == '__main__':
     stages = [
         ('submission',),
@@ -140,8 +160,16 @@ if __name__ == '__main__':
         ('Read',),
     ]
 
+    review_status = [
+        ('Came',),
+        ('Is seeing',),
+        ('Confirmed',),
+        ('Denied',),
+    ]
+
     # insert_to_stage(stages)
     # insert_to_article_status(article_status)
     # insert_to_role(roles)
     # insert_to_auth_group(groups)
     # insert_to_notificationstatus(notif_status)
+    # insert_to_reviewstatus(review_status)

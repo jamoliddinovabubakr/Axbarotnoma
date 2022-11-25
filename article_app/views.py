@@ -34,28 +34,6 @@ def post_detail(request, slug):
 
 
 @login_required(login_url='login')
-def my_articles(request):
-    user = request.user
-    get_my_articles = Article.objects.filter(author=user).filter(
-        Q(state__id=2) | Q(state__id=3)
-    )
-    paginator = Paginator(get_my_articles, 10)
-    page_num = request.GET.get('page')
-    page = paginator.get_page(page_num)
-    p_n = paginator.count
-    page_count = page.paginator.page_range
-
-    context = {
-        'user': user,
-        'my_articles': get_my_articles,
-        'page_count': page_count,
-        'page': page,
-        'p_n': p_n,
-    }
-    return render(request, "article_app/my_articles.html", context=context)
-
-
-@login_required(login_url='login')
 def create_article(request):
     user = User.objects.get(pk=request.user.id)
     if request.method == "POST":
@@ -74,9 +52,18 @@ def create_article(request):
                 email=article.author.email,
                 work=article.author.work,
             )
-            return redirect('update_article', article.id)
+            data={
+                "result": True,
+                "message": "Ok!",
+                "redirect": f"/article/edit/{article.id}/",
+            }
+            return JsonResponse(data=data)
         else:
-            return HttpResponse("Form is invalid!")
+            data={
+                "result": False,
+                "message": "Form is invalid!",
+            }
+            return JsonResponse(data=data)
     else:
         context = {
             'form': CreateArticleForm(),
@@ -97,11 +84,13 @@ def update_article(request, pk):
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, instance=article)
         if form.is_valid():
+            files = ArticleFile.objects.filter(article=article).filter(file_status=1)
+            title = str(request.POST.get('title')).replace('<p>', '').replace('</p>', '')
             abstrk = str(request.POST.get('abstract')).replace('<p>', '').replace('</p>', '')
             keywords = str(request.POST.get('keywords')).replace('<p>', '').replace('</p>', '')
             references = str(request.POST.get('references')).replace('<p>', '').replace('</p>', '')
 
-            if len(abstrk) == 0 or len(keywords) == 0 or len(references) == 0:
+            if len(abstrk) == 0 or len(keywords) == 0 or len(references) == 0 or len(title)==0 or files.count() == 0:
                 context = {
                     'form': UpdateArticleForm(instance=article),
                     'article': article,
@@ -122,7 +111,7 @@ def update_article(request, pk):
         else:
             data = {
                 'result': 0,
-                'message': "Formani to'liq to'ldiring!",
+                'message': "Formani to'liq to'ldiring...!",
             }
             return JsonResponse(data=data)
     else:
@@ -199,7 +188,11 @@ def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if request.method == "POST":
         article.delete()
-        return redirect('dashboard')
+        data ={
+            "result": True,
+            "message": "Your article was successfully deleted!",
+        }
+        return JsonResponse(data=data)
     else:
         return render(request, 'article_app/crud/delete_article.html', {'article': article})
 

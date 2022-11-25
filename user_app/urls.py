@@ -9,7 +9,9 @@ urlpatterns = [
     path('editor_notifications/', editor_notifications, name='editor_notifications'),
     path('editor_check_article/<int:pk>/', editor_check_article, name='editor_check_article'),
 
-    path('article_notification/view/<int:pk>/', user_notofication_view, name='user_notofication_view'),
+    path('article_notification/view/<int:pk>/', author_vs_editor, name='comment_author_vs_editor'),
+    path('comment_editor_vs_reviewer/<int:pk>/', editor_vs_reviewer, name='comment_editor_vs_reviewer'),
+
     path('load_notif/', load_notification, name='load_notification'),
     path('count_notif/', count_notification, name='count_notification'),
     path('load_reviewers/', load_reviewers, name='load_reviewers'),
