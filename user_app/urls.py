@@ -6,8 +6,11 @@ from user_app.views import *
 urlpatterns = [
     path('user_dashboard/', dashboard, name='dashboard'),
     path('editor_dashboard/', editor_dashboard, name='editor_dashboard'),
+    path('reviewer_dashboard/', reviewer_dashboard, name='reviewer_dashboard'),
     path('editor_notifications/', editor_notifications, name='editor_notifications'),
+    path('reviewer_notifications/', reviewer_notifications, name='reviewer_notifications'),
     path('editor_check_article/<int:pk>/', editor_check_article, name='editor_check_article'),
+    path('reviewer_check_article/<int:pk>/', reviewer_check_article, name='reviewer_check_article'),
 
     path('article_notification/view/<int:pk>/', author_vs_editor, name='comment_author_vs_editor'),
     path('comment_editor_vs_reviewer/<int:pk>/', editor_vs_reviewer, name='comment_editor_vs_reviewer'),

@@ -138,17 +138,17 @@ Dashboard
         <div class="col-md-2"></div>
     </div>
     <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
-        <div class="col-md-10 forshadow" style="padding: 2%; background-color: #fff;">
+        <div class="col-md-10 forshadow" style="padding: 1%; background-color: #fff;">
             <table class="table table-responsive">
                 <thead>
-                <tr>
-                    <th width="1%"><b>ID</b></th>
-                    <th><b>{% trans "File" %}</b></th>
-                    <th><b>{% trans "Title" %}</b></th>
-                    <th><b>{% trans "created_at" %}</b></th>
-                    <th><b>{% trans "Action" %}</b></th>
-                </tr>
-                </thead>
+                    <tr>
+                        <th width="1%"><b>ID</b></th>
+                        <th><b>{% trans "File" %}</b></th>
+                        <th><b>{% trans "Title" %}</b></th>
+                        <th><b>{% trans "created_at" %}</b></th>
+                        <th width="20%"><b>{% trans "Action" %}</b></th>
+                    </tr>
+                    </thead>
                 <tbody id="articleDetail">
 
                 </tbody>
@@ -244,7 +244,6 @@ Dashboard
                 type: "GET",
                 url: "/article/view/" + id + "/",
                 success: function (response) {
-                    $("#articleDetail").empty();
                     $("#articleView").css("display", "block");
 
                     console.log(response);
@@ -258,10 +257,12 @@ Dashboard
                         + `</td><td>` +
                         response['title'] + `</td><td>` +
                         response['created_at'] + `</td><td>` +
-                        `<a class="btn btn-sm btn-outline-warning edit_article_btn" href="/article/edit/${response['id']}/">Edit</a>` + " " +
-                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-danger remove_article_btn">Delete</button>`
+                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-warning edit_article_btn"><i class="fa fa-edit"></i></button>` + " " +
+                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-danger remove_article_btn"><i class="fa fa-trash"></i></button>`
                         + "</td></tr>";
-                    $("#articleDetail").append(temp);
+                    $("#articleDetail").html(temp);
+                    if(response.article_status_id != 6){ $('.edit_article_btn').prop('disabled', true);}
+
                 },
                 error: function (response) {
                     console.log(response);
@@ -329,6 +330,14 @@ Dashboard
                     });
 
                     return false;
+        });
+
+        $('body').on('click', '.edit_article_btn', function (e) {
+            e.preventDefault();
+    
+            let id = $(this).data('id');
+            let url = "/article/edit/" + id + "/";
+            window.location.href = url;
         });
 
         $('body').on('click', '.remove_article_btn', function (e) {

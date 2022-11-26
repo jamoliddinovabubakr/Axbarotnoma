@@ -49,12 +49,7 @@
             success: function (response) {
                 $('#create_article_modal').modal('hide');
                 console.log(response);
-                if (response.result){
-                    
-                    swal({
-                        title: response.message,
-                        timer: 2000,
-                    });
+                if (response.result){       
                     window.location.href = response.redirect;
                 } else {
                     alert(response.message);

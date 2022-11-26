@@ -12,22 +12,22 @@
         <div>
             <div class="panel-body" style="padding:10px;">
                 <div class="row jumbotron forshadow" style="background-color: #FFFFFF; font-size: 15px;">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <table>
+                    <div class="col-md-2">
+                        <div class="card">
+							<img class="card-img-top" src="{{ editor.user.avatar.url }}" width="10" alt="Card image cap" />
+							<div class="card-body">
+								<h5 class="card-title">{{ editor.user.full_name }}</h5>
+								<p class="card-text f-s-13">Bosh Muharrir</p>
+								<p class="card-text text-gray f-s-13">{{ notifification.created_at }}</p>
+							</div>
+						</div>
+                    </div>
+                    <div class="col-md-10">
+                        <table style="margin-left: 3%;">
                             <tr>
                                 <td><p><b>{% trans "Mavzu:" %} </b>{{ article.title|safe }}</p></td>
                             </tr>
-                            <tr>
-                                <td><b>{% trans "Aftorlar:" %} </b></td>
-                            </tr>
-                            {% for author in authors %}
-                                <tr>
-                                    <td>{{ forloop.counter }}. {{ author.lname }} {{ author.fname }}
-                                        ({{ author.work }})
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                        
                             <tr>
                                 <td><p></p><b>{% trans "Abstract:" %} </b>{{ article.abstract|safe }}</td>
                             </tr>
@@ -44,7 +44,6 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-md-2"></div>
                 </div> 
 
                 <div class="row d-flex justify-content-center">
@@ -120,66 +119,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col-lg-12">
-                        <div class="col-lg-12 col-lg-6">
-                            <br>
-                            <div class="m-b-10 m-t-10 f-s-12">
-                                <h5 class="text-inverse">Send to Reviewers. Minimum two Reviewers</h5>
-                            </div>
-                
-                            <div class="jumbotron forshadow">
-                                <div class="form-group row m-b-10 align-items-center">
-									<label class="col-md-3 col-form-label"><h4>Choosing Types</h4></label>
-									<div class="col-md-9">
-										<div class="form-check form-check-inline" style="border:5px solid white; padding:10px; border-radius:10px;">
-											<input class="form-check-input" type="radio" name="radio_reviewer" id="Radio1" value="1" style="box-shadow:0 0 5px 0px gray inset; border-radius:50%; border:1px solid darkgray; width:20px; height:20px; outline:none;"/>
-											<label class="form-check-label" for="defaultInlineRadio1">Search Email</label>
-										</div>
-										<div class="form-check form-check-inline" style="border:5px solid white; padding:10px; border-radius:10px;">
-											<input class="form-check-input" type="radio" name="radio_reviewer" id="Radio2" value="2" style="box-shadow:0 0 5px 0px gray inset; border-radius:50%; border:1px solid darkgray; width:20px; height:20px; outline:none;"/>
-											<label class="form-check-label" for="defaultInlineRadio2">Random Choosing</label>
-										</div>
-									</div>
-								</div>
-                                <br>
-                               
-                                <form method="post" id="choose_reviewer_form">
-                                    {% csrf_token %}
-                                    <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget" id="list_reviewers" style="display: none;">
-                                        <!-- begin widget-todolist-header -->
-                                        <div class="widget-todolist-header">
-                                            <div class="widget-todolist-header-left">
-                                                <h4 class="widget-todolist-header-title">Reviewers</h4>
-                                            </div>
-                                            <div class="widget-todolist-header-right">
-                                                <div class="widget-todolist-header-total" id="count_reviewer"></div>
-                                            </div>
-                                        </div>
-                                        <!-- end widget-todolist-header -->
-                                        <!-- begin widget-todolist-body -->
-                                        <div class="widget-todolist-body" id="widget-todolist-body">
-    
-    
-                                        </div>
-                                        <!-- end widget-todolist-body -->
-                                        <div class="widget-todolist-item">
-                                            <div class="widget-todolist-input">
-                                                <button type="button" data-id="{{ article.id }}" class="btn btn-success" 
-                                                id="send_btn_to_reviewer" {% if article.article_status.id == 4 %} disabled {% endif%}>
-                                                SEND TO SELECTED REVIEWERS</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-
-                                <div class="container" id="random_btn" style="display: none;">
-                                    <button class="btn btn-lg btn-info" id="random_btn" {% if article.article_status.id == 4 %} disabled {% endif%}>Generate Random Choosing Reviewers</button>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -187,97 +126,6 @@
     <div id="writeeditor_message_div"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-        $('body').on('click', '#send_btn_to_reviewer', function(e){
-            e.preventDefault();
-
-            let article_id = $(this).data('id');
-
-            let selected = [];
-            $('#widget-todolist-body input[type=checkbox]').each(function() {
-                if ($(this).is(":checked")) {
-                    selected.push($(this).val());
-                    }
-                });
-
-            let n = selected.length;
-
-            if (n < 2){
-                alert("2 tadan kam odam tanladiz");
-            }
-
-            if (n > 5){
-                alert("5 tadan kop odam tanladiz");
-            }
-
-            if (n >= 2 && n <=5){
-                $.ajax({
-                    type : "POST", 
-                    url: "/profile/sending_reviewer/",
-                    data: {
-                        reviewers : selected,
-                        csrfmiddlewaretoken:'{{ csrf_token }}',
-                        article_id:{{ article.id }}
-                    },
-                    success: function(response){
-                        if(response.is_valid){
-                            $('#send_btn_to_reviewer').prop("disabled", true);
-                            $('#random_btn').prop("disabled", true);
-                            swal({
-                                title: response.message,
-                                timer: 1500,
-                            });
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function(error){
-                        console.log(error);
-                    }
-                
-                    });
-            }
-            
-        });
-
-        $('input:radio[name="radio_reviewer"]').change(function(){
-
-            if ($(this).val() == '1') {
-                $('#list_reviewers').css("display", "block");
-                $('#random_btn').css("display", "none");
-
-                $.ajax({
-                    type: 'GET',
-                    url: "/profile/load_reviewers/",
-                    success: function (response) {
-                        $('#widget-todolist-body').empty();
-                        $('#count_reviewer').html("<span>" + response.reviewers.length + "</span><small>Count</small>");
-                        
-
-                        for(let item of response.reviewers){
-                            let widget_item = `<div class="widget-todolist-item">` + 
-                                `<div class="widget-todolist-input"><div class="checkbox checkbox-css pt-0">`+
-                                    `<input type="checkbox" id="widget_todolist_${item.id}" name="reviewer_checkbox" value="${item.id}"/><label for="widget_todolist_${item.id}" class="p-l-15">&nbsp;</label></div></div>` +
-                                    `<div class="widget-todolist-content"><h4 class="widget-todolist-title">` + item.user__last_name + " " + item.user__first_name + `</h4><p class="widget-todolist-desc">${item.user__email}</p></div>`
-                                + `</div>`;
-
-                                $('#widget-todolist-body').append(widget_item);
-                        }
-                    },
-                    error: function (error) {
-                        console.log("Xatolik");
-                        console.log(error);
-                    }
-                });
-            }
-
-            if ($(this).val() == '2')  {
-                $('#list_reviewers').css("display", "none");
-                $('#random_btn').css("display", "block");
-            }
-
-        });
-
-
         $('body').on('click', '#view-article-messages', function(e){
             e.preventDefault();
             

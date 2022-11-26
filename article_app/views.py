@@ -16,6 +16,10 @@ from django.core.paginator import Paginator
 from user_app.models import User
 
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
 def main_page(request):
     user_language = 'uz'
     post = Post.objects.last()
@@ -145,7 +149,7 @@ def create_article_file(request, pk):
             return JsonResponse(data=data)
         else:
             data = {
-                'result': True,
+                'result': False,
                 'message': "Invalid!"
             }
             return JsonResponse(data=data)
@@ -159,14 +163,15 @@ def create_article_file(request, pk):
 
 @login_required(login_url='login')
 def article_view(request, pk):
-    article = get_object_or_404(Article, pk=pk)
-    document = None
-    author = article.author
-    if article.file is not None:
-        ob = ArticleFile.objects.filter(article_id=article.id).filter(file_status=1).first()
-        document = ob.file.url
+    if is_ajax(request=request):
+        article = get_object_or_404(Article, pk=pk)
+        document = None
+        author = article.author
+        if article.file is not None:
+            ob = ArticleFile.objects.filter(article_id=article.id).filter(file_status=1).first()
+            document = ob.file.url
 
-    data = {
+        data = {
         "id": article.id,
         "author": author.full_name,
         "section": article.section.name,
@@ -176,11 +181,14 @@ def article_view(request, pk):
         "keywords": article.keywords,
         "references": article.references,
         "article_status": article.article_status.name,
+        "article_status_id": article.article_status.id,
         "is_publish": article.is_publish,
         "created_at": article.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
         "updated_at": article.updated_at,
-    }
-    return JsonResponse(data=data)
+        }
+        return JsonResponse(data=data)
+    else:
+        return redirect("dashboard")
 
 
 @login_required(login_url='login')

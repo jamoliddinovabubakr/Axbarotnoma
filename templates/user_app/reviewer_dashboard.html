@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
-        <h3 class="page-header">{% trans "Editor Dashboard" %}</h3>
+        <h3 class="page-header">{% trans "Reviewer Dashboard" %}</h3>
         <br>
         <div class="row">
             <div class="col-md-10">
@@ -14,13 +14,13 @@
                     <li class="nav-item">
                         <a href="#uncheck" data-toggle="tab" class="nav-link active">
                             <span class="d-sm-none">Tab 1</span>
-                            <span class="d-sm-block d-none">Unchecks</span>
+                            <span class="d-sm-block d-none">Uncheck Articles</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#check" data-toggle="tab" class="nav-link">
                             <span class="d-sm-none">Tab 2</span>
-                            <span class="d-sm-block d-none">Checked History</span>
+                            <span class="d-sm-block d-none">Checked Articles History</span>
                         </a>
                     </li>
                 </ul>
@@ -33,7 +33,7 @@
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <tbody id="editor_uncheck_notifications">
+                                <tbody id="reviewer_uncheck_notifications">
 
 
                                 </tbody>
@@ -48,7 +48,7 @@
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <tbody id="editor_checked_notifications">
+                                <tbody id="reviewer_checked_notifications">
 
 
                                 </tbody>
@@ -67,10 +67,10 @@
             setInterval(function(){
                 $.ajax({
                     type: 'GET',
-                    url: "/profile/editor_notifications/",
+                    url: "/profile/reviewer_notifications/",
                     success: function(response){
-                        $('#editor_uncheck_notifications').empty();
-                        $('#editor_checked_notifications').empty();
+                        $('#reviewer_uncheck_notifications').empty();
+                        $('#reviewer_checked_notifications').empty();
 
                        if (response.uncheck_notifications.length > 0){
                         for(let item of response.uncheck_notifications){
@@ -80,15 +80,15 @@
 
                             let uncheck = `<tr>` +
                                 `<td>` + item.id + `</td>`+
-                                `<td><b>` + item.article__author__email + `</b><br>`+
-                                item.article__title + `</td>` +
+                                `<td><b>` + item.from_user__email + `</b><br>`+
+                                item.message + `</td>` +
                                 `<td>`+ time_string + `</td>` +
                                 `<td id="view_notif_id${item.id}"></td>`+
-                                `<td><a href="/profile/editor_check_article/${ item.id}/" class="btn btn-primary btn-sm" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                                `<td><a href="/profile/reviewer_check_article/${ item.id}/" class="btn btn-primary btn-sm" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </a></td>`
                                 + `</tr>`;
                                             
-                            $('#editor_uncheck_notifications').append(uncheck);
+                            $('#reviewer_uncheck_notifications').append(uncheck);
 
                             if (item.notification_status__id == 1){
                                 $('#view_notif_id' + item.id).html("<span class='badge badge-danger'>" + item.notification_status__name + "</span>");
@@ -105,7 +105,7 @@
                         let tr = `<tr>` +
                             `<td><h3 class="text-center" style="color: green;">NO DATA</h3></td>`
                             + `</tr>`;
-                        $('#editor_uncheck_notifications').append(tr);
+                        $('#reviewer_uncheck_notifications').append(tr);
                        }
 
                        if (response.check_notifications.length > 0){
@@ -116,15 +116,15 @@
 
                             let checked = `<tr>` +
                                 `<td>` + item.id + `</td>`+
-                                `<td><b>` + item.article__author__email + `</b><br>`+
-                                item.article__title + `</td>` +
+                                `<td><b>` + item.from_user__email + `</b><br>`+
+                                item.message + `</td>` +
                                 `<td>`+ time_string + `</td>` +
                                 `<td id="view_notif_checked_id${item.id}"></td>`+
                                 `<td><button type="button" data-id="${item.article__id}" class="btn btn-primary btn-sm" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </button></td>`
                                 + `</tr>`;
                                             
-                            $('#editor_checked_notifications').append(checked);
+                            $('#reviewer_checked_notifications').append(checked);
 
                             if (item.notification_status__id == 3){
                                 $('#view_notif_checked_id' + item.id).html("<span class='badge badge-success'>" + item.notification_status__name + "</span>");
@@ -133,7 +133,7 @@
                         }
                     }  else {
                         let tr = `<tr>` +`<td><h3 class="text-center" style="color: green;">NO DATA</h3></td>`+ `</tr>`;
-                        $('#editor_checked_notifications').append(tr);
+                        $('#reviewer_checked_notifications').append(tr);
                        }
 
                     },
@@ -141,7 +141,7 @@
                         console.log(response);
                     }
                 });
-            }, 1500); 
+            }, 2000); 
         });
 
     </script>

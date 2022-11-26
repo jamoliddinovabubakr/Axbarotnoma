@@ -1,4 +1,4 @@
-from article_app.models import Journal, Notification, Article, NotificationStatus, ExtraAuthor, ArticleStatus
+from article_app.models import Journal, Notification, Article, NotificationStatus, ExtraAuthor, ArticleStatus, ArticleFile
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from user_app.decorators import unauthenticated_user, password_reset_authentification
@@ -187,6 +187,19 @@ def editor_dashboard(request):
     return render(request, "user_app/editor_dashboard.html")
 
 
+
+@login_required(login_url='login')
+# @allowed_users(menu_url='profile_page')
+def reviewer_dashboard(request):
+    user = User.objects.get(id=request.user.id)
+    role_r = Role.objects.get(id=3)
+
+    if role_r.id not in user.get_roles:
+        return render(request, 'user_app/not_access.html')
+    return render(request, "user_app/reviewer_dashboard.html")
+
+
+
 @login_required(login_url='login')
 # @allowed_users(menu_url='profile_page')
 def editor_notifications(request):
@@ -206,6 +219,30 @@ def editor_notifications(request):
         "check_notifications": list(check_notifications.values(
             'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
             'article__author__email', 'is_update_article'
+        ))
+    }
+
+    return JsonResponse(data)
+
+
+
+@login_required(login_url='login')
+# @allowed_users(menu_url='profile_page')
+def reviewer_notifications(request):
+    user = User.objects.get(id=request.user.id)
+
+    uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
+        Q(notification_status_id=1) | Q(notification_status_id=2)).order_by('-created_at')
+
+    check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
+        notification_status_id=3).order_by('-created_at')
+
+    data = {
+        "uncheck_notifications": list(uncheck_notifications.values(
+            'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name', 'is_update_article', 'from_user__email', 'message'
+        )),
+        "check_notifications": list(check_notifications.values(
+            'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name', 'is_update_article', 'from_user__email', 'message'
         ))
     }
 
@@ -323,7 +360,7 @@ def editor_vs_reviewer(request, pk):  #review-editor and editor-reviewer comment
 
         notifications = notifications.order_by('created_at')
 
-        messages = notifications.filter(to_user_id=current_user_id).filter(is_update_article=False)
+        messages = Notification.objects.filter(article=article).filter(to_user_id=current_user_id).filter(is_update_article=False)
 
         for item in messages:
             item.notification_status = NotificationStatus.objects.get(pk=3)
@@ -395,13 +432,39 @@ def editor_check_article(request, pk):
     article = Article.objects.get(pk=notifification.article.id)
 
     authors = ExtraAuthor.objects.filter(article=article)
+    file = ArticleFile.objects.filter(article=article).filter(file_status=1).last()
 
     context = {
         "article": article,
+        "article_file": file,
         "authors": authors,
         "n_id": pk,
     }
     return render(request, 'user_app/check_article_by_editor.html', context=context)
+
+
+
+@login_required(login_url='login')
+def reviewer_check_article(request, pk):
+    user = get_object_or_404(User, pk=request.user.id)
+    objs = Reviewer.objects.filter(user=user).filter(is_reviewer=True)
+    if objs.count() != 1:
+         return render(request, 'user_app/not_access.html')
+    notifification = get_object_or_404(Notification, pk=pk)
+    notifification.notification_status = NotificationStatus.objects.get(id=2)
+    notifification.save()
+    article = Article.objects.get(pk=notifification.article.id)
+
+    article_reviews = ReviewerArticle.objects.filter(article=article).filter(reviewer=objs.first())
+    if article_reviews.count() > 0:
+        article_review = article_reviews.first()
+        context = {
+        "article": article,
+        "notifification": notifification,
+        "editor": article_review.editor,
+        }
+        return render(request, 'user_app/check_article_by_reviewer.html', context=context)
+
 
 
 @login_required(login_url='login')
@@ -426,6 +489,7 @@ def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
 
         if len(selected) > 0 and token and article_id:
             article = Article.objects.get(pk=int(article_id))
+            editor = get_object_or_404(Editor, user=user)
             for item in selected:
                 reviewer = get_object_or_404(Reviewer, pk=int(item))
                 reviewer_user = get_object_or_404(User, pk=reviewer.user.id)
@@ -441,8 +505,8 @@ def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
 
                 ReviewerArticle.objects.create(
                     article=article,
-                    editor=user,
-                    reviewer=reviewer_user,
+                    editor=editor,
+                    reviewer=reviewer,
                     status=StatusReview.objects.get(pk=1),
                     comment="",
                 )
