@@ -272,6 +272,21 @@ def author_vs_editor(request, pk):  #author-editor and editor-author comments
             "message": "Siz bu tizimda Editor bo'lganiz uchun Cooment qismiga ruxsat yo'q!",
             }
             return JsonResponse(data)
+        
+        
+        if min(user.get_roles) == 3:
+            print(current_user_id)
+            print(author_id)
+            current_user_from = Notification.objects.filter(
+            article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=author_id)
+            
+            print(f"A {current_user_from}")
+
+
+            current_user_to = Notification.objects.filter(
+            article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=author_id)
+            print(f"B {current_user_to}")
+            
 
 
         if min(user.get_roles) == 4:
@@ -320,8 +335,6 @@ def editor_vs_reviewer(request, pk):  #review-editor and editor-reviewer comment
         if min(user.get_roles) == 2:
             editor = Editor.objects.get(user_id=current_user_id)
             article_revieing = ReviewerArticle.objects.filter(editor_id=editor.id).filter(article=article)
-            print("Editor")
-            print(article_revieing)
 
             for item in article_revieing:
                 reviewer = item.reviewer
@@ -331,10 +344,8 @@ def editor_vs_reviewer(request, pk):  #review-editor and editor-reviewer comment
                 querysets.append(current_user_from.union(current_user_to))
 
         if min(user.get_roles) == 3:
-            print("Taqriz")
             reviewer = Reviewer.objects.get(user_id=current_user_id)
             article_revieing = ReviewerArticle.objects.filter(reviewer_id=reviewer.id).filter(article=article)
-            print(article_revieing)
 
             for item in article_revieing:
                 editor = item.editor

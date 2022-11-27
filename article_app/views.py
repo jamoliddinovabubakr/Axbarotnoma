@@ -56,14 +56,14 @@ def create_article(request):
                 email=article.author.email,
                 work=article.author.work,
             )
-            data={
+            data = {
                 "result": True,
                 "message": "Ok!",
                 "redirect": f"/article/edit/{article.id}/",
             }
             return JsonResponse(data=data)
         else:
-            data={
+            data = {
                 "result": False,
                 "message": "Form is invalid!",
             }
@@ -88,13 +88,18 @@ def update_article(request, pk):
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, instance=article)
         if form.is_valid():
-            files = ArticleFile.objects.filter(article=article).filter(file_status=1)
-            title = str(request.POST.get('title')).replace('<p>', '').replace('</p>', '')
-            abstrk = str(request.POST.get('abstract')).replace('<p>', '').replace('</p>', '')
-            keywords = str(request.POST.get('keywords')).replace('<p>', '').replace('</p>', '')
-            references = str(request.POST.get('references')).replace('<p>', '').replace('</p>', '')
+            files = ArticleFile.objects.filter(
+                article=article).filter(file_status=1)
+            title = str(request.POST.get('title')).replace(
+                '<p>', '').replace('</p>', '')
+            abstrk = str(request.POST.get('abstract')).replace(
+                '<p>', '').replace('</p>', '')
+            keywords = str(request.POST.get('keywords')).replace(
+                '<p>', '').replace('</p>', '')
+            references = str(request.POST.get('references')).replace(
+                '<p>', '').replace('</p>', '')
 
-            if len(abstrk) == 0 or len(keywords) == 0 or len(references) == 0 or len(title)==0 or files.count() == 0:
+            if len(abstrk) == 0 or len(keywords) == 0 or len(references) == 0 or len(title) == 0 or files.count() == 0:
                 context = {
                     'form': UpdateArticleForm(instance=article),
                     'article': article,
@@ -144,6 +149,7 @@ def create_article_file(request, pk):
             article.save()
             data = {
                 'result': True,
+                'file_name': new_file.file_name(),
                 'message': 'Success!'
             }
             return JsonResponse(data=data)
@@ -168,23 +174,24 @@ def article_view(request, pk):
         document = None
         author = article.author
         if article.file is not None:
-            ob = ArticleFile.objects.filter(article_id=article.id).filter(file_status=1).first()
+            ob = ArticleFile.objects.filter(
+                article_id=article.id).filter(file_status=1).first()
             document = ob.file.url
 
         data = {
-        "id": article.id,
-        "author": author.full_name,
-        "section": article.section.name,
-        "file": f"{document}",
-        "title": article.title,
-        "abstract": article.abstract,
-        "keywords": article.keywords,
-        "references": article.references,
-        "article_status": article.article_status.name,
-        "article_status_id": article.article_status.id,
-        "is_publish": article.is_publish,
-        "created_at": article.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
-        "updated_at": article.updated_at,
+            "id": article.id,
+            "author": author.full_name,
+            "section": article.section.name,
+            "file": f"{document}",
+            "title": article.title,
+            "abstract": article.abstract,
+            "keywords": article.keywords,
+            "references": article.references,
+            "article_status": article.article_status.name,
+            "article_status_id": article.article_status.id,
+            "is_publish": article.is_publish,
+            "created_at": article.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
+            "updated_at": article.updated_at,
         }
         return JsonResponse(data=data)
     else:
@@ -196,7 +203,7 @@ def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if request.method == "POST":
         article.delete()
-        data ={
+        data = {
             "result": True,
             "message": "Your article was successfully deleted!",
         }
@@ -223,7 +230,8 @@ def add_author(request, pk):
         form = AddAuthorForm(request.POST)
         if form.is_valid():
             if ExtraAuthor.objects.filter(article_id=pk).count() > 4:
-                data = {'result': "limit_author", 'message': 'Mualliflarni qoshish limiti 4 ta!'}
+                data = {'result': "limit_author",
+                        'message': 'Mualliflarni qoshish limiti 4 ta!'}
                 return JsonResponse(data)
             form.save()
             data = {
@@ -232,7 +240,8 @@ def add_author(request, pk):
             }
             return JsonResponse(data)
         else:
-            data = {'result': False, 'message': 'Mualliflar muvaffaqiyatli yaratildi!'}
+            data = {'result': False,
+                    'message': 'Mualliflar muvaffaqiyatli yaratildi!'}
             return JsonResponse(data)
     context = {
         'form': AddAuthorForm(),
@@ -290,30 +299,50 @@ def delete_author(request, pk):
 @login_required(login_url='login')
 def send_message(request, pk):
     article = Article.objects.get(pk=pk)
-    from_user = User.objects.get(id=request.user.id)
-    roles = from_user.get_roles
+    current_user = User.objects.get(id=request.user.id)
+    author = article.author
+    author_id = author.id
+    roles = current_user.get_roles
 
-    # if from_user.id != article.author.id:
-    #     return render(request, 'user_app/not_access.html')
+    if request.method == 'GET' and is_ajax(request):
+        if min(roles) == 2:
+            messages = Notification.objects.filter(article_id=pk).filter(
+                to_user_id=current_user.id).filter(from_user_id=author_id).filter(is_update_article=True)
 
-    messages = Notification.objects.filter(article_id=pk).filter(to_user_id=from_user.id)
+            if messages.count() >= 1:
+                to_user = author
+            else:
+                data = {
+                    'result': False,
+                    'message': 'You can not send message!'
+                }
+                return JsonResponse(data)
 
-    if messages.count() == 0:
-        messages = Notification.objects.filter(article_id=pk).filter(from_user_id=from_user.id)
-        if messages.count() == 0:
-            data = {
-                'result': False,
-                'message': 'You can not send message!'
-            }
-            return JsonResponse(data)
-        message = messages.last()
-        to_user = message.to_user
+        if min(roles) == 4:
+            messages = Notification.objects.filter(article_id=pk).filter(
+                from_user_id=current_user.id).filter(is_update_article=True)
 
-    else:
-        message = messages.last()
-        to_user = message.from_user
+            if messages.count() >= 1:
+                message = messages.last()
+                to_user = message.to_user
+            else:
+                data = {
+                    'result': False,
+                    'message': 'You can not send message!'
+                }
+                return JsonResponse(data)
 
-    if request.method == "POST":
+        form = SendMessageForm()
+        context = {
+            'form': form,
+            'article': article,
+            'from_user': current_user,
+            'to_user': to_user,
+            'roles': roles,
+        }
+        return render(request, 'article_app/message/send_message.html', context=context)
+
+    elif request.method == "POST" and is_ajax(request):
         form = SendMessageForm(request.POST)
         if form.is_valid():
             notif = form.save(commit=False)
@@ -327,15 +356,70 @@ def send_message(request, pk):
             return JsonResponse(data)
         else:
             return JsonResponse("Form is invalid")
+    else:
+        return HttpResponse("Note Found Page.")
 
-    form = SendMessageForm()
-    context = {
-        'form': form,
-        'article': article,
-        'from_user': from_user,
-        'to_user': to_user,
-    }
-    return render(request, 'article_app/message/send_message.html', context=context)
+
+@login_required(login_url='login')
+def send_message_er(request, pk):
+    article = Article.objects.get(pk=pk)
+    current_user = User.objects.get(id=request.user.id)
+    author = article.author
+    author_id = author.id
+    roles = current_user.get_roles
+    if request.method == 'GET' and is_ajax(request):
+        if min(roles) == 2:
+            messages = Notification.objects.filter(article_id=pk).filter(
+                to_user_id=current_user.id).filter(from_user_id=author_id).filter(is_update_article=True)
+
+            if messages.count() >= 1:
+                to_user = author
+            else:
+                data = {
+                    'result': False,
+                    'message': 'You can not send message!'
+                }
+                return JsonResponse(data)
+
+        if min(roles) == 3:
+            messages = Notification.objects.filter(article_id=pk).filter(
+                from_user_id=current_user.id).filter(is_update_article=True)
+
+            if messages.count() >= 1:
+                message = messages.last()
+                to_user = message.to_user
+            else:
+                data = {
+                    'result': False,
+                    'message': 'You can not send message!'
+                }
+                return JsonResponse(data)
+
+        form = SendMessageForm()
+        context = {
+            'form': form,
+            'article': article,
+            'from_user': from_user,
+            'to_user': to_user,
+        }
+        return render(request, 'article_app/message/send_message.html', context=context)
+
+    elif request.method == "POST" and is_ajax(request):
+        form = SendMessageForm(request.POST)
+        if form.is_valid():
+            notif = form.save(commit=False)
+            notif.notification_status = NotificationStatus.objects.get(pk=1)
+            notif.save()
+            data = {
+                'result': True,
+                'roles': roles,
+                'message': 'Send Message Successfully!'
+            }
+            return JsonResponse(data)
+        else:
+            return JsonResponse("Form is invalid")
+    else:
+        return HttpResponse("Note Found Page.")
 
 
 @login_required(login_url='login')

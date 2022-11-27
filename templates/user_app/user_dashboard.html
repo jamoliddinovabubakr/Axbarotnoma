@@ -226,8 +226,15 @@ Dashboard
             type: 'GET',
             url: "/send_message/" + id + "/",
             success: function (response) {
-                $('#write_message_div_form').html(response);
+                if(response.result){
+                    $('#write_message_div_form').html(response);
                 $('#send-message-modal').modal('show');
+                } else {
+                    swal({
+                        title: response.message,
+                        timer: 2000,
+                    });
+                }
             },
             error: function (error) {
                 console.log("Xatolik");

@@ -65,15 +65,15 @@ class ArticleFile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    @property
-    def file_name(self):
-        return self.file.name.split("/")[1].replace('_', ' ').replace('-', ' ')
 
-    @property
+    def file_name(self):
+        return str(self.file.name.split("/")[-1].replace('_', ' ').replace('-', ' '))
+
+
     def file_size(self):
         return self.file.size
 
-    @property
+
     def file_type(self):
         name, type = os.path.splitext(self.file.name)
         return type
@@ -103,26 +103,6 @@ class Submission(models.Model):
     file = models.ForeignKey('article_app.ArticleFile', related_name="submission_file", blank=True,
                              on_delete=models.CASCADE, null=True)
     article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.id)
-
-
-class StatusReviewer(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.name)
-
-
-class ReviewerArticle(models.Model):
-    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
-    reviewer = models.ForeignKey('user_app.Reviewer', on_delete=models.CASCADE, blank=True, null=True)
-    editor = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, blank=True, null=True)
-    comment = models.TextField(help_text="Message")
-    status = models.ForeignKey('article_app.StatusReviewer', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -47,13 +47,13 @@
                 </div> 
 
                 <div class="row d-flex justify-content-center">
-                    <button type="button" data-id="{{ article.id }}" id="view-article-messages" class="btn btn-md btn-info forshadow">
+                    <button type="button" data-id="{{ article.id }}" id="view-article-messages-by-reviewer" class="btn btn-md btn-info forshadow">
                         <i class="fa fa-comment"></i>  LOAD MESSAGES</button>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxEditor1">
+                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxReviewer1">
                             <!-- begin widget-chat -->
                             <div class="m-b-10 m-t-10 f-s-12">
                                 <h5 class="text-inverse">Author</h5>
@@ -71,13 +71,13 @@
                                         <h4 class="widget-chat-header-title">Sending Message To Author</h4>
                                     </div>
                                     <div class="widget-chat-header-content">
-                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info editorWrite-message-btn1" style="float:right;">SEND MESSAGE</button>
+                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info reviewerWrite-message-btn1" style="float:right;">SEND MESSAGE</button>
                                     </div>
                                 </div>
                                 <!-- end widget-chat-header -->
                 
                                 <!-- begin widget-chat-body -->
-                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="editor_chat_body1">
+                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="reviewer_chat_body1">
                 
                 
                                 </div>
@@ -87,7 +87,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxEditor2">
+                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxReviewer2">
                             <!-- begin widget-chat -->
                             <div class="m-b-10 m-t-10 f-s-12">
                                 <h5 class="text-inverse">Reviewers</h5>
@@ -105,13 +105,13 @@
                                         <h4 class="widget-chat-header-title">Sending Message To Reviewer</h4>
                                     </div>
                                     <div class="widget-chat-header-content">
-                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info editorWrite-message-btn2" style="float:right;">SEND MESSAGE</button>
+                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info reviewerWrite-message-btn2" style="float:right;">SEND MESSAGE</button>
                                     </div>
                                 </div>
                                 <!-- end widget-chat-header -->
                 
                                 <!-- begin widget-chat-body -->
-                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="editor_chat_body2">
+                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="reviewer_chat_body2">
                 
                 
                                 </div>
@@ -123,10 +123,10 @@
             </div>
         </div>
     </div>
-    <div id="writeeditor_message_div"></div>
+    <div id="writereviewer_message_div"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-        $('body').on('click', '#view-article-messages', function(e){
+        $('body').on('click', '#view-article-messages-by-reviewer', function(e){
             e.preventDefault();
             
             let id = $(this).data('id');
@@ -136,8 +136,8 @@
                         url: "/profile/article_notification/view/" + id + "/",
                         success: function (response) {
                             console.log(response);
-                            $('#MessageBoxEditor1').css('display', 'block');
-                            $('#editor_chat_body1').empty();
+                            $('#MessageBoxReviewer1').css('display', 'block');
+                            $('#reviewer_chat_body1').empty();
         
                            for(let item of response.notifications){
         
@@ -155,14 +155,13 @@
                                                 + time_string + 
                                                 `</div></div></div></div>`;
         
-                                    $('#editor_chat_body1').append(temp1); 
+                                    $('#reviewer_chat_body1').append(temp1); 
                                 }
         
                                 if(response.current_user_id === item.to_user__id){
-                                    console.log("menga");
         
                                     let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
-                                    $('#editor_chat_body1').append(temp2); 
+                                    $('#reviewer_chat_body2').append(temp2); 
                                 }
                             }
                         
@@ -177,8 +176,8 @@
                         url: "/profile/comment_editor_vs_reviewer/" + id + "/",
                         success: function (response) {
                             console.log(response);
-                            $('#MessageBoxEditor2').css('display', 'block');
-                            $('#editor_chat_body2').empty();
+                            $('#MessageBoxReviewer2').css('display', 'block');
+                            $('#reviewer_chat_body2').empty();
         
                             if(response.is_visible_comment){
                                 for(let item of response.notifications){
@@ -197,17 +196,17 @@
                                                         + time_string + 
                                                         `</div></div></div></div>`;
                 
-                                            $('#editor_chat_body2').append(temp1); 
+                                            $('#reviewer_chat_body2').append(temp1); 
                                         }
                 
                                         if(response.current_user_id === item.to_user__id){
                 
                                             let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
-                                            $('#editor_chat_body2').append(temp2); 
+                                            $('#reviewer_chat_body2').append(temp2); 
                                         }
                                     }
                             } else {
-                                $('#editor_chat_body2').append("<h3 class='text-danger'>" + response.message + "</h3>");
+                                $('#reviewer_chat_body2').append("<h3 class='text-danger'>" + response.message + "</h3>");
                             }
                         
                         },
@@ -218,7 +217,7 @@
 
         });
 
-        $('body').on('click', '.editorWrite-message-btn1', function (e) {
+        $('body').on('click', '.reviewerWrite-message-btn1', function (e) {
             e.preventDefault();
     
             let id = $(this).data('id');
@@ -227,7 +226,7 @@
                 type: 'GET',
                 url: "/send_message/" + id + "/",
                 success: function (response) {
-                    $('#writeeditor_message_div').html(response);
+                    $('#writereviewer_message_div').html(response);
                     $('#send-message-modal').modal('show');
                 },
                 error: function (error) {
@@ -237,7 +236,7 @@
             });
         });
 
-        $('body').on('click', '.editorWrite-message-btn2', function (e) {
+        $('body').on('click', '.reviewerWrite-message-btn2', function (e) {
             e.preventDefault();
     
             let id = $(this).data('id');
@@ -246,7 +245,7 @@
                 type: 'GET',
                 url: "/send_message/" + id + "/",
                 success: function (response) {
-                    $('#writeeditor_message_div').html(response);
+                    $('#writereviewer_message_div').html(response);
                     $('#send-message-modal').modal('show');
                 },
                 error: function (error) {
