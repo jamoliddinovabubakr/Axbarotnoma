@@ -12,8 +12,7 @@ urlpatterns = [
     path('editor_check_article/<int:pk>/', editor_check_article, name='editor_check_article'),
     path('reviewer_check_article/<int:pk>/', reviewer_check_article, name='reviewer_check_article'),
 
-    path('article_notification/view/<int:pk>/', author_vs_editor, name='comment_author_vs_editor'),
-    path('comment_editor_vs_reviewer/<int:pk>/', editor_vs_reviewer, name='comment_editor_vs_reviewer'),
+    path('article_notification/view/<int:pk>/', author_vs_editor_vs_reviewer, name='comment_author_vs_editor'),
 
     path('load_notif/', load_notification, name='load_notification'),
     path('count_notif/', count_notification, name='count_notification'),

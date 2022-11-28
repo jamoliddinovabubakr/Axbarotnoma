@@ -65,14 +65,11 @@ class ArticleFile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def file_name(self):
         return str(self.file.name.split("/")[-1].replace('_', ' ').replace('-', ' '))
 
-
     def file_size(self):
         return self.file.size
-
 
     def file_type(self):
         name, type = os.path.splitext(self.file.name)

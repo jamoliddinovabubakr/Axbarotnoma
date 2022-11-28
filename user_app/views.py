@@ -25,6 +25,10 @@ from user_app.models import Menu, ReviewerArticle, StatusReview
 from django.utils.translation import get_language_from_request
 
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
 @unauthenticated_user
 def login_page(request):
     if request.method == 'POST':
@@ -251,50 +255,18 @@ def reviewer_notifications(request):
 
 @login_required(login_url='login')
 # @allowed_users(menu_url='notifications')
-def author_vs_editor(request, pk):  #author-editor and editor-author comments
+def author_vs_editor_vs_reviewer(request, pk):  #author-editor and editor-author comments
     article = Article.objects.get(pk=pk)
     user = get_object_or_404(User, pk=request.user.id)
     current_user_id = user.id
     author_id = article.author.id
 
-    if request.method == "GET":
-        if min(user.get_roles) == 2 and user.id != author_id:
-            current_user_from = Notification.objects.filter(
-            article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=author_id)
-
-
-            current_user_to = Notification.objects.filter(
-            article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=author_id)
-
-        if min(user.get_roles) == 2 and user.id == author_id:
-            data = {
-            "is_visible_comment": False,
-            "message": "Siz bu tizimda Editor bo'lganiz uchun Cooment qismiga ruxsat yo'q!",
-            }
-            return JsonResponse(data)
-        
-        
-        if min(user.get_roles) == 3:
-            print(current_user_id)
-            print(author_id)
-            current_user_from = Notification.objects.filter(
-            article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=author_id)
-            
-            print(f"A {current_user_from}")
-
-
-            current_user_to = Notification.objects.filter(
-            article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=author_id)
-            print(f"B {current_user_to}")
-            
-
-
-        if min(user.get_roles) == 4:
-            current_user_from = Notification.objects.filter(
+    if request.method == "GET" and is_ajax(request):
+        current_user_from = Notification.objects.filter(
             article_id=pk).filter(from_user_id=current_user_id)
 
 
-            current_user_to = Notification.objects.filter(
+        current_user_to = Notification.objects.filter(
             article_id=pk).filter(to_user_id=current_user_id)
 
         notifications = current_user_from.union(
@@ -311,75 +283,6 @@ def author_vs_editor(request, pk):  #author-editor and editor-author comments
             "article_title": article.title,
             "current_user_id": current_user_id,
             "author_id": author_id,
-            "is_visible_comment": True,
-            "notifications": list(
-                notifications.values(
-                    'id', 'article__id', 'from_user__username', 'from_user__email', 'from_user__id', 'message',
-                    'to_user__username', 'to_user__email', 'to_user__id', 'created_at',
-                )
-            ),
-        }
-        return JsonResponse(data)
-
-
-@login_required(login_url='login')
-# @allowed_users(menu_url='notifications')
-def editor_vs_reviewer(request, pk):  #review-editor and editor-reviewer comments
-    article = Article.objects.get(pk=pk)
-    user = get_object_or_404(User, pk=request.user.id)
-    current_user_id = user.id
-    author_id = article.author.id
-
-    if request.method == "GET":
-        querysets = []
-        if min(user.get_roles) == 2:
-            editor = Editor.objects.get(user_id=current_user_id)
-            article_revieing = ReviewerArticle.objects.filter(editor_id=editor.id).filter(article=article)
-
-            for item in article_revieing:
-                reviewer = item.reviewer
-                current_user_from = Notification.objects.filter(article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=reviewer.user.id)
-                current_user_to = Notification.objects.filter(article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=reviewer.user.id)
-
-                querysets.append(current_user_from.union(current_user_to))
-
-        if min(user.get_roles) == 3:
-            reviewer = Reviewer.objects.get(user_id=current_user_id)
-            article_revieing = ReviewerArticle.objects.filter(reviewer_id=reviewer.id).filter(article=article)
-
-            for item in article_revieing:
-                editor = item.editor
-                current_user_from = Notification.objects.filter(article_id=pk).filter(from_user_id=current_user_id).filter(to_user_id=editor.user.id)
-                current_user_to = Notification.objects.filter(article_id=pk).filter(to_user_id=current_user_id).filter(from_user_id=editor.user.id)
-
-                querysets.append(current_user_from.union(current_user_to))
-
-        if len(querysets) == 0:
-            data = {
-            "is_visible_comment": False,
-            "message": "Reviewers no comments!",
-            }
-            return JsonResponse(data)
-        elif len(querysets) == 1:
-            notifications = querysets[0]
-        elif len(querysets) == 2:
-             notifications = querysets[0].union(querysets[1])
-        else:
-            notifications = querysets[0]
-            for i in range(1, len(querysets)):
-                notifications = notifications.union(querysets[i])
-
-        notifications = notifications.order_by('created_at')
-
-        messages = Notification.objects.filter(article=article).filter(to_user_id=current_user_id).filter(is_update_article=False)
-
-        for item in messages:
-            item.notification_status = NotificationStatus.objects.get(pk=3)
-            item.save()
-
-        data = {
-            "article_title": article.title,
-            "current_user_id": current_user_id,
             "is_visible_comment": True,
             "notifications": list(
                 notifications.values(
@@ -461,20 +364,26 @@ def reviewer_check_article(request, pk):
     objs = Reviewer.objects.filter(user=user).filter(is_reviewer=True)
     if objs.count() != 1:
          return render(request, 'user_app/not_access.html')
+     
     notifification = get_object_or_404(Notification, pk=pk)
     notifification.notification_status = NotificationStatus.objects.get(id=2)
     notifification.save()
+    reviewer = get_object_or_404(Reviewer, user=user)
     article = Article.objects.get(pk=notifification.article.id)
 
     article_reviews = ReviewerArticle.objects.filter(article=article).filter(reviewer=objs.first())
-    if article_reviews.count() > 0:
+    
+    if article_reviews.count() == 1:
         article_review = article_reviews.first()
         context = {
         "article": article,
         "notifification": notifification,
         "editor": article_review.editor,
+        "article_review": article_review,
         }
         return render(request, 'user_app/check_article_by_reviewer.html', context=context)
+    else:
+        return HttpResponse("Error")
 
 
 

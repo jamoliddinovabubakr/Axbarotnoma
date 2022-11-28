@@ -297,7 +297,7 @@ def delete_author(request, pk):
 
 
 @login_required(login_url='login')
-def send_message(request, pk):
+def send_message(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     current_user = User.objects.get(id=request.user.id)
     author = article.author
@@ -305,102 +305,13 @@ def send_message(request, pk):
     roles = current_user.get_roles
 
     if request.method == 'GET' and is_ajax(request):
-        if min(roles) == 2:
-            messages = Notification.objects.filter(article_id=pk).filter(
-                to_user_id=current_user.id).filter(from_user_id=author_id).filter(is_update_article=True)
-
-            if messages.count() >= 1:
-                to_user = author
-            else:
-                data = {
-                    'result': False,
-                    'message': 'You can not send message!'
-                }
-                return JsonResponse(data)
-
-        if min(roles) == 4:
-            messages = Notification.objects.filter(article_id=pk).filter(
-                from_user_id=current_user.id).filter(is_update_article=True)
-
-            if messages.count() >= 1:
-                message = messages.last()
-                to_user = message.to_user
-            else:
-                data = {
-                    'result': False,
-                    'message': 'You can not send message!'
-                }
-                return JsonResponse(data)
-
         form = SendMessageForm()
         context = {
             'form': form,
             'article': article,
             'from_user': current_user,
-            'to_user': to_user,
+            'user_id': user_id,
             'roles': roles,
-        }
-        return render(request, 'article_app/message/send_message.html', context=context)
-
-    elif request.method == "POST" and is_ajax(request):
-        form = SendMessageForm(request.POST)
-        if form.is_valid():
-            notif = form.save(commit=False)
-            notif.notification_status = NotificationStatus.objects.get(pk=1)
-            notif.save()
-            data = {
-                'result': True,
-                'roles': roles,
-                'message': 'Send Message Successfully!'
-            }
-            return JsonResponse(data)
-        else:
-            return JsonResponse("Form is invalid")
-    else:
-        return HttpResponse("Note Found Page.")
-
-
-@login_required(login_url='login')
-def send_message_er(request, pk):
-    article = Article.objects.get(pk=pk)
-    current_user = User.objects.get(id=request.user.id)
-    author = article.author
-    author_id = author.id
-    roles = current_user.get_roles
-    if request.method == 'GET' and is_ajax(request):
-        if min(roles) == 2:
-            messages = Notification.objects.filter(article_id=pk).filter(
-                to_user_id=current_user.id).filter(from_user_id=author_id).filter(is_update_article=True)
-
-            if messages.count() >= 1:
-                to_user = author
-            else:
-                data = {
-                    'result': False,
-                    'message': 'You can not send message!'
-                }
-                return JsonResponse(data)
-
-        if min(roles) == 3:
-            messages = Notification.objects.filter(article_id=pk).filter(
-                from_user_id=current_user.id).filter(is_update_article=True)
-
-            if messages.count() >= 1:
-                message = messages.last()
-                to_user = message.to_user
-            else:
-                data = {
-                    'result': False,
-                    'message': 'You can not send message!'
-                }
-                return JsonResponse(data)
-
-        form = SendMessageForm()
-        context = {
-            'form': form,
-            'article': article,
-            'from_user': from_user,
-            'to_user': to_user,
         }
         return render(request, 'article_app/message/send_message.html', context=context)
 

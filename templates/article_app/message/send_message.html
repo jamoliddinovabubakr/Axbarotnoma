@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load static %}
 <form class="send-message-form" data-parsley-validate="true" method="post"
-      action="{% url 'send_message' article.id %}">
+      action="{% url 'send_message' article.id user_id %}">
     {% csrf_token %}
     <div class="modal fade" id="send-message-modal">
         <div class="modal-dialog modal-dialog-centered">
@@ -34,7 +34,7 @@
                             <td class="text-nowrap">
                                 <select id="id_to_user" name="to_user" class="form-control">
                                     <option selected
-                                            value="{{ to_user.id }}">{{to_user.id }}</option>
+                                            value="{{ user_id }}">{{user_id }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -64,7 +64,7 @@
     
             $.ajax({
                 type: 'POST',
-                url: "{% url 'send_message' article.id %}",
+                url: "{% url 'send_message' article.id  user_id %}",
                 data: $formData,
                 success: function (response) {
                     console.log(response);
@@ -80,7 +80,7 @@
 
                         if(main_role_id === admin){ $('#view-article-messages').click(); }
                         if(main_role_id === editor){ $('#view-article-messages').click(); }
-                        if(main_role_id === reviewer){ $('#view-article-messages').click(); }
+                        if(main_role_id === reviewer){ $('#view-article-messages-by-reviewer').click(); }
                         if(main_role_id === author){ $('#view-article-messages').click(); }
                         
                         $('.view_message_btn').click();

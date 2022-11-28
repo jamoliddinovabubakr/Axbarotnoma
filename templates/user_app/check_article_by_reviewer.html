@@ -4,11 +4,9 @@
 {% block title %}{% trans "Maqola tekshirish" %}{% endblock %}
 {% block content %}
     <div id="content" class="content">
-
         <h2 class="page-header viewArticleFont">
             {% trans "Maqola tekshirish" %}
         </h2>
-
         <div>
             <div class="panel-body" style="padding:10px;">
                 <div class="row jumbotron forshadow" style="background-color: #FFFFFF; font-size: 15px;">
@@ -48,15 +46,15 @@
 
                 <div class="row d-flex justify-content-center">
                     <button type="button" data-id="{{ article.id }}" id="view-article-messages-by-reviewer" class="btn btn-md btn-info forshadow">
-                        <i class="fa fa-comment"></i>  LOAD MESSAGES</button>
+                        <i class="fa fa-comment"></i>  LOAD COMMENTS</button>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxReviewer1">
+                    <div class="col-lg-12">
+                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxReviewer">
                             <!-- begin widget-chat -->
                             <div class="m-b-10 m-t-10 f-s-12">
-                                <h5 class="text-inverse">Author</h5>
+                                <h5 class="text-inverse">Comments</h5>
                             </div>
                 
                             <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
@@ -68,16 +66,13 @@
                                            style="line-height: 30px"></i>
                                     </div>
                                     <div class="widget-chat-header-content">
-                                        <h4 class="widget-chat-header-title">Sending Message To Author</h4>
-                                    </div>
-                                    <div class="widget-chat-header-content">
-                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info reviewerWrite-message-btn1" style="float:right;">SEND MESSAGE</button>
+                                        <h4 class="widget-chat-header-title">Sending Comment To Author and Editor</h4>
                                     </div>
                                 </div>
                                 <!-- end widget-chat-header -->
                 
                                 <!-- begin widget-chat-body -->
-                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="reviewer_chat_body1">
+                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="reviewer_chat_body">
                 
                 
                                 </div>
@@ -86,38 +81,24 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
-                        <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxReviewer2">
-                            <!-- begin widget-chat -->
-                            <div class="m-b-10 m-t-10 f-s-12">
-                                <h5 class="text-inverse">Reviewers</h5>
-                            </div>
-                
-                            <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
-                
-                                <!-- begin widget-chat-header -->
-                                <div class="widget-chat-header">
-                                    <div class="widget-chat-header-icon">
-                                        <i class="fa fa-book width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
-                                           style="line-height: 30px"></i>
-                                    </div>
-                                    <div class="widget-chat-header-content">
-                                        <h4 class="widget-chat-header-title">Sending Message To Reviewer</h4>
-                                    </div>
-                                    <div class="widget-chat-header-content">
-                                        <button type="button" data-id="{{ article.id }}" class="btn btn-sm btn-info reviewerWrite-message-btn2" style="float:right;">SEND MESSAGE</button>
-                                    </div>
-                                </div>
-                                <!-- end widget-chat-header -->
-                
-                                <!-- begin widget-chat-body -->
-                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="reviewer_chat_body2">
-                
-                
-                                </div>
-                                <!-- end widget-chat-body -->
-                            </div>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-lg-6">
+                        <div class="card forshadow">
+                            <ul style="margin: 2%;">
+                                <li><b>Title: </b> {{ article_review.article.title }}</li>
+                                <li><b>Editor: </b> {{ article_review.editor.user.full_name }}</li>
+                                <li><b>Reviewer: </b> {{ article_review.reviewer.user.full_name }}</li>
+                                <li><b>Status: </b> <span class='badge badge-warning'>{{ article_review.status.name }}</span></li>
+                                <li><b>Date: </b> {{ article_review.created_at }}</li>
+                             </ul> 
+                             <br>
+                             <div class="row d-flex justify-content-center">
+                                <button class="btn btn-warning" style="margin-right: 1px;">Reject</button> 
+                                <button class="btn btn-success" style="margin-left: 1px;">Confirm</button>
+                             </div> 
+                             <br>
+                        </div>           
                     </div>
                 </div>
             </div>
@@ -136,8 +117,8 @@
                         url: "/profile/article_notification/view/" + id + "/",
                         success: function (response) {
                             console.log(response);
-                            $('#MessageBoxReviewer1').css('display', 'block');
-                            $('#reviewer_chat_body1').empty();
+                            $('#MessageBoxReviewer').css('display', 'block');
+                            $('#reviewer_chat_body').empty();
         
                            for(let item of response.notifications){
         
@@ -151,17 +132,26 @@
                                          + item.from_user__email + 
                                          `</div><div class="widget-chat-message">` 
                                             + item.message + 
-                                            `</div><div class="widget-chat-time">` 
-                                                + time_string + 
-                                                `</div></div></div></div>`;
+                                            `</div><div class="widget-chat-time">` + `</div></div></div></div>`;
         
-                                    $('#reviewer_chat_body1').append(temp1); 
+                                    $('#reviewer_chat_body').append(temp1); 
                                 }
         
                                 if(response.current_user_id === item.to_user__id){
         
-                                    let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
-                                    $('#reviewer_chat_body2').append(temp2); 
+                                    let temp2 = `<div class="widget-chat-item left">
+                                        <div class="widget-chat-info">
+                                            <div class="widget-chat-info-container">
+                                                <div class="widget-chat-name text-indigo">`
+                                                     + item.from_user__email + 
+                                                     `</div><div class="widget-chat-message">`
+                                                         + item.message + 
+                                                         `</div><div class="widget-chat-time">`+ `</div>
+                                                         <br><div class="widget-chat-ansewer">
+                                                            <button type="button" data-id="${id},${item.from_user__id}" class="btn btn-white btn-sm reviewerWrite-message-btn">Ansewer</button>
+                                                        </div>
+                                                        </div></div></div>`;
+                                    $('#reviewer_chat_body').append(temp2); 
                                 }
                             }
                         
@@ -171,60 +161,19 @@
                         }
                     });
 
-                    $.ajax({
-                        type: "GET",
-                        url: "/profile/comment_editor_vs_reviewer/" + id + "/",
-                        success: function (response) {
-                            console.log(response);
-                            $('#MessageBoxReviewer2').css('display', 'block');
-                            $('#reviewer_chat_body2').empty();
-        
-                            if(response.is_visible_comment){
-                                for(let item of response.notifications){
-        
-                                    let time_tz = new Date(item.created_at);
-                                    let time_string = time_tz.toLocaleString();
-                                    console.log(time_string);
-                
-                                        if(response.current_user_id === item.from_user__id){
-                
-                                            let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
-                                                 + item.from_user__email + 
-                                                 `</div><div class="widget-chat-message">` 
-                                                    + item.message + 
-                                                    `</div><div class="widget-chat-time">` 
-                                                        + time_string + 
-                                                        `</div></div></div></div>`;
-                
-                                            $('#reviewer_chat_body2').append(temp1); 
-                                        }
-                
-                                        if(response.current_user_id === item.to_user__id){
-                
-                                            let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">` + item.from_user__email + `</div><div class="widget-chat-message">` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div></div></div></div>`;
-                                            $('#reviewer_chat_body2').append(temp2); 
-                                        }
-                                    }
-                            } else {
-                                $('#reviewer_chat_body2').append("<h3 class='text-danger'>" + response.message + "</h3>");
-                            }
-                        
-                        },
-                        error: function (response) {
-                            console.log(response);
-                        }
-                    });
-
         });
 
-        $('body').on('click', '.reviewerWrite-message-btn1', function (e) {
+        $('body').on('click', '.reviewerWrite-message-btn', function (e) {
             e.preventDefault();
     
-            let id = $(this).data('id');
+            const data = $(this).data('id');
+            const array = data.split(',');
+            const id = array[0];
+            const user_id = parseInt(array[1]);
 
             $.ajax({
                 type: 'GET',
-                url: "/send_message/" + id + "/",
+                url: "/send_message/" + id + "/" + user_id,
                 success: function (response) {
                     $('#writereviewer_message_div').html(response);
                     $('#send-message-modal').modal('show');
@@ -236,23 +185,5 @@
             });
         });
 
-        $('body').on('click', '.reviewerWrite-message-btn2', function (e) {
-            e.preventDefault();
-    
-            let id = $(this).data('id');
-
-            $.ajax({
-                type: 'GET',
-                url: "/send_message/" + id + "/",
-                success: function (response) {
-                    $('#writereviewer_message_div').html(response);
-                    $('#send-message-modal').modal('show');
-                },
-                error: function (error) {
-                    console.log("Xatolik");
-                    console.log(error);
-                }
-            });
-        });
     </script>
 {% endblock %}

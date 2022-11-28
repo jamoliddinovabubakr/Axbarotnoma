@@ -26,7 +26,7 @@ urlpatterns = [
     path('author/edit/<int:pk>/', edit_author, name='edit_author'),
     path('author/delete/<int:pk>/', delete_author, name='delete_author'),
 
-    path('send_message/<int:pk>/', send_message, name='send_message'),
+    path('send_message/<int:pk>/<int:user_id>', send_message, name='send_message'),
 
     path('magazines/', get_magazines, name='get_magazines'),
     path('magazine/create', create_magazine, name='create_magazine'),

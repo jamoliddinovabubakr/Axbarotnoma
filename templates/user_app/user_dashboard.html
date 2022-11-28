@@ -65,7 +65,7 @@ Dashboard
                                 <td>
                                     <button data-id="{{article.id}}" type="button"
                                             class="btn btn-warning btn-sm view_message_btn"
-                                            style="float: left"><i class="fa fa-comment"></i> Messages
+                                            style="float: left"><i class="fa fa-comment"></i> Comment
                                     </button>
                                 </td>
                             </tr>
@@ -120,7 +120,7 @@ Dashboard
                                 <td>
                                     <button data-id="{{article.id}}" type="button"
                                             class="btn btn-warning btn-sm view_message_btn"
-                                            style="float: left"><i class="fa fa-comment"></i> Messages
+                                            style="float: left"><i class="fa fa-comment"></i> Comments
                                     </button>
                                 </td>
                             </tr>
@@ -161,7 +161,7 @@ Dashboard
                 <div class="col-md-12 col-md-6" style="display: none;" id="MessageBoxAuthor">
                     <!-- begin widget-chat -->
                     <div class="m-b-10 m-t-10 f-s-12">
-                        <h5 class="text-inverse">Messages</h5>
+                        <h5 class="text-inverse">Comment</h5>
                     </div>
                 
                     <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
@@ -169,14 +169,11 @@ Dashboard
                         <!-- begin widget-chat-header -->
                         <div class="widget-chat-header">
                             <div class="widget-chat-header-icon">
-                                <i class="fa fa-book width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
-                                           style="line-height: 30px"></i>
+                                <i class="fa fa-file width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
+                                           style="line-height: 30px"></i><b>Title</b>
                             </div>
                             <div class="widget-chat-header-content">
                                 <h4 class="widget-chat-header-title" id="article_title">Ilmiy Markaz</h4>
-                            </div>
-                            <div class="widget-chat-header-content write-message-div">
-                                        
                             </div>
                         </div>
                         <!-- end widget-chat-header -->
@@ -220,21 +217,18 @@ Dashboard
     $('body').on('click', '.authorWrite-message-btn', function (e) {
         e.preventDefault();
 
-        let id = $(this).data('id');
+        const data = $(this).data('id');
+        const array = data.split(',');
+        const id = array[0];
+        const user_id = parseInt(array[1]);
 
         $.ajax({
             type: 'GET',
-            url: "/send_message/" + id + "/",
+            url: "/send_message/" + id + "/" + user_id,
             success: function (response) {
-                if(response.result){
-                    $('#write_message_div_form').html(response);
+                $('#write_message_div_form').html(response);
                 $('#send-message-modal').modal('show');
-                } else {
-                    swal({
-                        title: response.message,
-                        timer: 2000,
-                    });
-                }
+                
             },
             error: function (error) {
                 console.log("Xatolik");
@@ -299,29 +293,45 @@ Dashboard
             
                                     if(response.current_user_id === item.from_user__id){
             
-                                        let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
-                                             + item.from_user__email + 
-                                             `</div><div class="widget-chat-message">` 
-                                                + item.message + 
-                                                `</div><div class="widget-chat-time">` 
-                                                    + time_string + 
-                                                    `</div></div></div></div>`;
+                                        let temp1 = `<div class="widget-chat-item right">
+                                                        <div class="widget-chat-info">
+                                                            <div class="widget-chat-info-container">
+                                                                <div class="widget-chat-name text-indigo">`
+                                                                    + item.from_user__email + 
+                                                                `</div>
+                                                                <div class="widget-chat-message">` 
+                                                                    + item.message + 
+                                                                `</div>
+                                                                <div class="widget-chat-time">` + `</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`;
             
                                         $('#user_chat_body').append(temp1); 
                                     }
             
                                     if(response.current_user_id === item.to_user__id){
             
-                                        let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
-                                             + item.from_user__email + `</div><div class="widget-chat-message">`
-                                                 + item.message + `</div><div class="widget-chat-time">`
-                                                     + time_string + `</div></div></div></div>`;
+                                        let temp2 = `<div class="widget-chat-item left">
+                                                        <div class="widget-chat-info">
+                                                            <div class="widget-chat-info-container">
+                                                                <div class="widget-chat-name text-indigo">`
+                                                                    + item.from_user__email + 
+                                                                `</div>
+                                                                <div class="widget-chat-message">`
+                                                                    + item.message + 
+                                                                `</div>
+                                                                <div class="widget-chat-time">` + `</div>
+                                                                <br><div class="widget-chat-ansewer">
+                                                                    <button type="button" data-id="${id},${item.from_user__id}" class="btn btn-white btn-sm authorWrite-message-btn">Ansewer</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`;
+
                                         $('#user_chat_body').append(temp2); 
                                     }
-                                }   
-    
-                                $('.write-message-div').empty();
-                                $('.write-message-div').append(`<button data-id="${id}" type="button" class="btn btn-sm btn-info authorWrite-message-btn" style="float: right"><i class="fa fa-comment"></i> Write Message </button>`);
+                                }
                             
                             } else {
                                 swal({
