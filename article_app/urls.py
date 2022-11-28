@@ -15,8 +15,6 @@ urlpatterns = [
 
     path('post/<slug:slug>/', post_detail, name='post_detail'),
 
-    path('articles/', my_articles, name='my_articles'),
-
     path('article/create/', create_article, name='create_article'),
     path('article/view/<int:pk>/', article_view, name='article_view'),
     path('article/edit/<int:pk>/', update_article, name='update_article'),

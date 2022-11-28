@@ -122,6 +122,20 @@ class Reviewer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class StatusReview(models.Model):
+    name = models.CharField(_('Name'), max_length=255, unique=True)
+
+
+class ReviewerArticle(models.Model):
+    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, related_name="review_article", blank=True)
+    editor = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, related_name="review_editor", blank=True)
+    reviewer = models.ForeignKey('user_app.Reviewer', on_delete=models.CASCADE, related_name="review_reviewer", blank=True)
+    status = models.ForeignKey('user_app.StatusReview', on_delete=models.CASCADE, related_name="review_status", blank=True)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class Menu(models.Model):
     name = models.CharField(max_length=100)
     icon = models.CharField(max_length=255, null=True, blank=True)

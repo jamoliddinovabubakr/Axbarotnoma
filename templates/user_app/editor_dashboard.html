@@ -12,13 +12,13 @@
             <div class="col-md-10">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a href="#uncheck" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
+                        <a href="#uncheck" data-toggle="tab" class="nav-link active">
                             <span class="d-sm-none">Tab 1</span>
                             <span class="d-sm-block d-none">Unchecks</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#check" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
+                        <a href="#check" data-toggle="tab" class="nav-link">
                             <span class="d-sm-none">Tab 2</span>
                             <span class="d-sm-block d-none">Checked History</span>
                         </a>
@@ -33,39 +33,10 @@
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% if uncheck.count > 0 %}
-                                    {% for notif in uncheck %}
-                                        <tr>
-                                            <td>{{ notif.id }}</td>
-                                            <td><b>{{ notif.article.author.full_name }}</b><br>{{ notif.article.title|slice:100 }}
-                                            </td>
-                                        <td>{{ notif.created_at }}</td>
-                                            <td>
-                                                <button {% if notif.notification_status_id == 1 %}
-                                                    class="btn btn-danger btn-xs"
-                                                {% elif notif.notification_status_id == 2 %}
-                                                    class="btn btn-warning btn-xs"
-                                                {% else %}
-                                                    class="btn btn-success btn-xs"
-                                                {% endif %}
-                                                    style="margin: 10px; border-radius: 20px; float: right"><i
-                                                        class="fa fa-circle-notch mr-1"></i>{{ notif.notification_status.name }}
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button onclick="OnClickViewArticle({{ notif.article.id }})"
-                                                        class="btn btn-primary btn-sm"
-                                                        style="margin: 10px; float: right"><i
-                                                        class="fa fa-eye mr-1"></i>View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr class="text-center">
-                                        <td colspan="4"><h3>NO DATA</h3></td>
-                                    </tr>
-                                {% endif %}
+                                <tbody id="editor_uncheck_notifications">
+
+
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -77,38 +48,10 @@
                         <br>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                {% if check.count > 0 %}
-                                    {% for notif in check %}
-                                        <tr>
-                                            <td>{{ notif.id }}</td>
-                                            <td><b>{{ notif.article.author.full_name }}</b><br>{{ notif.article.title }}
-                                            </td>
-                                            <td>
-                                                <button {% if notif.notification_status_id == 1 %}
-                                                    class="btn btn-danger btn-xs"
-                                                {% elif notif.notification_status_id == 2 %}
-                                                    class="btn btn-warning btn-xs"
-                                                {% else %}
-                                                    class="btn btn-success btn-xs"
-                                                {% endif %}
-                                                    style="margin: 10px; border-radius: 20px; float: right"><i
-                                                        class="fa fa-circle-notch mr-1"></i>{{ notif.notification_status.name }}
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button onclick="OnClickViewArticle({{ notif.article.id }})"
-                                                        class="btn btn-primary btn-sm"
-                                                        style="margin: 10px; float: right"><i
-                                                        class="fa fa-eye mr-1"></i>View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr class="text-center">
-                                        <td colspan="4"><h3>NO DATA</h3></td>
-                                    </tr>
-                                {% endif %}
+                                <tbody id="editor_checked_notifications">
+
+
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -116,107 +59,91 @@
             </div>
             <div class="col-md-2"></div>
         </div>
-        <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="notificationView">
-            <div class="col-md-10 forshadow" style="padding: 2%; background-color: #fff;">
-                <table class="table table-responsive">
-                    <thead>
-                    <tr>
-                        <th width="1%"><b>ID</b></th>
-                        <th><b>{% trans "File" %}</b></th>
-                        <th><b>{% trans "Title" %}</b></th>
-                        <th><b>{% trans "created_at" %}</b></th>
-                        <th><b>{% trans "Action" %}</b></th>
-                    </tr>
-                    </thead>
-                    <tbody id="articleDetail">
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            setInterval(function () {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            setInterval(function(){
                 $.ajax({
-                    type: "GET",
-                    url: "{% url 'load_notification' %}",
-                    success: function (response) {
-                        $("#display_table").empty();
-                        let tr = 0;
+                    type: 'GET',
+                    url: "/profile/editor_notifications/",
+                    success: function(response){
+                        $('#editor_uncheck_notifications').empty();
+                        $('#editor_checked_notifications').empty();
 
-                        for (let item of response.notifications) {
-                            tr++;
-                            let status = item.status.toString();
-                            let temp =
-                                "<tr>" +
-                                "<td>" + tr + "</td>" +
-                                "<td>" + item.my_resend__author__email + "</td>" +
-                                "<td>" + item.description + "</td>" +
-                                "<td>" + item.created_at + "</td>" +
-                                "<td id='index" + item.id + "'></td>" +
-                                "<td>" + `<a href="/profile/notification/${item.id}/view"><i class="fas fa-fw m-r-15 fa-edit"></i>` + "</a></td>"
-                                + "</tr>";
+                       if (response.uncheck_notifications.length > 0){
+                        for(let item of response.uncheck_notifications){
 
-                            $("#display_table").append(temp);
+                            let time = new Date(item.created_at);
+                            let time_string = time.toLocaleString();
 
-                            if (status === 'Tekshirilmadi') {
-                                $("#index" + item.id).html("<span class='badge badge-danger'>" + item.status + "</span>");
-                            } else if (status === 'Tekshirildi') {
-                                $("#index" + item.id).html("<span class='badge badge-success'>" + item.status + "</span>");
-                            } else if (status === 'Tekshirilmoqda') {
-                                $("#index" + item.id).html("<span class='badge badge-warning'>" + item.status + "</span>");
-                            } else {
-                                $("#index" + item.id).html("<span class='badge badge-info'>" + item.status + "</span>");
+                            let uncheck = `<tr>` +
+                                `<td>` + item.id + `</td>`+
+                                `<td><b>` + item.article__author__email + `</b><br>`+
+                                item.article__title + `</td>` +
+                                `<td>`+ time_string + `</td>` +
+                                `<td id="view_notif_id${item.id}"></td>`+
+                                `<td><a href="/profile/editor_check_article/${ item.id}/" class="btn btn-primary btn-sm" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                                </a></td>`
+                                + `</tr>`;
+                                            
+                            $('#editor_uncheck_notifications').append(uncheck);
+
+                            if (item.notification_status__id == 1){
+                                $('#view_notif_id' + item.id).html("<span class='badge badge-danger'>" + item.notification_status__name + "</span>");
+                            }
+                            if (item.notification_status__id == 2){
+                                $('#view_notif_id' + item.id).html("<span class='badge badge-warning'>" + item.notification_status__name + "</span>");
+                            }
+                            if (item.notification_status__id == 3){
+                                $('#view_notif_id' + item.id).html("<span class='badge badge-success'>" + item.notification_status__name + "</span>");
                             }
 
+                        }
+                       }  else {
+                        let tr = `<tr>` +
+                            `<td><h3 class="text-center" style="color: green;">NO DATA</h3></td>`
+                            + `</tr>`;
+                        $('#editor_uncheck_notifications').append(tr);
+                       }
+
+                       if (response.check_notifications.length > 0){
+                        for(let item of response.check_notifications){
+
+                            let time = new Date(item.created_at);
+                            let time_string = time.toLocaleString();
+
+                            let checked = `<tr>` +
+                                `<td>` + item.id + `</td>`+
+                                `<td><b>` + item.article__author__email + `</b><br>`+
+                                item.article__title + `</td>` +
+                                `<td>`+ time_string + `</td>` +
+                                `<td id="view_notif_checked_id${item.id}"></td>`+
+                                `<td><button type="button" data-id="${item.article__id}" class="btn btn-primary btn-sm" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                                </button></td>`
+                                + `</tr>`;
+                                            
+                            $('#editor_checked_notifications').append(checked);
+
+                            if (item.notification_status__id == 3){
+                                $('#view_notif_checked_id' + item.id).html("<span class='badge badge-success'>" + item.notification_status__name + "</span>");
+                            }
 
                         }
+                    }  else {
+                        let tr = `<tr>` +`<td><h3 class="text-center" style="color: green;">NO DATA</h3></td>`+ `</tr>`;
+                        $('#editor_checked_notifications').append(tr);
+                       }
+
                     },
-                    error: function (response) {
-                        alert(response);
+                    error: function(response){
+                        console.log(response);
                     }
                 });
-
-            }, 5000);
-
+            }, 1500); 
         });
 
-        function OnClickViewArticle(id) {
-            $.ajax({
-                type: "GET",
-                url: "/article/view/" + id + "/",
-                success: function (response) {
-                    $("#articleDetail").empty();
-                    $("#articleView").css("display", "block");
-
-                    console.log(response);
-                    let fileID = response['file'];
-                    let FileArticle = "File Not Exists";
-                    if (fileID != "None") {
-                        FileArticle = `<a href='${response['file']}' download role='button'>` + `<span>Yuklab olish</span></a>`
-                    }
-                    let temp = "<tr><td>" +
-                        response['id'] + "</td><td>" + FileArticle
-                        + `</td><td>` +
-                        response['title'] + `</td><td>` +
-                        response['created_at'] + `</td><td>` +
-                        `<a class="btn btn-sm btn-outline-warning" href="/article/edit/${response['id']}/">Edit</a>` + " " +
-                        `<a class="btn btn-sm btn-outline-danger"  href="/article/delete/${response['id']}/">Delete</a>`
-                        + "</td></tr>";
-                    $("#articleDetail").append(temp);
-                },
-                error: function (response) {
-                    console.log(response);
-                }
-            });
-        }
-
-        function OnClickSubmissionTab() {
-            $('#articleView').css("display", "none");
-        }
     </script>
 {% endblock %}
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>

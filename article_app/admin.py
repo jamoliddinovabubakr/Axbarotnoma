@@ -40,17 +40,6 @@ class ExtraAuthorAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'lname', 'fname', 'mname', 'email', 'work']
 
 
-@admin.register(StatusReviewer)
-class StatusReviewerAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'name', 'created_at']
-
-
-@admin.register(ReviewerArticle)
-class ReviewerArticleAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'article', 'reviewer', 'editor',
-                    'status', 'comment', 'created_at']
-
-
 @admin.register(NotificationStatus)
 class NotificationStatusAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name']

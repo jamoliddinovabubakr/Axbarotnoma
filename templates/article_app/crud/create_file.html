@@ -60,12 +60,21 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                      swal({
+                    if(response.result){
+                        $('#createArticleFile_modal').click();
+                        $('#article_file_name').text(response.file_name);
+                        swal({
                             title: response.message,
                             timer: 2000,
                         });
                      $form[0].reset();
-                     $('#createArticleFile_modal').click();
+                    } else {
+                        swal({
+                            title: response.message,
+                            timer: 2000,
+                        });
+                    }
+                      
                 },
             });
         });

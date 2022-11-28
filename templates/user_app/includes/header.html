@@ -27,7 +27,7 @@
             {% include "lang.html" %}
         </li>
         <li class="dropdown">
-            {% if 1 in request.user.get_roles or 2 in request.user.get_roles %}
+            
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                     <i class="fa fa-bell"></i>
                     <span class="notif_count label label-primary"></span>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 </li>
-            {% endif %}
+            
 
         <li class="dropdown navbar-user">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -94,6 +94,6 @@
                     console.log(response);
                 }
             });
-        }, 1500);
+        }, 10000);
     });
 </script>

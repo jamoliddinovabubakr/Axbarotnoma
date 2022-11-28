@@ -1,9 +1,9 @@
 {% load i18n %}
 {% load static %}
-<form method="post" action="{% url 'create_article' %}">
+<form class="create_article_form" method="post" action="{% url 'create_article' %}">
     {% csrf_token %}
     {{ form.media }}
-    <div class="modal fade" id="addUser">
+    <div class="modal fade" id="create_article_modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -34,7 +34,36 @@
         </div>
     </div>
 </form>
-<div id="emailModal" class="modal fade" role="dialog">
-</div>
+<script>
+    $(document).ready(function(){
+        const $myCreateArticleForm = $('.create_article_form');
+        $myCreateArticleForm.submit(function (e) {
+        e.preventDefault();
+
+        const $formData = $myCreateArticleForm.serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: "/article/create/",
+            data: $formData,
+            success: function (response) {
+                $('#create_article_modal').modal('hide');
+                console.log(response);
+                if (response.result){       
+                    window.location.href = response.redirect;
+                } else {
+                    alert(response.message);
+                }
+                
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        return false;
+    });
+    });
+</script>
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

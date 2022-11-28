@@ -8,7 +8,7 @@ from user_app.models import User, Role, Editor
 @receiver(post_save, sender=Article)
 def create_article(sender, instance, created, **kwargs):
     if instance.article_status.id == 1:
-        editor = Editor.objects.all().first()
+        editor = Editor.objects.all().last()
 
         Notification.objects.create(
             article=instance,
@@ -16,4 +16,5 @@ def create_article(sender, instance, created, **kwargs):
             to_user=editor.user,
             message="Assalomu aleykum. Men sizlarga o'z maqolamni yubordim!",
             notification_status=NotificationStatus.objects.get(id=1),
+            is_update_article=True,
         )

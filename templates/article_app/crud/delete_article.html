@@ -1,8 +1,8 @@
 {% load i18n %}
-<div class="modal fade" id="UserModal">
+<form method="post" id="delete_article_form">
+{% csrf_token %}
+<div class="modal fade" id="delete_article_modal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'delete_article' article.id %}">
-            {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{% trans "Maqolani o'chirish" %}</h4>
@@ -18,6 +18,41 @@
                     <button type="submit" class="btn btn-primary">{% trans "Ha" %}</button>
                 </div>
             </div>
-        </form>
     </div>
 </div>
+</form>
+<script>
+    $(document).ready(function(){
+        const $myRemoveArticleForm = $('#delete_article_form');
+        $myRemoveArticleForm.submit(function (e) {
+        e.preventDefault();
+
+        const $formData = $myRemoveArticleForm.serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: "/article/delete/" + {{ article.id }} + "/",
+            data: $formData,
+            success: function (response) {
+                $('#delete_article_modal').modal('hide');
+                console.log(response);
+                if (response.result){
+                    swal({
+                        title: response.message,
+                        timer: 2000,
+                    });
+                        location.reload(true);
+                } else {
+                    alert("Xatolik");
+                }
+                
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        return false;
+    });
+    });
+</script>
