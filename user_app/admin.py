@@ -46,14 +46,3 @@ class EditorAdmin(ImportExportActionModelAdmin):
 @admin.register(Reviewer)
 class ReviewerAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'user', 'mfile', 'is_reviewer', 'created_at', 'updated_at']
-    
-    
-@admin.register(StatusReview)
-class StatusReviewerAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'name']
-
-
-@admin.register(ReviewerArticle)
-class ReviewerArticleAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'article', 'reviewer', 'editor',
-                    'status', 'comment', 'created_at']

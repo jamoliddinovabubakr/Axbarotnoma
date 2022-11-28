@@ -66,7 +66,7 @@
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Tug'ilgan kun" %} </label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input type="text" value="{{ user.birthday }}" name="birthday"
+                                        <input type="text" value="{{ user.birthday|date:"m/d/Y" }}" name="birthday"
                                                class="form-control" id="datepicker-default" placeholder="Select Date"/>
                                     </div>
                                 </div>
@@ -80,12 +80,12 @@
                                 </div>
                                 <!-- end form-group -->
                                 <!-- begin form-group -->
-                                <div class="form-group row m-b-10">
-                                    <label class="col-lg-3 text-lg-right col-form-label">{% trans "Tuman" %}</label>
-                                    <div class="col-lg-9 col-xl-6">
-                                        {{ form.district }}
-                                    </div>
-                                </div>
+                                {#                                <div class="form-group row m-b-10">#}
+                                {#                                    <label class="col-lg-3 text-lg-right col-form-label">{% trans "Tuman" %}</label>#}
+                                {#                                    <div class="col-lg-9 col-xl-6">#}
+                                {#                                        {{ form.district }}#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
                                 <!-- end form-group -->
                                 <!-- begin form-group -->
                                 <div class="form-group row m-b-10">
@@ -152,7 +152,19 @@
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Passport" %}</label>
                                     <div class="col-lg-9 col-xl-6">
-                                        {{ form.passport }}
+                                        {{ form.pser }} {{ form.pnum }}
+                                        {{ form_file.status_reviewer }}
+                                    </div>
+                                </div>
+                                <div class="form-group row m-b-10">
+                                    <label class="col-lg-3 text-lg-right col-form-label">{% trans "Passport" %}</label>
+                                    <div class="col-lg-9 col-xl-6">
+                                        <input type="file" name="mfile">
+                                    </div>
+                                </div>
+                                <div class="row m-b-15">
+                                    <div class="col-md-12">
+                                        {{ form_section.section }}
                                     </div>
                                 </div>
                                 <!-- end form-group -->
@@ -165,7 +177,7 @@
                                 <div class="row">
                                     <div class="col-xs-3"></div>
                                     <div class="col-xs-6">
-                                        <button type="submit" style="float: right;" href="{% url 'profile_page' %}"
+                                        <button type="submit" style="float: right;" href="{% url 'dashboard' %}"
                                                 class="btn btn-success"><span
                                                 style="font-family: Arial,cursive">{% trans "O'zgarishlarni saqlash" %}</span>
                                         </button>
