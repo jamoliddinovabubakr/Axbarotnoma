@@ -2,6 +2,7 @@ from django import forms
 from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput, ModelMultipleChoiceField
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
+from article_app.models import Section
 from user_app.models import *
 
 
@@ -11,11 +12,38 @@ class CreateUserForm(UserCreationForm):
         fields = ['last_name', 'first_name', 'username', 'email', 'password1', 'password2']
 
 
+# working
+class ReviewerFileForm(forms.ModelForm):
+    class Meta:
+        model = ReviewerFile
+        fields = ['file', ]
+
+
+class ReviewerForm(forms.ModelForm):
+    choices = [['', '']]
+    query = Section.objects.all().values().order_by('name')
+    if query:
+        choices = [[x['id'], x['name']] for x in query]
+
+    section = forms.MultipleChoiceField(choices=choices, required=True, widget=forms.SelectMultiple(attrs={
+        'class': 'multiple-select2 form-control',
+        'multiple': 'multiple',
+        'data - size': "10",
+        'data-live-search': "true",
+        'data - style': "btn-white",
+        'data - parsley - required': "true",
+    }))
+
+    class Meta:
+        model = Reviewer
+        fields = ['section', ]
+
+
 class UpdateUserForm(UserChangeForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'middle_name', 'birthday', 'avatar', 'email',
-                  'phone', 'pser', 'pnum', 'region', 'gender', 'work']
+                  'phone', 'pser', 'pnum', 'region', 'gender', 'work', ]
 
         widgets = {
             'first_name': TextInput(attrs={

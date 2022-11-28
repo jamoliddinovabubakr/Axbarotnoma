@@ -46,3 +46,8 @@ class EditorAdmin(ImportExportActionModelAdmin):
 @admin.register(Reviewer)
 class ReviewerAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'user', 'mfile', 'is_reviewer', 'created_at', 'updated_at']
+
+
+@admin.register(ReviewerFile)
+class ReviewerAdmin(ImportExportActionModelAdmin):
+    list_display = ['file', ]

@@ -1,6 +1,7 @@
 {% load static %}
-{#{% load menu_tag %}#}
-<div id="sidebar" class="sidebar" style="box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+{% load menu_tag %}
+<div id="sidebar" class="sidebar"
+     style="box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
     <div data-scrollbar="true" data-height="100%">
         <ul class="nav">
             <li class="nav-profile">
@@ -16,7 +17,39 @@
                 </a>
             </li>
         </ul>
-{#        {% get_allow_menus request.user.role.pk %}#}
+        {% menus as menu %}
+        <ul class="list-group">
+            {% for m in menu %}
+                <li class="list-group-item"><a
+                        href="{% url m.url %}">{{ m.name }}</a></li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
+<script>
+    const links = document.querySelectorAll('.list-group-item')
+    const urlSplit = window.location.href.split('/')
+    const currentPage = urlSplit[urlSplit.length - 2]
+    console.log(urlSplit)
+    const menuPages = [
+        "user_dashboard",
+        "my_articles",
+        "articles",
+        "view",
+        "edit_profile",
+        "change_password",
+        "roles",
+        "menus",
+    ];
+    let text = "";
+    let tmp = 0;
+    for (let x of menuPages) {
+        if (x === currentPage) {
+            links[tmp].style.backgroundColor = '#f0f0f0'
+            tmp = 0
+            break
+        }
+        tmp += 1
+    }
+</script>
 <div class="sidebar-bg"></div>

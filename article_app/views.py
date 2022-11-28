@@ -11,7 +11,8 @@ from django.views.decorators.csrf import requires_csrf_token
 from user_app.decorators import allowed_users
 from article_app.models import *
 from article_app.models import ExtraAuthor
-from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm, AddAuthorForm, SendMessageForm
+from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm, AddAuthorForm, \
+    SendMessageForm
 from django.core.paginator import Paginator
 from user_app.models import User
 

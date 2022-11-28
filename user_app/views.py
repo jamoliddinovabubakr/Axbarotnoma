@@ -1,4 +1,4 @@
-from article_app.models import Journal, Notification, Article
+from article_app.models import Journal, Notification, Article, Section
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from user_app.decorators import unauthenticated_user, password_reset_authentification
@@ -9,7 +9,7 @@ from django.template.loader import render_to_string, get_template
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from user_app.forms import CreateUserForm, AddReviewerForm
+from user_app.forms import CreateUserForm, AddReviewerForm, ReviewerForm
 from user_app.models import *
 import os
 from user_app.models import User
@@ -102,27 +102,28 @@ def choose_roles(request):
     return render(request, "user_app/crud/choose_role.html", context=context)
 
 
-# @login_required(login_url='login')
-# def change_password(request):
-#     if request.method == 'POST':
-#         form = PasswordChangeForm(request.user, request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             update_session_auth_hash(request, user)  # Important!
-#             messages.success(request, 'Parolingiz muvaffaqiyatli o\'zgartirildi!')
-#             r = 1
-#             return render(request, 'user_app/register/change_password.html', {'result': r})
-#         else:
-#             r = -1
-#             messages.error(request, 'Please correct the error below.')
-#     else:
-#         r = 2
-#         form = PasswordChangeForm(request.user)
-#     return render(request, 'user_app/register/change_password.html', {
-#         'form': form,
-#         'result': r,
-#     })
-#
+@login_required(login_url='login')
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Parolingiz muvaffaqiyatli o\'zgartirildi!')
+            r = 1
+            return render(request, 'user_app/register/change_password.html', {'result': r})
+        else:
+            r = -1
+            messages.error(request, 'Please correct the error below.')
+    else:
+        r = 2
+        form = PasswordChangeForm(request.user)
+    return render(request, 'user_app/register/change_password.html', {
+        'form': form,
+        'result': r,
+    })
+
+
 #
 # @password_reset_authentification
 # def password_reset(request):
@@ -196,12 +197,14 @@ def editor_dashboard(request):
     return render(request, "user_app/editor_dashboard.html", context=context)
 
 
-# @login_required(login_url='login')
-# def profile(request):
-#     context = {
-#
-#     }
-#     return render(request, "user_app/profile_page.html", context=context)
+@login_required(login_url='login')
+def profile(request):
+    context = {
+
+    }
+    return render(request, "user_app/profile_page.html", context=context)
+
+
 #
 #
 # @login_required(login_url='login')
@@ -209,14 +212,16 @@ def editor_dashboard(request):
 #     return render(request, 'user_app/error_404.html')
 #
 #
-# @login_required(login_url='login')
-# @allowed_users(menu_url='roles')
-# def get_roles(request):
-#     roles = Role.objects.filter(status=True)
-#     context = {
-#         'roles': roles
-#     }
-#     return render(request, "user_app/settings/roles_page.html", context=context)
+@login_required(login_url='login')
+@allowed_users(menu_url='roles')
+def get_roles(request):
+    roles = Role.objects.filter(status=True)
+    context = {
+        'roles': roles
+    }
+    return render(request, "user_app/settings/roles_page.html", context=context)
+
+
 #
 #
 # @login_required(login_url='login')
@@ -338,30 +343,48 @@ def editor_dashboard(request):
 #     return render(request, 'user_app/crud/view_user.html', {'user': user})
 #
 #
-# @login_required(login_url='login')
-# def edit_profile(request):
-#     user = request.user
-#     if request.method == 'POST':
-#         form = UpdateUserForm(request.POST, instance=user)
-#         if form.is_valid():
-#             ob = form.save(commit=False)
-#             ob.save()
-#             if request.FILES.get('avatar', None) is not None:
-#                 try:
-#                     os.remove(user.avatar.url)
-#                 except Exception as e:
-#                     print('Exception in removing old profile image: ', e)
-#                 user.avatar = request.FILES['avatar']
-#                 user.save()
-#             r = 1
-#             return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
-#         else:
-#             return redirect('profile')
-#
-#     else:
-#         r = 0
-#         form = UpdateUserForm(instance=user)
-#         return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
+@login_required(login_url='login')
+def edit_profile(request):
+    user = request.user
+    print(request.user.id)
+    if request.method == 'POST':
+        form_section = ReviewerForm(request.POST, instance=None)
+        form = UpdateUserForm(request.POST, instance=user)
+        if form.is_valid():
+            ob = form.save(commit=False)
+            ob.save()
+            if request.FILES.get('mfile', None) is not None:
+                file = request.FILES.get('mfile')
+                ReviewerFile.objects.create(
+                    file=file,
+                )
+                tmp_file = ReviewerFile.objects.create(file=file)
+                review = form_section.save(commit=False)
+                review.user = request.user
+                review.mfile = tmp_file
+                review.save()
+                for i in request.POST.getlist('section'):
+                    review.section.add(Section.objects.get(pk=i))
+            if request.FILES.get('avatar', None) is not None:
+                try:
+                    os.remove(user.avatar.url)
+                except Exception as e:
+                    print('Exception in removing old profile image: ', e)
+                user.avatar = request.FILES['avatar']
+                user.save()
+            r = 1
+            return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r,
+                                                                           'form_section': form_section})
+        else:
+            return redirect('profile')
+
+    else:
+        r = 0
+        form = UpdateUserForm(instance=user)
+        return render(request, 'user_app/register/edit_profile.html',
+                      {"user": user, 'form': form, 'result': r, 'form_section': ReviewerForm(instance=user)})
+
+
 #
 #
 # def change_group(user, new_gr):
@@ -546,6 +569,8 @@ def count_notification(request):
                  'id', 'from_user__avatar', 'from_user__first_name', 'from_user__last_name',
                  'created_at'
              ))})
+
+
 # @login_required(login_url='login')
 # @allowed_users(perm='view_notification')
 # def view_notification(request, pk):
@@ -630,14 +655,16 @@ def count_notification(request):
 #
 # # END Glavniy redaktor
 #
-# @login_required(login_url='login')
-# @allowed_users(menu_url='menus')
-# def get_menus(request):
-#     menus = Menu.objects.filter(status=True)
-#     context = {
-#         'menus': menus
-#     }
-#     return render(request, "user_app/settings/menus_page.html", context=context)
+@login_required(login_url='login')
+@allowed_users(menu_url='menus')
+def get_menus(request):
+    menus = Menu.objects.filter(status=True)
+    context = {
+        'menus': menus
+    }
+    return render(request, "user_app/settings/menus_page.html", context=context)
+
+
 #
 #
 # @login_required(login_url='login')
@@ -698,8 +725,8 @@ def count_notification(request):
 #         return HttpResponse("Kechirasiz taqrizchilar topilmadi!")
 #
 #
-# def review_notifications(request):
-#     return render(request, "user_app/reviews/notif_review.html")
+def review_notifications(request):
+    return render(request, "user_app/reviews/notif_review.html")
 #
 #
 # def get_review_view_notification(request):

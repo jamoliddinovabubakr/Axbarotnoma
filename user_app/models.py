@@ -45,10 +45,16 @@ class User(AbstractUser):
     pnum = models.CharField(_('Passport '), max_length=7, blank=True, null=True)
     work = models.CharField(max_length=255, null=True, blank=True)
     region = models.ForeignKey('user_app.Region', on_delete=models.CASCADE, verbose_name="Region", null=True,
-                                  blank=True)
+                               blank=True)
     roles = models.ManyToManyField('user_app.Role', related_name="user_roles", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # file = models.FileField(_("Fayl"), upload_to="files/reviewer/%Y/%m/%d", max_length=255, blank=True,
+    #                         validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx', 'pdf'])],
+    #                         help_text='Please upload only .doc, .docx or .pdf files!')
+
+    # mfile = models.ForeignKey('user_app.ReviewerFile', on_delete=models.CASCADE, blank=True, null=True)
 
     # def save(self, *args, **kwargs):
     #     if self.role is None:
@@ -81,6 +87,9 @@ class Editor(models.Model):
     user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
 
 
+# declaring a Student Model
+
+
 class ReviewerFile(models.Model):
     file = models.FileField(_("Fayl"), upload_to="files/reviewer/%Y/%m/%d", max_length=255, blank=True,
                             validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx', 'pdf'])],
@@ -106,7 +115,7 @@ class ReviewerFile(models.Model):
 
 class Reviewer(models.Model):
     section = models.ManyToManyField('article_app.Section', related_name="reviewer_sections", blank=True)
-    user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True, null=True)
     mfile = models.ForeignKey('user_app.ReviewerFile', on_delete=models.CASCADE, blank=True, null=True)
     is_reviewer = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -127,13 +136,13 @@ class Menu(models.Model):
     def get_roles(self):
         return [p.name for p in self.allowed_roles.all()]
 
-    def save(self, *args, **kwargs):
-        menus = self.objects.all()
-        if menus.count() > 0:
-            self.menu_tr = menus.last().menu_tr + 1
-        else:
-            self.menu_tr = 1
-        super().save(*args, **kwargs)
+        # def save(self, *args, **kwargs):
+        #     menus = self.objects.all()
+        #     if menus.count() > 0:
+        #         self.menu_tr = menus.last().menu_tr + 1
+        #     else:
+        #         self.menu_tr = 1
+        #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

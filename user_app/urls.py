@@ -12,9 +12,9 @@ urlpatterns = [
     path('register/', register_page, name='register'),
     path('choose_role/', choose_roles, name='choose_role'),
 
-    # path('change_password', change_password, name='change_password'),
-    # path('view/', profile, name='profile'),
-    # path('edit_profile/', edit_profile, name='edit_profile'),
+    path('change_password/', change_password, name='change_password'),
+    path('view/', profile, name='profile'),
+    path('edit_profile/', edit_profile, name='edit_profile'),
     #
     # path('admins/', admins, name='admins'),
     # path('users/', users, name='users'),
@@ -22,18 +22,18 @@ urlpatterns = [
     # path('users/update/<int:pk>', update_user, name='update_user'),
     # path('users/delete/<int:pk>', delete_user, name='delete_user'),
     #
-    path('article_notification/view/<int:pk>/', user_notofication_view, name='user_notofication_view'),
-    path('load_notif/', load_notification, name='load_notification'),
+    # path('article_notification/view/<int:pk>/', user_notofication_view, name='user_notofication_view'),
+    # path('load_notif/', load_notification, name='load_notification'),
     path('count_notif/', count_notification, name='count_notification'),
     # path('get_review_view_notification/', get_review_view_notification, name='get_review_view_notification'),
     # path('notification/<int:pk>/view', view_notification, name='view_notification'),
     # path('notification/answer_to_author/<int:pk>', answer_to_author, name='answer_to_author'),
     # path('send_to_review/<int:article_id>', send_to_review, name='send_to_review'),
     #
-    # path('review_view_notifications/', review_notifications, name='review_view_notifications'),
+    path('review_view_notifications/', review_notifications, name='review_view_notifications'),
     # path('review_view_notification/<int:pk>/view', review_view_notification, name='review_notification_view'),
     #
-    # path('menus/', get_menus, name='menus'),
+    path('menus/', get_menus, name='menus'),
     # path('menus/create', create_menu, name='create_menu'),
     # path('menus/view/<int:pk>', view_menu, name='view_menu'),
     # path('menus/edit/<int:pk>', edit_menu, name='edit_menu'),
@@ -44,7 +44,7 @@ urlpatterns = [
     # path('genders/edit/<int:pk>', edit_gender, name='edit_gender'),
     # path('genders/delete/<int:pk>', delete_gender, name='delete_gender'),
     #
-    # path('roles/', get_roles, name='roles'),
+    path('roles/', get_roles, name='roles'),
     # path('roles/create', create_role, name='create_role'),
     # path('roles/edit/<int:pk>', edit_role, name='edit_role'),
     # path('roles/delete/<int:pk>', delete_role, name='delete_role'),
