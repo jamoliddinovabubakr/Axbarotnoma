@@ -41,7 +41,7 @@ def post_detail(request, slug):
 @login_required(login_url='login')
 def create_article(request):
     user = User.objects.get(pk=request.user.id)
-    if request.method == "POST":
+    if request.method == "POST" and is_ajax(request):
         form = CreateArticleForm(request.POST)
         if form.is_valid():
             article = form.save(commit=False)
@@ -116,7 +116,7 @@ def update_article(request, pk):
                 ob.save()
                 return redirect('dashboard')
             else:
-                return JsonResponse(f"id=1 ArticleStatus mavjud emas!")
+                return JsonResponse(f"ArticleStatus mavjud emas!")
 
         else:
             data = {

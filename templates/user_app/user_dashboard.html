@@ -258,11 +258,13 @@ Dashboard
                         + `</td><td>` +
                         response['title'] + `</td><td>` +
                         response['created_at'] + `</td><td>` +
-                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-warning edit_article_btn"><i class="fa fa-edit"></i></button>` + " " +
+                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-warning edit_article_btn" disabled><i class="fa fa-edit"></i></button>` + " " +
                         `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-danger remove_article_btn"><i class="fa fa-trash"></i></button>`
                         + "</td></tr>";
                     $("#articleDetail").html(temp);
-                    if(response.article_status_id != 6){ $('.edit_article_btn').prop('disabled', true);}
+                    if(response.article_status_id == 6){ $('.edit_article_btn').prop('disabled', false);}
+                    if(response.article_status_id == 7){ $('.edit_article_btn').prop('disabled', false);}
+                    if(response.article_status_id == 8){ $('.edit_article_btn').prop('disabled', false);}
 
                 },
                 error: function (response) {

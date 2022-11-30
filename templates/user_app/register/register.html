@@ -19,48 +19,52 @@
                         <small>Onlayn axborotnoma jurnali</small>
                     </div>
                     <div class="icon">
-                        <img src="{% static 'img/version.png' %}" width="100" alt=""/>
+                        <img src="{% static 'img/version.png' %}" width="120" alt=""/>
                     </div>
                 </div>
                 <div class="login-body">
                     <div class="login-content">
-                        <form action="" method="POST" class="margin-bottom-0">
+                        <form action="" method="POST" class="margin-bottom-0 registerForm">
                             {% csrf_token %}
                             <div class="form-group m-b-20">
-                                <input type="text" name="last_name" class="form-control form-control-xs inverse-mode"
+                                <input type="text" name="last_name" class="form-control form-control-xs inverse-mode last_name"
                                        placeholder="Familiya"/>
                             </div>
                             <div class="form-group m-b-20">
-                                <input type="text" name="first_name" class="form-control form-control-xs inverse-mode"
+                                <input type="text" name="first_name" class="form-control form-control-xs inverse-mode first_name"
                                        placeholder="Ism"/>
                             </div>
                             <div class="form-group m-b-20">
-                                <input type="text" name="username" class="form-control form-control-xs inverse-mode"
+                                <input type="text" name="middle_name" class="form-control form-control-xs inverse-mode middle_name"
+                                       placeholder="Otangizni ismi"/>
+                            </div>
+                            <div class="form-group m-b-20">
+                                <input type="text" name="username" class="form-control form-control-xs inverse-mode username"
                                        placeholder="Username"/>
                             </div>
                             <div class="form-group m-b-20">
-                                <input type="text" name="email" class="form-control form-control-xs inverse-mode"
+                                <input type="text" name="email" class="form-control form-control-xs inverse-mode email"
                                        placeholder="Email"/>
                             </div>
                             <div class="form-group m-b-20">
                                 <input type="password" name="password1"
-                                       class="form-control form-control-xs inverse-mode" placeholder="Password"/>
+                                       class="form-control form-control-xs inverse-mode password1" placeholder="Password"/>
                             </div>
                             <div class="form-group m-b-20">
                                 <input type="password" name="password2"
-                                       class="form-control form-control-xs inverse-mode"
+                                       class="form-control form-control-xs inverse-mode password2"
                                        placeholder="Re-enter password"/>
                             </div>
                             <br>
                             <div class="login-buttons">
-                                <button type="submit"
-                                        class="UserModal btn btn-primary btn-block btn-lg">{% trans "Ro'yxatdan o'tish" %}</button>
+                                <button type="button"
+                                        class="UserModal btn btn-primary btn-block btn-lg registerBtn">{% trans "Ro'yxatdan o'tish" %}</button>
                             </div>
                             <div class="m-t-30 m-b-30 p-b-30">
                                 {% trans "Already a member? Click" %} <a
                                     href="{% url 'login' %}">{% trans "here" %}</a> {% trans "to login." %}
                             </div>
-                            <h4 class="text-danger text-center">{{ error }}</h4>
+                            <div class="row d-flex justify-content-center" id="registerFormError"></div>
                             <hr/>
                             <p class="text-center mb-0">
                                 &copy; DTM 2022

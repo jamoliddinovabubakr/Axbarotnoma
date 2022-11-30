@@ -23,6 +23,7 @@ from django.contrib.auth.models import Group, Permission
 from user_app.decorators import allowed_users
 from user_app.models import Menu, ReviewerArticle, StatusReview
 from django.utils.translation import get_language_from_request
+from . import utils
 
 
 def is_ajax(request):
@@ -46,9 +47,17 @@ def login_page(request):
 
 @unauthenticated_user
 def register_page(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and is_ajax(request):
         form = CreateUserForm(request.POST)
-        if form.is_valid():
+        lname = request.POST.get('last_name')
+        fname = request.POST.get('first_name')
+        mname = request.POST.get('middle_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        
+        if form.is_valid() and len(lname) != 0 and len(fname) != 0 and len(mname) != 0:
             user = form.save(commit=False)
             user.save()
 
@@ -65,29 +74,31 @@ def register_page(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('main_page')
-            else:
-                return redirect('register')
+                return JsonResponse({"msg": "You are successfully registered."})
         else:
-            username = request.POST['username']
-            email = request.POST['email']
-            usr = authenticate(request, username=username,
-                               email=email, password=request.POST['password1'])
-            error = "Formani to'g'ri to'ldiring!"
-            if usr is not None:
-                error = "Bu foydalanuvchi bor!"
-            context = {
-                "error": error,
-                "form": form,
-            }
-            return render(request, "user_app/register/register.html", context=context)
+            if len(lname) == 0:
+                return JsonResponse({"message": " Please enter your Surname"})
+            if len(fname) == 0:
+                return JsonResponse({"message": " Please enter your Name"})
+            if len(mname) == 0:
+                return JsonResponse({"message": " Please enter your Middle name"})
+            if len(username) == 0:
+                return JsonResponse({"message": " Please enter your Username"})
+            if len(email) == 0:
+                return JsonResponse({"message": " Please enter your Email"})
+            res_username = utils.validate_username(username)
+            if not res_username['success']:
+                return JsonResponse({"message": res_username['reason']})
+            
+            res_email = utils.validate_email(email)
+            if not res_email['success']:
+                return JsonResponse({"message": res_email['reason']})
 
-    else:
-        form = CreateUserForm()
-        context = {
-            'form': form,
-        }
-        return render(request, "user_app/register/register.html", context)
+    form = CreateUserForm()
+    context = {
+        'form': form,
+    }
+    return render(request, "user_app/register/register.html", context)
 
 
 def choose_roles(request):
@@ -168,7 +179,7 @@ def logout_user(request):
 # @allowed_users(menu_url='profile_page')
 def dashboard(request):
     user = request.user
-    myqueues = Article.objects.filter(author=user).filter(Q(article_status_id=1) | Q(article_status_id=4) | Q(article_status_id=5) | Q(article_status_id=6)).order_by(
+    myqueues = Article.objects.filter(author=user).filter(Q(article_status_id=1) | Q(article_status_id=4) | Q(article_status_id=5) | Q(article_status_id=6) | Q(article_status_id=7) | Q(article_status_id=8)).order_by(
         '-updated_at')
     myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by(
         '-updated_at')
@@ -255,7 +266,7 @@ def reviewer_notifications(request):
 
 @login_required(login_url='login')
 # @allowed_users(menu_url='notifications')
-def author_vs_editor_vs_reviewer(request, pk):  #author-editor and editor-author comments
+def author_vs_editor_vs_reviewer(request, pk):
     article = Article.objects.get(pk=pk)
     user = get_object_or_404(User, pk=request.user.id)
     current_user_id = user.id
@@ -340,19 +351,30 @@ def count_notification(request):
 
 @login_required(login_url='login')
 def editor_check_article(request, pk):
+    user = get_object_or_404(User, pk=request.user.id)
+    objs = Editor.objects.filter(user=user)
+    if objs.count() != 1:
+         return render(request, 'user_app/not_access.html')
+     
     notifification = get_object_or_404(Notification, pk=pk)
     notifification.notification_status = NotificationStatus.objects.get(id=2)
     notifification.save()
     article = Article.objects.get(pk=notifification.article.id)
 
-    authors = ExtraAuthor.objects.filter(article=article)
     file = ArticleFile.objects.filter(article=article).filter(file_status=1).last()
-
+    article_reviews = ReviewerArticle.objects.filter(article=article).filter(editor=objs.first())
+    
+    is_ready_publish : bool = True
+    for item in article_reviews:
+        if item.status.id != 3:
+            is_ready_publish = False
+    
+        
     context = {
         "article": article,
+        "article_reviews": article_reviews,
         "article_file": file,
-        "authors": authors,
-        "n_id": pk,
+        "is_ready_publish": is_ready_publish,
     }
     return render(request, 'user_app/check_article_by_editor.html', context=context)
 
@@ -368,6 +390,7 @@ def reviewer_check_article(request, pk):
     notifification = get_object_or_404(Notification, pk=pk)
     notifification.notification_status = NotificationStatus.objects.get(id=2)
     notifification.save()
+    
     reviewer = get_object_or_404(Reviewer, user=user)
     article = Article.objects.get(pk=notifification.article.id)
 
@@ -375,6 +398,9 @@ def reviewer_check_article(request, pk):
     
     if article_reviews.count() == 1:
         article_review = article_reviews.first()
+        if article_review.status.id == 1:
+            article_review.status = StatusReview.objects.get(pk=2)
+            article_review.save()
         context = {
         "article": article,
         "notifification": notifification,
@@ -400,6 +426,88 @@ def load_reviewers(request):
 
 
 @login_required(login_url='login')
+def reviewer_confirmed(request):
+    if request.method == 'POST' and is_ajax(request):
+        review_id = request.POST.get('review_article_id')
+        comment = request.POST.get('comment')
+        
+        review = ReviewerArticle.objects.get(pk=int(review_id))
+        review.comment = comment
+        review.status = StatusReview.objects.get(pk=3)
+        review.save()
+
+        data = {
+        "message":  "Success Article Cinfirmed!",
+        }
+        return JsonResponse(data=data)
+    else:
+        return HttpResponse("Not Fount Page!")
+    
+  
+@login_required(login_url='login')
+def reviewer_resubmit(request):
+    if request.method == 'POST' and is_ajax(request):
+        review_id = request.POST.get('review_article_id')
+        comment = request.POST.get('comment')
+        
+        review = ReviewerArticle.objects.get(pk=int(review_id))
+        review.comment = comment
+        review.status = StatusReview.objects.get(pk=5)
+        review.save()
+        
+        article = get_object_or_404(Article, pk=review.article.id)
+        article.article_status = get_object_or_404(ArticleStatus, pk=8)
+        article.save()
+        
+        Notification.objects.create(
+            article=article,
+            from_user=review.reviewer.user,
+            to_user=review.editor.user,
+            message=comment,
+            notification_status=NotificationStatus.objects.get(id=1),
+        )
+        
+
+        data = {
+            "message":  "Resubmit Article!",
+            }
+        return JsonResponse(data=data)
+    else:
+        return HttpResponse("Not Fount Page!")
+    
+    
+@login_required(login_url='login')
+def reviewer_rejected(request):
+    if request.method == 'POST' and is_ajax(request):
+        review_id = request.POST.get('review_article_id')
+        comment = request.POST.get('comment')
+        
+        review = ReviewerArticle.objects.get(pk=int(review_id))
+        review.comment = comment
+        review.status = StatusReview.objects.get(pk=4)
+        review.save()
+        
+        article = get_object_or_404(Article, pk=review.article.id)
+        
+        Notification.objects.create(
+            article=article,
+            from_user=review.reviewer.user,
+            to_user=review.editor.user,
+            message=comment,
+            notification_status=NotificationStatus.objects.get(id=1),
+        )
+        
+
+        data = {
+            "message":  "Success Article Cinfirmed!",
+            }
+        return JsonResponse(data=data)
+    else:
+        return HttpResponse("Not Fount Page!")
+    
+
+
+@login_required(login_url='login')
 def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST':
@@ -418,7 +526,7 @@ def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
                     article=article,
                     from_user=user,
                     to_user=reviewer_user,
-                    message=f"Xurmatli Taqrizchi({reviewer_user.email}). Tekshirish uchun sizga maqola yuborildi.",
+                    message=f"({reviewer_user.email}).Hurmatli taqrizchi sizga maqola yuborildi.",
                     notification_status=NotificationStatus.objects.get(id=1),
                     is_update_article=True,
                 )
