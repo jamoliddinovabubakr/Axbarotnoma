@@ -30,34 +30,28 @@
                 <div class="login-body">
                     <!-- begin login-content -->
                     <div class="login-content">
-                        <form action="" method="POST" class="margin-bottom-0">
+                        <form action="" method="POST" class="margin-bottom-0 loginForm">
                             {% csrf_token %}
                             <div class="form-group m-b-20">
-                                <input type="text" name="username" class="form-control form-control-xs inverse-mode"
+                                <input type="text" name="username" class="form-control form-control-xs inverse-mode usernameLogin"
                                        placeholder="Username"/>
                             </div>
 
                             <div class="form-group m-b-20">
                                 <input type="password" name="password"
-                                       class="form-control form-control-xs inverse-mode" placeholder="Password"/>
+                                       class="form-control form-control-xs inverse-mode passwordLogin" placeholder="Password"/>
                             </div>
 
-                            <div class="checkbox checkbox-css m-b-20">
-                                <input type="checkbox" id="remember_checkbox"/>
-                                <label for="remember_checkbox">
-                                    Remember Me
-                                </label>
-                            </div>
                             <div class="login-buttons">
                                 <button type="submit"
-                                        class="btn btn-primary btn-block btn-lg">{% trans "KIRISH" %}</button>
+                                        class="btn btn-primary btn-block btn-lg loginBtn">{% trans "KIRISH" %}</button>
                             </div>
                             <div class="m-t-20 m-b-20 p-b-20">
-                                Not a member yet? Click <a
-                                    href="{% url 'register' %}">{% trans "here" %}</a> {% trans "to register." %}
+                                Not a member yet? Click <a href="{% url 'register' %}">{% trans "here" %}</a> {% trans "to register." %}
 {#                                Are you forgot? Click <a#}
 {#                                    href="{% url 'password_reset' %}">{% trans "here" %}</a> {% trans "to reset password." %}#}
                             </div>
+                            <div class="row d-flex justify-content-center" id="loginFormError"></div>
                             <hr/>
                             <p class="text-center text-grey-darker mb-0">
                                 &copy; DTM 2022

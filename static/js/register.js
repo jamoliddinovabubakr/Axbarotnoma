@@ -3,72 +3,195 @@ function validateEmail(email) {
     return regex.test(email);
 }
 
+function formValidate(array) {
+
+    let is_validRForm = true;
+
+    $('.text-danger').hide();
+
+    for (let index = 0; index < array.length; index++) {
+        let key = array[index].key;
+        let value = array[index].value;
+        let message = array[index].message;
+
+
+        if (key == 'email') {
+            if (value == "") {
+                $('.' + key).after('<span class="text-danger"> Please enter your email </span>');
+                is_validRForm = false;
+            }
+            else if (!validateEmail(value)) {
+                $('.' + key).after('<span class="text-danger"> Please enter a valid email address</span>');
+                is_validRForm = false;
+            }
+        }
+
+        if (value == "") {
+            $('.' + key).after('<span class="text-danger text-small"> Please enter your ' + message + '</span>');
+            is_validRForm = false;
+        }
+
+    }
+
+    return is_validRForm
+}
+
+
+
 $('body').on('click', '.registerBtn', function (e) {
     e.preventDefault();
 
+    let lname = $('.last_name').val();
+    let fname = $('.first_name').val();
+    let mname = $('.middle_name').val();
+    let username = $('.username').val();
+    let email = $('.email').val();
+    let password = $('.password1').val();
+    let confirmPassword = $('.password2').val();
+
+    let data = new Array(
+        { key: 'last_name', value: lname, message: "surname" },
+        { key: 'first_name', value: fname, message: "name" },
+        { key: 'middle_name', value: mname, message: "middle name" },
+        { key: 'username', value: username, message: "username" },
+        { key: 'password1', value: password, message: "password" },
+        { key: 'password2', value: confirmPassword, message: "confirmpassword" },
+        { key: 'email', value: email, message: "" },
+    );
+
+    let is_valid_registerForm = formValidate(data);
+
+    if (is_valid_registerForm) {
         $.ajax({
             method: "POST",
             url: '/profile/register/',
             data: $('.registerForm').serialize(),
             success: function (response) {
-                if(response.message){
-                    $('#registerFormError').html("<span class='text-danger text-center'>" + response.message +"</span>");
+                if (response.message) {
+                    $('#registerFormError').html("<span class='text-danger text-center'>" + response.message + "</span>");
                 } else {
-                    window.location.href="/";
-                } 
+                    window.location.reload();
+                }
             },
         });
+    }
+});
 
+$('body').on('click', '.loginBtn', function (e) {
+    e.preventDefault();
 
-    function formValidate() {
+    let is_valid_form = formValidateLogin();
+    if (is_valid_form) {
+        $.ajax({
+            method: "POST",
+            url: '/profile/login/',
+            data: $('.loginForm').serialize(),
+            success: function (response) {
+                if (response.message) {
+                    $('#loginFormError').html("<span class='text-danger text-center'>" + response.message + "</span>");
+                } else {
+                    window.location.reload();
+                }
+            },
+        });
+    }
 
-        let lname = $('.last_name').val();
-        let fname = $('.first_name').val();
-        let mname = $('.middle_name').val();
-        let username = $('.username').val();
-        let email = $('.email').val();
-        let password = $('.password1').val();
-        let confirmPassword = $('.password2').val();
+    function formValidateLogin() {
 
+        let username = $('.usernameLogin').val();
+        let password = $('.passwordLogin').val();
 
+        let inputValue = new Array(username, password);
 
-        var inputValue = new Array(lname, fname, mname, email, username, password, confirmPassword);
+        let inputMessage = new Array("Username", "Password");
 
-        var inputMessage = new Array("Surname", "Name", "Family Name", "Email", "Username", "Password", "ConfirmPassword");
+        let is_valid = true;
 
         $('.text-danger').hide();
 
         if (inputValue[0] == "") {
-            $('.last_name').after('<span class="text-danger"> Please enter your ' + inputMessage[0] + '</span>');
+            $('.usernameLogin').after('<span class="text-danger"> Please enter your ' + inputMessage[0] + '</span>');
+            is_valid = false;
         }
 
         if (inputValue[1] == "") {
-            $('.first_name').after('<span class="text-danger"> Please enter your ' + inputMessage[1] + '</span>');
+            $('.passwordLogin').after('<span class="text-danger"> Please enter your ' + inputMessage[1] + '</span>');
+            is_valid = false
         }
 
-        if (inputValue[2] == "") {
-            $('.middle_name').after('<span class="text-danger"> Please enter your ' + inputMessage[2] + '</span>');
-        }
-
-        if (inputValue[4] == "") {
-            $('.username').after('<span class="text-danger"> Please enter your ' + inputMessage[4] + '</span>');
-        }
-
-        if (inputValue[3] == "") {
-            $('.email').after('<span class="text-danger"> Please enter your ' + inputMessage[3] + '</span>');
-        }
-        else if (!validateEmail.test(email)) {
-            $('.email').after('<span class="text-danger"> Please enter a valid email address</span>');
-        }
-
-        if (inputValue[5] == "") {
-            $('.password1').after('<span class="text-danger"> Please enter your ' + inputMessage[5] + '</span>');
-        }
-
-        if (inputValue[6] == "") {
-            $('.password2').after('<span class="text-danger"> Please enter your ' + inputMessage[6] + '</span>');
-        }
+        return is_valid;
     }
 });
 
 
+$('body').on('submit', '.editProfileForm', function (e) {
+    e.preventDefault();
+
+    let last_name = $('.last_name').val();
+    let first_name = $('.first_name').val();
+    let middle_name = $('.middle_name').val();
+    let username = $('.username').val();
+    let email = $('.email').val();
+    let birthday = $('.birthday').val();
+    let region = $('.region').val();
+    let gender = $('.gender').val();
+    let phone = $('.phone').val();
+    let pser = $('.pser').val();
+    let pnum = $('.pnum').val();
+    let work = $('.work').val();
+
+    let dataEdit = new Array(
+        { key: 'last_name', value: last_name, message: "surname" },
+        { key: 'first_name', value: first_name, message: "name" },
+        { key: 'middle_name', value: middle_name, message: "middle name" },
+        { key: 'username', value: username, message: "username" },
+        { key: 'email', value: email, message: "" },
+        { key: 'birthday', value: birthday, message: "birthday" },
+        { key: 'region', value: region, message: "region" },
+        { key: 'gender', value: gender, message: "gender" },
+        { key: 'phone', value: phone, message: "phone" },
+        { key: 'pser', value: pser, message: "pser" },
+        { key: 'pnum', value: pnum, message: "pnum" },
+        { key: 'work', value: work, message: "work" },
+    );
+
+
+    let is_valid_form = formValidate(dataEdit);
+
+    let formData = new FormData();
+    formData.append('last_name', last_name);
+    formData.append('first_name', first_name);
+    formData.append('middle_name', middle_name);
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('birthday', birthday);
+    formData.append('region', region);
+    formData.append('gender', gender);
+    formData.append('phone', phone);
+    formData.append('pser', pser);
+    formData.append('pnum', pnum);
+    formData.append('work', work);
+    formData.append('avatar', $('#id_avatar')[0].files[0]);
+    formData.append('csrfmiddlewaretoken', $("input[name=csrfmiddlewaretoken]").val());
+
+
+    if (is_valid_form) {
+        $.ajax({
+            method: "POST",
+            url: '/profile/edit_profile/',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                swal({
+                    title: response.message,
+                    timer: 1500,
+                });
+                if(response.status){
+                    window.location.reload();
+                }
+            },
+        });
+    }
+});

@@ -30,7 +30,7 @@ urlpatterns = [
 
     # path('change_password', change_password, name='change_password'),
     # path('view/', profile, name='profile'),
-    # path('edit_profile/', edit_profile, name='edit_profile'),
+    path('edit_profile/', edit_profile, name='edit_profile'),
     #
     # path('admins/', admins, name='admins'),
     # path('users/', users, name='users'),

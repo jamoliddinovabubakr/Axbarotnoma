@@ -26,13 +26,18 @@ from django.utils.translation import get_language_from_request
 from . import utils
 
 
+def logout_user(request):
+    logout(request)
+    return redirect('main_page')
+
+
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
 @unauthenticated_user
 def login_page(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and is_ajax(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -40,8 +45,7 @@ def login_page(request):
             login(request, user)
             return redirect('main_page')
         else:
-            errors = messages.info(request, 'login yoki parol xato')
-            return redirect('login')
+            return JsonResponse({"message": "Username or password incorrect!"})
     return render(request, "user_app/register/login.html")
 
 
@@ -58,6 +62,14 @@ def register_page(request):
         password2 = request.POST.get('password2')
         
         if form.is_valid() and len(lname) != 0 and len(fname) != 0 and len(mname) != 0:
+            res_username = utils.validate_username(username)
+            if not res_username['success']:
+                return JsonResponse({"message": res_username['reason']})
+            
+            res_email = utils.validate_email(email)
+            if not res_email['success']:
+                return JsonResponse({"message": res_email['reason']})
+            
             user = form.save(commit=False)
             user.save()
 
@@ -74,7 +86,9 @@ def register_page(request):
 
             if user is not None:
                 login(request, user)
-                return JsonResponse({"msg": "You are successfully registered."})
+                return redirect('main_page')
+            else:
+                return JsonResponse({"message": "Username or password incorrect!"})
         else:
             if len(lname) == 0:
                 return JsonResponse({"message": " Please enter your Surname"})
@@ -170,9 +184,6 @@ def choose_roles(request):
 #                   context={"password_reset_form": password_reset_form})
 #
 #
-def logout_user(request):
-    logout(request)
-    return redirect('main_page')
 
 
 @login_required(login_url='login')
@@ -696,37 +707,29 @@ def sending_reviewer(request):   #Tanlangan taqrizchilarga maqolani yuborish
 #     return render(request, 'user_app/crud/view_user.html', {'user': user})
 #
 #
-# @login_required(login_url='login')
-# def edit_profile(request):
-#     user = request.user
-#     if request.method == 'POST':
-#         form = UpdateUserForm(request.POST, instance=user)
-#         if form.is_valid():
-#             ob = form.save(commit=False)
-#             ob.save()
-#             if request.FILES.get('avatar', None) is not None:
-#                 try:
-#                     os.remove(user.avatar.url)
-#                 except Exception as e:
-#                     print('Exception in removing old profile image: ', e)
-#                 user.avatar = request.FILES['avatar']
-#                 user.save()
-#             r = 1
-#             return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
-#         else:
-#             return redirect('profile')
-#
-#     else:
-#         r = 0
-#         form = UpdateUserForm(instance=user)
-#         return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form, 'result': r})
-#
-#
-# def change_group(user, new_gr):
-#     if user.groups.exists():
-#         user.groups.clear()
-#     new_group = Group.objects.get(name=new_gr)
-#     new_group.user_set.add(user)
+@login_required(login_url='login')
+def edit_profile(request):
+    user = request.user
+    if request.method == 'POST' and is_ajax(request):
+        form = UpdateUserForm(request.POST, request.FILES, instance=user)
+        print(form)
+        if not form.has_changed():
+            return JsonResponse({'status':False, "message": "Form hasn't change"})
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status':True, "message": "Your changes saved successfully."})
+        else:
+            return JsonResponse({'status':False, "message": "Form invalid"})
+    else:
+        form = UpdateUserForm(instance=user)
+        return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form})
+
+
+def change_group(user, new_gr):
+    if user.groups.exists():
+        user.groups.clear()
+    new_group = Group.objects.get(name=new_gr)
+    new_group.user_set.add(user)
 #
 #
 # @login_required(login_url='login')

@@ -36,7 +36,7 @@ class User(AbstractUser):
     middle_name = models.CharField(_('Middle Name'), max_length=30, null=True, blank=True)
     birthday = models.DateField(_('Birthday'), null=True, blank=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True, blank=True)
-    avatar = models.ImageField(_("Avatar"), upload_to='avatars/', default='user.png',
+    avatar = models.ImageField(_("Avatar"), upload_to='avatars/%Y/%m/%d', default='user.png',
                                validators=[validate_file_size, FileExtensionValidator(['png', 'jpg'])], blank=True,
                                null=True)
     email = models.EmailField(_('Email address'), max_length=255, blank=True, unique=True)
@@ -85,9 +85,10 @@ class User(AbstractUser):
 
 class Editor(models.Model):
     user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
-
-
-# declaring a Student Model
+    
+    
+class ScienceDegree(models.Model):
+    name = models.CharField(max_length=255, blank=True, unique=True)
 
 
 class ReviewerFile(models.Model):
@@ -115,6 +116,7 @@ class ReviewerFile(models.Model):
 
 class Reviewer(models.Model):
     section = models.ManyToManyField('article_app.Section', related_name="reviewer_sections", blank=True)
+    science_degree = models.ForeignKey('user_app.ScienceDegree', on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True, null=True)
     mfile = models.ForeignKey('user_app.ReviewerFile', on_delete=models.CASCADE, blank=True, null=True)
     is_reviewer = models.BooleanField(default=False)

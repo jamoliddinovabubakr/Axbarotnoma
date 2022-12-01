@@ -2,35 +2,24 @@
 {% load i18n %}
 {% block content %}
     <div id="content" class="content">
-        <!-- begin breadcrumb -->
-        <ol class="breadcrumb float-xl-right">
-            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Home" %}</a></li>
-            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Sozlamalar" %}</a></li>
-            <li class="breadcrumb-item active">{% trans "Profilni sozlash" %}</li>
-        </ol>
-        <!-- end breadcrumb -->
-        <!-- begin page-header -->
+
         <h1 class="page-header">{% trans "Profile sozlamalari" %}
             <small>{% trans "profilizni ma'luotlarini o'zgartirish..." %}</small></h1>
-        <!-- end page-header -->
-        <!-- begin wizard-form -->
-        <form method="POST" name="form-wizard" class="form-control-with-bg forshadow" enctype="multipart/form-data">
+
+        <form method="POST" name="form-wizard" action="" class="form-control-with-bg forshadow editProfileForm" enctype="multipart/form-data">
             {% csrf_token %}
-            <!-- begin wizard -->
             <div id="wizard">
-                <!-- begin wizard-step -->
                 <ul>
                     <li>
                         <a href="#step-1">
                             <span class="number">!</span>
                             <span class="info">
 									{% trans "Shaxsiy ma'lumotlar" %}
-									<small>{% trans "FIO, Address, Tug'ilgan kun, Jins" %}</small>
 								</span>
                         </a>
                     </li>
                 </ul>
-                <div style="background-color: #f8f8f8">
+                <div style="background-color: #f8f8f8; padding:2%;">
                     <div id="step-1">
                         <div class="row">
                             <div class="col-md-6">
@@ -38,63 +27,50 @@
                                 <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse"
                                         style="text-align: center;">{% trans "Shaxsiy ma'lumotlaringiz" %}
                                 </legend>
-                                <!-- begin form-group -->
+                               
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Familiya" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.last_name }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Ism" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.first_name }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Otangizni ismi" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.middle_name }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Tug'ilgan kun" %} </label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input type="text" value="{{ user.birthday|date:"m/d/Y" }}" name="birthday"
-                                               class="form-control" id="datepicker-default" placeholder="Select Date"/>
+                                        <input type="text" value="{{ user.birthday|date:'m/d/Y' }}" name="birthday"
+                                               class="form-control birthday" id="datepicker-default" placeholder="Select Date"/>
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Viloyat" %}</label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.region }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
-                                {#                                <div class="form-group row m-b-10">#}
-                                {#                                    <label class="col-lg-3 text-lg-right col-form-label">{% trans "Tuman" %}</label>#}
-                                {#                                    <div class="col-lg-9 col-xl-6">#}
-                                {#                                        {{ form.district }}#}
-                                {#                                    </div>#}
-                                {#                                </div>#}
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                               
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Jins" %}</label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.gender }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
+                                
                                 <hr>
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Rasmingizni yuklang" %}</label>
@@ -102,12 +78,10 @@
                                         <img src="{{ user.avatar.url }}" width="80" height="80" id="image">
                                         <br>
                                         <br>
-                                        <input type="file" name="avatar" class="form-control" id="id_avatar"
-                                               style="width: 400px"
-                                               accept=".png, .jpg, .jpeg">
+                                        {{ form.avatar }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
+                                
                                 <script>
                                     document.getElementById('id_avatar').onchange = function () {
                                         var src = URL.createObjectURL(this.files[0])
@@ -121,7 +95,7 @@
                                 <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse"
                                         style="text-align: center;">{% trans "Bog'lanish uchun ma'lumotlar" %}
                                 </legend>
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Username" %} <span
                                             class="text-danger">*</span></label>
@@ -129,16 +103,14 @@
                                         {{ form.username }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Telefon Nomer" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.phone }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Email Address" %}
                                         <span
@@ -147,29 +119,20 @@
                                         {{ form.email }}
                                     </div>
                                 </div>
-                                <!-- end form-group -->
-                                <!-- begin form-group -->
+                                
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Passport" %}</label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.pser }} {{ form.pnum }}
-                                        {{ form_file.status_reviewer }}
                                     </div>
                                 </div>
                                 <div class="form-group row m-b-10">
-                                    <label class="col-lg-3 text-lg-right col-form-label">{% trans "Passport" %}</label>
+                                    <label class="col-lg-3 text-lg-right col-form-label">{% trans "Work" %}</label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input type="file" name="mfile">
+                                        {{ form.work }}
                                     </div>
                                 </div>
-                                <div class="row m-b-15">
-                                    <div class="col-md-12">
-                                        {{ form_section.section }}
-                                    </div>
-                                </div>
-                                <!-- end form-group -->
                             </div>
-                            <!-- end col-8 -->
                         </div>
                         <div class="row">
                             <div class="col-xs-6"></div>
@@ -177,9 +140,8 @@
                                 <div class="row">
                                     <div class="col-xs-3"></div>
                                     <div class="col-xs-6">
-                                        <button type="submit" style="float: right;" href="{% url 'dashboard' %}"
-                                                class="btn btn-success"><span
-                                                style="font-family: Arial,cursive">{% trans "O'zgarishlarni saqlash" %}</span>
+                                        <button type="submit" style="float: right;"
+                                                class="btn btn-success editProfileBtn"><span>{% trans "O'zgarishlarni saqlash" %}</span>
                                         </button>
                                     </div>
                                     <div class="col-xs-3"></div>
@@ -188,39 +150,8 @@
                         </div>
                         <br>
                     </div>
-                    <!-- end step-4 -->
                 </div>
-                <!-- end wizard-content -->
             </div>
-            <!-- end wizard -->
         </form>
-        <!-- end wizard-form -->
-        <br>
-        <div class="row">
-            <div class="col-lg-2 col-xs-2"></div>
-            <div class="col-lg-8 col-xs-8">
-                {% if result == -1 %}
-                    <div class="alert alert-danger forshadow" style="text-align: center">
-                        <strong>{% trans "Diqqat!" %}</strong>{% trans "Siz kiritgan joriy parol xato yoki yangi parol biri ikkinchisiga mos  emas." %}
-                    </div>
-                {% endif %}
-                {% if result == 0 %}
-                    <div class="alert alert-warning forshadow">
-                        <strong>{% trans "Ogohlantirish!" %}</strong>
-                        <ul>
-                            <li>{% trans "Siz kiritgan joriy parolni to'g'ri kiriting." %}</li>
-                            <li>{% trans "Siz kiritgan yangi parollar bir - biriga mos kelishi kerak." %}</li>
-                            <li>{% trans "Kamida 8 ta belgidan iborat bo'lsin." %}</li>
-                        </ul>
-                    </div>
-                {% endif %}
-                {% if result == 1 %}
-                    <div class="alert alert-success forshadow" style="text-align: center">
-                        <strong>{% trans "Muvafaqqiyat!" %}</strong> {% trans "Sizni joriy paroliz yangisiga muvafaqqiyatli o'zgartirildi." %}
-                    </div>
-                {% endif %}
-            </div>
-            <div class="col-lg-2 col-xs-2"></div>
-        </div>
     </div>
 {% endblock %}
