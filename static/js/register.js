@@ -19,8 +19,7 @@ function formValidate(array) {
             if (value == "") {
                 $('.' + key).after('<span class="text-danger"> Please enter your email </span>');
                 is_validRForm = false;
-            }
-            else if (!validateEmail(value)) {
+            } else if (!validateEmail(value)) {
                 $('.' + key).after('<span class="text-danger"> Please enter a valid email address</span>');
                 is_validRForm = false;
             }
@@ -37,7 +36,6 @@ function formValidate(array) {
 }
 
 
-
 $('body').on('click', '.registerBtn', function (e) {
     e.preventDefault();
 
@@ -49,15 +47,13 @@ $('body').on('click', '.registerBtn', function (e) {
     let password = $('.password1').val();
     let confirmPassword = $('.password2').val();
 
-    let data = new Array(
-        { key: 'last_name', value: lname, message: "surname" },
-        { key: 'first_name', value: fname, message: "name" },
-        { key: 'middle_name', value: mname, message: "middle name" },
-        { key: 'username', value: username, message: "username" },
-        { key: 'password1', value: password, message: "password" },
-        { key: 'password2', value: confirmPassword, message: "confirmpassword" },
-        { key: 'email', value: email, message: "" },
-    );
+    let data = [{key: 'last_name', value: lname, message: "surname"},
+        {key: 'first_name', value: fname, message: "name"},
+        {key: 'middle_name', value: mname, message: "middle name"},
+        {key: 'username', value: username, message: "username"},
+        {key: 'password1', value: password, message: "password"},
+        {key: 'password2', value: confirmPassword, message: "confirmpassword"},
+        {key: 'email', value: email, message: ""}];
 
     let is_valid_registerForm = formValidate(data);
 
@@ -139,56 +135,39 @@ $('body').on('submit', '.editProfileForm', function (e) {
     let pser = $('.pser').val();
     let pnum = $('.pnum').val();
     let work = $('.work').val();
+    // let roles = $("#roles :selected").map((_, e) => e.value).get();
 
-    let dataEdit = new Array(
-        { key: 'last_name', value: last_name, message: "surname" },
-        { key: 'first_name', value: first_name, message: "name" },
-        { key: 'middle_name', value: middle_name, message: "middle name" },
-        { key: 'username', value: username, message: "username" },
-        { key: 'email', value: email, message: "" },
-        { key: 'birthday', value: birthday, message: "birthday" },
-        { key: 'region', value: region, message: "region" },
-        { key: 'gender', value: gender, message: "gender" },
-        { key: 'phone', value: phone, message: "phone" },
-        { key: 'pser', value: pser, message: "pser" },
-        { key: 'pnum', value: pnum, message: "pnum" },
-        { key: 'work', value: work, message: "work" },
-    );
+    let dataEdit = [{key: 'last_name', value: last_name, message: "surname"},
+        {key: 'first_name', value: first_name, message: "name"},
+        {key: 'middle_name', value: middle_name, message: "middle name"},
+        {key: 'username', value: username, message: "username"},
+        {key: 'email', value: email, message: ""},
+        {key: 'birthday', value: birthday, message: "birthday"},
+        {key: 'region', value: region, message: "region"},
+        {key: 'gender', value: gender, message: "gender"},
+        {key: 'phone', value: phone, message: "phone"},
+        {key: 'pser', value: pser, message: "pser"},
+        {key: 'pnum', value: pnum, message: "pnum"},
+        {key: 'work', value: work, message: "work"}];
 
 
     let is_valid_form = formValidate(dataEdit);
 
-    let formData = new FormData();
-    formData.append('last_name', last_name);
-    formData.append('first_name', first_name);
-    formData.append('middle_name', middle_name);
-    formData.append('username', username);
-    formData.append('email', email);
-    formData.append('birthday', birthday);
-    formData.append('region', region);
-    formData.append('gender', gender);
-    formData.append('phone', phone);
-    formData.append('pser', pser);
-    formData.append('pnum', pnum);
-    formData.append('work', work);
-    formData.append('avatar', $('#id_avatar')[0].files[0]);
-    formData.append('csrfmiddlewaretoken', $("input[name=csrfmiddlewaretoken]").val());
-
+    let formData = new FormData(this);
 
     if (is_valid_form) {
         $.ajax({
             method: "POST",
             url: '/profile/edit_profile/',
             data: formData,
-            dataType: 'json',
-            processData: false,
             contentType: false,
+            processData: false,
             success: function (response) {
                 swal({
                     title: response.message,
                     timer: 1500,
                 });
-                if(response.status){
+                if (response.status) {
                     window.location.reload();
                 }
             },

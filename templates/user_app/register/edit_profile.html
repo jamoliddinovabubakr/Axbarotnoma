@@ -2,75 +2,69 @@
 {% load i18n %}
 {% block content %}
     <div id="content" class="content">
-
         <h1 class="page-header">{% trans "Profile sozlamalari" %}
             <small>{% trans "profilizni ma'luotlarini o'zgartirish..." %}</small></h1>
-
-        <form method="POST" name="form-wizard" action="" class="form-control-with-bg forshadow editProfileForm" enctype="multipart/form-data">
+        <form method="POST" name="form-wizard" action="" class="form-control-with-bg forshadow editProfileForm"
+              enctype="multipart/form-data">
             {% csrf_token %}
             <div id="wizard">
                 <ul>
-                    <li>
-                        <a href="#step-1">
-                            <span class="number">!</span>
-                            <span class="info">
-									{% trans "Shaxsiy ma'lumotlar" %}
-								</span>
-                        </a>
-                    </li>
+                    <li><a href="#step-1"><span class="number">!</span><span
+                            class="info">{% trans "Shaxsiy ma'lumotlar" %}</span></a></li>
                 </ul>
                 <div style="background-color: #f8f8f8; padding:2%;">
                     <div id="step-1">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-lg-5">
                                 <br>
                                 <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse"
                                         style="text-align: center;">{% trans "Shaxsiy ma'lumotlaringiz" %}
                                 </legend>
-                               
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Familiya" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.last_name }}
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Ism" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.first_name }}
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Otangizni ismi" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.middle_name }}
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Tug'ilgan kun" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         <input type="text" value="{{ user.birthday|date:'m/d/Y' }}" name="birthday"
-                                               class="form-control birthday" id="datepicker-default" placeholder="Select Date"/>
+                                               class="form-control birthday" id="datepicker-default"
+                                               placeholder="Select Date"/>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Viloyat" %}</label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.region }}
                                     </div>
                                 </div>
-                               
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Jins" %}</label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.gender }}
                                     </div>
                                 </div>
-                                
+
                                 <hr>
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Rasmingizni yuklang" %}</label>
@@ -81,7 +75,6 @@
                                         {{ form.avatar }}
                                     </div>
                                 </div>
-                                
                                 <script>
                                     document.getElementById('id_avatar').onchange = function () {
                                         var src = URL.createObjectURL(this.files[0])
@@ -90,12 +83,12 @@
                                 </script>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-lg-5">
                                 <br>
                                 <legend class="no-border f-w-700 p-b-0 m-t-0 m-b-20 f-s-16 text-inverse"
                                         style="text-align: center;">{% trans "Bog'lanish uchun ma'lumotlar" %}
                                 </legend>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Username" %} <span
                                             class="text-danger">*</span></label>
@@ -103,14 +96,14 @@
                                         {{ form.username }}
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Telefon Nomer" %} </label>
                                     <div class="col-lg-9 col-xl-6">
                                         {{ form.phone }}
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Email Address" %}
                                         <span
@@ -119,7 +112,7 @@
                                         {{ form.email }}
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Passport" %}</label>
                                     <div class="col-lg-9 col-xl-6">
@@ -133,6 +126,38 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-2">
+                                <br>
+                                <hr>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget"
+                                         id="list_reviewers">
+                                        <div class="widget-todolist-header">
+                                            <div class="widget-todolist-header-left">
+                                                <h4 class="widget-todolist-header-title">Roles</h4>
+                                            </div>
+                                        </div>
+                                        <div class="widget-todolist-body" id="widget-todolist-body">
+                                            {% for role in roles %}
+                                                <div class="widget-todolist-item">
+                                                <div class="widget-todolist-input">
+                                                    <div class="checkbox checkbox-css pt-0 checkbox-success">
+                                                        <input type="checkbox" id="role{{ role.id }}" value="{{ role.id }}" name="role" {% if role.id in user.get_roles %}checked{% endif %}/>
+                                                        <label for="role{{ role.id }}" class="p-l-15">&nbsp;</label></div>
+                                                </div>
+                                                <div class="widget-todolist-content"><h4 class="widget-todolist-title">{{ role.name }}</h4></div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    <div class="widget-todolist-item">
+                                        <div class="widget-todolist-input">
+                                            <button type="button" class="btn btn-outline-info btn-sm btn-block forshadow" style="float: right">Save Role</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-6"></div>
@@ -140,8 +165,9 @@
                                 <div class="row">
                                     <div class="col-xs-3"></div>
                                     <div class="col-xs-6">
-                                        <button type="submit" style="float: right;"
-                                                class="btn btn-success editProfileBtn"><span>{% trans "O'zgarishlarni saqlash" %}</span>
+                                        <button type="submit"
+                                                class="btn btn-success editProfileBtn">
+                                            <span>{% trans "O'zgarishlarni saqlash" %}</span>
                                         </button>
                                     </div>
                                     <div class="col-xs-3"></div>
@@ -154,4 +180,6 @@
             </div>
         </form>
     </div>
+
+
 {% endblock %}

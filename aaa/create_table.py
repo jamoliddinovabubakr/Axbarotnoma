@@ -1,13 +1,14 @@
 from psycopg2 import connect, Error
 
 user = "postgres"
-password = "4144"
+password = "6868"
 host = "localhost"
 port = "5432"
 database = "article_db"
 
 
 def insert_to_stage(records):
+    global conn
     try:
         conn = connect(host=host, user=user, password=password, database=database, port=port)
         cursor = conn.cursor()
@@ -140,6 +141,8 @@ if __name__ == '__main__':
         ('submit', 2),
         ('submit', 3),
         ('incomplete', 1),
+        ('resubmit', 1),
+        ('resubmit', 2),
     ]
     roles = [
         ('Admin',),
@@ -165,6 +168,7 @@ if __name__ == '__main__':
         ('Is seeing',),
         ('Confirmed',),
         ('Denied',),
+        ('Resubmit',),
     ]
 
     # insert_to_stage(stages)
