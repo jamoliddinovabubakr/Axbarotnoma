@@ -26,7 +26,7 @@ urlpatterns = [
     path('login/', login_page, name='login'),
     path('logout', logout_user, name='logout'),
     path('register/', register_page, name='register'),
-    path('choose_role/', choose_roles, name='choose_role'),
+    path('choosen_reviewer_role/', choose_roles, name='choosen_reviewer_role'),
 
     # path('change_password', change_password, name='change_password'),
     # path('view/', profile, name='profile'),

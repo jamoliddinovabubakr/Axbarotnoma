@@ -1,9 +1,9 @@
 function validateEmail(email) {
-    var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return regex.test(email);
 }
 
-function formValidate(array) {
+const formValidate = array => {
 
     let is_validRForm = true;
 
@@ -33,7 +33,7 @@ function formValidate(array) {
     }
 
     return is_validRForm
-}
+};
 
 
 $('body').on('click', '.registerBtn', function (e) {
@@ -173,4 +173,46 @@ $('body').on('submit', '.editProfileForm', function (e) {
             },
         });
     }
+});
+
+$('body').on('click', '#choose-role-reviewer-btn', function (e) {
+    e.preventDefault();
+
+    $.ajax({
+        type: 'GET',
+        url: '/profile/choosen_reviewer_role/',
+        success: function (response) {
+            console.log(response);
+            $('#choosen_reviewer_role_div').html(response);
+            $('#choosen_reviewerRole').modal('show');
+        },
+        error: function (error) {
+            alert(error);
+        },
+    });
+});
+
+$('body').on('submit', '#choosen_reviewerRole_form', function (e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+    $.ajax({
+        type: 'POST',
+        url: '/profile/choosen_reviewer_role/',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log(response);
+            swal({
+                title: response.message,
+                timer: 1500,
+            });
+            if (response.result) {
+                window.location.reload();
+            }
+        },
+        error: function (error) {
+            alert("Error");
+        },
+    });
 });

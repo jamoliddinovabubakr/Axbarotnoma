@@ -1,0 +1,93 @@
+{% load i18n %}
+{% load static %}
+<form data-parsley-validate="true" method="post" id="choosen_reviewerRole_form"
+      data-url="{% url 'choosen_reviewer_role'%}">
+    {% csrf_token %}
+    <div class="modal fade" id="choosen_reviewerRole">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans "Hurmatli talabgor formani to'ldiring" %}</h5>
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row m-b-15" hidden>
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Maqola" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            <select id="id_user" name="user" class="form-control">
+                                <option selected value="{{ user.id }}">{{ user.username }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Sohani tanlang" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.section }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Ilmiy darajangiz" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.scientific_degree }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Fayl" %}<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            <label class="form-check-label">Qilgan va erishgan ishlarizni yuklang</label>
+                            {{ fileForm.file }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="close btn btn-outline-info" id="choosen_reiewer_role_modal"
+                       data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-success">{% trans "Yuborish" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{#<script type="text/javascript">#}
+{#    $(document).ready(function () {#}
+{#        $('#id_file').on('change', function () {#}
+{#            $('#id_file').addClass("is-valid");#}
+{#        });#}
+{##}
+{#        $('#create_articleFile_form').submit(function (e) {#}
+{#            e.preventDefault();#}
+{#            let formData = new FormData(this);#}
+{#            $.ajax({#}
+{#                url: "{% url 'create_article_file' article.id %}",#}
+{#                type: 'POST',#}
+{#                data: formData,#}
+{#                cache: false,#}
+{#                contentType: false,#}
+{#                processData: false,#}
+{#                success: function (response) {#}
+{#                    if(response.result){#}
+{#                        $('#createArticleFile_modal').click();#}
+{#                        $('#article_file_name').text(response.file_name);#}
+{#                        swal({#}
+{#                            title: response.message,#}
+{#                            timer: 2000,#}
+{#                        });#}
+{#                    } else {#}
+{#                        swal({#}
+{#                            title: response.message,#}
+{#                            timer: 2000,#}
+{#                        });#}
+{#                    }#}
+{##}
+{#                },#}
+{#            });#}
+{#        });#}
+{##}
+{#    });#}
+{#</script>#}
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

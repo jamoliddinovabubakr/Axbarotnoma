@@ -1,6 +1,5 @@
 from django import forms
-from django.forms import Select, DateInput, PasswordInput, TextInput, EmailInput, NumberInput, FileInput, \
-    CheckboxSelectMultiple, SelectMultiple, ModelChoiceField
+from django.forms import Select, TextInput, FileInput, SelectMultiple, ClearableFileInput
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from article_app.models import Section
@@ -80,26 +79,30 @@ class UpdateUserForm(UserChangeForm):
         }
 
 
+class ReviewerFileForm(forms.ModelForm):
+    file = forms.FileField(
+        label="Files",
+        widget=forms.ClearableFileInput(attrs={"multiple": True, "name": "file"})
+    )
+
+    class Meta:
+        model = ReviewerFile
+        fields = ['file']
+
+
 class AddReviewerForm(forms.ModelForm):
     class Meta:
         model = Reviewer
-        fields = ['user', 'file', 'section']
+        fields = ['user', 'section', 'scientific_degree']
 
         widgets = {
-            'section': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'text',
-                'id': 'masked-input-phone',
-                'placeholder': '(99) 999-99-99',
-                'data - parsley - group': "step-1",
+            'section': SelectMultiple(attrs={
+                'class': 'select2 form-control',
+                'multiple': 'multiple',
+                'name': 'section',
             }),
-            'file': TextInput(attrs={
-                'class': 'form-control',
-                'type': 'email',
-                'data-parsley-type': "email",
-                'placeholder': 'someone@example.com',
-                'data - parsley - group': "step-1",
-                'data - parsley - required': "true",
+            'scientific_degree': Select(attrs={
+                'class': 'form-control selectpicker',
             }),
         }
 

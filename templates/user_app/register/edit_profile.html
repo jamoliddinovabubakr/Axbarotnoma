@@ -127,36 +127,102 @@
                                 </div>
                             </div>
                             <div class="col-lg-2">
-                                <br>
                                 <hr>
-                                <form method="post">
-                                    {% csrf_token %}
-                                    <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget"
-                                         id="list_reviewers">
-                                        <div class="widget-todolist-header">
-                                            <div class="widget-todolist-header-left">
-                                                <h4 class="widget-todolist-header-title">Roles</h4>
-                                            </div>
+                                <span class="text-center">Your roles:</span>
+                                {% for item in user.roles.all %}
+                                    <span class="badge badge-pill badge-info">{{ item.name }}</span>
+                                {% endfor %}
+                                <hr>
+                                <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget"
+                                     id="list_reviewers">
+                                    <div class="widget-todolist-header">
+                                        <div class="widget-todolist-header-left">
+                                            <span class="text-center">Taqrizchi rolini tanlash</span>
                                         </div>
-                                        <div class="widget-todolist-body" id="widget-todolist-body">
-                                            {% for role in roles %}
+                                    </div>
+                                    <div class="widget-todolist-body" id="widget-todolist-body">
+                                        {% for role in roles %}
+                                            {% if role.id == 1 and role.id in user.get_roles %}
                                                 <div class="widget-todolist-item">
-                                                <div class="widget-todolist-input">
-                                                    <div class="checkbox checkbox-css pt-0 checkbox-success">
-                                                        <input type="checkbox" id="role{{ role.id }}" value="{{ role.id }}" name="role" {% if role.id in user.get_roles %}checked{% endif %}/>
-                                                        <label for="role{{ role.id }}" class="p-l-15">&nbsp;</label></div>
+                                                    <div class="widget-todolist-input">
+                                                        <div class="checkbox checkbox-css pt-0 checkbox-success">
+                                                            <input type="checkbox" id="role{{ role.id }}"
+                                                                   value="{{ role.id }}"
+                                                                   name="role"
+                                                                   {% if role.id in user.get_roles %}checked
+                                                                   disabled{% endif %}
+                                                            />
+                                                            <label for="role{{ role.id }}"
+                                                                   class="p-l-15">&nbsp;</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="widget-todolist-content"><h4
+                                                            class="widget-todolist-title">{{ role.name }}</h4></div>
                                                 </div>
-                                                <div class="widget-todolist-content"><h4 class="widget-todolist-title">{{ role.name }}</h4></div>
-                                            </div>
-                                            {% endfor %}
-                                        </div>
+                                            {% elif role.id == 2 and role.id in user.get_roles %}
+                                                <div class="widget-todolist-item">
+                                                    <div class="widget-todolist-input">
+                                                        <div class="checkbox checkbox-css pt-0 checkbox-success">
+                                                            <input type="checkbox" id="role{{ role.id }}"
+                                                                   value="{{ role.id }}"
+                                                                   name="role"
+                                                                   {% if role.id in user.get_roles %}checked
+                                                                   disabled{% endif %}
+                                                            />
+                                                            <label for="role{{ role.id }}"
+                                                                   class="p-l-15">&nbsp;</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="widget-todolist-content"><h4
+                                                            class="widget-todolist-title">{{ role.name }}</h4></div>
+                                                </div>
+                                            {% elif role.id == 3 %}
+                                                <div class="widget-todolist-item">
+                                                    <div class="widget-todolist-input">
+                                                        <div class="checkbox checkbox-css pt-0 checkbox-danger">
+                                                            <input type="checkbox" id="role{{ role.id }}"
+                                                                   value="{{ role.id }}"
+                                                                   name="role"
+                                                                   {% if role.id in user.get_roles %}checked
+                                                                   disabled{% endif %}
+                                                                   {% if is_send_request %} checked disabled{% endif %}
+                                                            />
+                                                            <label for="role{{ role.id }}"
+                                                                   class="p-l-15">&nbsp;</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="widget-todolist-content"><h4
+                                                            class="widget-todolist-title">{{ role.name }}</h4></div>
+                                                </div>
+                                            {% elif role.id == 4 and role.id in user.get_roles %}
+                                                <div class="widget-todolist-item">
+                                                    <div class="widget-todolist-input">
+                                                        <div class="checkbox checkbox-css pt-0 checkbox-success">
+                                                            <input type="checkbox" id="role{{ role.id }}"
+                                                                   value="{{ role.id }}"
+                                                                   name="role"
+                                                                   {% if role.id in user.get_roles %}checked
+                                                                   disabled{% endif %}
+                                                            />
+                                                            <label for="role{{ role.id }}"
+                                                                   class="p-l-15">&nbsp;</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="widget-todolist-content"><h4
+                                                            class="widget-todolist-title">{{ role.name }}</h4></div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
                                     <div class="widget-todolist-item">
                                         <div class="widget-todolist-input">
-                                            <button type="button" class="btn btn-outline-info btn-sm btn-block forshadow" style="float: right">Save Role</button>
+                                            <button type="button" disabled id="choose-role-reviewer-btn"
+                                                    class="btn btn-outline-info btn-sm btn-block forshadow"
+                                                    style="float: right">Submit Selection
+                                            </button>
                                         </div>
                                     </div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -180,6 +246,16 @@
             </div>
         </form>
     </div>
-
-
+    <div id="choosen_reviewer_role_div"></div>
+    <script>
+        $(document).ready(function () {
+            $('#role3').click(function () {
+                if ($(this).is(":checked")) {
+                    $('#choose-role-reviewer-btn').removeAttr("disabled");
+                } else if ($(this).is(":not(:checked)")) {
+                    $('#choose-role-reviewer-btn').prop("disabled", true);
+                }
+            });
+        });
+    </script>
 {% endblock %}

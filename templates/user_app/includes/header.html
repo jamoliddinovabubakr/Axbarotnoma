@@ -15,7 +15,6 @@
         </a>
     </div>
 
-    <!-- end navbar-header --><!-- begin header-nav -->
     <ul class="navbar-nav d-flex flex-grow-1">
         <li style="padding-top: 20px;">
             <span style="text-transform: uppercase; margin-left: 1em;  text-align: center; display: table-cell; vertical-align: middle;">
@@ -53,7 +52,7 @@
                     class="caret"></b>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{% url 'dashboard' %}" class="dropdown-item"><i
+                <a href="{% url 'edit_profile' %}" class="dropdown-item"><i
                         class="icon-people p-r-10"></i><span>{% trans "Profile" %}</span></a>
                 <a href="{% url 'main_page' %}" class="dropdown-item"><i
                         class="icon-home p-r-10"></i><span>{% trans "Home" %}</span></a>
@@ -64,7 +63,7 @@
     </ul>
     <!-- end header-nav -->
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         setInterval(function () {

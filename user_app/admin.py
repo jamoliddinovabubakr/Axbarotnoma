@@ -45,4 +45,4 @@ class EditorAdmin(ImportExportActionModelAdmin):
 
 @admin.register(Reviewer)
 class ReviewerAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'user', 'file', 'is_reviewer', 'created_at', 'updated_at']
+    list_display = ['id', 'user', 'scientific_degree', 'is_reviewer', 'created_at', 'updated_at']

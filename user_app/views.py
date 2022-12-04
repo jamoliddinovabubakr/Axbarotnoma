@@ -15,7 +15,7 @@ from user_app.models import *
 import os
 from user_app.models import User
 from django.db.models.query_utils import Q
-from user_app.forms import UpdateUserForm
+from user_app.forms import UpdateUserForm, ReviewerFileForm
 from django.http import HttpResponse, JsonResponse
 from user_app.models import Region
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -118,19 +118,34 @@ def register_page(request):
 
 
 def choose_roles(request):
+    user = User.objects.get(pk=request.user.id)
     if request.method == "POST":
-        form = AddReviewerForm(request.POST, request.FILES)
+        form = AddReviewerForm(request.POST)
+        files = request.FILES.getlist('file')
+        editor = Editor.objects.all().last()
+        status = ReviewerEditorStatus.objects.get(pk=1)
         if form.is_valid():
             reviewer = form.save(commit=False)
-            # if request.FILES:
-            #     for f in request.FILES.getlist('mfile'):
-
-            return redirect('main_page')
+            reviewer.save()
+            ReviewerEditor.objects.create(
+                reviewer=reviewer,
+                editor=editor,
+                status=status,
+            )
+            for f in files:
+                ReviewerFile.objects.create(
+                    reviewer=reviewer,
+                    file=f
+                )
+            return JsonResponse({"result": True, "message": "Success Sended!"})
+        else:
+            return JsonResponse({"result": False, "message": "Form is not valid!"})
     context = {
-        'user': User.objects.get(pk=request.user.id),
-        'form': AddReviewerForm()
+        'user': user,
+        'form': AddReviewerForm(),
+        'fileForm': ReviewerFileForm(),
     }
-    return render(request, "user_app/crud/choose_role.html", context=context)
+    return render(request, "user_app/register/add_reviewer_form.html", context=context)
 
 
 # @login_required(login_url='login')
@@ -707,8 +722,6 @@ def sending_reviewer(request):  # Tanlangan taqrizchilarga maqolani yuborish
 def edit_profile(request):
     user = request.user
     if request.method == 'POST':
-        print(request.POST)
-        print(request.FILES)
         form = UpdateUserForm(request.POST, request.FILES, instance=user)
 
         if not form.has_changed():
@@ -722,7 +735,9 @@ def edit_profile(request):
     else:
         form = UpdateUserForm(instance=user)
         roles = Role.objects.all().order_by('-id')
-        return render(request, 'user_app/register/edit_profile.html', {"user": user, 'form': form,  'roles': roles})
+        res = Reviewer.objects.filter(user=user).exists()
+        context = {"user": user, 'form': form,  'roles': roles, "is_send_request": res}
+        return render(request, 'user_app/register/edit_profile.html', context)
 
 
 def change_group(user, new_gr):
@@ -730,8 +745,8 @@ def change_group(user, new_gr):
         user.groups.clear()
     new_group = Group.objects.get(name=new_gr)
     new_group.user_set.add(user)
-#
-#
+
+
 # @login_required(login_url='login')
 # @allowed_users(perm='change_user')
 # def update_user(request, pk):

@@ -15,6 +15,20 @@ class Section(models.Model):
         return self.name
 
 
+class ArticleType(models.Model):
+    name = models.CharField(_('Name'), max_length=150, blank=True, default=None)
+
+    def __str__(self):
+        return self.name
+
+
+class ArticleLanguage(models.Model):
+    name = models.CharField(_('Name'), max_length=150, blank=True, default=None)
+
+    def __str__(self):
+        return self.name
+
+
 class Stage(models.Model):
     name = models.CharField(_('Name'), max_length=100, default=None)
 
