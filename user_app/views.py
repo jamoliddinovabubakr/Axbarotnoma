@@ -175,7 +175,9 @@ def reviewer_role_list_detail(request, pk):
             submisson.save()
 
         elif int(result) == 1:
+            role = Role.objects.get(pk=3)
             reviewer.is_reviewer = True
+            reviewer.user.roles.add(role)
             reviewer.save()
             submisson.status = ReviewerEditorStatus.objects.get(pk=2)
             submisson.save()

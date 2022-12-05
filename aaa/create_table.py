@@ -337,11 +337,11 @@ if __name__ == '__main__':
     ]
 
     sections = [
-        ('Section1',),
-        ('Section2',),
-        ('Section3',),
-        ('Section4',),
-        ('Section5',),
+        ('Matematika',),
+        ('Fizika',),
+        ('Kimyo',),
+        ('Psixologya',),
+        ('Biologiya',),
     ]
 
     gender = [
