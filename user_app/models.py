@@ -1,3 +1,5 @@
+import os
+
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
@@ -114,6 +116,16 @@ class ReviewerFile(models.Model):
                             validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx', 'pdf'])],
                             help_text='Please upload only .doc, .docx or .pdf files!')
 
+    def file_name(self):
+        return str(self.file.name.split("/")[-1].replace('_', ' ').replace('-', ' '))
+
+    def file_size(self):
+        return self.file.size
+
+    def file_type(self):
+        name, type = os.path.splitext(self.file.name)
+        return type
+
 
 class ReviewerEditorStatus(models.Model):
     name = models.CharField(max_length=255, blank=True)
@@ -125,8 +137,8 @@ class ReviewerEditorStatus(models.Model):
 class ReviewerEditor(models.Model):
     reviewer = models.ForeignKey('user_app.Reviewer', blank=True, on_delete=models.CASCADE)
     editor = models.ForeignKey('user_app.Editor', on_delete=models.CASCADE, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
     status = models.ForeignKey('user_app.ReviewerEditorStatus', on_delete=models.CASCADE, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class StatusReview(models.Model):

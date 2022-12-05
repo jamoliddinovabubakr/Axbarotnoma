@@ -135,7 +135,6 @@ $('body').on('submit', '.editProfileForm', function (e) {
     let pser = $('.pser').val();
     let pnum = $('.pnum').val();
     let work = $('.work').val();
-    // let roles = $("#roles :selected").map((_, e) => e.value).get();
 
     let dataEdit = [{key: 'last_name', value: last_name, message: "surname"},
         {key: 'first_name', value: first_name, message: "name"},

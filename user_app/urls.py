@@ -27,6 +27,8 @@ urlpatterns = [
     path('logout', logout_user, name='logout'),
     path('register/', register_page, name='register'),
     path('choosen_reviewer_role/', choose_roles, name='choosen_reviewer_role'),
+    path('choosen_reviewer_role_list/', reviewer_role_list, name='choosen_reviewer_role_list'),
+    path('choosen_reviewer_role_list/<int:pk>/', reviewer_role_list_detail, name='reviewer_role_list_detail'),
 
     # path('change_password', change_password, name='change_password'),
     # path('view/', profile, name='profile'),

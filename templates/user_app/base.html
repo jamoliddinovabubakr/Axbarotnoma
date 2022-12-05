@@ -66,8 +66,7 @@
 </div>
 {% block base_content %}
     <div id="page-container"
-         class="fade page-sidebar-fixed page-header-fixed page-with-wide-sidebar page-with-light-sidebar viewArticleFont
-{% if not 1 in request.user.get_roles and not 2 in request.user.get_roles and not 3 in request.user.get_roles %}page-sidebar-minified{% endif %}">
+         class="fade page-sidebar-fixed page-header-fixed page-with-wide-sidebar page-with-light-sidebar viewArticleFont">
         {% include 'user_app/includes/header.html' %}
         {% if 1 in request.user.get_roles or 2 in request.user.get_roles or 3 in request.user.get_roles %}
             {% include 'user_app/includes/sidebar.html' %}

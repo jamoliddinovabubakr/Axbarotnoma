@@ -6,14 +6,36 @@ from article_app.models import *
 class CreateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['section', 'title']
+        fields = ['section', 'title', 'article_type', 'article_lang', 'country']
 
         widgets = {
+            'country': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data-size': "10",
+                'data-live-search': "true",
+                'data-style': "btn-white",
+                'data-placeholder': "Tanlang",
+                'data-parsley-required': "true",
+            }),
+            'article_type': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data-style': "btn-white",
+                'data - parsley - required': "true",
+            }),
+            'article_lang': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data-style': "btn-white",
+                'data - parsley - required': "true",
+            }),
             'section': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data - size': "10",
                 'data-live-search': "true",
-                'data - style': "btn-white",
+                'data-style': "btn-white",
                 'data - parsley - required': "true",
             }),
             'title': Textarea(attrs={
@@ -61,7 +83,7 @@ class UpdateArticleForm(forms.ModelForm):
             'section': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data-live-search': "true",
-                'data - style': "btn-white",
+                'data-style': "btn-white",
                 'data - parsley - required': "true",
                 'name': 'section',
                 'id': 'id_section',

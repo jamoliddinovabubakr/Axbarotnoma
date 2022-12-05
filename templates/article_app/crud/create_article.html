@@ -12,7 +12,28 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Section" %} <span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Mamlakat" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.country }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Tur" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.article_type }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Til" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.article_lang }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Soha" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
                             {{ form.section }}

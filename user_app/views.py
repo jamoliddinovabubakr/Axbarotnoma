@@ -1,5 +1,5 @@
 from article_app.models import Journal, Notification, Article, NotificationStatus, ExtraAuthor, ArticleStatus, \
-    ArticleFile
+    ArticleFile, Section
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from user_app.decorators import unauthenticated_user, password_reset_authentification
@@ -13,16 +13,14 @@ from django.utils.encoding import force_bytes
 from user_app.forms import CreateUserForm, AddReviewerForm
 from user_app.models import *
 import os
-from user_app.models import User
 from django.db.models.query_utils import Q
 from user_app.forms import UpdateUserForm, ReviewerFileForm
 from django.http import HttpResponse, JsonResponse
-from user_app.models import Region
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Group, Permission
 from user_app.decorators import allowed_users
-from user_app.models import Menu, ReviewerArticle, StatusReview
+from user_app.models import User, ReviewerArticle, StatusReview
 from django.utils.translation import get_language_from_request
 from . import utils
 
@@ -125,18 +123,26 @@ def choose_roles(request):
         editor = Editor.objects.all().last()
         status = ReviewerEditorStatus.objects.get(pk=1)
         if form.is_valid():
+            sections = request.POST.getlist('section')
             reviewer = form.save(commit=False)
             reviewer.save()
-            ReviewerEditor.objects.create(
-                reviewer=reviewer,
-                editor=editor,
-                status=status,
-            )
+
+            for section_id in sections:
+                section = Section.objects.get(pk=int(section_id))
+                reviewer.section.add(section)
+
             for f in files:
                 ReviewerFile.objects.create(
                     reviewer=reviewer,
                     file=f
                 )
+
+            ReviewerEditor.objects.create(
+                reviewer=reviewer,
+                editor=editor,
+                status=status,
+            )
+
             return JsonResponse({"result": True, "message": "Success Sended!"})
         else:
             return JsonResponse({"result": False, "message": "Form is not valid!"})
@@ -146,6 +152,41 @@ def choose_roles(request):
         'fileForm': ReviewerFileForm(),
     }
     return render(request, "user_app/register/add_reviewer_form.html", context=context)
+
+
+def reviewer_role_list(request):
+    submissions = ReviewerEditor.objects.all()
+    context = {
+        "submissions": submissions
+    }
+    return render(request, "user_app/reviewer_list_by_editor.html", context)
+
+
+def reviewer_role_list_detail(request, pk):
+    reviewer = Reviewer.objects.get(pk=pk)
+    files = ReviewerFile.objects.filter(reviewer=reviewer)
+    if request.method == 'POST' and is_ajax(request):
+        result = request.POST.get('result')
+        submisson = ReviewerEditor.objects.filter(reviewer=reviewer).last()
+        if int(result) == 0:
+            reviewer.is_reviewer = False
+            reviewer.save()
+            submisson.status = ReviewerEditorStatus.objects.get(pk=3)
+            submisson.save()
+
+        elif int(result) == 1:
+            reviewer.is_reviewer = True
+            reviewer.save()
+            submisson.status = ReviewerEditorStatus.objects.get(pk=2)
+            submisson.save()
+        else:
+            print("Error")
+        return JsonResponse({"message": "Success"})
+    context = {
+        "reviewer": reviewer,
+        "files": files,
+    }
+    return render(request, "user_app/crud/check_role_reviewer_form.html", context)
 
 
 # @login_required(login_url='login')
@@ -736,7 +777,7 @@ def edit_profile(request):
         form = UpdateUserForm(instance=user)
         roles = Role.objects.all().order_by('-id')
         res = Reviewer.objects.filter(user=user).exists()
-        context = {"user": user, 'form': form,  'roles': roles, "is_send_request": res}
+        context = {"user": user, 'form': form, 'roles': roles, "is_send_request": res}
         return render(request, 'user_app/register/edit_profile.html', context)
 
 
@@ -745,7 +786,6 @@ def change_group(user, new_gr):
         user.groups.clear()
     new_group = Group.objects.get(name=new_gr)
     new_group.user_set.add(user)
-
 
 # @login_required(login_url='login')
 # @allowed_users(perm='change_user')

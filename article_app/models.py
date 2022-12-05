@@ -49,6 +49,9 @@ def user_directory_path(instance, filename):
 
 
 class Article(models.Model):
+    article_type = models.ForeignKey('article_app.ArticleType', on_delete=models.CASCADE, blank=True, null=True)
+    country = models.ForeignKey('user_app.Country', on_delete=models.CASCADE, blank=True, null=True)
+    article_lang = models.ForeignKey('article_app.ArticleLanguage', on_delete=models.CASCADE, blank=True, null=True)
     section = models.ForeignKey('article_app.Section', verbose_name="Section", related_name="article_section",
                                 on_delete=models.CASCADE, blank=True)
     author = models.ForeignKey('user_app.User', on_delete=models.CASCADE, related_name="article_author", blank=True)

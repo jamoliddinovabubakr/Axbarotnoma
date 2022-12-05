@@ -97,12 +97,15 @@ class AddReviewerForm(forms.ModelForm):
 
         widgets = {
             'section': SelectMultiple(attrs={
-                'class': 'select2 form-control',
+                'class': 'multiple-select2 form-control',
                 'multiple': 'multiple',
+                'placeholder': 'Select',
                 'name': 'section',
             }),
             'scientific_degree': Select(attrs={
                 'class': 'form-control selectpicker',
+                'data-live-search': "true",
+                'data-style': "btn-white",
             }),
         }
 
