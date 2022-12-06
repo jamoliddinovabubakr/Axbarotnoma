@@ -23,6 +23,7 @@ from user_app.decorators import allowed_users
 from user_app.models import User, ReviewerArticle, StatusReview
 from django.utils.translation import get_language_from_request
 from . import utils
+import numpy as np
 
 
 def logout_user(request):
@@ -435,10 +436,14 @@ def editor_check_article(request, pk):
     file = ArticleFile.objects.filter(article=article).filter(file_status=1).last()
     article_reviews = ReviewerArticle.objects.filter(article=article).filter(editor=objs.first())
 
-    is_ready_publish: bool = True
+    is_ready_publish: bool = False
+    result_sum = 0
     for item in article_reviews:
-        if item.status.id != 3:
-            is_ready_publish = False
+        if item.status.id == 3:
+            result_sum += item.result
+    if result_sum == 2:
+        is_ready_publish = True
+
 
     context = {
         "article": article,
@@ -487,7 +492,8 @@ def load_reviewers(request):
 
     data = {
         "reviewers": list(reviewers.values(
-            'id', 'user__id', 'user__first_name', 'user__last_name', 'user__email'
+            'id', 'user__id', 'user__first_name', 'user__last_name', 'user__email', 'scientific_degree__name',
+            'user__middle_name'
         ))
     }
     return JsonResponse(data=data)
@@ -501,11 +507,18 @@ def reviewer_confirmed(request):
 
         review = ReviewerArticle.objects.get(pk=int(review_id))
         review.comment = comment
+        review.result = 1
         review.status = StatusReview.objects.get(pk=3)
         review.save()
 
+        notifs = Notification.objects.filter(article=review.article).filter(to_user=request.user).filter(
+            from_user=review.article.author).filter(is_update_article=True)
+        notif = notifs.last()
+        notif.notification_status = NotificationStatus.objects.get(pk=3)
+        notif.save()
+
         data = {
-            "message": "Success Article Cinfirmed!",
+            "message": "Success Article Confirmed!",
         }
         return JsonResponse(data=data)
     else:
@@ -520,6 +533,7 @@ def reviewer_resubmit(request):
 
         review = ReviewerArticle.objects.get(pk=int(review_id))
         review.comment = comment
+        review.result = 2
         review.status = StatusReview.objects.get(pk=5)
         review.save()
 
@@ -534,6 +548,12 @@ def reviewer_resubmit(request):
             message=comment,
             notification_status=NotificationStatus.objects.get(id=1),
         )
+
+        notifs = Notification.objects.filter(article=article).filter(to_user=request.user).filter(
+            from_user=article.author).filter(is_update_article=True)
+        notif = notifs.last()
+        notif.notification_status = NotificationStatus.objects.get(pk=3)
+        notif.save()
 
         data = {
             "message": "Resubmit Article!",
@@ -551,6 +571,7 @@ def reviewer_rejected(request):
 
         review = ReviewerArticle.objects.get(pk=int(review_id))
         review.comment = comment
+        review.result = 3
         review.status = StatusReview.objects.get(pk=4)
         review.save()
 
@@ -563,9 +584,36 @@ def reviewer_rejected(request):
             message=comment,
             notification_status=NotificationStatus.objects.get(id=1),
         )
+        notifs = Notification.objects.filter(article=article).filter(to_user=request.user).filter(
+            from_user=article.author).filter(is_update_article=True)
+        notif = notifs.last()
+        notif.notification_status = NotificationStatus.objects.get(pk=3)
+        notif.save()
 
         data = {
             "message": "Success Article Cinfirmed!",
+        }
+        return JsonResponse(data=data)
+    else:
+        return HttpResponse("Not Fount Page!")
+
+
+@login_required(login_url='login')
+def approve_publish(request):
+    if request.method == 'POST' and is_ajax(request):
+        article_id = request.POST.get('article_id')
+        article = get_object_or_404(Article, pk=int(article_id))
+        article.article_status = ArticleStatus.objects.get(pk=2)
+        article.is_publish = True
+        article.save()
+
+        notifs = Notification.objects.filter(article=article).filter(to_user=request.user).filter(from_user=article.author).filter(is_update_article=True)
+        notif = notifs.last()
+        notif.notification_status = NotificationStatus.objects.get(pk=3)
+        notif.save()
+
+        data = {
+            "message": "Maqola omadli tasdiqlandi!",
         }
         return JsonResponse(data=data)
     else:
@@ -583,7 +631,108 @@ def sending_reviewer(request):  # Tanlangan taqrizchilarga maqolani yuborish
         if len(selected) > 0 and token and article_id:
             article = Article.objects.get(pk=int(article_id))
             editor = get_object_or_404(Editor, user=user)
+
             for item in selected:
+                reviewer = get_object_or_404(Reviewer, pk=int(item))
+                reviewer_user = get_object_or_404(User, pk=reviewer.user.id)
+                reviews = ReviewerArticle.objects.filter(article=article).filter(reviewer=reviewer)
+
+                if reviews.count() == 0:
+                    Notification.objects.create(
+                        article=article,
+                        from_user=user,
+                        to_user=reviewer_user,
+                        message=f"({reviewer_user.email}).Hurmatli taqrizchi sizga maqola yuborildi.",
+                        notification_status=NotificationStatus.objects.get(id=1),
+                        is_update_article=True,
+                    )
+
+                    ReviewerArticle.objects.create(
+                        article=article,
+                        editor=editor,
+                        reviewer=reviewer,
+                        status=StatusReview.objects.get(pk=1),
+                        comment="",
+                    )
+                else:
+                    continue
+
+            article.article_status = get_object_or_404(ArticleStatus, pk=4)
+            article.save()
+            data = {
+                "is_valid": True,
+                "select_random_reviewers": selected,
+                "message": "Taqrizchilarga muvaffaqiyatli yuborildi!",
+            }
+            return JsonResponse(data=data)
+        else:
+            data = {
+                "is_valid": False,
+                "message": "Taqrizchilarni to'liq tanlang!",
+            }
+            return JsonResponse(data=data)
+
+
+@login_required(login_url='login')
+def random_sending_reviewer(request):
+    user = get_object_or_404(User, pk=request.user.id)
+    if request.method == 'POST':
+        number = request.POST['value']
+        article_id = request.POST['article_id']
+        token = request.POST['csrfmiddlewaretoken']
+
+        if int(number) > 0 and token and article_id:
+            article = Article.objects.get(pk=int(article_id))
+            article_section = article.section
+            editor = get_object_or_404(Editor, user=user)
+            authors = ExtraAuthor.objects.filter(article=article)
+
+            author_levels = []
+            for author in authors:
+                author_levels.append(author.scientific_degree.level)
+
+            max_level_author = max(author_levels)
+
+            reviewers = Reviewer.objects.filter(is_reviewer=True).filter(
+                scientific_degree__level__gte=max_level_author)
+
+            reviewers_id = []
+            if reviewers.count() > 0:
+                for reviewer in reviewers:
+                    results = ReviewerArticle.objects.filter(article=article).filter(reviewer=reviewer)
+                    if results.count() == 0:
+                        l = []
+                        for it in reviewer.section.all():
+                            l.append(it.id)
+                        if article_section.id in l:
+                            reviewers_id.append(reviewer.id)
+                    else:
+                        continue
+            else:
+                degree = ScientificDegree.objects.get(level=max_level_author)
+                data = {
+                    "is_valid": False,
+                    "message": f"Bu maqolaga ilmiy darajasi({degree.name})ga teng taqrizchilar topilmadi!",
+                }
+                return JsonResponse(data=data)
+
+            if len(reviewers_id) > 0:
+                if len(reviewers_id) >= int(number):
+                    select_random_reviewers = np.random.choice(reviewers_id, int(number), replace=False).tolist()
+                else:
+                    data = {
+                        "is_valid": False,
+                        "message": f"Topilgan taqrizchilar soni {len(reviewers_id)} ga teng. Siz izlagan son {number} ga teng!",
+                    }
+                    return JsonResponse(data=data)
+            else:
+                data = {
+                    "is_valid": False,
+                    "message": f"{article_section.name} sohasini tekshiradigan taqrizchilar topilmadi!",
+                }
+                return JsonResponse(data=data)
+
+            for item in select_random_reviewers:
                 reviewer = get_object_or_404(Reviewer, pk=int(item))
                 reviewer_user = get_object_or_404(User, pk=reviewer.user.id)
 
@@ -608,6 +757,7 @@ def sending_reviewer(request):  # Tanlangan taqrizchilarga maqolani yuborish
             article.save()
             data = {
                 "is_valid": True,
+                "select_random_reviewers": select_random_reviewers,
                 "message": "Taqrizchilarga muvaffaqiyatli yuborildi!",
             }
             return JsonResponse(data=data)
@@ -619,14 +769,6 @@ def sending_reviewer(request):  # Tanlangan taqrizchilarga maqolani yuborish
             return JsonResponse(data=data)
 
 
-# @login_required(login_url='login')
-# def profile(request):
-#     context = {
-#
-#     }
-#     return render(request, "user_app/profile_page.html", context=context)
-#
-#
 # @login_required(login_url='login')
 # def handler404(request, exception):
 #     return render(request, 'user_app/error_404.html')

@@ -124,7 +124,7 @@ class UpdateArticleForm(forms.ModelForm):
 class AddAuthorForm(forms.ModelForm):
     class Meta:
         model = ExtraAuthor
-        fields = ['article', 'fname', 'lname', 'mname', 'email', 'work']
+        fields = ['article', 'fname', 'lname', 'mname', 'email', 'work', 'scientific_degree']
 
         widgets = {
             'fname': TextInput(attrs={
@@ -162,6 +162,11 @@ class AddAuthorForm(forms.ModelForm):
                 'type': 'text',
                 'placeholder': "Enter...",
                 'data - parsley - required': "true",
+            }),
+            'scientific_degree': Select(attrs={
+                'class': 'form-control',
+                'data-live-search': "true",
+                'data-style': "btn-white",
             }),
 
         }

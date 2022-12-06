@@ -67,9 +67,13 @@ class UpdateUserForm(UserChangeForm):
 
             'region': Select(attrs={
                 'class': 'form-control region',
+                'data-live-search': "true",
+                'data-style': "btn-white",
             }),
             'gender': Select(attrs={
                 'class': 'form-control gender',
+                'data-live-search': "true",
+                'data-style': "btn-white",
             }),
             'work': TextInput(attrs={
                 'class': 'form-control work',

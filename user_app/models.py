@@ -96,6 +96,7 @@ class Editor(models.Model):
 
 class ScientificDegree(models.Model):
     name = models.CharField(max_length=255, blank=True, unique=True)
+    level = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -157,6 +158,7 @@ class ReviewerArticle(models.Model):
     status = models.ForeignKey('user_app.StatusReview', on_delete=models.CASCADE, related_name="review_status",
                                blank=True)
     comment = models.TextField()
+    result = models.PositiveSmallIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

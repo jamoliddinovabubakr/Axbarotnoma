@@ -20,7 +20,9 @@
                                 <td><p><b>{% trans "Title:" %} </b>{{ article.title|safe }}</p></td>
                             </tr>
                             <tr>
-                                <td><b>{% trans "Author:" %} </b>{{ article.author.last_name }} {{ article.author.first_name }} <br><i>{{ article.author.email }}</i></td>
+                                <td>
+                                    <b>{% trans "Author:" %} </b>{{ article.author.last_name }} {{ article.author.first_name }}
+                                    <br><i>{{ article.author.email }}</i></td>
                             </tr>
                             <tr>
                                 <td><p></p><b>{% trans "Abstract:" %} </b>{{ article.abstract|safe }}</td>
@@ -31,19 +33,22 @@
                             <br>
                             <tr>
                                 <td><b>{% trans "File:" %} </b><a class="btn btn-outline-info btn-sm"
-                                                                          href="{{ article_file.file.url }}"
-                                                                          download
-                                                                          role="button"><i class="icon-paper-clip"></i><span> {% trans "Download File" %}</span></a>
+                                                                  href="{{ article_file.file.url }}"
+                                                                  download
+                                                                  role="button"><i
+                                        class="icon-paper-clip"></i><span> {% trans "Download File" %}</span></a>
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="col-md-2"></div>
-                </div> 
+                </div>
 
                 <div class="row d-flex justify-content-center">
-                    <button type="button" data-id="{{ article.id }}" id="view-article-messages" class="btn btn-md btn-info forshadow">
-                        <i class="fa fa-comment"></i>  LOAD COMMENTS</button>
+                    <button type="button" data-id="{{ article.id }}" id="view-article-messages"
+                            class="btn btn-md btn-info forshadow">
+                        <i class="fa fa-comment"></i> LOAD COMMENTS
+                    </button>
                 </div>
                 <br>
                 <div class="row">
@@ -53,9 +58,9 @@
                             <div class="m-b-10 m-t-10 f-s-12">
                                 <h5 class="text-inverse">Comments</h5>
                             </div>
-                
+
                             <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
-                
+
                                 <!-- begin widget-chat-header -->
                                 <div class="widget-chat-header">
                                     <div class="widget-chat-header-icon">
@@ -67,43 +72,53 @@
                                     </div>
                                 </div>
                                 <!-- end widget-chat-header -->
-                
+
                                 <!-- begin widget-chat-body -->
-                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="editor_chat_body">
-                
-                
+                                <div class="widget-chat-body" data-scrollbar="true" data-height="250px"
+                                     id="editor_chat_body">
+
+
                                 </div>
                                 <!-- end widget-chat-body -->
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-lg-12">
                         <div class="col-lg-12 col-lg-6">
                             <br>
                             <div class="m-b-10 m-t-10 f-s-12">
                                 <h5 class="text-inverse">Send to Reviewers. Minimum two Reviewers</h5>
                             </div>
-                
+
                             <div class="jumbotron forshadow">
                                 <div class="form-group row m-b-10 align-items-center">
-									<label class="col-md-3 col-form-label"><h4>Choosing Types</h4></label>
-									<div class="col-md-9">
-										<div class="form-check form-check-inline" style="border:5px solid white; padding:10px; border-radius:10px;">
-											<input class="form-check-input" type="radio" name="radio_reviewer" id="Radio1" value="1" style="box-shadow:0 0 5px 0px gray inset; border-radius:50%; border:1px solid darkgray; width:20px; height:20px; outline:none;"/>
-											<label class="form-check-label" for="defaultInlineRadio1">Choose Reviewer</label>
-										</div>
-										<div class="form-check form-check-inline" style="border:5px solid white; padding:10px; border-radius:10px;">
-											<input class="form-check-input" type="radio" name="radio_reviewer" id="Radio2" value="2" style="box-shadow:0 0 5px 0px gray inset; border-radius:50%; border:1px solid darkgray; width:20px; height:20px; outline:none;"/>
-											<label class="form-check-label" for="defaultInlineRadio2">Random Choosing</label>
-										</div>
-									</div>
-								</div>
+                                    <label class="col-md-3 col-form-label"><h4>Choosing Types</h4></label>
+                                    <div class="col-md-9">
+                                        <div class="form-check form-check-inline"
+                                             style="border:5px solid white; padding:10px; border-radius:10px;">
+                                            <input class="form-check-input" type="radio" name="radio_reviewer"
+                                                   id="Radio1" value="1"
+                                                   style="box-shadow:0 0 5px 0px gray inset; border-radius:50%; border:1px solid darkgray; width:20px; height:20px; outline:none;"/>
+                                            <label class="form-check-label" for="defaultInlineRadio1">Choose
+                                                Reviewer</label>
+                                        </div>
+                                        <div class="form-check form-check-inline"
+                                             style="border:5px solid white; padding:10px; border-radius:10px;">
+                                            <input class="form-check-input" type="radio" name="radio_reviewer"
+                                                   id="Radio2" value="2"
+                                                   style="box-shadow:0 0 5px 0px gray inset; border-radius:50%; border:1px solid darkgray; width:20px; height:20px; outline:none;"/>
+                                            <label class="form-check-label" for="defaultInlineRadio2">Random
+                                                Choosing</label>
+                                        </div>
+                                    </div>
+                                </div>
                                 <br>
-                               
+
                                 <form method="post" id="choose_reviewer_form">
                                     {% csrf_token %}
-                                    <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget" id="list_reviewers" style="display: none;">
+                                    <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget"
+                                         id="list_reviewers" style="display: none;">
                                         <!-- begin widget-todolist-header -->
                                         <div class="widget-todolist-header">
                                             <div class="widget-todolist-header-left">
@@ -116,92 +131,158 @@
                                         <!-- end widget-todolist-header -->
                                         <!-- begin widget-todolist-body -->
                                         <div class="widget-todolist-body" id="widget-todolist-body">
-    
-    
+
+
                                         </div>
                                         <!-- end widget-todolist-body -->
                                         <div class="widget-todolist-item">
                                             <div class="widget-todolist-input">
-                                                <button type="button" data-id="{{ article.id }}" class="btn btn-success" 
-                                                id="send_btn_to_reviewer" {% if article.article_status.id == 4 %} disabled {% endif%}>
-                                                SEND TO SELECTED REVIEWERS</button>
+                                                <button type="button" data-id="{{ article.id }}" class="btn btn-success"
+                                                        id="send_btn_to_reviewer"
+                                                        {% if article.article_status.id == 4 %} disabled {% endif %}>
+                                                    SEND TO SELECTED REVIEWERS
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </form>
-
-                                <div class="container" id="random_btn" style="display: none;">
-                                    <button class="btn btn-lg btn-info" id="random_btn" {% if article.article_status.id == 4 %} disabled {% endif%}>Generate Random Choosing Reviewers</button>
-                                </div>
-                                
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="container" id="random_btn" style="display: none;">
+                                        <label>Choose number of reviewers
+                                            <input type="number" id="reviewer_number" name="reviewer_number" value="0"
+                                                   class="form-control">
+                                        </label>
+                                        <button class="btn btn-md btn-info" id="random_send_reviewer_btn" type="button"
+                                                data-id="{{ article.id }}" data-action="{{ csrf_token }}"
+                                                {% if article.article_status.id == 4 %} disabled {% endif %}>Generate
+                                            Random Choosing Reviewers
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-lg-6">
-                            <div class="m-b-10 m-t-10 f-s-12">
-                                <h5 class="text-inverse">Reviewing Process</h5>
-                            </div>
-                            <button style="width:100%;" data-id="{{ article.id }}" class="btn btn-sm btn-primary forshadow" id="approveForPublicationBtn" {% if not is_ready_publish %} disabled {% endif %}>APPROVE FOR PUBLICATION</button>
-                            <br>
-                            <br>
-                            {% for item in article_reviews %}
-                                <div class="card forshadow" style="padding: 1%;">
-                                    <table>
-                                        <tr>
-                                            <div class="progress">
-                                                {% if item.status.id == 1 %}
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Yuborilgan</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda</div>
-                                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Tugatildi</div>
-                                                {% endif %}
-                                                {% if item.status.id == 2 %}
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Yuborilgan</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Tugatildi</div>
-                                                {% endif %}
-                                                {% if item.status.id == 3 or item.status.id == 4 %}
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Yuborilgan</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">Tugatildi</div>
-                                                {% endif %}
-                                                {% if item.status.id == 5 %}
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Yuborilgan</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Qayta yuborish</div>
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Tugatildi</div>
-                                                {% endif %}
-                                            </div>
-                                            <br>
-                                        </tr>
-                                        <tr>
-                                            <td><h3>{{ forloop.counter }}</h3></td>
-                                            <td><b>Reviewer: </b> {{ item.reviewer.user.full_name }}</td>
-                                            <td><b>Status: </b>
-                                                <span {% if item.status.id == 1 %} class='badge badge-warning' {% elif item.status.id == 2 %} 
-                                                class='badge badge-info' {% elif item.status.id == 3 %} 
-                                                class='badge badge-success' {% elif item.status.id == 4 %} 
-                                                class='badge badge-danger' {% elif item.status.id == 5 %} 
+                        <div class="m-b-10 m-t-10 f-s-12">
+                            <h5 class="text-inverse">Reviewing Process</h5>
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button style="width:100%;" data-id="{{ article.id }}" data-action="{{ csrf_token }}"
+                                    class="btn btn-sm btn-primary forshadow"
+                                    id="approveForPublicationBtn"
+                                    {% if article.article_status.id == 2 %} disabled {% endif %}
+                                    {% if not is_ready_publish %} disabled {% endif %}>
+                                APPROVE
+                                FOR PUBLICATION
+                            </button>
+                        </form>
+                        <br>
+                        <br>
+                        {% for item in article_reviews %}
+                            <div class="card forshadow" style="padding: 1%;">
+                                <table>
+                                    <tr>
+                                        <div class="progress">
+                                            {% if item.status.id == 1 %}
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                                     role="progressbar" style="width: 25%" aria-valuenow="25"
+                                                     aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                                     role="progressbar" style="width: 0%" aria-valuenow="0"
+                                                     aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped bg-success"
+                                                     role="progressbar" style="width: 0%" aria-valuenow="0"
+                                                     aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                                </div>
+                                            {% endif %}
+                                            {% if item.status.id == 2 %}
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                                     role="progressbar" style="width: 25%" aria-valuenow="25"
+                                                     aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                                     role="progressbar" style="width: 35%" aria-valuenow="35"
+                                                     aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                     role="progressbar" style="width: 0%" aria-valuenow="0"
+                                                     aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                                </div>
+                                            {% endif %}
+                                            {% if item.status.id == 3 or item.status.id == 4 %}
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                                     role="progressbar" style="width: 25%" aria-valuenow="25"
+                                                     aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                                     role="progressbar" style="width: 35%" aria-valuenow="35"
+                                                     aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                     role="progressbar" style="width: 40%" aria-valuenow="40"
+                                                     aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                                </div>
+                                            {% endif %}
+                                            {% if item.status.id == 5 %}
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                                     role="progressbar" style="width: 25%" aria-valuenow="25"
+                                                     aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                                     role="progressbar" style="width: 25%" aria-valuenow="25"
+                                                     aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
+                                                     role="progressbar" style="width: 25%" aria-valuenow="25"
+                                                     aria-valuemin="0" aria-valuemax="100">Qayta yuborish
+                                                </div>
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                                     role="progressbar" style="width: 0%" aria-valuenow="0"
+                                                     aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <br>
+                                    </tr>
+                                    <tr>
+                                        <td><h3>{{ forloop.counter }}</h3></td>
+                                        <td><b>Reviewer: </b> {{ item.reviewer.user.full_name }}</td>
+                                        <td><b>Status: </b>
+                                            <span {% if item.status.id == 1 %}
+                                                class='badge badge-warning' {% elif item.status.id == 2 %}
+                                                class='badge badge-info' {% elif item.status.id == 3 %}
+                                                class='badge badge-success' {% elif item.status.id == 4 %}
+                                                class='badge badge-danger' {% elif item.status.id == 5 %}
                                                 class='badge badge-indigo' {% endif %}>
                                                     {{ item.status.name }}
                                                 </span>
-                                            </td>
-                                            <td><b>Created Time: </b>{% if item.created_at %}{{ item.created_at }}{% else %} Not yet {% endif %}</td>
-                                            <td><b>Updated Time: </b>{% if item.updated_at %}{{ item.updated_at }}{% else %} Not yet {% endif %}</td>
-                                            <td>{% if item.status.id == 3 %}<i class="fas fa-lg fa-fw m-r-10 fa-check" style="color: lightgreen; font-size: 18px;"></i>{% else %} 
-                                                <i class="fas fa-lg fa-fw m-r-10 fa-times" style="color: pink; font-size: 18px;"></i>{% endif %}</td>
-                                        </tr>
-                                    </table>
-                                    <table>
-                                        <tr>
-                                            <br><b>Taqriz bayoni: </b> {% if item.comment %}{{ item.comment }}{% else %} <em>No message</em> {% endif %}
-                                        </tr>
-                                    </table>
-                                </div>
-                                <br>
-                            {% endfor %}
+                                        </td>
+                                        <td><b>Created Time: </b>{% if item.created_at %}{{ item.created_at }}{% else %}
+                                            Not yet {% endif %}</td>
+                                        <td><b>Updated Time: </b>{% if item.updated_at %}{{ item.updated_at }}{% else %}
+                                            Not yet {% endif %}</td>
+                                        <td>{% if item.status.id == 3 %}<i class="fas fa-lg fa-fw m-r-10 fa-check"
+                                                                           style="color: lightgreen; font-size: 18px;"></i>{% else %}
+                                            <i class="fas fa-lg fa-fw m-r-10 fa-times"
+                                               style="color: pink; font-size: 18px;"></i>{% endif %}</td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <br><b>Taqriz bayoni: </b> {% if item.comment %}{{ item.comment }}{% else %}
+                                        <em>No message</em> {% endif %}
+                                    </tr>
+                                </table>
+                            </div>
                             <br>
+                        {% endfor %}
+                        <br>
                     </div>
                 </div>
             </div>
@@ -210,41 +291,57 @@
     <div id="writeeditor_message_div"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-        $('body').on('click', '#send_btn_to_reviewer', function(e){
+        $('body').on('click', '#approveForPublicationBtn', function (e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+
+            let token = $(this).data('action');
+
+            $.ajax({
+                type: "POST",
+                url: "/profile/approve_publish/",
+                data: {
+                    article_id: id,
+                    csrfmiddlewaretoken: token,
+                },
+                success: function (response) {
+                    $('#approveForPublicationBtn').prop("disabled", true);
+
+                    swal({
+                        title: response.message,
+                        timer: 1500,
+                    });
+
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        $('body').on('click', '#random_send_reviewer_btn', function (e) {
             e.preventDefault();
 
-            let article_id = $(this).data('id');
+            let id = $(this).data('id');
+            let token = $(this).data('action');
 
-            let selected = [];
-            $('#widget-todolist-body input[type=checkbox]').each(function() {
-                if ($(this).is(":checked")) {
-                    selected.push($(this).val());
-                    }
-                });
+            let value = $('#reviewer_number').val();
 
-            let n = selected.length;
-
-            if (n < 2){
-                alert("2 tadan kam odam tanladiz");
-            }
-
-            if (n > 5){
-                alert("5 tadan kop odam tanladiz");
-            }
-
-            if (n >= 2 && n <=5){
+            if (value > 0) {
                 $.ajax({
-                    type : "POST", 
-                    url: "/profile/sending_reviewer/",
+                    type: "POST",
+                    url: "/profile/random_sending_reviewer/",
                     data: {
-                        reviewers : selected,
-                        csrfmiddlewaretoken:'{{ csrf_token }}',
-                        article_id:{{ article.id }}
+                        value: value,
+                        article_id: id,
+                        csrfmiddlewaretoken: token,
                     },
-                    success: function(response){
-                        if(response.is_valid){
+                    success: function (response) {
+                        if (response.is_valid) {
                             $('#send_btn_to_reviewer').prop("disabled", true);
-                            $('#random_btn').prop("disabled", true);
+                            $('#random_send_reviewer_btn').prop("disabled", true);
+                            alert(response.select_random_reviewers);
                             swal({
                                 title: response.message,
                                 timer: 1500,
@@ -254,16 +351,70 @@
                             alert(response.message);
                         }
                     },
-                    error: function(error){
+                    error: function (error) {
                         console.log(error);
                     }
-                
-                    });
+                });
+            } else {
+                alert("Taqrizchilar sonini kiriting!")
             }
-            
         });
 
-        $('input:radio[name="radio_reviewer"]').change(function(){
+        $('body').on('click', '#send_btn_to_reviewer', function (e) {
+            e.preventDefault();
+
+            let article_id = $(this).data('id');
+
+            let selected = [];
+            $('#widget-todolist-body input[type=checkbox]').each(function () {
+                if ($(this).is(":checked")) {
+                    selected.push($(this).val());
+                }
+            });
+
+            let n = selected.length;
+
+            if (n === 0) {
+                alert("Taqrizchi tanlamadiz!");
+            }
+
+            if (n > 5) {
+                alert("5 tadan kop Taqrizchi tanladiz");
+            }
+
+            if (n >= 1 && n <= 5) {
+                $.ajax({
+                    type: "POST",
+                    url: "/profile/sending_reviewer/",
+                    data: {
+                        reviewers: selected,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        article_id:{{ article.id }}
+                    },
+                    success: function (response) {
+                        if (response.is_valid) {
+                            $('#send_btn_to_reviewer').prop("disabled", true);
+                            $('#random_btn').prop("disabled", true);
+
+                            swal({
+                                title: response.message,
+                                timer: 1500,
+                            });
+                            window.location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+
+                });
+            }
+
+        });
+
+        $('input:radio[name="radio_reviewer"]').change(function () {
 
             if ($(this).val() == '1') {
                 $('#list_reviewers').css("display", "block");
@@ -275,16 +426,18 @@
                     success: function (response) {
                         $('#widget-todolist-body').empty();
                         $('#count_reviewer').html("<span>" + response.reviewers.length + "</span><small>Count</small>");
-                        
 
-                        for(let item of response.reviewers){
-                            let widget_item = `<div class="widget-todolist-item">` + 
-                                `<div class="widget-todolist-input"><div class="checkbox checkbox-css pt-0">`+
-                                    `<input type="checkbox" id="widget_todolist_${item.id}" name="reviewer_checkbox" value="${item.id}"/><label for="widget_todolist_${item.id}" class="p-l-15">&nbsp;</label></div></div>` +
-                                    `<div class="widget-todolist-content"><h4 class="widget-todolist-title">` + item.user__last_name + " " + item.user__first_name + `</h4><p class="widget-todolist-desc">${item.user__email}</p></div>`
+
+                        for (let item of response.reviewers) {
+                            let widget_item = `<div class="widget-todolist-item">` +
+                                `<div class="widget-todolist-input"><div class="checkbox checkbox-css pt-0">` +
+                                `<input type="checkbox" id="widget_todolist_${item.id}" name="reviewer_checkbox" value="${item.id}"/><label for="widget_todolist_${item.id}" class="p-l-15">&nbsp;</label></div></div>` +
+                                `<div class="widget-todolist-content"><h4 class="widget-todolist-title">` + item.user__last_name + " " + item.user__first_name + " " + item.user__middle_name +
+                                `</h4><p class="widget-todolist-desc"><b>Email:</b>${item.user__email}</p></div><div class="widget-todolist-icon"><p class="widget-todolist-desc">${item.scientific_degree__name}</p></div><div class="widget-todolist-icon">
+											<a href="#"><i class="fa fa-question-circle"></i></a></div>`
                                 + `</div>`;
 
-                                $('#widget-todolist-body').append(widget_item);
+                            $('#widget-todolist-body').append(widget_item);
                         }
                     },
                     error: function (error) {
@@ -294,7 +447,7 @@
                 });
             }
 
-            if ($(this).val() == '2')  {
+            if ($(this).val() == '2') {
                 $('#list_reviewers').css("display", "none");
                 $('#random_btn').css("display", "block");
             }
@@ -302,67 +455,67 @@
         });
 
 
-        $('body').on('click', '#view-article-messages', function(e){
+        $('body').on('click', '#view-article-messages', function (e) {
             e.preventDefault();
-            
+
             let id = $(this).data('id');
-        
-                    $.ajax({
-                        type: "GET",
-                        url: "/profile/article_notification/view/" + id + "/",
-                        success: function (response) {
-                            console.log(response);
-                            $('#MessageBoxEditor').css('display', 'block');
-                            $('#editor_chat_body').empty();
-        
-                           for(let item of response.notifications){
-        
-                            let time_tz = new Date(item.created_at);
-                            let time_string = time_tz.toLocaleString();
-                            console.log(time_string);
-        
-                                if(response.current_user_id === item.from_user__id){
-        
-                                    let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container">
+
+            $.ajax({
+                type: "GET",
+                url: "/profile/article_notification/view/" + id + "/",
+                success: function (response) {
+                    console.log(response);
+                    $('#MessageBoxEditor').css('display', 'block');
+                    $('#editor_chat_body').empty();
+
+                    for (let item of response.notifications) {
+
+                        let time_tz = new Date(item.created_at);
+                        let time_string = time_tz.toLocaleString();
+                        console.log(time_string);
+
+                        if (response.current_user_id === item.from_user__id) {
+
+                            let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container">
                                         <div class="widget-chat-name text-indigo">`
-                                         + item.from_user__email + 
-                                         `</div><div class="widget-chat-message">` 
-                                            + item.message + 
-                                            `</div><div class="widget-chat-time">` 
-                                                + `</div></div></div></div>`;
-        
-                                    $('#editor_chat_body').append(temp1); 
-                                }
-        
-                                if(response.current_user_id === item.to_user__id){
-                                    console.log("menga");
-        
-                                    let temp2 = `<div class="widget-chat-item left">
+                                + item.from_user__email +
+                                `</div><div class="widget-chat-message">`
+                                + item.message +
+                                `</div><div class="widget-chat-time">`
+                                + `</div></div></div></div>`;
+
+                            $('#editor_chat_body').append(temp1);
+                        }
+
+                        if (response.current_user_id === item.to_user__id) {
+                            console.log("menga");
+
+                            let temp2 = `<div class="widget-chat-item left">
                                         <div class="widget-chat-info">
                                             <div class="widget-chat-info-container">
                                         <div class="widget-chat-name text-indigo">`
-                                             + item.from_user__email + 
-                                             `</div><div class="widget-chat-message">`+ item.message + `</div>
-                                             <div class="widget-chat-time">`+ `</div>
+                                + item.from_user__email +
+                                `</div><div class="widget-chat-message">` + item.message + `</div>
+                                             <div class="widget-chat-time">` + `</div>
                                              <br><div class="widget-chat-ansewer">
                                                 <button type="button" data-id="${id},${item.from_user__id}" class="btn btn-white btn-sm editorWrite-message-btn">Ansewer</button>
                                             </div>
                                             </div></div></div>`;
-                                    $('#editor_chat_body').append(temp2); 
-                                }
-                            }
-                        
-                        },
-                        error: function (response) {
-                            console.log(response);
+                            $('#editor_chat_body').append(temp2);
                         }
-                    });
+                    }
+
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
 
         });
 
         $('body').on('click', '.editorWrite-message-btn', function (e) {
             e.preventDefault();
-    
+
             const data = $(this).data('id');
             const array = data.split(',');
             const id = array[0];

@@ -18,10 +18,13 @@ urlpatterns = [
     path('count_notif/', count_notification, name='count_notification'),
     path('load_reviewers/', load_reviewers, name='load_reviewers'),
     path('sending_reviewer/', sending_reviewer, name='sending_reviewer'),
-    
+    path('random_sending_reviewer/', random_sending_reviewer, name='random_sending_reviewer'),
+
     path('reviewer_confirmed/', reviewer_confirmed, name='reviewer_confirm'),
     path('reviewer_resubmit/', reviewer_resubmit, name='reviewer_resubmit'),
     path('reviewer_rejected/', reviewer_rejected, name='reviewer_rejected'),
+
+    path('approve_publish/', approve_publish, name='approve_publish'),
 
     path('login/', login_page, name='login'),
     path('logout', logout_user, name='logout'),

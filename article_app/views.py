@@ -216,7 +216,7 @@ def delete_article(request, pk):
 def get_article_authors(request, pk):
     authors = ExtraAuthor.objects.filter(article_id=pk).order_by('id')
     return JsonResponse({"authors": list(authors.values(
-        'id', 'lname', 'fname', 'mname', 'email', 'work'
+        'id', 'lname', 'fname', 'mname', 'email', 'work', 'scientific_degree__name'
     ))})
 
 

@@ -106,6 +106,7 @@ class ExtraAuthor(models.Model):
     mname = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(blank=True)
     work = models.CharField(max_length=255, blank=True, null=True)
+    scientific_degree = models.ForeignKey('user_app.ScientificDegree', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.fname

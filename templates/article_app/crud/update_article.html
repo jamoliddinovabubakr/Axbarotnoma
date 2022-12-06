@@ -127,6 +127,7 @@
                                             <th><b>{% trans "Ism" %}</b></th>
                                             <th><b>{% trans "Sharif" %}</b></th>
                                             <th><b>{% trans "Email" %}</b></th>
+                                            <th><b>{% trans "Ilmiy Daraja" %}</b></th>
                                             <th><b>{% trans "Ish" %}</b></th>
                                             <th width="100"><b>{% trans "Action" %}</b></th>
                                         </tr>
@@ -180,6 +181,7 @@
                                 "<td>" + item.fname + "</td>" +
                                 "<td>" + item.mname + "</td>" +
                                 "<td>" + item.email + "</td>" +
+                                "<td>" + item.scientific_degree__name + "</td>" +
                                 "<td>" + item.work + "</td>" +
                                 "<td class='with-btn' nowrap>" +
                                 `<button data-id="${item.id}" type="button" class="btn btn-xs btn-warning edit-author" ><i class="fa fa-edit mr-1"></i>Edit</button>` + " " +

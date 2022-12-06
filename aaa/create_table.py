@@ -334,6 +334,8 @@ if __name__ == '__main__':
     scientific_degree = [
         ('PhD(Doctor of Philosophy)',),
         ('DSc(Doctor of Science)',),
+        ('Bachelor',),
+        ('Master',),
     ]
 
     sections = [
