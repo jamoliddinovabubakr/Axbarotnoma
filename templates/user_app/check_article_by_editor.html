@@ -139,7 +139,9 @@
                                             <div class="widget-todolist-input">
                                                 <button type="button" data-id="{{ article.id }}" class="btn btn-success"
                                                         id="send_btn_to_reviewer"
-                                                        {% if article.article_status.id == 4 %} disabled {% endif %}>
+                                                        {% if article.article_status.id != 1 or article.is_resubmit %}
+                                                        disabled {% endif %}
+                                                >
                                                     SEND TO SELECTED REVIEWERS
                                                 </button>
                                             </div>
@@ -151,11 +153,14 @@
                                     <div class="container" id="random_btn" style="display: none;">
                                         <label>Choose number of reviewers
                                             <input type="number" id="reviewer_number" name="reviewer_number" value="0"
+                                                    {% if article.article_status.id != 1 or article.is_resubmit %}
+                                                   disabled {% endif %}
                                                    class="form-control">
                                         </label>
                                         <button class="btn btn-md btn-info" id="random_send_reviewer_btn" type="button"
                                                 data-id="{{ article.id }}" data-action="{{ csrf_token }}"
-                                                {% if article.article_status.id == 4 %} disabled {% endif %}>Generate
+                                                {% if article.article_status.id != 1 or article.is_resubmit %}
+                                                disabled {% endif %}>Generate
                                             Random Choosing Reviewers
                                         </button>
                                     </div>
@@ -171,14 +176,39 @@
                         </div>
                         <form method="post">
                             {% csrf_token %}
-                            <button style="width:100%;" data-id="{{ article.id }}" data-action="{{ csrf_token }}"
-                                    class="btn btn-sm btn-primary forshadow"
+                            <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},0"
+                                    data-action="{{ csrf_token }}"
+                                    class="btn btn-sm btn-success forshadow resultBtn"
                                     id="approveForPublicationBtn"
-                                    {% if article.article_status.id == 2 %} disabled {% endif %}
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
                                     {% if not is_ready_publish %} disabled {% endif %}>
-                                APPROVE
-                                FOR PUBLICATION
+                                TASDIQLASH
                             </button>
+                            <br>
+                            <br>
+                            <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},1"
+                                    data-action="{{ csrf_token }}"
+                                    class="btn btn-sm btn-danger forshadow resultBtn"
+                                    id="rejectedBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_rejected %} disabled {% endif %}>
+                                RAD ETISH
+                            </button>
+                            <br>
+                            <br>
+                            <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},2"
+                                    data-action="{{ csrf_token }}"
+                                    class="btn btn-sm btn-primary forshadow resultBtn"
+                                    id="resubmitBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_resubmit %} disabled {% endif %}>
+                                MUALLIFGA QAYTA YUBORISH
+                            </button>
+                            <p></p>
+                            {% if is_ready_resubmit %}
+                                <textarea id="resubmit_text" class="form-control"
+                                          placeholder="Muallifga qayta yuborish sababini yozing..."></textarea>
+                            {% endif %}
                         </form>
                         <br>
                         <br>
@@ -267,6 +297,20 @@
                                             Not yet {% endif %}</td>
                                         <td><b>Updated Time: </b>{% if item.updated_at %}{{ item.updated_at }}{% else %}
                                             Not yet {% endif %}</td>
+                                        <td>
+                                            {% if item.status.id == 5 and article.article_status.id == 1 %}
+                                                <form method="post">
+                                                    {% csrf_token %}
+                                                    <button type="button" data-id="{{ item.id }}"
+                                                            id="resubmit_to_reviewer_btn_{{ item.id }}"
+                                                            data-action="{{ csrf_token }}"
+                                                            class="btn btn-outline-success btn-xs resubmit_to_reviewer_btn">
+                                                        <i class="fas fa-lg fa-fw m-r-10 fa-arrow-circle-right"></i>Qayta
+                                                        yuborish
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
                                         <td>{% if item.status.id == 3 %}<i class="fas fa-lg fa-fw m-r-10 fa-check"
                                                                            style="color: lightgreen; font-size: 18px;"></i>{% else %}
                                             <i class="fas fa-lg fa-fw m-r-10 fa-times"
@@ -291,33 +335,102 @@
     <div id="writeeditor_message_div"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-        $('body').on('click', '#approveForPublicationBtn', function (e) {
+        $('body').on('click', '.resubmit_to_reviewer_btn', function (e) {
             e.preventDefault();
-            let id = $(this).data('id');
 
+            let id = $(this).data('id');
+            alert(id);
             let token = $(this).data('action');
 
             $.ajax({
                 type: "POST",
-                url: "/profile/approve_publish/",
+                url: "/profile/editor_resubmit_to_reviewer/",
                 data: {
-                    article_id: id,
+                    review_id: id,
                     csrfmiddlewaretoken: token,
                 },
                 success: function (response) {
-                    $('#approveForPublicationBtn').prop("disabled", true);
-
+                    $('#resubmit_to_reviewer_btn_' + id).prop("disabled", true);
                     swal({
                         title: response.message,
                         timer: 1500,
                     });
 
-                    window.location.reload();
                 },
                 error: function (error) {
                     console.log(error);
                 }
             });
+
+        });
+
+        $('body').on('click', '.resultBtn', function (e) {
+            e.preventDefault();
+            let data = $(this).data('id');
+            let article_id = parseInt(data.split(',')[0]);
+            let notif_id = parseInt(data.split(',')[1]);
+            let btn_number = parseInt(data.split(',')[2]);
+            let token = $(this).data('action');
+
+            if (btn_number === 2) {
+                let text = $('#resubmit_text').val();
+                if (text.length > 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/profile/approve_publish/",
+                        data: {
+                            article_id: article_id,
+                            notif_id: notif_id,
+                            text: text,
+                            btn_number: btn_number,
+                            csrfmiddlewaretoken: token,
+                        },
+                        success: function (response) {
+                            $('#approveForPublicationBtn').prop("disabled", true);
+
+                            swal({
+                                title: response.message,
+                                timer: 1500,
+                            });
+
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+
+                } else {
+                    alert("Izohni kiriting!");
+                }
+            }
+
+            if (btn_number === 0 || btn_number === 1){
+                   $.ajax({
+                        type: "POST",
+                        url: "/profile/approve_publish/",
+                        data: {
+                            article_id: article_id,
+                            notif_id: notif_id,
+                            btn_number: btn_number,
+                            csrfmiddlewaretoken: token,
+                        },
+                        success: function (response) {
+                            $('#approveForPublicationBtn').prop("disabled", true);
+
+                            swal({
+                                title: response.message,
+                                timer: 1500,
+                            });
+
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+            }
+
         });
 
         $('body').on('click', '#random_send_reviewer_btn', function (e) {

@@ -25,6 +25,7 @@ urlpatterns = [
     path('reviewer_rejected/', reviewer_rejected, name='reviewer_rejected'),
 
     path('approve_publish/', approve_publish, name='approve_publish'),
+    path('editor_resubmit_to_reviewer/', editor_resubmit_to_reviewer, name='editor_resubmit_to_reviewer'),
 
     path('login/', login_page, name='login'),
     path('logout', logout_user, name='logout'),

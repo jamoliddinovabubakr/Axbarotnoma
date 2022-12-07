@@ -290,26 +290,29 @@ def reviewer_dashboard(request):
 @login_required(login_url='login')
 # @allowed_users(menu_url='profile_page')
 def editor_notifications(request):
-    user = User.objects.get(id=request.user.id)
+    if request.method == 'GET' and is_ajax(request):
+        user = User.objects.get(id=request.user.id)
 
-    uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
-        Q(notification_status_id=1) | Q(notification_status_id=2)).order_by('-created_at')
+        uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
+            Q(notification_status_id=1) | Q(notification_status_id=2)).order_by('-created_at')
 
-    check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
-        notification_status_id=3).order_by('-created_at')
+        check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
+            notification_status_id=3).order_by('-created_at')
 
-    data = {
-        "uncheck_notifications": list(uncheck_notifications.values(
-            'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
-            'article__author__email', 'is_update_article'
-        )),
-        "check_notifications": list(check_notifications.values(
-            'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
-            'article__author__email', 'is_update_article'
-        ))
-    }
+        data = {
+            "uncheck_notifications": list(uncheck_notifications.values(
+                'id', 'created_at', 'article__id', 'article__title', 'notification_status__id',
+                'notification_status__name',
+                'article__author__email', 'is_update_article'
+            )),
+            "check_notifications": list(check_notifications.values(
+                'id', 'created_at', 'article__id', 'article__title', 'notification_status__id',
+                'notification_status__name',
+                'article__author__email', 'is_update_article'
+            ))
+        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
 
 
 @login_required(login_url='login')
@@ -437,19 +440,49 @@ def editor_check_article(request, pk):
     article_reviews = ReviewerArticle.objects.filter(article=article).filter(editor=objs.first())
 
     is_ready_publish: bool = False
-    result_sum = 0
-    for item in article_reviews:
-        if item.status.id == 3:
-            result_sum += item.result
-    if result_sum == 2:
-        is_ready_publish = True
+    is_ready_rejected: bool = False
+    is_ready_resubmit: bool = False
 
+    result_sum = 0
+    m = []
+
+    for item in article_reviews:
+        result_sum += item.result
+        m.append(item.result)
+
+    if result_sum == 2 and 0 not in m and 2 not in m and 3 not in m:
+        is_ready_publish = True
+        if article.article_status.id == 4:
+            article.article_status = get_object_or_404(ArticleStatus, pk=5)
+            article.save()
+
+    if result_sum == 6 and 0 not in m and 2 not in m and 1 not in m:
+        is_ready_rejected = True
+        if article.article_status.id == 4:
+            article.article_status = get_object_or_404(ArticleStatus, pk=5)
+            article.save()
+
+    if result_sum == 3 and 0 not in m and 3 not in m:
+        is_ready_resubmit = True
+        if article.article_status.id == 4:
+            article.article_status = get_object_or_404(ArticleStatus, pk=5)
+            article.save()
+
+    if result_sum == 4:
+        if 0 not in m and 1 not in m and 3 not in m:
+            is_ready_resubmit = True
+            if article.article_status.id == 4:
+                article.article_status = get_object_or_404(ArticleStatus, pk=5)
+                article.save()
 
     context = {
         "article": article,
         "article_reviews": article_reviews,
         "article_file": file,
+        "notif_id": pk,
         "is_ready_publish": is_ready_publish,
+        "is_ready_rejected": is_ready_rejected,
+        "is_ready_resubmit": is_ready_resubmit,
     }
     return render(request, 'user_app/check_article_by_editor.html', context=context)
 
@@ -511,12 +544,6 @@ def reviewer_confirmed(request):
         review.status = StatusReview.objects.get(pk=3)
         review.save()
 
-        notifs = Notification.objects.filter(article=review.article).filter(to_user=request.user).filter(
-            from_user=review.article.author).filter(is_update_article=True)
-        notif = notifs.last()
-        notif.notification_status = NotificationStatus.objects.get(pk=3)
-        notif.save()
-
         data = {
             "message": "Success Article Confirmed!",
         }
@@ -538,25 +565,17 @@ def reviewer_resubmit(request):
         review.save()
 
         article = get_object_or_404(Article, pk=review.article.id)
-        article.article_status = get_object_or_404(ArticleStatus, pk=8)
-        article.save()
 
         Notification.objects.create(
             article=article,
             from_user=review.reviewer.user,
             to_user=review.editor.user,
-            message=comment,
+            message=f"({review.editor.user.email}){comment}",
             notification_status=NotificationStatus.objects.get(id=1),
         )
 
-        notifs = Notification.objects.filter(article=article).filter(to_user=request.user).filter(
-            from_user=article.author).filter(is_update_article=True)
-        notif = notifs.last()
-        notif.notification_status = NotificationStatus.objects.get(pk=3)
-        notif.save()
-
         data = {
-            "message": "Resubmit Article!",
+            "message": "Resubmit Article Success!",
         }
         return JsonResponse(data=data)
     else:
@@ -581,17 +600,44 @@ def reviewer_rejected(request):
             article=article,
             from_user=review.reviewer.user,
             to_user=review.editor.user,
-            message=comment,
+            message=f"({review.editor.user.email}){comment}",
             notification_status=NotificationStatus.objects.get(id=1),
         )
-        notifs = Notification.objects.filter(article=article).filter(to_user=request.user).filter(
-            from_user=article.author).filter(is_update_article=True)
-        notif = notifs.last()
-        notif.notification_status = NotificationStatus.objects.get(pk=3)
-        notif.save()
 
         data = {
-            "message": "Success Article Cinfirmed!",
+            "message": "Success Rejected Cinfirmed!",
+        }
+        return JsonResponse(data=data)
+    else:
+        return HttpResponse("Not Fount Page!")
+
+
+@login_required(login_url='login')
+def editor_resubmit_to_reviewer(request):
+    user = get_object_or_404(User, pk=request.user.id)
+    if request.method == 'POST' and is_ajax(request):
+        review_id = request.POST.get('review_id')
+
+        review = ReviewerArticle.objects.get(pk=int(review_id))
+        review.result = 0
+        review.status = StatusReview.objects.get(pk=1)
+        review.save()
+
+        article = get_object_or_404(Article, pk=review.article.id)
+        article.article_status = get_object_or_404(ArticleStatus, pk=4)
+        article.save()
+
+        Notification.objects.create(
+            article=article,
+            from_user=user,
+            to_user=review.reviewer.user,
+            message=f"({review.reviewer.user.email}).Hurmatli taqrizchi sizga maqola qayta yuborildi.",
+            notification_status=NotificationStatus.objects.get(id=1),
+            is_update_article=True,
+        )
+
+        data = {
+            "message": "Success Rejected Cinfirmed!",
         }
         return JsonResponse(data=data)
     else:
@@ -600,21 +646,47 @@ def reviewer_rejected(request):
 
 @login_required(login_url='login')
 def approve_publish(request):
+    user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST' and is_ajax(request):
+        data = None
         article_id = request.POST.get('article_id')
+        notif_id = request.POST.get('notif_id')
+        btn_number = int(request.POST.get('btn_number'))
+
         article = get_object_or_404(Article, pk=int(article_id))
-        article.article_status = ArticleStatus.objects.get(pk=2)
-        article.is_publish = True
-        article.save()
 
-        notifs = Notification.objects.filter(article=article).filter(to_user=request.user).filter(from_user=article.author).filter(is_update_article=True)
-        notif = notifs.last()
-        notif.notification_status = NotificationStatus.objects.get(pk=3)
-        notif.save()
+        if btn_number == 0:
+            article.article_status = ArticleStatus.objects.get(pk=2)
+            article.is_publish = True
+            article.save()
+            data = {
+                "message": "Maqola omadli tasdiqlandi!",
+            }
+        elif btn_number == 1:
+            article.article_status = ArticleStatus.objects.get(pk=3)
+            article.save()
+            data = {
+                "message": "Maqola Rad Etildi!",
+            }
+        elif btn_number == 2:
+            text = request.POST.get('text')
+            article.article_status = get_object_or_404(ArticleStatus, pk=8)
+            article.is_resubmit = True
+            article.save()
 
-        data = {
-            "message": "Maqola omadli tasdiqlandi!",
-        }
+            Notification.objects.create(
+                article=article,
+                from_user=user,
+                to_user=article.author,
+                message=f"({article.author.email}).{text}",
+                notification_status=NotificationStatus.objects.get(id=1),
+            )
+            data = {
+                "message": "Maqola Qayta Yuborish uchun Muallifga yuborildi!",
+            }
+        else:
+            print(-1)
+
         return JsonResponse(data=data)
     else:
         return HttpResponse("Not Fount Page!")

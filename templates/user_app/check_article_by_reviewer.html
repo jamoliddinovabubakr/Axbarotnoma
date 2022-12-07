@@ -132,14 +132,12 @@
         $('#id_comment').keyup(function(e){
             e.preventDefault();
             let val = $(this).val();
-            let status = {{ article_review.status.id }};
+            let is_check = {{ article_review.result }};
 
-            if(val.length > 0 && status != 3 ){
-                if (status !=4){
+            if(val.length > 0 && is_check === 0 ){
                     $('#reject_reviewer_btn').prop("disabled", false);
                     $('#resubmit_reviewer_btn').prop("disabled", false);
                     $('#confirm_reviewer_btn').prop("disabled", false);
-                }
             } else {
                 $('#reject_reviewer_btn').prop("disabled", true);
                 $('#confirm_reviewer_btn').prop("disabled", true);

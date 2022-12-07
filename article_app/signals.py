@@ -9,11 +9,26 @@ from user_app.models import User, Role, Editor
 def create_article(sender, instance, created, **kwargs):
     editor = Editor.objects.all().last()
     if created:
-        Notification.objects.create(
-            article=instance,
-            from_user=instance.author,
-            to_user=editor.user,
-            message=f"({editor.user.email})Assalomu aleykum. Men sizlarga o'z maqolamni yubordim!",
-            notification_status=NotificationStatus.objects.get(id=1),
-            is_update_article=True,
-        )
+        print(123)
+    else:
+        if instance.article_status.id == 6:
+            Notification.objects.create(
+                article=instance,
+                from_user=instance.author,
+                to_user=editor.user,
+                message=f"({editor.user.email})Assalomu aleykum. Yangi maqolamni yubordim!",
+                notification_status=NotificationStatus.objects.get(id=1),
+                is_update_article=True,
+            )
+
+        if instance.article_status.id == 8:
+            Notification.objects.create(
+                article=instance,
+                from_user=instance.author,
+                to_user=editor.user,
+                message=f"({editor.user.email})Assalomu aleykum. Maqolamni to'g'irlab qayta yubordim!",
+                notification_status=NotificationStatus.objects.get(id=1),
+                is_update_article=True,
+            )
+            instance.article_status = Article.objects.get(pk=1)
+            instance.save()

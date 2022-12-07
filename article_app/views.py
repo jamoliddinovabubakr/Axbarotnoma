@@ -108,15 +108,15 @@ def update_article(request, pk):
                 }
                 return render(request, "article_app/crud/update_article.html", context=context)
 
-            objects = ArticleStatus.objects.filter(pk=1)
-            if objects.count() == 1:
+            if article.article_status.id == 6:
+                objects = ArticleStatus.objects.filter(pk=1)
                 submit = objects.first()
-                ob = form.save(commit=False)
-                ob.article_status = submit
-                ob.save()
-                return redirect('dashboard')
-            else:
-                return JsonResponse(f"ArticleStatus mavjud emas!")
+                article.article_status = submit
+                article.save()
+
+            ob = form.save(commit=False)
+            ob.save()
+            return redirect('dashboard')
 
         else:
             data = {

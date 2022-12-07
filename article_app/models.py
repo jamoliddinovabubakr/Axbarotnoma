@@ -63,6 +63,7 @@ class Article(models.Model):
     references = RichTextField(blank=True, null=True)
     article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
     is_publish = models.BooleanField(default=False)
+    is_resubmit = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

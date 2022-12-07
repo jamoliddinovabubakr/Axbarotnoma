@@ -48,6 +48,11 @@ Dashboard
                                             style="border-radius: 20px; float: right"><i
                                             class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
                                     </button>
+                                        {% elif article.article_status_id == 8 %}
+                                        <button class="btn btn-outline-danger btn-sm"
+                                            style="border-radius: 20px; float: right"><i
+                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                    </button>
                                     {% else %}
                                     <button class="btn btn-outline-warning btn-sm"
                                             style="border-radius: 20px; float: right"><i
@@ -262,9 +267,9 @@ Dashboard
                         `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-danger remove_article_btn"><i class="fa fa-trash"></i></button>`
                         + "</td></tr>";
                     $("#articleDetail").html(temp);
-                    if(response.article_status_id == 6){ $('.edit_article_btn').prop('disabled', false);}
-                    if(response.article_status_id == 7){ $('.edit_article_btn').prop('disabled', false);}
-                    if(response.article_status_id == 8){ $('.edit_article_btn').prop('disabled', false);}
+                    if(response.article_status_id === 6){ $('.edit_article_btn').prop('disabled', false);}
+                    if(response.article_status_id === 7){ $('.edit_article_btn').prop('disabled', false);}
+                    if(response.article_status_id === 8){ $('.edit_article_btn').prop('disabled', false);}
 
                 },
                 error: function (response) {

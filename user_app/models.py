@@ -159,6 +159,7 @@ class ReviewerArticle(models.Model):
                                blank=True)
     comment = models.TextField()
     result = models.PositiveSmallIntegerField(default=0)
+    is_extra = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
