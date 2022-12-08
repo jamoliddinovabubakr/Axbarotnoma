@@ -90,8 +90,8 @@ class ArticleFile(models.Model):
         return self.file.size
 
     def file_type(self):
-        name, type = os.path.splitext(self.file.name)
-        return type
+        name, type_f = os.path.splitext(self.file.name)
+        return type_f
 
     # def get_absolute_url(self):
     #     return reverse('article_app:document-detail', kwargs={'pk': self.pk})
@@ -146,27 +146,6 @@ class Notification(models.Model):
 
     def __str__(self):
         return str(self.id)
-
-
-class Journal(models.Model):
-    file_pdf = models.FileField(_("Fayl"), upload_to="files/jurnals/", max_length=255, blank=True, null=True)
-    journal_number = models.PositiveBigIntegerField(default=0, unique=True)
-    journal_year = models.CharField(max_length=4, blank=True)
-    img = models.ImageField(upload_to='jurnal/', default='jurnal_ob.png')
-    article = models.ManyToManyField('Article', related_name='articles', blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    status = models.BooleanField(default=False)
-
-    def get_articles(self):
-        return [p.title for p in self.article.all()]
-
-    def __str__(self):
-        return str(self.journal_number)
-
-    class Meta:
-        verbose_name = _("Journal")
-        verbose_name_plural = _("Journals")
 
 
 class Post(models.Model):

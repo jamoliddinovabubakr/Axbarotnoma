@@ -1,27 +1,15 @@
-from article_app.models import Journal, Notification, Article, NotificationStatus, ExtraAuthor, ArticleStatus, \
-    ArticleFile, Section
-from django.contrib import messages
+from article_app.models import *
 from django.contrib.auth import logout, authenticate, login
-from user_app.decorators import unauthenticated_user, password_reset_authentification
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-from django.core.mail import send_mail, BadHeaderError, EmailMultiAlternatives
-from django.template.loader import render_to_string, get_template
-from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
+from user_app.decorators import unauthenticated_user
 from user_app.forms import CreateUserForm, AddReviewerForm
 from user_app.models import *
-import os
 from django.db.models.query_utils import Q
 from user_app.forms import UpdateUserForm, ReviewerFileForm
 from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.models import Group, Permission
-from user_app.decorators import allowed_users
+from django.contrib.auth.models import Group
 from user_app.models import User, ReviewerArticle, StatusReview
-from django.utils.translation import get_language_from_request
 from . import utils
 import numpy as np
 

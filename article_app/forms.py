@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import TextInput, Textarea, FileInput, NumberInput, SelectMultiple, Select
+from django.forms import TextInput, Textarea, FileInput, Select
 from article_app.models import *
 
 
@@ -200,44 +200,3 @@ class CreateSectionForm(forms.ModelForm):
                 'data - parsley - required': "true",
             }),
         }
-
-
-# class CreateMagazineForm(forms.ModelForm):
-#     class Meta:
-#         model = Journal
-#         fields = ['number_magazine', 'year_magazine']
-#
-#         widgets = {
-#             'year_magazine': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#             'number_magazine': NumberInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#
-#         }
-
-
-# class UpdateMagazineForm(forms.ModelForm):
-#     class Meta:
-#         model = Journal
-#         fields = ['number_magazine', 'year_magazine', 'article', 'status']
-#
-#         widgets = {
-#             'year_magazine': TextInput(attrs={
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#             'number_magazine': NumberInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': "Enter...",
-#                 'data - parsley - required': "true",
-#             }),
-#         }

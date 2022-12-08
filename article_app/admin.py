@@ -57,11 +57,6 @@ class PostAdmin(ImportExportActionModelAdmin):
     prepopulated_fields = {'url': ('title',)}
 
 
-@admin.register(Journal)
-class JournalAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'journal_number', 'journal_year', 'get_articles', 'file_pdf', 'created_at', 'status']
-
-
 @admin.register(BlankPage)
 class BlankPageAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'title', 'body', 'is_publish', 'created_at']

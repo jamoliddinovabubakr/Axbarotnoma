@@ -57,20 +57,6 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # file = models.FileField(_("Fayl"), upload_to="files/reviewer/%Y/%m/%d", max_length=255, blank=True,
-    #                         validators=[FileExtensionValidator(allowed_extensions=['doc', 'docx', 'pdf'])],
-    #                         help_text='Please upload only .doc, .docx or .pdf files!')
-
-    # mfile = models.ForeignKey('user_app.ReviewerFile', on_delete=models.CASCADE, blank=True, null=True)
-
-    # def save(self, *args, **kwargs):
-    #     if self.role is None:
-    #         admin = Role.objects.get(pk=1)
-    #         author = Role.objects.get(pk=4)
-    #         if self.is_superuser:
-    #             self.role.add(admin)
-    #     super().save(*args, **kwargs)
-
     @property
     def full_name(self):
         if self.first_name is not None and self.last_name is not None:
@@ -124,8 +110,8 @@ class ReviewerFile(models.Model):
         return self.file.size
 
     def file_type(self):
-        name, type = os.path.splitext(self.file.name)
-        return type
+        name, type_f = os.path.splitext(self.file.name)
+        return type_f
 
 
 class ReviewerEditorStatus(models.Model):
@@ -171,9 +157,6 @@ class Menu(models.Model):
     menu_tr = models.PositiveSmallIntegerField(default=0)
     status = models.BooleanField(default=True)
     allowed_roles = models.ManyToManyField('user_app.Role', related_name='allowed_role_menus', blank=True)
-
-    # parent_id = models.PositiveIntegerField(default=0)
-    # type_menu = models.PositiveSmallIntegerField(default=0)
 
     def get_roles(self):
         return [p.name for p in self.allowed_roles.all()]

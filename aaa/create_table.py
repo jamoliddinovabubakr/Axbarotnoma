@@ -1,7 +1,7 @@
 from psycopg2 import connect, Error
 
 user = "postgres"
-password = "6868"
+password = "4144"
 host = "localhost"
 port = "5432"
 database = "article_db"
@@ -133,7 +133,7 @@ def insert_to_scientific_degree(records):
         conn = connect(host=host, user=user, password=password, database=database, port=port)
         cursor = conn.cursor()
         conn.autocommit = True
-        sql = """ INSERT INTO user_app_scientificdegree (name) VALUES (%s) """
+        sql = """ INSERT INTO user_app_scientificdegree (name, level) VALUES (%s, %s) """
 
         cursor.executemany(sql, records)
         print(cursor.rowcount, "Record inserted successfully into user_app_scientificdegree table")
@@ -290,19 +290,19 @@ def insert_to_article_lang(records):
 
 if __name__ == '__main__':
     stages = [
-        ('submission',),
-        ('review',),
-        ('publication',)
+        ('Submission',),
+        ('Review',),
+        ('Publication',)
     ]
     article_status = [
-        ('submit', 1),
-        ('accept', 3),
-        ('declined', 1),
-        ('submit', 2),
-        ('submit', 3),
-        ('incomplete', 1),
-        ('resubmit', 1),
-        ('resubmit', 2),
+        ('Submit', 1),
+        ('Accept', 3),
+        ('Declined', 1),
+        ('Submit', 2),
+        ('Submit', 3),
+        ('Incomplete', 1),
+        ('Resubmit', 1),
+        ('Resubmit', 2),
     ]
     roles = [
         ('Admin',),
@@ -318,24 +318,24 @@ if __name__ == '__main__':
     ]
 
     notif_status = [
-        ('Unread',),
-        ('Reading',),
-        ('Read',),
+        ('Uncheck',),
+        ('Checking',),
+        ('Checked',),
     ]
 
     review_status = [
-        ('Came',),
-        ('Is seeing',),
-        ('Confirmed',),
-        ('Denied',),
-        ('Resubmit',),
+        ('Yuborildi',),
+        ('Ko\'rilmoqda',),
+        ('Tasdiqlandi',),
+        ('Rad etildi',),
+        ('Qayta yuborish',),
     ]
 
     scientific_degree = [
-        ('PhD(Doctor of Philosophy)',),
-        ('DSc(Doctor of Science)',),
-        ('Bachelor',),
-        ('Master',),
+        ('PhD', 3,),
+        ('DSc', 4,),
+        ('Bachelor', 1,),
+        ('Master', 2,),
     ]
 
     sections = [
