@@ -152,7 +152,7 @@
                                     {% csrf_token %}
                                     <div class="container" id="random_btn" style="display: none;">
                                         <label>Choose number of reviewers
-                                            <input type="number" id="reviewer_number" name="reviewer_number" value="0"
+                                            <input type="number" id="reviewer_number" name="reviewer_number" value="1"
                                                     {% if article.article_status.id != 1 or article.is_resubmit %}
                                                    disabled {% endif %}
                                                    class="form-control">
@@ -209,6 +209,15 @@
                                 <textarea id="resubmit_text" class="form-control"
                                           placeholder="Muallifga qayta yuborish sababini yozing..."></textarea>
                             {% endif %}
+                        <br>
+                            <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},3"
+                                    data-action="{{ csrf_token }}"
+                                    class="btn btn-sm btn-info forshadow resultBtn"
+                                    id="rejectedExtraReviewerBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_resubmit_extra_reviewer %} disabled {% endif %}>
+                                BOSHQA TAQRIZCHIGA MAQOLANI YUBORISH
+                            </button>
                         </form>
                         <br>
                         <br>
@@ -339,7 +348,6 @@
             e.preventDefault();
 
             let id = $(this).data('id');
-            alert(id);
             let token = $(this).data('action');
 
             $.ajax({
@@ -405,30 +413,30 @@
                 }
             }
 
-            if (btn_number === 0 || btn_number === 1){
-                   $.ajax({
-                        type: "POST",
-                        url: "/profile/approve_publish/",
-                        data: {
-                            article_id: article_id,
-                            notif_id: notif_id,
-                            btn_number: btn_number,
-                            csrfmiddlewaretoken: token,
-                        },
-                        success: function (response) {
-                            $('#approveForPublicationBtn').prop("disabled", true);
+            if (btn_number === 0 || btn_number === 1 || btn_number === 3) {
+                $.ajax({
+                    type: "POST",
+                    url: "/profile/approve_publish/",
+                    data: {
+                        article_id: article_id,
+                        notif_id: notif_id,
+                        btn_number: btn_number,
+                        csrfmiddlewaretoken: token,
+                    },
+                    success: function (response) {
+                        $('#approveForPublicationBtn').prop("disabled", true);
 
-                            swal({
-                                title: response.message,
-                                timer: 1500,
-                            });
+                        swal({
+                            title: response.message,
+                            timer: 1500,
+                        });
 
-                            window.location.reload();
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
             }
 
         });

@@ -30,5 +30,3 @@ def create_article(sender, instance, created, **kwargs):
                 notification_status=NotificationStatus.objects.get(id=1),
                 is_update_article=True,
             )
-            instance.article_status = Article.objects.get(pk=1)
-            instance.save()

@@ -115,6 +115,7 @@ def update_article(request, pk):
                 article.save()
 
             ob = form.save(commit=False)
+            ob.article_status = Article.objects.get(pk=1)
             ob.save()
             return redirect('dashboard')
 

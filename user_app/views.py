@@ -430,13 +430,22 @@ def editor_check_article(request, pk):
     is_ready_publish: bool = False
     is_ready_rejected: bool = False
     is_ready_resubmit: bool = False
+    is_ready_resubmit_extra_reviewer: bool = False
 
     result_sum = 0
     m = []
 
     for item in article_reviews:
-        result_sum += item.result
-        m.append(item.result)
+        if item.is_extra:
+            if item.result == 1:
+                is_ready_publish = True
+            elif item.result == 3:
+                is_ready_rejected = True
+            elif item.result == 2:
+                is_ready_resubmit = True
+        else:
+            result_sum += item.result
+            m.append(item.result)
 
     if result_sum == 2 and 0 not in m and 2 not in m and 3 not in m:
         is_ready_publish = True
@@ -463,6 +472,18 @@ def editor_check_article(request, pk):
                 article.article_status = get_object_or_404(ArticleStatus, pk=5)
                 article.save()
 
+        if 0 not in m and 2 not in m:
+            is_ready_resubmit_extra_reviewer = True
+            if article.article_status.id == 4:
+                article.article_status = get_object_or_404(ArticleStatus, pk=5)
+                article.save()
+
+    if result_sum == 5 and 0 not in m and 1 not in m:
+        is_ready_resubmit_extra_reviewer = True
+        if article.article_status.id == 4:
+            article.article_status = get_object_or_404(ArticleStatus, pk=5)
+            article.save()
+
     context = {
         "article": article,
         "article_reviews": article_reviews,
@@ -471,6 +492,7 @@ def editor_check_article(request, pk):
         "is_ready_publish": is_ready_publish,
         "is_ready_rejected": is_ready_rejected,
         "is_ready_resubmit": is_ready_resubmit,
+        "is_ready_resubmit_extra_reviewer": is_ready_resubmit_extra_reviewer,
     }
     return render(request, 'user_app/check_article_by_editor.html', context=context)
 
@@ -483,8 +505,9 @@ def reviewer_check_article(request, pk):
         return render(request, 'user_app/not_access.html')
 
     notifification = get_object_or_404(Notification, pk=pk)
-    notifification.notification_status = NotificationStatus.objects.get(id=2)
-    notifification.save()
+    if notifification.notification_status.id == 1:
+        notifification.notification_status = NotificationStatus.objects.get(id=2)
+        notifification.save()
 
     reviewer = get_object_or_404(Reviewer, user=user)
     article = Article.objects.get(pk=notifification.article.id)
@@ -640,6 +663,7 @@ def approve_publish(request):
         article_id = request.POST.get('article_id')
         notif_id = request.POST.get('notif_id')
         btn_number = int(request.POST.get('btn_number'))
+        token = request.POST['csrfmiddlewaretoken']
 
         article = get_object_or_404(Article, pk=int(article_id))
 
@@ -647,12 +671,14 @@ def approve_publish(request):
             article.article_status = ArticleStatus.objects.get(pk=2)
             article.is_publish = True
             article.save()
+
             data = {
                 "message": "Maqola omadli tasdiqlandi!",
             }
         elif btn_number == 1:
             article.article_status = ArticleStatus.objects.get(pk=3)
             article.save()
+
             data = {
                 "message": "Maqola Rad Etildi!",
             }
@@ -672,9 +698,80 @@ def approve_publish(request):
             data = {
                 "message": "Maqola Qayta Yuborish uchun Muallifga yuborildi!",
             }
+        elif btn_number == 3:
+            article_section = article.section
+            editor = get_object_or_404(Editor, user=user)
+            authors = ExtraAuthor.objects.filter(article=article)
+
+            author_levels = []
+            for author in authors:
+                author_levels.append(author.scientific_degree.level)
+
+            max_level_author = max(author_levels)
+
+            reviewers = Reviewer.objects.filter(is_reviewer=True).filter(
+                scientific_degree__level__gte=max_level_author)
+
+            reviewers_id = []
+            if reviewers.count() > 0:
+                for reviewer in reviewers:
+                    results = ReviewerArticle.objects.filter(article=article).filter(reviewer=reviewer)
+                    if results.count() == 0:
+                        l = []
+                        for it in reviewer.section.all():
+                            l.append(it.id)
+                        if article_section.id in l:
+                            reviewers_id.append(reviewer.id)
+                    else:
+                        continue
+            else:
+                degree = ScientificDegree.objects.get(level=max_level_author)
+                data = {
+                    "is_valid": False,
+                    "message": f"Bu maqolaga ilmiy darajasi({degree.name})ga teng taqrizchi topilmadi!",
+                }
+                return JsonResponse(data=data)
+
+            if len(reviewers_id) > 0:
+                select_random_reviewer = np.random.choice(reviewers_id, 1, replace=False).tolist()
+            else:
+                data = {
+                    "is_valid": False,
+                    "message": f"{article_section.name} sohasini tekshiradigan taqrizchilar topilmadi!",
+                }
+                return JsonResponse(data=data)
+
+            for item in select_random_reviewer:
+                reviewer = get_object_or_404(Reviewer, pk=int(item))
+                reviewer_user = get_object_or_404(User, pk=reviewer.user.id)
+
+                Notification.objects.create(
+                    article=article,
+                    from_user=user,
+                    to_user=reviewer_user,
+                    message=f"({reviewer_user.email}).Hurmatli taqrizchi sizga maqola yuborildi.",
+                    notification_status=NotificationStatus.objects.get(id=1),
+                    is_update_article=True,
+                )
+
+                ReviewerArticle.objects.create(
+                    article=article,
+                    editor=editor,
+                    reviewer=reviewer,
+                    status=StatusReview.objects.get(pk=1),
+                    comment="",
+                    is_extra=True,
+                )
+
+            article.article_status = get_object_or_404(ArticleStatus, pk=4)
+            data = {
+                "is_valid": True,
+                "select_random_reviewers": select_random_reviewer,
+                "message": "Taqrizchiga muvaffaqiyatli yuborildi!",
+            }
+
         else:
             print(-1)
-
         return JsonResponse(data=data)
     else:
         return HttpResponse("Not Fount Page!")
