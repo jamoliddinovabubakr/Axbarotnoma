@@ -14,7 +14,7 @@ from article_app.models import ExtraAuthor
 from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm, AddAuthorForm, \
     SendMessageForm
 from django.core.paginator import Paginator
-from user_app.models import User
+from user_app.models import User, Editor
 
 
 def is_ajax(request):
@@ -42,13 +42,19 @@ def post_detail(request, slug):
 def create_article(request):
     user = User.objects.get(pk=request.user.id)
     if request.method == "POST" and is_ajax(request):
+        country = request.POST.get('country', None)
+        article_type = request.POST.get('article_type', None)
+        article_lang = request.POST.get('article_lang', None)
+        section = request.POST.get('section', None)
+        title = request.POST.get('title', None)
+
         form = CreateArticleForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and country and article_type and article_lang and section and title:
             article = form.save(commit=False)
             article.author = user
             article.article_status_id = 6
             article.save()
-            # if article.author.work:
+
             ExtraAuthor.objects.create(
                 article=article,
                 lname=article.author.last_name,
@@ -79,6 +85,7 @@ def create_article(request):
 @login_required(login_url='login')
 def update_article(request, pk):
     user = request.user
+    editor = Editor.objects.all().last()
     articles = Article.objects.filter(pk=pk)
     if articles.count() == 0:
         return render(request, 'user_app/not_access.html')
@@ -108,15 +115,32 @@ def update_article(request, pk):
                 }
                 return render(request, "article_app/crud/update_article.html", context=context)
 
-            if article.article_status.id == 6:
-                objects = ArticleStatus.objects.filter(pk=1)
-                submit = objects.first()
-                article.article_status = submit
-                article.save()
+            form.save()
 
-            ob = form.save(commit=False)
-            ob.article_status = Article.objects.get(pk=1)
-            ob.save()
+            if article.article_status.id == 6:
+                article.article_status = ArticleStatus.objects.get(pk=1)
+                article.save()
+                Notification.objects.create(
+                    article=article,
+                    from_user=article.author,
+                    to_user=editor.user,
+                    message=f"({editor.user.email})Assalomu aleykum. Yangi maqolamni yubordim!",
+                    notification_status=NotificationStatus.objects.get(id=1),
+                    is_update_article=True,
+                )
+
+            if article.article_status.id == 8:
+                article.article_status = ArticleStatus.objects.get(pk=1)
+                article.save()
+                Notification.objects.create(
+                    article=article,
+                    from_user=article.author,
+                    to_user=editor.user,
+                    message=f"({editor.user.email})Assalomu aleykum. Maqolamni to'g'irlab qayta yubordim!",
+                    notification_status=NotificationStatus.objects.get(id=1),
+                    is_update_article=True,
+                )
+
             return redirect('dashboard')
 
         else:
@@ -398,25 +422,25 @@ def edit_magazine(request, pk):
     return render(request, "article_app/crud/edit_magazine.html", context=context)
 
 
-@login_required(login_url='login')
-# @allowed_users(menu_url='get_magazines')
-def get_magazines(request):
-    search = request.GET.get('search')
-    magazines = Journal.objects.all()
-    paginator = Paginator(magazines, 10)
-    page_num = request.GET.get('page')
-    page = paginator.get_page(page_num)
-    p_n = paginator.count
-    page_count = page.paginator.page_range
-
-    context = {
-        'magazines': magazines,
-        'page_count': page_count,
-        'page': page,
-        'p_n': p_n,
-        'search': search,
-    }
-    return render(request, "article_app/magazines.html", context=context)
+# @login_required(login_url='login')
+# # @allowed_users(menu_url='get_magazines')
+# def get_magazines(request):
+#     search = request.GET.get('search')
+#     magazines = Journal.objects.all()
+#     paginator = Paginator(magazines, 10)
+#     page_num = request.GET.get('page')
+#     page = paginator.get_page(page_num)
+#     p_n = paginator.count
+#     page_count = page.paginator.page_range
+#
+#     context = {
+#         'magazines': magazines,
+#         'page_count': page_count,
+#         'page': page,
+#         'p_n': p_n,
+#         'search': search,
+#     }
+#     return render(request, "article_app/magazines.html", context=context)
 
 
 def about_journal(request):
@@ -433,17 +457,17 @@ def talabnoma(request):
     })
 
 
-def magazine_detail(request, pk):
-    magazine = get_object_or_404(Journal, pk=pk)
-    context = {
-        'magazine': magazine
-    }
-    return render(request, "article_app/magazine_detail.html", context=context)
+# def magazine_detail(request, pk):
+#     magazine = get_object_or_404(Journal, pk=pk)
+#     context = {
+#         'magazine': magazine
+#     }
+#     return render(request, "article_app/magazine_detail.html", context=context)
 
 
-def all_magazine_son(request):
-    magazines = Journal.objects.all()
-    context = {
-        'magazines': magazines
-    }
-    return render(request, "article_app/all_magazine_son.html", context=context)
+# def all_magazine_son(request):
+#     magazines = Journal.objects.all()
+#     context = {
+#         'magazines': magazines
+#     }
+#     return render(request, "article_app/all_magazine_son.html", context=context)

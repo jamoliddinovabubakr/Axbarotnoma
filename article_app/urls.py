@@ -7,7 +7,7 @@ urlpatterns = [
     path('', main_page, name='main_page'),
     path('about_journal/', about_journal, name='about_journal'),
     path('talabnoma/', talabnoma, name='talabnoma'),
-    path('all_magazines/', all_magazine_son, name='all_magazine_son'),
+    # path('all_magazines/', all_magazine_son, name='all_magazine_son'),
     path('contact/', TemplateView.as_view(template_name="article_app/contact.html"), name='contact'),
     path('aboutdtm/', TemplateView.as_view(template_name="article_app/blank_page/about_dtm.html"), name='aboutdtm'),
     path('editor_board/', TemplateView.as_view(template_name="article_app/blank_page/editor_board.html"),
@@ -28,10 +28,10 @@ urlpatterns = [
 
     path('send_message/<int:pk>/<int:user_id>', send_message, name='send_message'),
 
-    path('magazines/', get_magazines, name='get_magazines'),
-    path('magazine/create', create_magazine, name='create_magazine'),
-    path('magazine/view/<int:pk>/', magazine_detail, name='view_magazine'),
-    path('magazine/edit/<int:pk>', edit_magazine, name='edit_magazine'),
+    # path('magazines/', get_magazines, name='get_magazines'),
+    # path('magazine/create', create_magazine, name='create_magazine'),
+    # path('magazine/view/<int:pk>/', magazine_detail, name='view_magazine'),
+    # path('magazine/edit/<int:pk>', edit_magazine, name='edit_magazine'),
 
     # path('category/create/', create_category, name='create_category'),
     # path('category/edit/<int:pk>/', edit_category, name='edit_category'),

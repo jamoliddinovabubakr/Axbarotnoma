@@ -103,9 +103,10 @@
                                         <tbody>
                                         <tr>
                                             <td class="text-nowrap">
-                                                <input type="text" value="{{ article_review.id }}" class="form-control" name="review_article_id" id="review_article_id" hidden/>
+                                                <label for="review_article_id"></label><input type="text" value="{{ article_review.id }}" class="form-control" name="review_article_id" id="review_article_id" hidden/>
+                                                <label for="notif_id"></label><input type="text" value="{{ notifification.id }}" class="form-control" name="notif_id" id="notif_id" hidden/>
                                                 <label for="exampleFormControlTextarea1" class="form-label"><b>Taqriz</b></label>
-                                                <textarea class="form-control" name="comment" id="id_comment" rows="3" placeholder="Enter Result"></textarea>
+                                                <label for="id_comment"></label><textarea class="form-control" name="comment" id="id_comment" rows="3" placeholder="Enter Result"></textarea>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -132,9 +133,9 @@
         $('#id_comment').keyup(function(e){
             e.preventDefault();
             let val = $(this).val();
-            let is_check = {{ article_review.result }};
+            let is_checked = {{ article_review.result }};
 
-            if(val.length > 0 && is_check === 0 ){
+            if(val.length > 0 && is_checked === 0 ){
                     $('#reject_reviewer_btn').prop("disabled", false);
                     $('#resubmit_reviewer_btn').prop("disabled", false);
                     $('#confirm_reviewer_btn').prop("disabled", false);

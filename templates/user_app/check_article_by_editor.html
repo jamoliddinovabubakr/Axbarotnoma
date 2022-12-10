@@ -191,7 +191,8 @@
                                     class="btn btn-sm btn-danger forshadow resultBtn"
                                     id="rejectedBtn"
                                     {% if article.article_status.id != 5 %} disabled {% endif %}
-                                    {% if not is_ready_rejected %} disabled {% endif %}>
+                                    {% if not is_ready_rejected %} disabled {% endif %}
+                            >
                                 RAD ETISH
                             </button>
                             <br>
@@ -215,7 +216,8 @@
                                     class="btn btn-sm btn-info forshadow resultBtn"
                                     id="rejectedExtraReviewerBtn"
                                     {% if article.article_status.id != 5 %} disabled {% endif %}
-                                    {% if not is_ready_resubmit_extra_reviewer %} disabled {% endif %}>
+                                    {% if not is_ready_resubmit_extra_reviewer %} disabled {% endif %}
+                            >
                                 BOSHQA TAQRIZCHIGA MAQOLANI YUBORISH
                             </button>
                         </form>
@@ -462,7 +464,6 @@
                         if (response.is_valid) {
                             $('#send_btn_to_reviewer').prop("disabled", true);
                             $('#random_send_reviewer_btn').prop("disabled", true);
-                            alert(response.select_random_reviewers);
                             swal({
                                 title: response.message,
                                 timer: 1500,

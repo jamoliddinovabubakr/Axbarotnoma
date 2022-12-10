@@ -420,8 +420,9 @@ def editor_check_article(request, pk):
         return render(request, 'user_app/not_access.html')
 
     notifification = get_object_or_404(Notification, pk=pk)
-    notifification.notification_status = NotificationStatus.objects.get(id=2)
-    notifification.save()
+    if notifification.notification_status.id == 1:
+        notifification.notification_status = NotificationStatus.objects.get(id=2)
+        notifification.save()
     article = Article.objects.get(pk=notifification.article.id)
 
     file = ArticleFile.objects.filter(article=article).filter(file_status=1).last()
@@ -432,8 +433,14 @@ def editor_check_article(request, pk):
     is_ready_resubmit: bool = False
     is_ready_resubmit_extra_reviewer: bool = False
 
-    result_sum = 0
-    m = []
+    results_list = []
+    confirm = {1}
+    reject = {3}
+    resubmit1 = {2}
+    resubmit2 = {1, 2}
+    resubmit_extra1 = {1, 3}
+    resubmit_extra2 = {2, 3}
+    resubmit_extra3 = {1, 2, 3}
 
     for item in article_reviews:
         if item.is_extra:
@@ -444,42 +451,43 @@ def editor_check_article(request, pk):
             elif item.result == 2:
                 is_ready_resubmit = True
         else:
-            result_sum += item.result
-            m.append(item.result)
+            results_list.append(item.result)
 
-    if result_sum == 2 and 0 not in m and 2 not in m and 3 not in m:
-        is_ready_publish = True
+    if set(results_list) == confirm:
+        if article_reviews.count() > len(results_list):
+            is_ready_publish = False
+        if article_reviews.count() == len(results_list):
+            is_ready_publish = True
+
         if article.article_status.id == 4:
             article.article_status = get_object_or_404(ArticleStatus, pk=5)
             article.save()
 
-    if result_sum == 6 and 0 not in m and 2 not in m and 1 not in m:
-        is_ready_rejected = True
+    if set(results_list) == reject:
+        if article_reviews.count() > len(results_list):
+            is_ready_rejected = False
+        if article_reviews.count() == len(results_list):
+            is_ready_rejected = True
+
         if article.article_status.id == 4:
             article.article_status = get_object_or_404(ArticleStatus, pk=5)
             article.save()
 
-    if result_sum == 3 and 0 not in m and 3 not in m:
-        is_ready_resubmit = True
-        if article.article_status.id == 4:
-            article.article_status = get_object_or_404(ArticleStatus, pk=5)
-            article.save()
-
-    if result_sum == 4:
-        if 0 not in m and 1 not in m and 3 not in m:
+    if set(results_list) == resubmit1 or set(results_list) == resubmit2:
+        if article_reviews.count() > len(results_list):
+            is_ready_resubmit = False
+        if article_reviews.count() == len(results_list):
             is_ready_resubmit = True
-            if article.article_status.id == 4:
-                article.article_status = get_object_or_404(ArticleStatus, pk=5)
-                article.save()
 
-        if 0 not in m and 2 not in m:
+        if article.article_status.id == 4:
+            article.article_status = get_object_or_404(ArticleStatus, pk=5)
+            article.save()
+
+    if set(results_list) == resubmit_extra1 or set(results_list) == resubmit_extra2 or set(results_list) == resubmit_extra3:
+        if article_reviews.count() > len(results_list):
+            is_ready_resubmit_extra_reviewer = False
+        if article_reviews.count() == len(results_list):
             is_ready_resubmit_extra_reviewer = True
-            if article.article_status.id == 4:
-                article.article_status = get_object_or_404(ArticleStatus, pk=5)
-                article.save()
-
-    if result_sum == 5 and 0 not in m and 1 not in m:
-        is_ready_resubmit_extra_reviewer = True
         if article.article_status.id == 4:
             article.article_status = get_object_or_404(ArticleStatus, pk=5)
             article.save()
@@ -547,6 +555,7 @@ def load_reviewers(request):
 def reviewer_confirmed(request):
     if request.method == 'POST' and is_ajax(request):
         review_id = request.POST.get('review_article_id')
+        notif_id = request.POST.get('notif_id')
         comment = request.POST.get('comment')
 
         review = ReviewerArticle.objects.get(pk=int(review_id))
@@ -554,6 +563,10 @@ def reviewer_confirmed(request):
         review.result = 1
         review.status = StatusReview.objects.get(pk=3)
         review.save()
+
+        notif = get_object_or_404(Notification, pk=int(notif_id))
+        notif.notification_status = get_object_or_404(NotificationStatus, pk=3)
+        notif.save()
 
         data = {
             "message": "Success Article Confirmed!",
@@ -567,6 +580,7 @@ def reviewer_confirmed(request):
 def reviewer_resubmit(request):
     if request.method == 'POST' and is_ajax(request):
         review_id = request.POST.get('review_article_id')
+        notif_id = request.POST.get('notif_id')
         comment = request.POST.get('comment')
 
         review = ReviewerArticle.objects.get(pk=int(review_id))
@@ -574,6 +588,10 @@ def reviewer_resubmit(request):
         review.result = 2
         review.status = StatusReview.objects.get(pk=5)
         review.save()
+
+        notif = get_object_or_404(Notification, pk=int(notif_id))
+        notif.notification_status = get_object_or_404(NotificationStatus, pk=3)
+        notif.save()
 
         article = get_object_or_404(Article, pk=review.article.id)
 
@@ -597,6 +615,7 @@ def reviewer_resubmit(request):
 def reviewer_rejected(request):
     if request.method == 'POST' and is_ajax(request):
         review_id = request.POST.get('review_article_id')
+        notif_id = request.POST.get('notif_id')
         comment = request.POST.get('comment')
 
         review = ReviewerArticle.objects.get(pk=int(review_id))
@@ -606,6 +625,10 @@ def reviewer_rejected(request):
         review.save()
 
         article = get_object_or_404(Article, pk=review.article.id)
+
+        notif = get_object_or_404(Notification, pk=int(notif_id))
+        notif.notification_status = get_object_or_404(NotificationStatus, pk=3)
+        notif.save()
 
         Notification.objects.create(
             article=article,
@@ -648,7 +671,7 @@ def editor_resubmit_to_reviewer(request):
         )
 
         data = {
-            "message": "Success Rejected Cinfirmed!",
+            "message": "Success Resubmit To Reviewer!",
         }
         return JsonResponse(data=data)
     else:
@@ -666,11 +689,16 @@ def approve_publish(request):
         token = request.POST['csrfmiddlewaretoken']
 
         article = get_object_or_404(Article, pk=int(article_id))
+        notif = get_object_or_404(Notification, pk=int(notif_id))
 
         if btn_number == 0:
             article.article_status = ArticleStatus.objects.get(pk=2)
             article.is_publish = True
             article.save()
+
+            if notif.notification_status.id == 2:
+                notif.notification_status = NotificationStatus.objects.get(id=3)
+                notif.save()
 
             data = {
                 "message": "Maqola omadli tasdiqlandi!",
@@ -678,6 +706,10 @@ def approve_publish(request):
         elif btn_number == 1:
             article.article_status = ArticleStatus.objects.get(pk=3)
             article.save()
+
+            if notif.notification_status.id == 2:
+                notif.notification_status = NotificationStatus.objects.get(id=3)
+                notif.save()
 
             data = {
                 "message": "Maqola Rad Etildi!",
@@ -687,6 +719,10 @@ def approve_publish(request):
             article.article_status = get_object_or_404(ArticleStatus, pk=8)
             article.is_resubmit = True
             article.save()
+
+            if notif.notification_status.id == 2:
+                notif.notification_status = NotificationStatus.objects.get(id=3)
+                notif.save()
 
             Notification.objects.create(
                 article=article,
@@ -717,10 +753,10 @@ def approve_publish(request):
                 for reviewer in reviewers:
                     results = ReviewerArticle.objects.filter(article=article).filter(reviewer=reviewer)
                     if results.count() == 0:
-                        l = []
+                        sections = []
                         for it in reviewer.section.all():
-                            l.append(it.id)
-                        if article_section.id in l:
+                            sections.append(it.id)
+                        if article_section.id in sections:
                             reviewers_id.append(reviewer.id)
                     else:
                         continue
@@ -763,7 +799,6 @@ def approve_publish(request):
                     is_extra=True,
                 )
 
-            article.article_status = get_object_or_404(ArticleStatus, pk=4)
             data = {
                 "is_valid": True,
                 "select_random_reviewers": select_random_reviewer,
@@ -778,7 +813,7 @@ def approve_publish(request):
 
 
 @login_required(login_url='login')
-def sending_reviewer(request):  # Tanlangan taqrizchilarga maqolani yuborish
+def sending_reviewer(request):
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST':
         selected = request.POST.getlist('reviewers[]')
@@ -856,12 +891,12 @@ def random_sending_reviewer(request):
             reviewers_id = []
             if reviewers.count() > 0:
                 for reviewer in reviewers:
-                    results = ReviewerArticle.objects.filter(article=article).filter(reviewer=reviewer)
-                    if results.count() == 0:
-                        l = []
+                    reviews = ReviewerArticle.objects.filter(article=article).filter(reviewer=reviewer)
+                    if reviews.count() == 0:
+                        sections = []
                         for it in reviewer.section.all():
-                            l.append(it.id)
-                        if article_section.id in l:
+                            sections.append(it.id)
+                        if article_section.id in sections:
                             reviewers_id.append(reviewer.id)
                     else:
                         continue
