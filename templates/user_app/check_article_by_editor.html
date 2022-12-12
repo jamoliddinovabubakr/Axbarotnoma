@@ -45,6 +45,25 @@
                 </div>
 
                 <div class="row d-flex justify-content-center">
+                    <h5>Muallifga taqrizchilarga yuborishdan oldin qayta yuborishi yoki rad etish qismi</h5>
+                    <textarea id="resubmit_or_reject_text" class="form-control"
+                                          placeholder="Muallifga qayta yuborish yoki rad etganiz sababini yozing..."></textarea>
+
+                    <button type="button" style="width:50%; margin-top: 10px; margin-right: 1px;" data-id="{{ article.id }},{{ notif_id }},0"
+                                    data-action="{{ csrf_token }}"
+                            class="btn btn-md btn-gray forshadow resultBtnUnReview">
+                        <i class="fa fa-comment"></i> Muallifga yuborish
+                    </button>
+                    <button type="button" style="width:50%; margin-top: 10px; margin-left: 1px;" data-id="{{ article.id }},{{ notif_id }},1"
+                                    data-action="{{ csrf_token }}"
+                            class="btn btn-md btn-danger forshadow resultBtnUnReview">
+                        <i class="fa fa-comment"></i> Maqola jurnalga to'g'ri kelmaydi
+                    </button>
+
+                </div>
+                <hr>
+                <br>
+                <div class="row d-flex justify-content-center">
                     <button type="button" data-id="{{ article.id }}" id="view-article-messages"
                             class="btn btn-md btn-info forshadow">
                         <i class="fa fa-comment"></i> LOAD COMMENTS
@@ -210,7 +229,7 @@
                                 <textarea id="resubmit_text" class="form-control"
                                           placeholder="Muallifga qayta yuborish sababini yozing..."></textarea>
                             {% endif %}
-                        <br>
+                            <br>
                             <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},3"
                                     data-action="{{ csrf_token }}"
                                     class="btn btn-sm btn-info forshadow resultBtn"
@@ -440,6 +459,42 @@
                     }
                 });
             }
+
+        });
+
+        $('body').on('click', '.resultBtnUnReview', function (e) {
+            e.preventDefault();
+            let data = $(this).data('id');
+            let article_id = parseInt(data.split(',')[0]);
+            let notif_id = parseInt(data.split(',')[1]);
+            let btn_number = parseInt(data.split(',')[2]);
+            let token = $(this).data('action');
+            let text = $('#resubmit_or_reject_text').val();
+
+            if (text.length > 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/profile/approve_publish/",
+                        data: {
+                            article_id: article_id,
+                            notif_id: notif_id,
+                            text: text,
+                            btn_number: btn_number,
+                            csrfmiddlewaretoken: token,
+                        },
+                        success: function (response) {
+                            $('.resultBtnUnReview').prop("disabled", true);
+
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+
+                } else {
+                    alert("Izohni kiriting!");
+                }
 
         });
 
