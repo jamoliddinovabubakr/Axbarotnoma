@@ -2,150 +2,166 @@
 {% load i18n %}
 {% load static %}
 {% block title %}
-Dashboard
+    Dashboard
 {% endblock %}
 {% block content %}
-<div id="content" class="content">
-    <h3 class="page-header">{% trans "Submissions" %}</h3>
-    <br>
-    <div class="row">
-        <div class="col-md-10">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a href="#myqueue" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
-                        <span class="d-sm-none">Tab 1</span>
-                        <span class="d-sm-block d-none">My Queue</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#archives" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
-                        <span class="d-sm-none">Tab 2</span>
-                        <span class="d-sm-block d-none">Archives</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade active show" id="myqueue">
-                    <div class="row">
-                        <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5></div>
-                        <div class="col-md-6">
-                            <button type="button" data-id="create_article"  style="float: right"
-                                    class="btn btn-success btn-sm create_article_btn"><i class="fa fa-plus mr-1"></i>New Submission</button>
+    <div id="content" class="content">
+        <h3 class="page-header">{% trans "Submissions" %}</h3>
+        <br>
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a href="#myqueue" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
+                            <span class="d-sm-none">Tab 1</span>
+                            <span class="d-sm-block d-none">My Queue</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#archives" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
+                            <span class="d-sm-none">Tab 2</span>
+                            <span class="d-sm-block d-none">Archives</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="myqueue">
+                        <div class="row">
+                            <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5></div>
+                            <div class="col-md-6">
+                                <button type="button" data-id="create_article" style="float: right"
+                                        class="btn btn-success btn-sm create_article_btn"><i
+                                        class="fa fa-plus mr-1"></i>New Submission
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                {% if myqueues.count > 0 %}
+                                    {% for article in myqueues %}
+                                        <tr>
+                                            <th scope="row"><b>{{ article.id }}</b></th>
+                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title|slice:100 }}
+                                            </td>
+                                            <td>
+                                                {% if article.article_status_id == 1 or article.article_status_id == 4 or article.article_status_id == 5 %}
+                                                    <button class="btn btn-outline-warning btn-xs"
+                                                            style="border-radius: 20px; float: right"><i
+                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                    </button>
+                                                {% elif article.article_status_id == 6 or article.article_status_id == 7 or article.article_status_id == 8 %}
+                                                    <button class="btn btn-outline-danger btn-xs"
+                                                            style="border-radius: 20px; float: right"><i
+                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                    </button>
+                                                {% elif article.article_status_id == 10 %}
+                                                    <button class="btn btn-outline-info btn-xs"
+                                                            style="border-radius: 20px; float: right"><i
+                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-success btn-xs"
+                                                        style="border-radius: 10px; float: right"><i
+                                                        class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
+                                                </button>
+                                            </td>
+                                            <td><span class="badge badge-muted">{{ article.article_type.name }}</span>
+                                            </td>
+
+                                            <td></td>
+                                            <td>
+                                                <button onclick="OnClickViewArticle({{ article.id }})"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="float: right"><i
+                                                        class="fa fa-eye mr-1"></i>View
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button data-id="{{ article.id }}" type="button" id="view-article-messages-by-author_{{ article.id }}"
+                                                        class="btn btn-warning btn-sm view_message_btn"
+                                                        style="float: left"><i class="fa fa-comment"></i> Comment
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center">
+                                        <td colspan="4"><h3>NO DATA</h3></td>
+                                    </tr>
+                                {% endif %}
+                            </table>
                         </div>
                     </div>
-                    <br>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            {% if myqueues.count > 0 %}
-                            {% for article in myqueues %}
-                            <tr>
-                                <td>{{ article.id }}</td>
-                                <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
-                                </td>
-                                <td>
-                                    {% if article.article_status_id == 6 %}
-                                    <button class="btn btn-outline-danger btn-sm"
-                                            style="border-radius: 20px; float: right"><i
-                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                    </button>
-                                        {% elif article.article_status_id == 8 %}
-                                        <button class="btn btn-outline-danger btn-sm"
-                                            style="border-radius: 20px; float: right"><i
-                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                    </button>
-                                    {% else %}
-                                    <button class="btn btn-outline-warning btn-sm"
-                                            style="border-radius: 20px; float: right"><i
-                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
-                                    </button>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <button onclick="OnClickViewArticle({{ article.id }})"
-                                            class="btn btn-primary btn-sm"
-                                            style="float: right"><i
-                                            class="fa fa-eye mr-1"></i>View
-                                    </button>
-                                </td>
-                                <td>
-                                    <button data-id="{{article.id}}" type="button"
-                                            class="btn btn-warning btn-sm view_message_btn"
-                                            style="float: left"><i class="fa fa-comment"></i> Comment
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% else %}
-                            <tr class="text-center">
-                                <td colspan="4"><h3>NO DATA</h3></td>
-                            </tr>
-                            {% endif %}
-                        </table>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="archives">
-                    <div class="row">
-                        <div class="col-md-6"><h5 class="m-t-10"> Archived Submissions</h5>
+                    <div class="tab-pane fade" id="archives">
+                        <div class="row">
+                            <div class="col-md-6"><h5 class="m-t-10"> Archived Submissions</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" data-id="create_article" style="float: right"
+                                        class="btn btn-success btn-sm create_article_btn"><i
+                                        class="fa fa-plus mr-1"></i>New Submission
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <a href="{% url 'create_article' %}" data-toggle="modal" style="float: right"
-                               class="addUser btn btn-success btn-sm"><i class="fa fa-plus mr-1"></i>New Submission</a>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                {% if myarchives.count > 0 %}
+                                    {% for article in myarchives %}
+                                        <tr>
+                                            <th scope="row"><b>{{ article.id }}</b></th>
+                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title|slice:100 }}
+                                            </td>
+                                            <td>
+                                                {% if article.article_status_id == 3 or article.article_status_id == 9 %}
+                                                    <button class="btn btn-danger btn-xs"
+                                                            style="border-radius: 20px; float: right"><i
+                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                    </button>
+                                                {% endif %}
+                                                {% if article.article_status_id == 2 %}
+                                                    <button class="btn btn-success btn-xs"
+                                                            style="border-radius: 20px; float: right"><i
+                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                            <td><span class="badge badge-muted">{{ article.article_type.name }}</span>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm" style="float: right"
+                                                        onclick="OnClickViewArticle({{ article.id }})"><i
+                                                        class="fa fa-eye mr-1"></i>View
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button data-id="{{ article.id }}" type="button"
+                                                        class="btn btn-warning btn-sm view_message_btn"
+                                                        style="float: left"><i class="fa fa-comment"></i> Comments
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center">
+                                        <td colspan="4"><h3>NO DATA</h3></td>
+                                    </tr>
+                                {% endif %}
+                            </table>
                         </div>
-                    </div>
-                    <br>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            {% if myarchives.count > 0 %}
-                            {% for article in myarchives %}
-                            <tr>
-                                <td>{{ article.id }}</td>
-                                <td><b>{{ article.author.full_name }}</b><br>{{ article.title }}
-                                </td>
-                                <td>
-                                    {% if article.article_status_id == 2 or article.article_status_id == 1 %}
-                                    <button class="btn btn-success btn-sm"
-                                            style="margin: 10px; border-radius: 20px; float: right"><i
-                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                    </button>
-                                    {% endif %}
-                                    {% if article.article_status_id == 3 %}
-                                    <button class="btn btn-danger btn-sm"
-                                            style="margin: 10px; border-radius: 20px; float: right"><i
-                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                    </button>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm"
-                                            onclick="OnClickViewArticle({{ article.id }})"
-                                            style="margin: 10px; float: right"><i
-                                            class="fa fa-eye mr-1"></i>View
-                                    </button>
-                                </td>
-                                <td>
-                                    <button data-id="{{article.id}}" type="button"
-                                            class="btn btn-warning btn-sm view_message_btn"
-                                            style="float: left"><i class="fa fa-comment"></i> Comments
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% else %}
-                            <tr class="text-center">
-                                <td colspan="4"><h3>NO DATA</h3></td>
-                            </tr>
-                            {% endif %}
-                        </table>
                     </div>
                 </div>
             </div>
+            <div class="col-md-2"></div>
         </div>
-        <div class="col-md-2"></div>
-    </div>
-    <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
-        <div class="col-md-10 forshadow" style="padding: 1%; background-color: #fff;">
-            <table class="table table-responsive">
-                <thead>
+        <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
+            <div class="col-md-10 forshadow" style="padding: 1%; background-color: #fff;">
+                <table class="table table-responsive">
+                    <thead>
                     <tr>
                         <th width="1%"><b>ID</b></th>
                         <th><b>{% trans "File" %}</b></th>
@@ -154,243 +170,58 @@ Dashboard
                         <th width="20%"><b>{% trans "Action" %}</b></th>
                     </tr>
                     </thead>
-                <tbody id="articleDetail">
+                    <tbody id="articleDetail">
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2"></div>
         </div>
-        <div class="col-md-2"></div>
-    </div>
-    <div class="row">
+        <div class="row">
             <div class="col-md-10">
                 <div class="col-md-12 col-md-6" style="display: none;" id="MessageBoxAuthor">
                     <!-- begin widget-chat -->
                     <div class="m-b-10 m-t-10 f-s-12">
                         <h5 class="text-inverse">Comment</h5>
                     </div>
-                
+
                     <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
-                
+
                         <!-- begin widget-chat-header -->
                         <div class="widget-chat-header">
                             <div class="widget-chat-header-icon">
                                 <i class="fa fa-file width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
-                                           style="line-height: 30px"></i><b>Title</b>
+                                   style="line-height: 30px"></i><b>Title</b>
                             </div>
                             <div class="widget-chat-header-content">
                                 <h4 class="widget-chat-header-title" id="article_title">Ilmiy Markaz</h4>
                             </div>
                         </div>
                         <!-- end widget-chat-header -->
-                
+
                         <!-- begin widget-chat-body -->
                         <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="user_chat_body">
-                
-                
+
+
                         </div>
                         <!-- end widget-chat-body -->
                     </div>
                 </div>
             </div>
-        <div class="col-md-2"></div>
+            <div class="col-md-2"></div>
+        </div>
+
     </div>
-
-</div>
-<div id="write_message_div_form"></div>
-<div id="create_article_div"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
-    $('body').on('click', '.create_article_btn', function (e) {
-        e.preventDefault();
-
-        let id = $(this).data('id');
-
-        $.ajax({
-            type: 'GET',
-            url: "/article/create/",
-            success: function (response) {
-                $('#create_article_div').html(response);
-                $('#create_article_modal').modal('show');
-            },
-            error: function (error) {
-                console.log("Xatolik");
-                console.log(error);
-            }
-        });
-    });
-
-    $('body').on('click', '.authorWrite-message-btn', function (e) {
-        e.preventDefault();
-
-        const data = $(this).data('id');
-        const array = data.split(',');
-        const id = array[0];
-        const user_id = parseInt(array[1]);
-
-        $.ajax({
-            type: 'GET',
-            url: "/send_message/" + id + "/" + user_id,
-            success: function (response) {
-                $('#write_message_div_form').html(response);
-                $('#send-message-modal').modal('show');
-                
-            },
-            error: function (error) {
-                console.log("Xatolik");
-                console.log(error);
-            }
-        });
-
-        return false;
-    });
-
-        function OnClickViewArticle(id) {
-            $('#MessageBoxAuthor').css("display", "none");
-            $.ajax({
-                type: "GET",
-                url: "/article/view/" + id + "/",
-                success: function (response) {
-                    $("#articleView").css("display", "block");
-
-                    console.log(response);
-                    let fileID = response['file'];
-                    let FileArticle = "File Not Exists";
-                    if (fileID != "None") {
-                        FileArticle = `<a href='${response['file']}' download role='button'>` + `<span>Yuklab olish</span></a>`
-                    }
-                    let temp = "<tr><td>" +
-                        response['id'] + "</td><td>" + FileArticle
-                        + `</td><td>` +
-                        response['title'] + `</td><td>` +
-                        response['created_at'] + `</td><td>` +
-                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-warning edit_article_btn" disabled><i class="fa fa-edit"></i></button>` + " " +
-                        `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-danger remove_article_btn"><i class="fa fa-trash"></i></button>`
-                        + "</td></tr>";
-                    $("#articleDetail").html(temp);
-                    if(response.article_status_id === 6){ $('.edit_article_btn').prop('disabled', false);}
-                    if(response.article_status_id === 7){ $('.edit_article_btn').prop('disabled', false);}
-                    if(response.article_status_id === 8){ $('.edit_article_btn').prop('disabled', false);}
-
-                },
-                error: function (response) {
-                    console.log(response);
-                }
-            });
-        }
-
-        $('body').on('click', '.view_message_btn', function(e){
-            e.preventDefault();
-            let id = $(this).data('id');
-        
-                    $.ajax({
-                        type: "GET",
-                        url: "/profile/article_notification/view/" + id + "/",
-                        success: function (response) {
-                            console.log(response);
-                            if(response.is_visible_comment){
-                                $('#MessageBoxAuthor').css("display", "block");
-
-                                $('#article_title').text(response.article_title);
-                                $('#user_chat_body').empty();
-            
-                               for(let item of response.notifications){
-            
-                                    let time_tz = new Date(item.created_at);
-                                    let time_string = time_tz.toLocaleString();
-            
-                                    if(response.current_user_id === item.from_user__id){
-            
-                                        let temp1 = `<div class="widget-chat-item right">
-                                                        <div class="widget-chat-info">
-                                                            <div class="widget-chat-info-container">
-                                                                <div class="widget-chat-name text-indigo">`
-                                                                    + item.from_user__email + 
-                                                                `</div>
-                                                                <div class="widget-chat-message">` 
-                                                                    + item.message + 
-                                                                `</div>
-                                                                <div class="widget-chat-time">` + `</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>`;
-            
-                                        $('#user_chat_body').append(temp1); 
-                                    }
-            
-                                    if(response.current_user_id === item.to_user__id){
-            
-                                        let temp2 = `<div class="widget-chat-item left">
-                                                        <div class="widget-chat-info">
-                                                            <div class="widget-chat-info-container">
-                                                                <div class="widget-chat-name text-indigo">`
-                                                                    + item.from_user__email + 
-                                                                `</div>
-                                                                <div class="widget-chat-message">`
-                                                                    + item.message + 
-                                                                `</div>
-                                                                <div class="widget-chat-time">` + `</div>
-                                                                <br><div class="widget-chat-ansewer">
-                                                                    <button type="button" data-id="${id},${item.from_user__id}" class="btn btn-white btn-sm authorWrite-message-btn">Ansewer</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>`;
-
-                                        $('#user_chat_body').append(temp2); 
-                                    }
-                                }
-                            
-                            } else {
-                                swal({
-                                    title: response.message,
-                                    timer: 3000,
-                                });
-                            }
-                           
-                        },
-                        error: function (response) {
-                            console.log(response);
-                        }
-                    });
-
-                    return false;
-        });
-
-        $('body').on('click', '.edit_article_btn', function (e) {
-            e.preventDefault();
-    
-            let id = $(this).data('id');
-            let url = "/article/edit/" + id + "/";
-            window.location.href = url;
-        });
-
-        $('body').on('click', '.remove_article_btn', function (e) {
-            e.preventDefault();
-    
-            let id = $(this).data('id');
-    
-            $.ajax({
-                type: 'GET',
-                url: "/article/delete/" + id + "/",
-                success: function (response) {
-                    $('#create_article_div').html(response);
-                    $('#delete_article_modal').modal('show');
-                
-                },
-                error: function (error) {
-                    console.log("Xatolik");
-                    console.log(error);
-                }
-            });
-        });
-        
-
+    <div id="write_message_div_form"></div>
+    <div id="create_article_div"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
         function OnClickSubmissionTab() {
             $('#articleView').css("display", "none");
             $('#MessageBox').css("display", "none");
         }
 
-</script>
-<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
-<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>
+    </script>
+    <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+    <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>
 {% endblock %}

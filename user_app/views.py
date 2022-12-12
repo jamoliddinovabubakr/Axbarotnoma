@@ -12,11 +12,35 @@ from django.contrib.auth.models import Group
 from user_app.models import User, ReviewerArticle, StatusReview
 from . import utils
 import numpy as np
+from django.template.loader import render_to_string
 
 
 def logout_user(request):
     logout(request)
     return redirect('main_page')
+
+
+@login_required(login_url='login')
+def load_menus(request):
+    menus = Menu.objects.filter(status=True).order_by('order')
+    data = {
+        "menus": list(menus.values(
+            'id', 'name', 'icon_name', 'url', 'url_name', 'order'
+        ))
+    }
+    return JsonResponse(data=data)
+
+
+@login_required(login_url='login')
+def reviewers_list(request):
+    if request.method == 'GET':
+        reviewers = Reviewer.objects.all().order_by('id')
+        data = {
+            "reviewers": reviewers
+        }
+        return render(request, "user_app/reviewers_list.html", data)
+    else:
+        return HttpResponse("Error")
 
 
 def is_ajax(request):
@@ -104,6 +128,7 @@ def register_page(request):
     return render(request, "user_app/register/register.html", context)
 
 
+@login_required(login_url='login')
 def choose_roles(request):
     user = User.objects.get(pk=request.user.id)
     if request.method == "POST":
@@ -143,6 +168,7 @@ def choose_roles(request):
     return render(request, "user_app/register/add_reviewer_form.html", context=context)
 
 
+@login_required(login_url='login')
 def reviewer_role_list(request):
     submissions = ReviewerEditor.objects.all()
     context = {
@@ -151,6 +177,7 @@ def reviewer_role_list(request):
     return render(request, "user_app/reviewer_list_by_editor.html", context)
 
 
+@login_required(login_url='login')
 def reviewer_role_list_detail(request, pk):
     reviewer = Reviewer.objects.get(pk=pk)
     files = ReviewerFile.objects.filter(reviewer=reviewer)
@@ -236,14 +263,19 @@ def reviewer_role_list_detail(request, pk):
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='profile_page')
 def dashboard(request):
+    return render(request, "user_app/dashboard.html")
+
+
+@login_required(login_url='login')
+# @allowed_users(menu_url='profile_page')
+def user_dashboard(request):
     user = request.user
     myqueues = Article.objects.filter(author=user).filter(
         Q(article_status_id=1) | Q(article_status_id=4) | Q(article_status_id=5) | Q(article_status_id=6) | Q(
-            article_status_id=7) | Q(article_status_id=8)).order_by(
+            article_status_id=7) | Q(article_status_id=8) | Q(article_status_id=10)).order_by(
         '-updated_at')
-    myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3)).order_by(
+    myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3) | Q(article_status_id=9)).order_by(
         '-updated_at')
 
     context = {
@@ -483,7 +515,8 @@ def editor_check_article(request, pk):
             article.article_status = get_object_or_404(ArticleStatus, pk=5)
             article.save()
 
-    if set(results_list) == resubmit_extra1 or set(results_list) == resubmit_extra2 or set(results_list) == resubmit_extra3:
+    if set(results_list) == resubmit_extra1 or set(results_list) == resubmit_extra2 or set(
+            results_list) == resubmit_extra3:
         if article_reviews.count() > len(results_list):
             is_ready_resubmit_extra_reviewer = False
         if article_reviews.count() == len(results_list):
@@ -807,6 +840,68 @@ def approve_publish(request):
 
         else:
             print(-1)
+        return JsonResponse(data=data)
+    else:
+        return HttpResponse("Not Fount Page!")
+
+
+@login_required(login_url='login')
+def editor_submit_result(request):
+    user = get_object_or_404(User, pk=request.user.id)
+    if request.method == 'POST' and is_ajax(request):
+        data = None
+        article_id = request.POST.get('article_id')
+        notif_id = request.POST.get('notif_id')
+        btn_number = int(request.POST.get('btn_number'))
+        text = request.POST.get('text')
+
+        token = request.POST['csrfmiddlewaretoken']
+
+        article = get_object_or_404(Article, pk=int(article_id))
+        notif = get_object_or_404(Notification, pk=int(notif_id))
+
+        if btn_number == 0:
+            article.article_status = ArticleStatus.objects.get(pk=7)
+            article.save()
+
+            if notif.notification_status.id == 2:
+                notif.notification_status = NotificationStatus.objects.get(id=3)
+                notif.save()
+
+            Notification.objects.create(
+                article=article,
+                from_user=user,
+                to_user=article.author,
+                message=f"({article.author.email}).{text}",
+                notification_status=NotificationStatus.objects.get(id=1),
+            )
+
+            data = {
+                "message": "Maqola muallifga to'g'irlash uchun yuborildi!",
+            }
+        elif btn_number == 1:
+            article.article_status = ArticleStatus.objects.get(pk=9)
+            article.save()
+
+            if notif.notification_status.id == 2:
+                notif.notification_status = NotificationStatus.objects.get(id=3)
+                notif.save()
+
+            Notification.objects.create(
+                article=article,
+                from_user=user,
+                to_user=article.author,
+                message=f"({article.author.email}).{text}",
+                notification_status=NotificationStatus.objects.get(id=1),
+            )
+
+            data = {
+                "message": "Maqola Rad Etildi!",
+            }
+        else:
+            data = {
+                "message": "Bunday buyruq yo'q",
+            }
         return JsonResponse(data=data)
     else:
         return HttpResponse("Not Fount Page!")

@@ -29,7 +29,7 @@ class RoleAdmin(ImportExportActionModelAdmin):
 @admin.register(Menu)
 class MenuAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'name', 'status',
-                    'url', 'icon', 'menu_tr', 'get_roles']
+                    'url', 'url_name', 'icon_name', 'order', 'get_roles']
 
 
 @admin.register(User)

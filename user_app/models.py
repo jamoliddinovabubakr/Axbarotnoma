@@ -152,25 +152,18 @@ class ReviewerArticle(models.Model):
 
 class Menu(models.Model):
     name = models.CharField(max_length=100)
-    icon = models.CharField(max_length=255, null=True, blank=True)
+    icon_name = models.CharField(max_length=255, null=True, blank=True)
     url = models.CharField(max_length=255, null=True, blank=True)
-    menu_tr = models.PositiveSmallIntegerField(default=0)
+    url_name = models.CharField(max_length=255, null=True, blank=True)
+    order = models.PositiveSmallIntegerField(default=0)
     status = models.BooleanField(default=True)
     allowed_roles = models.ManyToManyField('user_app.Role', related_name='allowed_role_menus', blank=True)
 
     def get_roles(self):
         return [p.name for p in self.allowed_roles.all()]
 
-        # def save(self, *args, **kwargs):
-        #     menus = self.objects.all()
-        #     if menus.count() > 0:
-        #         self.menu_tr = menus.last().menu_tr + 1
-        #     else:
-        #         self.menu_tr = 1
-        #     super().save(*args, **kwargs)
-
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f"{self.url}")
+        return reverse(f"{self.link}")

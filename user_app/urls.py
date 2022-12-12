@@ -4,12 +4,15 @@ from django.contrib.auth import views as auth_views
 from user_app.views import *
 
 urlpatterns = [
-    path('user_dashboard/', dashboard, name='dashboard'),
+    path('user_dashboard/', user_dashboard, name='dashboard'),
     path('editor_dashboard/', editor_dashboard, name='editor_dashboard'),
     path('reviewer_dashboard/', reviewer_dashboard, name='reviewer_dashboard'),
     path('editor_notifications/', editor_notifications, name='editor_notifications'),
     path('reviewer_notifications/', reviewer_notifications, name='reviewer_notifications'),
+
     path('editor_check_article/<int:pk>/', editor_check_article, name='editor_check_article'),
+    path('editor_submit_result/', editor_submit_result, name='editor_submit_result'),
+
     path('reviewer_check_article/<int:pk>/', reviewer_check_article, name='reviewer_check_article'),
 
     path('article_notification/view/<int:pk>/', author_vs_editor_vs_reviewer, name='comment_author_vs_editor'),
@@ -37,6 +40,8 @@ urlpatterns = [
     # path('change_password', change_password, name='change_password'),
     # path('view/', profile, name='profile'),
     path('edit_profile/', edit_profile, name='edit_profile'),
+    path('load_menus/', load_menus, name='load_menus'),
+    path('reviewers_list/', reviewers_list, name='reviewers_list'),
     #
     # path('admins/', admins, name='admins'),
     # path('users/', users, name='users'),

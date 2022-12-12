@@ -129,7 +129,7 @@ def update_article(request, pk):
                     is_update_article=True,
                 )
 
-            if article.article_status.id == 8:
+            if article.article_status.id == 7 or article.article_status.id == 8:
                 article.article_status = ArticleStatus.objects.get(pk=1)
                 article.save()
                 Notification.objects.create(
