@@ -64,6 +64,7 @@ class Article(models.Model):
     article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
     is_publish = models.BooleanField(default=False)
     is_resubmit = models.BooleanField(default=False)
+    is_publish_journal = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -146,42 +147,3 @@ class Notification(models.Model):
 
     def __str__(self):
         return str(self.id)
-
-
-class Post(models.Model):
-    title = models.CharField(max_length=255, blank=True, null=True)
-    tag = RichTextField(blank=True, null=True)
-    img = models.ImageField(upload_to='blog/')
-    desc = RichTextField(blank=True, null=True)
-    is_publish = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    url = models.SlugField(max_length=200, unique=True)
-
-    def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"slug": self.url})
-
-    def save(self, *args, **kwargs):
-        if not self.url:
-            self.url = slugify(self.title, allow_unicode=True)
-        return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = _("Post")
-        verbose_name_plural = _("Posts")
-
-
-class BlankPage(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    body = RichTextField(blank=True, null=True)
-    is_publish = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = _("BlankPage")
-        verbose_name_plural = _("BlankPages")

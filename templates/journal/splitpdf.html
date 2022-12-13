@@ -1,0 +1,40 @@
+{% extends 'user_app/base.html' %}
+{% block title %}
+    Yaratish journal
+{% endblock %}
+{% block content %}
+    <br>
+    <div id="content" class="content">
+        <div class="panel panel-default forshadow" data-sortable-id="table-basic-7">
+            <div class="panel-body">
+                <form method="post" action="{% url 'split_pdf' %}">
+                    {% csrf_token %}
+                    {% if error %}
+                        <h1>
+                            <center style="color: red">Formani to'liq kiriting</center>
+
+                        </h1>
+                    {% endif %}
+                    {% for i in article_number %}
+                        <h2> {{ i.title }}</h2>
+                        <br>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput" class="form-label">Start page</label>
+                            <input type="number" class="form-control" id="formGroupExampleInput"
+                                   placeholder="Start page"
+                                   name="start_page{{ i.id }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput2" class="form-label">End page</label>
+                            <input type="number" class="form-control" id="formGroupExampleInput2"
+                                   placeholder="end finish" name="end_page{{ i.id }}">
+                        </div>
+                        <hr>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -37,11 +37,20 @@ urlpatterns = [
     path('choosen_reviewer_role_list/', reviewer_role_list, name='choosen_reviewer_role_list'),
     path('choosen_reviewer_role_list/<int:pk>/', reviewer_role_list_detail, name='reviewer_role_list_detail'),
 
-    # path('change_password', change_password, name='change_password'),
-    # path('view/', profile, name='profile'),
+
     path('edit_profile/', edit_profile, name='edit_profile'),
     path('load_menus/', load_menus, name='load_menus'),
     path('reviewers_list/', reviewers_list, name='reviewers_list'),
+
+    path('countries/', countries_list, name='countries'),
+    path('editors/', editors_list, name='editors'),
+    path('regions/', regions_list, name='regions'),
+    path('genders/', genders_list, name='genders'),
+    path('menus/', menus_list, name='menus'),
+    path('roles/', roles_list, name='roles'),
+    path('scientific_degrees/', scientific_degrees_list, name='scientific_degrees'),
+    path('users/', users_list, name='users'),
+
     #
     # path('admins/', admins, name='admins'),
     # path('users/', users, name='users'),
@@ -49,18 +58,19 @@ urlpatterns = [
     # path('users/update/<int:pk>', update_user, name='update_user'),
     # path('users/delete/<int:pk>', delete_user, name='delete_user'),
 
-    
-    # path('password_reset/', password_reset, name='password_reset'),
-    # path('password_reset/done/',
-    #      auth_views.PasswordResetDoneView.as_view(
-    #          template_name='user_app/register/password_reset_done.html'),
-    #      name='password_reset_done'),
-    # path('reset/<uidb64>/<token>/',
-    #      auth_views.PasswordResetConfirmView.as_view(
-    #          template_name="user_app/register/password_reset_confirm.html"),
-    #      name='password_reset_confirm'),
-    # path('reset/done/',
-    #      auth_views.PasswordResetCompleteView.as_view(
-    #          template_name='user_app/register/password_reset_complete.html'),
-    #      name='password_reset_complete'),
+
+    path('change_password/', change_password, name='change_password'),
+    path('password_reset/', password_reset, name='password_reset'),
+    path('password_reset/done/',
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='user_app/register/password_reset_done.html'),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name="user_app/register/password_reset_confirm.html"),
+         name='password_reset_confirm'),
+    path('reset/done/',
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='user_app/register/password_reset_complete.html'),
+         name='password_reset_complete'),
 ]

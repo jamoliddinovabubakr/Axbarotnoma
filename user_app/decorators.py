@@ -51,16 +51,16 @@ def allowed_users(perm=None, menu_url=None):
     return decorator
 
 
-def admin_only(view_func):
-    def wrapper_func(request, *args, **kwargs):
-        group = None
-        if request.user.groups.exists():
-            group = request.user.groups.all()[0].name
-
-        if group == 'USER':
-            return redirect('main_page')
-
-        if group == 'ADMIN':
-            return view_func(request, *args, **kwargs)
-
-    return wrapper_func
+# def admin_only(view_func):
+#     def wrapper_func(request, *args, **kwargs):
+#         group = None
+#         if request.user.groups.exists():
+#             group = request.user.groups.all()[0].name
+#
+#         if group == 'USER':
+#             return redirect('main_page')
+#
+#         if group == 'ADMIN':
+#             return view_func(request, *args, **kwargs)
+#
+#     return wrapper_func

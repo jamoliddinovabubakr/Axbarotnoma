@@ -77,7 +77,7 @@
                     for (let item of response.notifications) {
                         let time_tz = new Date(item.created_at);
                         let time = time_tz.toLocaleString();
-                        let temp = `<a class="dropdown-item media" href='/profile/notification/${item.id}/view'>`
+                        let temp = `<a class="dropdown-item media" href=''>`
                             + `<div class="media-left">`
                             + `<img src="/media/${item.from_user__avatar}" class='media-object' alt='' /><i class="fab fa-facebook-messenger text-blue media-object-icon"></i>`
                             + `</div>`
@@ -93,6 +93,6 @@
                     console.log(response);
                 }
             });
-        }, 5000);
+        }, 3000);
     });
 </script>

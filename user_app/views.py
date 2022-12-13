@@ -1,11 +1,18 @@
+from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
 from article_app.models import *
-from django.contrib.auth import logout, authenticate, login
-from user_app.decorators import unauthenticated_user
+from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
+from user_app.decorators import unauthenticated_user, password_reset_authentification
 from user_app.forms import CreateUserForm, AddReviewerForm
 from user_app.models import *
 from django.db.models.query_utils import Q
 from user_app.forms import UpdateUserForm, ReviewerFileForm
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, BadHeaderError
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Group
@@ -18,6 +25,78 @@ from django.template.loader import render_to_string
 def logout_user(request):
     logout(request)
     return redirect('main_page')
+
+
+@login_required(login_url='login')
+def countries_list(request):
+    objects = Country.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/country.html", context=context)
+
+
+@login_required(login_url='login')
+def editors_list(request):
+    objects = Editor.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/editors.html", context=context)
+
+
+@login_required(login_url='login')
+def regions_list(request):
+    objects = Region.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/region.html", context=context)
+
+
+@login_required(login_url='login')
+def genders_list(request):
+    objects = Gender.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/genders.html", context=context)
+
+
+@login_required(login_url='login')
+def menus_list(request):
+    objects = Menu.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/menus.html", context=context)
+
+
+@login_required(login_url='login')
+def roles_list(request):
+    objects = Role.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/roles.html", context=context)
+
+
+@login_required(login_url='login')
+def scientific_degrees_list(request):
+    objects = ScientificDegree.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/scientific_degrees.html", context=context)
+
+
+@login_required(login_url='login')
+def users_list(request):
+    objects = User.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "user_app/settings/users.html", context=context)
 
 
 @login_required(login_url='login')
@@ -207,64 +286,59 @@ def reviewer_role_list_detail(request, pk):
     return render(request, "user_app/crud/check_role_reviewer_form.html", context)
 
 
-# @login_required(login_url='login')
-# def change_password(request):
-#     if request.method == 'POST':
-#         form = PasswordChangeForm(request.user, request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             update_session_auth_hash(request, user)  # Important!
-#             messages.success(request, 'Parolingiz muvaffaqiyatli o\'zgartirildi!')
-#             r = 1
-#             return render(request, 'user_app/register/change_password.html', {'result': r})
-#         else:
-#             r = -1
-#             messages.error(request, 'Please correct the error below.')
-#     else:
-#         r = 2
-#         form = PasswordChangeForm(request.user)
-#     return render(request, 'user_app/register/change_password.html', {
-#         'form': form,
-#         'result': r,
-#     })
-#
-#
-# @password_reset_authentification
-# def password_reset(request):
-#     if request.method == "POST":
-#         password_reset_form = PasswordResetForm(request.POST)
-#         if password_reset_form.is_valid():
-#             data = password_reset_form.cleaned_data['email']
-#             associated_users = User.objects.filter(Q(email=data))
-#             if associated_users.exists():
-#                 for user in associated_users:
-#                     subject = "Password Reset Requested"
-#                     email_template_name = "user_app/register/password_reset_email.txt"
-#                     c = {
-#                         "email": user.email,
-#                         # 'domain': '127.0.0.1:443',
-#                         # 'site_name': '127.0.0.1:443',
-#                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-#                         "user": user,
-#                         'token': default_token_generator.make_token(user),
-#                         # 'protocol': 'http',
-#                     }
-#                     email = render_to_string(email_template_name, c)
-#                     try:
-#                         send_mail(subject, email, 'admin123@gmail.com', [user.email], fail_silently=False)
-#                     except BadHeaderError:
-#                         return HttpResponse('Invalid header found.')
-#                     return redirect("password_reset_done")
-#     password_reset_form = PasswordResetForm()
-#     return render(request=request, template_name="user_app/register/password_reset.html",
-#                   context={"password_reset_form": password_reset_form})
-#
-#
-
-
 @login_required(login_url='login')
-def dashboard(request):
-    return render(request, "user_app/dashboard.html")
+def change_password(request):
+    if request.method == 'POST' and is_ajax(request):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            data = {
+                "result": "ok",
+            }
+            return JsonResponse(data)
+        else:
+            data = {
+                "result": "bad",
+                "message": "Please correct the error below.",
+            }
+            return JsonResponse(data)
+    else:
+        form = PasswordChangeForm(request.user)
+        return render(request, 'user_app/register/change_password.html', {
+            'form': form,
+        })
+
+
+@password_reset_authentification
+def password_reset(request):
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "user_app/register/password_reset_email.txt"
+                    c = {
+                        "email": user.email,
+                        # 'domain': '127.0.0.1:443',
+                        # 'site_name': '127.0.0.1:443',
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": user,
+                        'token': default_token_generator.make_token(user),
+                        # 'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(subject, email, 'admin123@gmail.com', [user.email], fail_silently=False)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    return redirect("password_reset_done")
+    password_reset_form = PasswordResetForm()
+    return render(request=request, template_name="user_app/register/password_reset.html",
+                  context={"password_reset_form": password_reset_form})
 
 
 @login_required(login_url='login')
@@ -275,7 +349,8 @@ def user_dashboard(request):
         Q(article_status_id=1) | Q(article_status_id=4) | Q(article_status_id=5) | Q(article_status_id=6) | Q(
             article_status_id=7) | Q(article_status_id=8) | Q(article_status_id=10)).order_by(
         '-updated_at')
-    myarchives = Article.objects.filter(author=user).filter(Q(article_status_id=2) | Q(article_status_id=3) | Q(article_status_id=9)).order_by(
+    myarchives = Article.objects.filter(author=user).filter(
+        Q(article_status_id=2) | Q(article_status_id=3) | Q(article_status_id=9)).order_by(
         '-updated_at')
 
     context = {
@@ -525,7 +600,7 @@ def editor_check_article(request, pk):
             article.article_status = get_object_or_404(ArticleStatus, pk=5)
             article.save()
 
-    context = {
+    data = {
         "article": article,
         "article_reviews": article_reviews,
         "article_file": file,
@@ -535,7 +610,9 @@ def editor_check_article(request, pk):
         "is_ready_resubmit": is_ready_resubmit,
         "is_ready_resubmit_extra_reviewer": is_ready_resubmit_extra_reviewer,
     }
-    return render(request, 'user_app/check_article_by_editor.html', context=context)
+    html = render_to_string('user_app/check_article_by_editor.html', data)
+    return HttpResponse(html)
+    # return render(request, 'user_app/check_article_by_editor.html', context=context)
 
 
 @login_required(login_url='login')
@@ -942,7 +1019,11 @@ def sending_reviewer(request):
                         comment="",
                     )
                 else:
-                    continue
+                    data = {
+                        "is_valid": False,
+                        "message": "Bu taqrizchiga oldin yuborilgan!",
+                    }
+                    return JsonResponse(data=data)
 
             article.article_status = get_object_or_404(ArticleStatus, pk=4)
             article.save()

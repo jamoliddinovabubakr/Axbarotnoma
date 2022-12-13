@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from django.views.decorators.csrf import requires_csrf_token
 
+from journal.models import Post
 from user_app.decorators import allowed_users
 from article_app.models import *
 from article_app.models import ExtraAuthor
@@ -28,14 +29,49 @@ def main_page(request):
         'post': post,
     }
     return render(request, "article_app/main.html", context=context)
-
-
-def post_detail(request, slug):
-    post = get_object_or_404(Post, url=slug)
+@login_required(login_url='login')
+def list_sections(request):
+    sections = Section.objects.all()
     context = {
-        'post': post,
+        'objects': sections,
     }
-    return render(request, "article_app/post_detail.html", context=context)
+    return render(request, "article_app/sections.html", context=context)
+
+
+@login_required(login_url='login')
+def article_type_list(request):
+    objects = ArticleType.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "article_app/article_types.html", context=context)
+
+
+@login_required(login_url='login')
+def article_stages_list(request):
+    objects = Stage.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "article_app/article_stages.html", context=context)
+
+
+@login_required(login_url='login')
+def article_status_list(request):
+    objects = ArticleStatus.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "article_app/article_status.html", context=context)
+
+
+@login_required(login_url='login')
+def notification_status_list(request):
+    objects = NotificationStatus.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "article_app/notification_status.html", context=context)
 
 
 @login_required(login_url='login')
@@ -157,6 +193,7 @@ def update_article(request, pk):
         return render(request, "article_app/crud/update_article.html", context=context)
 
 
+@login_required(login_url='login')
 def create_article_file(request, pk):
     article = Article.objects.get(pk=pk)
     if request.method == "POST":
@@ -238,6 +275,7 @@ def delete_article(request, pk):
         return render(request, 'article_app/crud/delete_article.html', {'article': article})
 
 
+@login_required(login_url='login')
 def get_article_authors(request, pk):
     authors = ExtraAuthor.objects.filter(article_id=pk).order_by('id')
     return JsonResponse({"authors": list(authors.values(
@@ -443,18 +481,6 @@ def edit_magazine(request, pk):
 #     return render(request, "article_app/magazines.html", context=context)
 
 
-def about_journal(request):
-    journal_ab = BlankPage.objects.get(id=1)
-    return render(request, "article_app/about_journal.html", {
-        "ob": journal_ab
-    })
-
-
-def talabnoma(request):
-    t = BlankPage.objects.last()
-    return render(request, "article_app/talabnoma.html", {
-        "ob": t,
-    })
 
 
 # def magazine_detail(request, pk):

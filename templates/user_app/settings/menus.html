@@ -1,0 +1,61 @@
+{% extends 'user_app/base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Menus" %}{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+
+        <h2 class="page-header viewArticleFont">
+            {% trans "List of menus" %}
+        </h2>
+
+        <div class="panel-body forshadow" style="background-color: #ffffff; border-radius: 5px; padding: 10px;">
+            <div class="container">
+                <table class="table table-hover table-fixed table-responsive-lg">
+
+                    <thead>
+                    <tr>
+                        <th><strong>Tr</strong></th>
+                        <th><strong>Name</strong></th>
+                        <th><strong>Icon Name</strong></th>
+{#                        <th><strong>Url</strong></th>#}
+                        <th><strong>Url Name</strong></th>
+                        <th><strong>Order</strong></th>
+                        <th><strong>Status</strong></th>
+                        <th><strong>Allowed Roles</strong></th>
+                        <th></th>
+                        <th><strong>Action</strong></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% if objects.count > 0 %}
+                        {% for item in objects %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.icon_name }}</td>
+{#                                <td>{{ item.url }}</td>#}
+                                <td>{{ item.url_name }}</td>
+                                <td>{{ item.order }}</td>
+                                <td>{{ item.status }}</td>
+                                <td>
+                                    {% for role in item.allowed_roles.all %}
+                                        <span class="badge badge-default">{{ role.name }}</span>
+                                    {% endfor %}
+                                </td>
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm">Edit</button>
+                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

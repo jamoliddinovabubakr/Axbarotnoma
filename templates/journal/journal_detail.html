@@ -1,0 +1,33 @@
+{% extends 'article_app/base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    DTM Axborotnoma {% if magazine.article.count > 0 %} {{ magazine.year_magazine }} № {{ magazine.number_magazine }}
+{% endif %}
+{% endblock %}
+{% block content %}
+    <div class="row"
+         style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
+        <div class="container">
+            <br>
+            {% if magazine.article.count > 0 %}
+                <center><h4 class="title" style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif;">DTM
+                    Axborotnoma {{ magazine.journal_year }} № {{ magazine.journal_number }}</h4></center>
+                <br>
+                <i class="fas fa-md fa-fw m-r-10 fa-calendar-alt"></i><span class="text-inverse"
+                                                                            style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">{{ magazine.created_at }}</span>
+                <br><br>
+                <hr>
+                {% for item in magazine.article.all %}
+                    <p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;"><a
+                            href="{% url 'journal_article' item.id %}">{{ forloop.counter }}. {{ item.title }}</a>
+                    </p>
+                {% endfor %}
+            {% else %}
+                {#                <center><h4 class="title" style="color: red;">{% trans Jurnal mavjud emas! %}</h4></center>#}
+            {% endif %}
+            {% include 'article_app/includes/social_buttons.html' %}
+        </div>
+    </div>
+    <br>
+{% endblock content %}

@@ -1,0 +1,90 @@
+{% extends 'user_app/base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    Jurnal ma'lumotlarini o'zgartirish
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <!-- begin breadcrumb -->
+        <ol class="breadcrumb float-xl-right">
+            <li class="breadcrumb-item"><a href="javascript:;">{% trans "Bosh sahifa" %}</a></li>
+            <li class="breadcrumb-item active">{% trans "Jurnal ma'lumotlarini o'zgartirish" %}</li>
+        </ol>
+        <!-- end breadcrumb -->
+        <!-- begin page-header -->
+        <h1 class="page-header">{% trans "Jurnal ma'lumotlarini o'zgartirish" %}</h1>
+        <!-- end page-header -->
+
+        <!-- begin panel -->
+        <div class="panel panel-inverse" data-sortable-id="table-basic-7">
+            <!-- begin panel-heading -->
+            <!-- end panel-heading -->
+            <!-- begin panel-body -->
+            <div class="panel-body">
+                <form data-parsley-validate="true" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "Jurnal yili" %} <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.journal_year }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "Jurnal soni" %} <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.journal_number }}
+                                </div>
+                            </div>
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "Maqolalarni ko'rish:" %}
+                                    <span
+                                            class="text-danger">    *</sp   an></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {% for article in journal.article.all %}
+                                        <li>
+                                            <a href="{% url 'journal_article' article.id %}">{{ article.title }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="form-group row m-b-15">
+                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "Status" %}<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.status }}
+                                </div>
+
+                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "File" %}<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-md-9 col-sm-9">
+                                    {{ form.file_pdf }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" style="float: right;"
+                                class="btn btn-primary btn-block btn-lg">{% trans "Saqlash" %}
+                        </button>
+                        <a style="float: right; margin-right: 1em" href="{% url 'get_journals' %}"
+                           class="btn btn-outline-warning btn-block btn-lg">{% trans "Yopish" %}
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+            <!-- end panel-body -->
+        </div>
+        <!-- end panel -->
+    </div>
+{% endblock %}
+
+<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
+<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

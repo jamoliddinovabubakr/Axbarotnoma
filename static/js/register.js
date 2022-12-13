@@ -3,6 +3,22 @@ function validateEmail(email) {
     return regex.test(email);
 }
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 const formValidate = array => {
 
     let is_validRForm = true;
@@ -25,7 +41,7 @@ const formValidate = array => {
             }
         }
 
-        if (value == "") {
+        if (value == '') {
             $('.' + key).after('<span class="text-danger text-small"> Please enter your ' + message + '</span>');
             is_validRForm = false;
         }
@@ -57,6 +73,8 @@ $('body').on('click', '.registerBtn', function (e) {
 
     let is_valid_registerForm = formValidate(data);
 
+
+
     if (is_valid_registerForm) {
         $.ajax({
             method: "POST",
@@ -67,6 +85,46 @@ $('body').on('click', '.registerBtn', function (e) {
                     $('#registerFormError').html("<span class='text-danger text-center'>" + response.message + "</span>");
                 } else {
                     window.location.reload();
+                }
+            },
+        });
+    }
+});
+
+
+$('body').on('click', '.change_pass_btn', function (e) {
+    e.preventDefault();
+
+    let id_old_password = $('#id_old_password').val().toString().trim();
+    let id_new_password1 = $('#id_new_password1').val().toString().trim();
+    let id_new_password2 = $('#id_new_password2').val().toString().trim();
+    let csrftoken = getCookie('csrftoken');
+
+
+    let data = [{key: 'id_old_password', value: id_old_password, message: "oldPassword"},
+        {key: 'id_new_password1', value: id_new_password1, message: "newPassword1"},
+        {key: 'id_new_password2', value: id_new_password2, message: "newPassword2"},
+        ]
+
+    let is_valid_registerForm = formValidate(data);
+
+    if (is_valid_registerForm) {
+        $.ajax({
+            method: "POST",
+            url: '/profile/change_password/',
+            data: $('#change_password_form').serialize(),
+            success: function (response) {
+                if (response.result === 'ok') {
+                    $('#change_password_form')[0].reset();
+                    $('#change_password_page_info').empty();
+                    $('#change_password_page_info').html(`<div class="alert alert-success forshadow" style="text-align: center">
+                        <strong>Muvafaqqiyat!</strong>Sizni joriy paroliz yangisiga muvafaqqiyatli o'zgartirildi.
+                    </div>`);
+                } else {
+                    $('#change_password_page_info').empty();
+                    $('#change_password_page_info').html(`<div class="alert alert-danger forshadow" style="text-align: center">
+                        <strong>Diqqat!</strong>Siz kiritgan joriy parol xato yoki yangi parol biri ikkinchisiga mos emas.
+                    </div>`);
                 }
             },
         });

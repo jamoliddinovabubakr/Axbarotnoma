@@ -5,15 +5,12 @@ from .views import *
 
 urlpatterns = [
     path('', main_page, name='main_page'),
-    path('about_journal/', about_journal, name='about_journal'),
-    path('talabnoma/', talabnoma, name='talabnoma'),
-    # path('all_magazines/', all_magazine_son, name='all_magazine_son'),
     path('contact/', TemplateView.as_view(template_name="article_app/contact.html"), name='contact'),
     path('aboutdtm/', TemplateView.as_view(template_name="article_app/blank_page/about_dtm.html"), name='aboutdtm'),
     path('editor_board/', TemplateView.as_view(template_name="article_app/blank_page/editor_board.html"),
          name='editor_board'),
 
-    path('post/<slug:slug>/', post_detail, name='post_detail'),
+    # path('post/<slug:slug>/', post_detail, name='post_detail'),
 
     path('article/create/', create_article, name='create_article'),
     path('article/view/<int:pk>/', article_view, name='article_view'),
@@ -28,13 +25,11 @@ urlpatterns = [
 
     path('send_message/<int:pk>/<int:user_id>', send_message, name='send_message'),
 
-    # path('magazines/', get_magazines, name='get_magazines'),
-    # path('magazine/create', create_magazine, name='create_magazine'),
-    # path('magazine/view/<int:pk>/', magazine_detail, name='view_magazine'),
-    # path('magazine/edit/<int:pk>', edit_magazine, name='edit_magazine'),
-
-    # path('category/create/', create_category, name='create_category'),
-    # path('category/edit/<int:pk>/', edit_category, name='edit_category'),
+    path('sections/', list_sections, name='sections'),
+    path('article_types/', article_type_list, name='article_types'),
+    path('article_stages/', article_stages_list, name='article_stages'),
+    path('article_status/', article_status_list, name='article_status'),
+    path('notification_status/', notification_status_list, name='notification_status'),
     path('category/delete/<int:pk>/', delete_category, name='delete_category'),
 
 ]

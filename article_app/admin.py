@@ -49,14 +49,3 @@ class NotificationStatusAdmin(ImportExportActionModelAdmin):
 class NotificationAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'article', 'from_user', 'to_user', 'message', 'notification_status',
                     'created_at']
-
-
-@admin.register(Post)
-class PostAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'title', 'tag', 'desc', 'img', 'is_publish', 'created_at']
-    prepopulated_fields = {'url': ('title',)}
-
-
-@admin.register(BlankPage)
-class BlankPageAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'title', 'body', 'is_publish', 'created_at']

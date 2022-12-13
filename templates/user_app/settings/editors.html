@@ -1,0 +1,57 @@
+{% extends 'user_app/base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Editors" %}{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+
+        <h2 class="page-header viewArticleFont">
+            {% trans "List of Editors" %}
+        </h2>
+
+        <div class="panel-body forshadow" style="background-color: #ffffff; border-radius: 5px; padding: 10px;">
+            <div class="container" style="padding: 15px;">
+                <table class="table table-hover table-fixed table-responsive-lg">
+
+                    <thead>
+                    <tr>
+                        <th><strong>Tr</strong></th>
+                        <th><strong>FIO</strong></th>
+                        <th><strong>Email</strong></th>
+                        <th><strong>Phone</strong></th>
+                        <th><strong>Pasport Ser</strong></th>
+                        <th><strong>Pasport Number</strong></th>
+                        <th><strong>Gender</strong></th>
+                        <th><strong>Region</strong></th>
+                        <th></th>
+                        <th><strong>Action</strong></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% if objects.count > 0 %}
+                        {% for item in objects %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ item.user.full_name }}</td>
+                                <td>{{ item.user.email }}</td>
+                                <td>{{ item.user.phone }}</td>
+                                <td>{{ item.user.pser }}</td>
+                                <td>{{ item.user.pnum }}</td>
+                                <td>{{ item.user.gender.name }}</td>
+                                <td>{{ item.user.region.name }}</td>
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm">Edit</button>
+                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
