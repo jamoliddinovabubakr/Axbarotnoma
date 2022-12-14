@@ -108,5 +108,6 @@ class AddReviewerForm(forms.ModelForm):
                 'class': 'form-control selectpicker',
                 'data-live-search': "true",
                 'data-style': "btn-white",
+                'name': 'scientific_degree',
             }),
         }

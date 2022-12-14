@@ -23,27 +23,64 @@
         </li>
         <li class="navbar-form flex-grow-1"></li>
         <li class="navbar-brand">
-            {% include "lang.html" %}
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            <div class="dropdown">
+                <button class="btn btn-white dropdown-toggle" type="button" id="lang_btn"
+                        data-toggle="dropdown">
+                    {% if LANGUAGE_CODE == 'uz' %}
+                        <span class="flag-icon flag-icon-uz"></span>
+                        O'zbek tili
+                    {% elif LANGUAGE_CODE == 'ru' %}
+                        <span class="flag-icon flag-icon-ru"></span>
+                        Русский
+                    {% elif LANGUAGE_CODE == 'en' %}
+                        <span class="flag-icon flag-icon-gb"></span>
+                        English
+                    {% elif LANGUAGE_CODE == 'tr' %}
+                        <span><img src="{% static 'img/qq.png' %}" alt="" width="22"/></span>
+                        Qoraqalpoq tili
+                    {% endif %}
+                </button>
+                <ul class="dropdown-menu">
+                    {% for language in languages %}
+                        <li id="lang_{{ language.code }}">
+
+                            <a href="{% url 'set-language' language.code %}" class="btn btn-white btn-block">
+                                {% if language.code != 'tr' %}
+                                    <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>
+                                {% else %}
+                                    <span><img src="{% static 'img/qq.png' %}" alt="" width="22"/></span>
+                                {% endif %}
+                                {% if language.code == 'tr' %}
+                                    Qoraqalpoq tili
+                                {% else %}
+                                    {{ language.name_local }}
+                                {% endif %} </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </li>
         <li class="dropdown">
-            
-                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-                    <i class="fa fa-bell"></i>
-                    <span class="notif_count label label-primary"></span>
-                   
-                </a>
-                <div class="dropdown-menu media-list dropdown-menu-right">
-                    <div class="dropdown-header">Notifications (<span class="notif_count"></span>)</div>
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                <i class="fa fa-bell"></i>
+                <span class="notif_count label label-primary"></span>
 
-                    <div id="notif_body" class="widget-chat-body">
+            </a>
+            <div class="dropdown-menu media-list dropdown-menu-right">
+                <div class="dropdown-header">Notifications (<span class="notif_count"></span>)</div>
 
-                    </div>
-                    <div class="dropdown-footer text-center">
-                        <a href="#">{% trans "View more" %}</a>
-                    </div>
+                <div id="notif_body" class="widget-chat-body">
+
                 </div>
-                </li>
-            
+                <div class="dropdown-footer text-center">
+                    <a href="#">{% trans "View more" %}</a>
+                </div>
+            </div>
+        </li>
+
 
         <li class="dropdown navbar-user">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -73,7 +110,7 @@
                 success: function (response) {
                     $('.notif_count').text(response.count_unread_notifications);
                     $("#notif_body").empty();
-                    
+
                     for (let item of response.notifications) {
                         let time_tz = new Date(item.created_at);
                         let time = time_tz.toLocaleString();

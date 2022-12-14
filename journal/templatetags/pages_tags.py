@@ -1,5 +1,5 @@
 from django import template
-from journal.models import Post
+from post.models import Post
 
 register = template.Library()
 

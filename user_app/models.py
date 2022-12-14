@@ -158,6 +158,7 @@ class Menu(models.Model):
     order = models.PositiveSmallIntegerField(default=0)
     status = models.BooleanField(default=True)
     allowed_roles = models.ManyToManyField('user_app.Role', related_name='allowed_role_menus', blank=True)
+    type = models.PositiveSmallIntegerField(default=0)
 
     def get_roles(self):
         return [p.name for p in self.allowed_roles.all()]
@@ -166,4 +167,4 @@ class Menu(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f"{self.link}")
+        return reverse(f'{self.url_name}')

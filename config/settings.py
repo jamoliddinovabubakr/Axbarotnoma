@@ -15,7 +15,7 @@ DEBUG: bool = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
-    # 'modeltranslation',
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'article_app',
     'user_app',
     'journal',
+    'post',
     'import_export',
     'ckeditor',
 ]
@@ -89,10 +90,9 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-LANGUAGE_CODE = 'en'
-# MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
+LANGUAGE_CODE = 'uz'
 
-TIME_ZONE = 'Asia/Tashkent'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -100,25 +100,24 @@ USE_L10N = True
 
 USE_TZ = True
 
-# gettext = lambda s: s
-#
-# LANGUAGES = [
-#     ('uz', gettext('Uzbek')),
-#     ('en', gettext('English')),
-#     ('ru', gettext('Russia')),
-#     # ('kaa', gettext('Karakalpak')),
-# ]
+from django.utils.translation import gettext_lazy as _
 
-# MODELTRANSLATION_LANGUAGES = ('uz', 'en')
-#
-# MODELTRANSLATION_FALLBACK_LANGUAGES = ('uz', 'en')
-#
+LANGUAGES = [
+    ('uz', _('Uzbek')),
+    ('en', _('English')),
+    ('ru', _('Russia')),
+    ('tr', _('Turkish')),
+]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
+MODELTRANSLATION_LANGUAGES = ('uz', 'en', 'ru', 'tr')
+
 # MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'uz'
 
-
-# LOCALE_PATHS = [
-#     os.path.join(BASE_DIR, 'locale'),
-# ]
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = 'login'

@@ -113,19 +113,6 @@ class ExtraAuthor(models.Model):
     def __str__(self):
         return self.fname
 
-
-class Submission(models.Model):
-    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, blank=True, null=True)
-    author = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True, null=True)
-    file = models.ForeignKey('article_app.ArticleFile', related_name="submission_file", blank=True,
-                             on_delete=models.CASCADE, null=True)
-    article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.id)
-
-
 class NotificationStatus(models.Model):
     name = models.CharField(_('Name'), max_length=50, blank=True)
 

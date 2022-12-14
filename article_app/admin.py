@@ -30,11 +30,6 @@ class ArticleFileAdmin(ImportExportActionModelAdmin):
                     'file_size', 'file_type', 'file_status', 'created_at']
 
 
-@admin.register(Submission)
-class SubmissionAdmin(ImportExportActionModelAdmin):
-    list_display = ['id', 'article', 'author', 'article_status', 'created_at']
-
-
 @admin.register(ExtraAuthor)
 class ExtraAuthorAdmin(ImportExportActionModelAdmin):
     list_display = ['id', 'lname', 'fname', 'mname', 'email', 'work']

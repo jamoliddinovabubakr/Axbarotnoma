@@ -2,11 +2,11 @@
 {% load i18n %}
 <div id="header" class="header navbar navbar-default navbar-fixed-top navbar-expand-lg">
     <div class="container">
-        <a href="/">
+        <a href="{% url 'main_page' %}">
             <img src="{% static 'img/version.png' %}" alt="" width="80"/>
         </a>
         <span style="text-transform: uppercase; margin-left: 1em; font-family: Roboto,sans-serif; text-align: center; display: table-cell; vertical-align: middle;">
-                <b>{% trans "Onlayn axborotnoma jurnal" %}</b>
+                <b>Onlayn axborotnoma jurnal</b>
 			</span>
 
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar">
@@ -17,7 +17,7 @@
 
         <div class="collapse navbar-collapse" id="header-navbar">
             <ul class="nav navbar-nav navbar-right d-flex flex-grow-1">
-                <li><a href="/">{% trans "Bosh sahifa" %}</a></li>
+                <li><a href="{% url 'main_page' %}">{% trans "Bosh sahifa" %}</a></li>
                 {#                <li><a href="{% url 'about_journal' %}">{% trans "Jurnal haqida" %}</a></li>#}
                 <li><a href="#">{% trans "Konferensiya" %}</a></li>
                 {#                <li><a href="{% url 'talabnoma' %}">{% trans "Talabnoma" %}</a></li>#}
@@ -40,8 +40,46 @@
                     <li><a href="{% url 'login' %}">{% trans "Kirish" %}</a></li>
                 {% endif %}
 
-                <li style="margin-top: 1.5%">
-                    {% include 'lang.html' %}
+                <li style="margin-top: 1%">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    <div class="dropdown">
+                        <button class="btn btn-white dropdown-toggle" type="button" id="lang_btn"
+                                data-toggle="dropdown">
+                            {% if LANGUAGE_CODE == 'uz' %}
+                                <span class="flag-icon flag-icon-uz"></span>
+                                O'zbek tili
+                            {% elif LANGUAGE_CODE == 'ru' %}
+                                <span class="flag-icon flag-icon-ru"></span>
+                                Русский
+                            {% elif LANGUAGE_CODE == 'en' %}
+                                <span class="flag-icon flag-icon-gb"></span>
+                                English
+                            {% elif LANGUAGE_CODE == 'tr' %}
+                                <span><img src="{% static 'img/qq.png' %}" alt="" width="22"/></span>
+                                Qoraqalpoq tili
+                            {% endif %}
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for language in languages %}
+                                <li id="lang_{{ language.code }}">
+
+                                    <a href="{% url 'set-language' language.code %}" class="btn btn-white btn-block">
+                                        {% if language.code != 'tr' %}
+                                            <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>
+                                        {% else %}
+                                            <span><img src="{% static 'img/qq.png' %}" alt="" width="22"/></span>
+                                        {% endif %}
+                                        {% if language.code == 'tr' %}
+                                            Qoraqalpoq tili
+                                        {% else %}
+                                            {{ language.name_local }}
+                                        {% endif %} </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </div>

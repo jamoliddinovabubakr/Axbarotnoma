@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from django.views.decorators.csrf import requires_csrf_token
 
-from journal.models import Post
+from post.models import Post
 from user_app.decorators import allowed_users
 from article_app.models import *
 from article_app.models import ExtraAuthor
@@ -17,9 +17,35 @@ from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticl
 from django.core.paginator import Paginator
 from user_app.models import User, Editor
 
+from urllib.parse import urlparse
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.urls.base import resolve, reverse
+from django.urls.exceptions import Resolver404
+
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
+def set_language(request, language):
+    global view
+    for lang, _ in settings.LANGUAGES:
+        translation.activate(lang)
+        try:
+            view = resolve(urlparse(request.META.get("HTTP_REFERER")).path)
+        except Resolver404:
+            view = None
+        if view:
+            break
+    if view:
+        translation.activate(language)
+        next_url = reverse(view.url_name, args=view.args, kwargs=view.kwargs)
+        response = HttpResponseRedirect(next_url)
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+    else:
+        response = HttpResponseRedirect("/")
+    return response
 
 
 def main_page(request):
@@ -29,6 +55,8 @@ def main_page(request):
         'post': post,
     }
     return render(request, "article_app/main.html", context=context)
+
+
 @login_required(login_url='login')
 def list_sections(request):
     sections = Section.objects.all()
@@ -422,78 +450,3 @@ def delete_category(request, pk):
         return redirect('get_category')
     else:
         return render(request, 'article_app/crud/delete_category.html', {'category': category})
-
-
-@login_required(login_url='login')
-# @allowed_users(perm='add_magazine')
-def create_magazine(request):
-    # user = request.user
-    # if request.method == "POST":
-    #     form = CreateJournalForm(request.POST)
-    #     if form.is_valid():
-    #         magazine = form.save(commit=False)
-    #         magazine.save()
-    #         return redirect('edit_magazine', pk=magazine.id)
-    # else:
-    context = {
-        # 'form': CreateMagazineForm(),
-        # 'user': user,
-    }
-    return render(request, "article_app/crud/create_magazine.html", context=context)
-
-
-@login_required(login_url='login')
-# @allowed_users(perm='change_magazine')
-def edit_magazine(request, pk):
-    # jurnal = Journal.objects.get(pk=pk)
-    # if request.method == "POST":
-    #     form = UpdateMagazineForm(request.POST, request.FILES, instance=jurnal)
-    #     if form.is_valid():
-    #         form.save()
-    #
-    #         return redirect('get_magazines')
-    # else:
-    context = {
-        # 'form': UpdateMagazineForm(instance=jurnal),
-        # 'jurnal': jurnal,
-    }
-    return render(request, "article_app/crud/edit_magazine.html", context=context)
-
-
-# @login_required(login_url='login')
-# # @allowed_users(menu_url='get_magazines')
-# def get_magazines(request):
-#     search = request.GET.get('search')
-#     magazines = Journal.objects.all()
-#     paginator = Paginator(magazines, 10)
-#     page_num = request.GET.get('page')
-#     page = paginator.get_page(page_num)
-#     p_n = paginator.count
-#     page_count = page.paginator.page_range
-#
-#     context = {
-#         'magazines': magazines,
-#         'page_count': page_count,
-#         'page': page,
-#         'p_n': p_n,
-#         'search': search,
-#     }
-#     return render(request, "article_app/magazines.html", context=context)
-
-
-
-
-# def magazine_detail(request, pk):
-#     magazine = get_object_or_404(Journal, pk=pk)
-#     context = {
-#         'magazine': magazine
-#     }
-#     return render(request, "article_app/magazine_detail.html", context=context)
-
-
-# def all_magazine_son(request):
-#     magazines = Journal.objects.all()
-#     context = {
-#         'magazines': magazines
-#     }
-#     return render(request, "article_app/all_magazine_son.html", context=context)

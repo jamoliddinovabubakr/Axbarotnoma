@@ -5,19 +5,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from article_app.models import Article
 from journal.forms import CreateJournalForm, UpdateJournalForm
-from journal.models import SplitPdf, Journal, BlankPage, Post
-import os
+from journal.models import SplitPdf, Journal
 import PyPDF2
 
-
-def post_detail(request, slug):
-    post = get_object_or_404(Post, url=slug)
-    context = {
-        'post': post,
-    }
-    return render(request, "article_app/post_detail.html", context=context)
+from post.models import BlankPage
 
 
+@login_required(login_url='login')
 def split_pdf(request):
     journal = Journal.objects.last()
     if request.method == "POST":
@@ -101,7 +95,6 @@ def journal_article(request, pk_article):
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='get_magazines')
 def get_journal(request):
     search = request.GET.get('search')
     magazines = Journal.objects.all()
@@ -137,7 +130,6 @@ def journals_number(request):
 
 
 @login_required(login_url='login')
-# @allowed_users(perm='change_magazine')
 def edit_journal(request, pk):
     journal = Journal.objects.get(pk=pk)
     if request.method == "POST":
@@ -159,6 +151,8 @@ def delete_journal(request, delete_journal_id):
         article = Article.objects.get(pk=i.id)
         article.is_publish_journal = False
         article.save()
+        split_pdfs = SplitPdf.objects.get(article=article)
+        split_pdfs.delete()
     journal.delete()
     return HttpResponseRedirect(reverse('get_journals'))
 

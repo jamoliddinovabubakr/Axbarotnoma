@@ -129,6 +129,7 @@ def is_ajax(request):
 @unauthenticated_user
 def login_page(request):
     if request.method == 'POST' and is_ajax(request):
+        print(request.POST)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -210,13 +211,22 @@ def register_page(request):
 @login_required(login_url='login')
 def choose_roles(request):
     user = User.objects.get(pk=request.user.id)
-    if request.method == "POST":
+    if request.method == "POST" and is_ajax(request):
         form = AddReviewerForm(request.POST)
         files = request.FILES.getlist('file')
+        sections = request.POST.getlist('section')
+        scientific_degree = request.POST.getlist('scientific_degree')
         editor = Editor.objects.all().last()
         status = ReviewerEditorStatus.objects.get(pk=1)
+
+        if len(sections) == 0:
+            return JsonResponse({"result": False, "message": "Please.Choose sections!"})
+        if scientific_degree[0] == '':
+            return JsonResponse({"result": False, "message": "Please.Choose scientific degree!"})
+        if len(files) == 0:
+            return JsonResponse({"result": False, "message": "Please.Upload files!"})
+
         if form.is_valid():
-            sections = request.POST.getlist('section')
             reviewer = form.save(commit=False)
             reviewer.save()
 
@@ -1137,140 +1147,6 @@ def random_sending_reviewer(request):
             return JsonResponse(data=data)
 
 
-# @login_required(login_url='login')
-# def handler404(request, exception):
-#     return render(request, 'user_app/error_404.html')
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(menu_url='roles')
-# def get_roles(request):
-#     roles = Role.objects.filter(status=True)
-#     context = {
-#         'roles': roles
-#     }
-#     return render(request, "user_app/settings/roles_page.html", context=context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='add_role')
-# def create_role(request):
-#     if request.method == "POST":
-#         form = CreateRoleForm(request.POST)
-#         if form.is_valid():
-#             role = form.save(commit=False)
-#             role.save()
-#             return redirect('roles')
-#     else:
-#         context = {
-#             'form': CreateRoleForm(),
-#         }
-#         return render(request, 'user_app/crud/add_role.html', context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='change_role')
-# def edit_role(request, pk):
-#     role = get_object_or_404(Role, pk=pk)
-#     if request.method == 'POST':
-#         form = CreateRoleForm(request.POST, instance=role)
-#         form.save()
-#         return redirect('roles')
-#
-#     else:
-#         form = CreateRoleForm(instance=role)
-#         return render(request, 'user_app/crud/edit_role.html', {"role": role, 'form': form})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='delete_role')
-# def delete_role(request, pk):
-#     role = get_object_or_404(Role, pk=pk)
-#     if request.method == "POST":
-#         role.delete()
-#         return redirect('roles')
-#     else:
-#         return render(request, 'user_app/crud/delete_role.html', {'role': role})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(menu_url='states')
-# def get_states(request):
-#     states = State.objects.filter(status=True)
-#     context = {
-#         'states': states
-#     }
-#     return render(request, "user_app/settings/states_page.html", context=context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='add_state')
-# def create_state(request):
-#     if request.method == "POST":
-#         form = CreateStateForm(request.POST)
-#         if form.is_valid():
-#             state = form.save(commit=False)
-#             state.save()
-#             return redirect('states')
-#     else:
-#         context = {
-#             'form': CreateStateForm(),
-#         }
-#         return render(request, 'user_app/crud/add_state.html', context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='change_state')
-# def edit_state(request, pk):
-#     state = get_object_or_404(State, pk=pk)
-#     if request.method == 'POST':
-#         form = CreateStateForm(request.POST, instance=state)
-#         form.save()
-#         return redirect('states')
-#
-#     else:
-#         form = CreateStateForm(instance=state)
-#         return render(request, 'user_app/crud/edit_state.html', {"state": state, 'form': form})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='delete_state')
-# def delete_state(request, pk):
-#     state = get_object_or_404(State, pk=pk)
-#     if request.method == "POST":
-#         state.delete()
-#         return redirect('states')
-#     else:
-#         return render(request, 'user_app/crud/delete_state.html', {'state': state})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(menu_url='admins')
-# def admins(request):
-#     adminlar = User.objects.filter(Q(role__name="MASTER") | Q(role__name="ADMIN"))
-#     context = {
-#         'admins': adminlar
-#     }
-#     return render(request, "user_app/admins_page.html", context=context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(menu_url='users')
-# def users(request):
-#     userlar = User.objects.all()
-#     context = {
-#         'users': userlar
-#     }
-#     return render(request, "user_app/users_page.html", context=context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='view_user')
-# def view_user(request, pk):
-#     user = get_object_or_404(User, pk=pk)
-#     return render(request, 'user_app/crud/view_user.html', {'user': user})
-#
-#
 @login_required(login_url='login')
 def edit_profile(request):
     user = request.user
@@ -1298,6 +1174,8 @@ def change_group(user, new_gr):
         user.groups.clear()
     new_group = Group.objects.get(name=new_gr)
     new_group.user_set.add(user)
+
+
 
 # @login_required(login_url='login')
 # @allowed_users(perm='change_user')
@@ -1344,27 +1222,10 @@ def change_group(user, new_gr):
 #     else:
 #         form = UpdateUserForm(instance=user)
 #         return render(request, 'user_app/crud/edit_user.html', {"user": user, 'form': form})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='delete_user')
-# def delete_user(request, pk):
-#     user = get_object_or_404(User, pk=pk)
-#     if request.method == "POST":
-#         user.delete()
-#         return redirect('users')
-#     else:
-#         return render(request, 'user_app/crud/delete_user.html', {'user': user})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(menu_url='regions')
-# def get_regions(request):
-#     regions = Region.objects.all()
-#     context = {
-#         'regions': regions
-#     }
-#     return render(request, "user_app/settings/region_page.html", context=context)
+
+
+
+
 #
 #
 # @login_required(login_url='login')
@@ -1406,6 +1267,3 @@ def change_group(user, new_gr):
 #         return redirect('regions')
 #     else:
 #         return render(request, 'user_app/crud/delete_region.html', {'region': region})
-
-
-# Glavniy redaktor

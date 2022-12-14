@@ -1,13 +1,20 @@
-from ckeditor.fields import RichTextField
 from django.db import models
-from django.urls import reverse
-from django.utils.text import slugify
-
 from django.utils.translation import gettext_lazy as _
 
 
+def _validate_file_extension(value):
+    import os
+    from django.core.exceptions import ValidationError
+    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    valid_extensions = ['.pdf']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
+
+
 class Journal(models.Model):
-    file_pdf = models.FileField(_("Fayl"), upload_to="files/jurnals/", max_length=255, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    file_pdf = models.FileField(_("Fayl"), upload_to="files/jurnals/", validators=[_validate_file_extension],
+                                max_length=255, null=True)
     journal_number = models.PositiveBigIntegerField(unique=True)
     journal_year = models.CharField(max_length=4)
     article = models.ManyToManyField('article_app.Article', related_name='articles', blank=True)
@@ -34,42 +41,3 @@ class SplitPdf(models.Model):
 
     def __str__(self):
         return f'{self.id}, {self.article}, {self.start_page}, {self.finish_page}, {self.file}'
-
-
-class BlankPage(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    body = RichTextField(blank=True, null=True)
-    is_publish = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = _("BlankPage")
-        verbose_name_plural = _("BlankPages")
-
-
-class Post(models.Model):
-    title = models.CharField(max_length=255, blank=True, null=True)
-    tag = RichTextField(blank=True, null=True)
-    img = models.ImageField(upload_to='blog/')
-    desc = RichTextField(blank=True, null=True)
-    is_publish = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    url = models.SlugField(max_length=200, unique=True)
-
-    def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"slug": self.url})
-
-    def save(self, *args, **kwargs):
-        if not self.url:
-            self.url = slugify(self.title, allow_unicode=True)
-        return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = _("Post")
-        verbose_name_plural = _("Posts")

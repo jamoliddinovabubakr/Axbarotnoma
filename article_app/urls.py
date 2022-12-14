@@ -10,8 +10,6 @@ urlpatterns = [
     path('editor_board/', TemplateView.as_view(template_name="article_app/blank_page/editor_board.html"),
          name='editor_board'),
 
-    # path('post/<slug:slug>/', post_detail, name='post_detail'),
-
     path('article/create/', create_article, name='create_article'),
     path('article/view/<int:pk>/', article_view, name='article_view'),
     path('article/edit/<int:pk>/', update_article, name='update_article'),
@@ -30,6 +28,5 @@ urlpatterns = [
     path('article_stages/', article_stages_list, name='article_stages'),
     path('article_status/', article_status_list, name='article_status'),
     path('notification_status/', notification_status_list, name='notification_status'),
-    path('category/delete/<int:pk>/', delete_category, name='delete_category'),
 
 ]
