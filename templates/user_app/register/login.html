@@ -30,7 +30,7 @@
                 <div class="login-body">
                     <!-- begin login-content -->
                     <div class="login-content">
-                        <form action="" method="POST" class="margin-bottom-0 loginForm">
+                        <form method="POST" class="margin-bottom-0 loginForm" data-url="{% url 'login' %}">
                             {% csrf_token %}
                             <div class="form-group m-b-20">
                                 <input type="text" name="username" class="form-control form-control-xs inverse-mode usernameLogin"

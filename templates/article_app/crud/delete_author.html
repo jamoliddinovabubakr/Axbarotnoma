@@ -1,5 +1,5 @@
 {% load i18n %}
-<form class="delete_author_form" method="post" action="{% url 'delete_author' author.pk %}">
+<form class="delete_author_form" method="post" data-url="{% url 'delete_author' author.pk %}">
     {% csrf_token %}
 <div class="modal fade" id="removeAuthor">
     <div class="modal-dialog">

@@ -1,6 +1,6 @@
 {% load static %}
 {% load i18n %}
- {% get_current_language as LANGUAGE_CODE %}
+{% get_current_language as LANGUAGE_CODE %}
 {% with request.resolver_match.url_name as url_name %}
     <div id="sidebar" class="sidebar"
          style="box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px,
@@ -32,12 +32,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $('body').ready(function () {
-            let url = '{{ url_name }}'.toString();
-            let lang = '{{ LANGUAGE_CODE }}'.toString();
+            let url = '{% url 'load_menus' %}'.toString();
 
             $.ajax({
                 type: 'GET',
-                url: '/profile/load_menus/',
+                url: url,
                 success: function (response) {
                     $('#menu_sidebar').empty();
                     for (let item of response.menus) {

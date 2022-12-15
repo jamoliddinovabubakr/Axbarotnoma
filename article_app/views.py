@@ -22,6 +22,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls.base import resolve, reverse
 from django.urls.exceptions import Resolver404
+from django.utils.translation import activate, get_language
 
 
 def is_ajax(request):
@@ -49,7 +50,6 @@ def set_language(request, language):
 
 
 def main_page(request):
-    user_language = 'uz'
     post = Post.objects.last()
     context = {
         'post': post,
@@ -127,10 +127,12 @@ def create_article(request):
                 email=article.author.email,
                 work=article.author.work,
             )
+
+            lang = get_language()
             data = {
                 "result": True,
                 "message": "Ok!",
-                "redirect": f"/article/edit/{article.id}/",
+                "url": f"/{lang}/article/edit/{article.id}/",
             }
             return JsonResponse(data=data)
         else:
@@ -260,7 +262,7 @@ def create_article_file(request, pk):
 
 @login_required(login_url='login')
 def article_view(request, pk):
-    if is_ajax(request=request):
+    if request.method == 'GET' and is_ajax(request=request):
         article = get_object_or_404(Article, pk=pk)
         document = None
         author = article.author
@@ -268,6 +270,7 @@ def article_view(request, pk):
             ob = ArticleFile.objects.filter(
                 article_id=article.id).filter(file_status=1).first()
             document = ob.file.url
+        lang = get_language()
 
         data = {
             "id": article.id,
@@ -283,6 +286,8 @@ def article_view(request, pk):
             "is_publish": article.is_publish,
             "created_at": article.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
             "updated_at": article.updated_at,
+            "edit_url": f"/{lang}/article/edit/{article.id}/",
+            "delete_url": f"/{lang}/article/delete/{article.id}/",
         }
         return JsonResponse(data=data)
     else:
@@ -306,9 +311,15 @@ def delete_article(request, pk):
 @login_required(login_url='login')
 def get_article_authors(request, pk):
     authors = ExtraAuthor.objects.filter(article_id=pk).order_by('id')
-    return JsonResponse({"authors": list(authors.values(
-        'id', 'lname', 'fname', 'mname', 'email', 'work', 'scientific_degree__name'
-    ))})
+    lang = get_language()
+    data = {
+        "authors": list(authors.values(
+            'id', 'lname', 'fname', 'mname', 'email', 'work', 'scientific_degree__name'
+        )),
+        "edit_url": f"/{lang}/author/edit/",
+        "delete_url": f"/{lang}/author/delete/",
+    }
+    return JsonResponse(data)
 
 
 @login_required(login_url='login')

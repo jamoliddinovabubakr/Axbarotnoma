@@ -20,6 +20,7 @@ from user_app.models import User, ReviewerArticle, StatusReview
 from . import utils
 import numpy as np
 from django.template.loader import render_to_string
+from django.utils.translation import activate, get_language
 
 
 def logout_user(request):
@@ -404,6 +405,8 @@ def editor_notifications(request):
         check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
             notification_status_id=3).order_by('-created_at')
 
+        lang = get_language()
+
         data = {
             "uncheck_notifications": list(uncheck_notifications.values(
                 'id', 'created_at', 'article__id', 'article__title', 'notification_status__id',
@@ -414,7 +417,8 @@ def editor_notifications(request):
                 'id', 'created_at', 'article__id', 'article__title', 'notification_status__id',
                 'notification_status__name',
                 'article__author__email', 'is_update_article'
-            ))
+            )),
+            "view_url": f"/{lang}/profile/editor_check_article/",
         }
 
         return JsonResponse(data)
@@ -431,6 +435,8 @@ def reviewer_notifications(request):
     check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
         notification_status_id=3).order_by('-created_at')
 
+    lang = get_language()
+
     data = {
         "uncheck_notifications": list(uncheck_notifications.values(
             'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
@@ -439,7 +445,8 @@ def reviewer_notifications(request):
         "check_notifications": list(check_notifications.values(
             'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
             'is_update_article', 'from_user__email', 'message'
-        ))
+        )),
+        "view_url": f"/{lang}/profile/reviewer_check_article/",
     }
 
     return JsonResponse(data)
@@ -622,7 +629,6 @@ def editor_check_article(request, pk):
     }
     html = render_to_string('user_app/check_article_by_editor.html', data)
     return HttpResponse(html)
-    # return render(request, 'user_app/check_article_by_editor.html', context=context)
 
 
 @login_required(login_url='login')

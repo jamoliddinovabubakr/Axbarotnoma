@@ -24,7 +24,7 @@
                 </div>
                 <div class="login-body">
                     <div class="login-content">
-                        <form action="" method="POST" class="margin-bottom-0 registerForm">
+                        <form data-url="{% url 'register' %}" method="POST" class="margin-bottom-0 registerForm">
                             {% csrf_token %}
                             <div class="form-group m-b-20">
                                 <input type="text" name="last_name" class="form-control form-control-xs inverse-mode last_name"

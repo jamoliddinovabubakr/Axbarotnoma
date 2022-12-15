@@ -46,14 +46,18 @@
                       placeholder="Muallifga qayta yuborish yoki rad etganiz sababini yozing..."></textarea>
 
             <button type="button" style="width:50%; margin-top: 10px; margin-right: 1px;"
+                    data-url="{% url 'editor_submit_result' %}"
                     {% if article.article_status.id != 1 %} disabled {% endif %}
                     data-id="{{ article.id }},{{ notif_id }},0"
+                    data-action="{% url 'editor_check_article' notif_id %}"
                     class="btn btn-md btn-gray forshadow resultBtnUnReview">
                 <i class="fa fa-comment"></i> Muallifga yuborish
             </button>
             <button type="button" style="width:50%; margin-top: 10px; margin-left: 1px;"
+                    data-url="{% url 'editor_submit_result' %}"
                     {% if article.article_status.id != 1 %} disabled {% endif %}
                     data-id="{{ article.id }},{{ notif_id }},1"
+                    data-action="{% url 'editor_check_article' notif_id %}"
                     class="btn btn-md btn-danger forshadow resultBtnUnReview">
                 <i class="fa fa-comment"></i> Maqola jurnalga to'g'ri kelmaydi
             </button>
@@ -62,7 +66,8 @@
         <hr>
         <br>
         <div class="row d-flex justify-content-center">
-            <button type="button" data-id="{{ article.id }}" id="view-article-messages-by-editor"
+            <button type="button" id="view-article-messages-by-editor"
+                    data-url="{% url 'comment_author_vs_editor' article.id %}"
                     class="btn btn-md btn-info forshadow">
                 <i class="fa fa-comment"></i> LOAD COMMENTS
             </button>
@@ -114,6 +119,7 @@
                             <div class="col-md-9">
                                 <div class="form-check form-check-inline">
                                     <button type="button"
+                                            data-url="{% url 'load_reviewers' %}"
                                             class="btn btn-primary forshadow choose_type_sumit_btn" data-id="1">
                                         Choose Reviewer
                                     </button>
@@ -127,7 +133,7 @@
                         </div>
                         <br>
 
-                        <form method="post" id="choose_reviewer_form">
+                        <form method="post" id="choose_reviewer_form" data-url="{% url 'sending_reviewer' %}">
                             {% csrf_token %}
                             <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget"
                                  id="list_reviewers" style="display: none;">
@@ -146,6 +152,7 @@
                                 <div class="widget-todolist-item">
                                     <div class="widget-todolist-input">
                                         <button type="button" data-id="{{ article.id }},{{ notif_id }}"
+                                                data-action="{% url 'editor_check_article' notif_id %}"
                                                 class="btn btn-success" id="send_btn_to_reviewer"
                                                 {% if article.article_status.id != 1 or article.is_resubmit %}
                                                 disabled {% endif %}>
@@ -155,7 +162,7 @@
                                 </div>
                             </div>
                         </form>
-                        <form method="post">
+                        <form method="post" data-url="{% url 'random_sending_reviewer' %}" class="random_sending_reviewer_form">
                             {% csrf_token %}
                             <div class="container" id="random_btn" style="display: none;">
                                 <label>Choose number of reviewers
@@ -165,6 +172,7 @@
                                            class="form-control">
                                 </label>
                                 <button class="btn btn-md btn-info" id="random_send_reviewer_btn" type="button"
+                                        data-action="{% url 'editor_check_article' notif_id %}"
                                         data-id="{{ article.id }},{{ notif_id }}" {% if article.article_status.id != 1 or article.is_resubmit %}
                                         disabled {% endif %}>Generate
                                     Random Choosing Reviewers
@@ -180,9 +188,10 @@
                 <div class="m-b-10 m-t-10 f-s-12">
                     <h5 class="text-inverse">Reviewing Process</h5>
                 </div>
-                <form method="post">
+                <form method="post" data-url="{% url 'approve_publish' %}" class="approve_form">
                     {% csrf_token %}
                     <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},0"
+                            data-action="{% url 'editor_check_article' notif_id %}"
                             class="btn btn-sm btn-success forshadow resultBtn"
                             id="approveForPublicationBtn"
                             {% if article.article_status.id != 5 %} disabled {% endif %}
@@ -192,6 +201,7 @@
                     <br>
                     <br>
                     <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},1"
+                            data-action="{% url 'editor_check_article' notif_id %}"
                             class="btn btn-sm btn-danger forshadow resultBtn"
                             id="rejectedBtn"
                             {% if article.article_status.id != 5 %} disabled {% endif %}
@@ -202,6 +212,7 @@
                     <br>
                     <br>
                     <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},2"
+                            data-action="{% url 'editor_check_article' notif_id %}"
                             class="btn btn-sm btn-primary forshadow resultBtn"
                             id="resubmitBtn"
                             {% if article.article_status.id != 5 %} disabled {% endif %}
@@ -215,6 +226,7 @@
                     {% endif %}
                     <br>
                     <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},3"
+                            data-action="{% url 'editor_check_article' notif_id %}"
                             class="btn btn-sm btn-info forshadow resultBtn"
                             id="rejectedExtraReviewerBtn"
                             {% if article.article_status.id != 5 %} disabled {% endif %}
@@ -312,10 +324,11 @@
                                     Not yet {% endif %}</td>
                                 <td>
                                     {% if item.status.id == 5 and article.article_status.id == 1 %}
-                                        <form method="post">
+                                        <form method="post" data-url="{% url 'editor_resubmit_to_reviewer' %}" id="editor_resubmit_to_reviewer">
                                             {% csrf_token %}
                                             <button type="button" data-id="{{ item.id }},{{ notif_id }}"
                                                     id="resubmit_to_reviewer_btn_{{ item.id }}"
+                                                    data-action="{% url 'editor_check_article' notif_id %}"
                                                     class="btn btn-outline-success btn-xs resubmit_to_reviewer_btn">
                                                 <i class="fas fa-lg fa-fw m-r-10 fa-arrow-circle-right"></i>Qayta
                                                 yuborish

@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load static %}
-<form class="create_article_form" method="post" action="{% url 'create_article' %}">
+<form class="create_article_form" method="post" data-url="{% url 'create_article' %}">
     {% csrf_token %}
     {{ form.media }}
     <div class="modal fade" id="create_article_modal">
@@ -56,37 +56,38 @@
     </div>
 </form>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         const $myCreateArticleForm = $('.create_article_form');
         $myCreateArticleForm.submit(function (e) {
-        e.preventDefault();
+            e.preventDefault();
 
-        const $formData = $myCreateArticleForm.serialize();
+            const $formData = $myCreateArticleForm.serialize();
 
-        $.ajax({
-            type: 'POST',
-            url: "/article/create/",
-            data: $formData,
-            success: function (response) {
+            let url = $('.create_article_form').data('url');
 
-                if (response.result){
-                    $('#create_article_modal').modal('hide');
-                    window.location.href = response.redirect;
-                } else {
-                    swal({
-                        title: response.message,
-                        timer: 2000,
-                    });
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: $formData,
+                success: function (response) {
+                    if (response.result) {
+                        $('#create_article_modal').modal('hide');
+                        window.location.href = response.url;
+                    } else {
+                        swal({
+                            title: response.message,
+                            timer: 2000,
+                        });
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error);
                 }
-                
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+            });
 
-        return false;
-    });
+            return false;
+        });
     });
 </script>
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>

@@ -63,10 +63,11 @@
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function () {
+        let url = '{% url 'reviewer_notifications' %}'.toString();
     setInterval(function () {
         $.ajax({
             type: 'GET',
-            url: "/profile/reviewer_notifications/",
+            url: url,
             success: function (response) {
                 console.log(response)
                 $('#reviewer_uncheck_notifications').empty();
@@ -80,11 +81,10 @@
 
                         let uncheck = `<tr>` +
                             `<td>` + item.id + `</td>` +
-                            `<td><b>` + item.from_user__email + `</b><br>` +
-                            item.message + `</td>` +
+                            `<td><b>` + item.from_user__email + `</b><br>` + item.message + `</td>` +
                             `<td>` + time_string + `</td>` +
                             `<td id="view_notif_id${item.id}"></td>` +
-                            `<td><button type="button" data-id="${item.id}" class="btn btn-primary btn-sm article_view_reviewer" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                            `<td><button type="button" data-url="${response.view_url}${item.id}/" class="btn btn-primary btn-sm article_view_reviewer" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </button></td>`
                             + `</tr>`;
 
@@ -116,11 +116,10 @@
 
                         let checked = `<tr>` +
                             `<td>` + item.id + `</td>` +
-                            `<td><b>` + item.from_user__email + `</b><br>` +
-                            item.message + `</td>` +
+                            `<td><b>` + item.from_user__email + `</b><br>` + item.message + `</td>` +
                             `<td>` + time_string + `</td>` +
                             `<td id="view_notif_checked_id${item.id}"></td>` +
-                            `<td><button type="button" data-id="${item.id}" class="btn btn-primary btn-sm article_view_reviewer" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                            `<td><button type="button" data-url="${response.view_url}${item.id}/" class="btn btn-primary btn-sm article_view_reviewer" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </button></td>`
                             + `</tr>`;
 

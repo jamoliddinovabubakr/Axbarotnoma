@@ -23,11 +23,11 @@ $('body').on('click', '.reviewerWrite-message-btn', function (e) {
 $('body').on('click', '.article_view_reviewer', function (e) {
     e.preventDefault();
 
-    let id = $(this).data('id');
+    let url = $(this).data('url');
 
     $.ajax({
         type: "GET",
-        url: "/profile/reviewer_check_article/" + id + "/",
+        url: url,
         success: function (response) {
             $('.dashboard_reviewer').empty();
             $('.dashboard_reviewer').html(response);
@@ -43,11 +43,13 @@ $('body').on('click', '#resubmit_reviewer_btn', function (e) {
     const $myForm = $('.sending_editor_form');
     const $formData = $myForm.serialize();
 
+    let url = $('#resubmit_reviewer_btn').data('url');
+
     let comment = $('#id_comment').val();
 
     $.ajax({
         type: "POST",
-        url: "/profile/reviewer_resubmit/",
+        url: url,
         data: $formData,
         success: function (response) {
             console.log(response.message);
@@ -64,12 +66,13 @@ $('body').on('click', '#reject_reviewer_btn', function (e) {
     e.preventDefault();
     const $myForm = $('.sending_editor_form');
     const $formData = $myForm.serialize();
+    let url = $('#reject_reviewer_btn').data('url');
 
     let comment = $('#id_comment').val();
 
     $.ajax({
         type: "POST",
-        url: "/profile/reviewer_rejected/",
+        url: url,
         data: $formData,
         success: function (response) {
             console.log(response.message);
@@ -87,11 +90,13 @@ $('body').on('click', '#confirm_reviewer_btn', function (e) {
     const $myForm = $('.sending_editor_form');
     const $formData = $myForm.serialize();
 
+    let url = $('#confirm_reviewer_btn').data('url');
+
     let comment = $('#id_comment').val();
 
     $.ajax({
         type: "POST",
-        url: "/profile/reviewer_confirmed/",
+        url: url,
         data: $formData,
         success: function (response) {
             console.log(response.message);
@@ -108,10 +113,11 @@ $('body').on('click', '#view-article-messages-by-reviewer', function (e) {
     e.preventDefault();
 
     let id = $(this).data('id');
+    let url = $('#view-article-messages-by-reviewer').data('url');
 
     $.ajax({
         type: "GET",
-        url: "/profile/article_notification/view/" + id + "/",
+        url: url,
         success: function (response) {
             console.log(response);
             $('#MessageBoxReviewer').css('display', 'block');

@@ -3,11 +3,11 @@
 $('body').on('click', '.create_article_btn', function (e) {
     e.preventDefault();
 
-    let id = $(this).data('id');
+    let url = $('.create_article_btn').data('url');
 
     $.ajax({
         type: 'GET',
-        url: "/article/create/",
+        url: url,
         success: function (response) {
             $('#create_article_div').html(response);
             $('#create_article_modal').modal('show');
@@ -46,9 +46,11 @@ $('body').on('click', '.authorWrite-message-btn', function (e) {
 
 function OnClickViewArticle(id) {
     $('#MessageBoxAuthor').css("display", "none");
+    let url = $('#article_view_btn_' + id).data('url');
+
     $.ajax({
         type: "GET",
-        url: "/article/view/" + id + "/",
+        url: url,
         success: function (response) {
             $("#articleView").css("display", "block");
 
@@ -63,8 +65,8 @@ function OnClickViewArticle(id) {
                 + `</td><td>` +
                 response['title'] + `</td><td>` +
                 response['created_at'] + `</td><td>` +
-                `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-warning edit_article_btn" disabled><i class="fa fa-edit"></i></button>` + " " +
-                `<button type="button" data-id="${response['id']}" class="btn btn-sm btn-outline-danger remove_article_btn"><i class="fa fa-trash"></i></button>`
+                `<button type="button" data-url="${response['edit_url']}" class="btn btn-sm btn-outline-warning edit_article_btn" disabled><i class="fa fa-edit"></i></button>` + " " +
+                `<button type="button" data-url="${response['delete_url']}" class="btn btn-sm btn-outline-danger remove_article_btn"><i class="fa fa-trash"></i></button>`
                 + "</td></tr>";
             $("#articleDetail").html(temp);
             if (response.article_status_id === 6) {
@@ -87,10 +89,11 @@ function OnClickViewArticle(id) {
 $('body').on('click', '.view_message_btn', function (e) {
     e.preventDefault();
     let id = $(this).data('id');
+    let url = $('#view-article-messages-by-author_' + id).data('url');
 
     $.ajax({
         type: "GET",
-        url: "/profile/article_notification/view/" + id + "/",
+        url: url,
         success: function (response) {
             console.log(response);
             if (response.is_visible_comment) {
@@ -165,19 +168,29 @@ $('body').on('click', '.view_message_btn', function (e) {
 $('body').on('click', '.edit_article_btn', function (e) {
     e.preventDefault();
 
-    let id = $(this).data('id');
-    let url = "/article/edit/" + id + "/";
-    window.location.href = url;
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function () {
+            window.location.href = url;
+        },
+        error: function (error) {
+            console.log("Xatolik");
+            console.log(error);
+        }
+    });
 });
 
 $('body').on('click', '.remove_article_btn', function (e) {
     e.preventDefault();
 
-    let id = $(this).data('id');
+    let url = $(this).data('url');
 
     $.ajax({
         type: 'GET',
-        url: "/article/delete/" + id + "/",
+        url: url,
         success: function (response) {
             $('#create_article_div').html(response);
             $('#delete_article_modal').modal('show');

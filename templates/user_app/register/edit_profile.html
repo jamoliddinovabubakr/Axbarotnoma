@@ -4,7 +4,7 @@
     <div id="content" class="content">
         <h1 class="page-header">{% trans "Profile sozlamalari" %}
             <small>{% trans "profilizni ma'luotlarini o'zgartirish..." %}</small></h1>
-        <form method="POST" name="form-wizard" action="" class="form-control-with-bg forshadow editProfileForm"
+        <form method="POST" name="form-wizard" class="form-control-with-bg forshadow editProfileForm" data-url="{% url 'edit_profile' %}"
               enctype="multipart/form-data">
             {% csrf_token %}
             <div id="wizard">
@@ -218,7 +218,7 @@
                                     </div>
                                     <div class="widget-todolist-item">
                                         <div class="widget-todolist-input">
-                                            <button type="button" disabled id="choose-role-reviewer-btn"
+                                            <button type="button" disabled data-url="{% url 'choosen_reviewer_role' %}" id="choose-role-reviewer-btn"
                                                     class="btn btn-outline-info btn-sm btn-block forshadow"
                                                     style="float: right">Submit Selection
                                             </button>

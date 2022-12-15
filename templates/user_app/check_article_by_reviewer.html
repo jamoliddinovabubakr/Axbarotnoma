@@ -42,6 +42,7 @@
 
         <div class="row d-flex justify-content-center">
             <button type="button" data-id="{{ article.id }}" id="view-article-messages-by-reviewer"
+                    data-action="{% url 'comment_author_vs_editor' article.id %}"
                     class="btn btn-md btn-info forshadow">
                 <i class="fa fa-comment"></i> LOAD COMMENTS
             </button>
@@ -98,7 +99,7 @@
                         <li><b>Date: </b> {{ article_review.created_at }}</li>
                     </ul>
                     <br>
-                    <form method="post" action="" class="sending_editor_form">
+                    <form method="post" class="sending_editor_form">
                         {% csrf_token %}
                         <table class="table table-striped table-td-valign-middle">
                             <tbody>
@@ -125,12 +126,16 @@
                     <br>
                     <div class="row d-flex justify-content-center">
                         <button type="button" class="btn btn-danger forshadow" id="reject_reviewer_btn"
+                                data-url="{% url 'reviewer_rejected' %}"
                                 style="margin-right: 1%;" disabled>Reject
                         </button>
                         <button type="button" class="btn btn-warning forshadow" id="resubmit_reviewer_btn"
+                                data-url="{% url 'reviewer_resubmit' %}"
                                 style="margin-right: 1%;" disabled>Resubmit
                         </button>
-                        <button type="button" class="btn btn-success forshadow" id="confirm_reviewer_btn" disabled>
+                        <button type="button" class="btn btn-success forshadow"
+                                data-url="{% url 'reviewer_confirmed' %}"
+                                id="confirm_reviewer_btn" disabled>
                             Confirm
                         </button>
                     </div>

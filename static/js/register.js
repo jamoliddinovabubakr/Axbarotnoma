@@ -74,11 +74,11 @@ $('body').on('click', '.registerBtn', function (e) {
     let is_valid_registerForm = formValidate(data);
 
 
-
     if (is_valid_registerForm) {
+        let url = $('.registerForm').data('url');
         $.ajax({
             method: "POST",
-            url: '/profile/register/',
+            url: url,
             data: $('.registerForm').serialize(),
             success: function (response) {
                 if (response.message) {
@@ -109,9 +109,10 @@ $('body').on('click', '.change_pass_btn', function (e) {
     let is_valid_registerForm = formValidate(data);
 
     if (is_valid_registerForm) {
+        let url = $('#change_password_form').data('url');
         $.ajax({
             method: "POST",
-            url: '/profile/change_password/',
+            url: url,
             data: $('#change_password_form').serialize(),
             success: function (response) {
                 if (response.result === 'ok') {
@@ -136,9 +137,10 @@ $('body').on('click', '.loginBtn', function (e) {
 
     let is_valid_form = formValidateLogin();
     if (is_valid_form) {
+        let url = $('.loginForm').data('url');
         $.ajax({
             method: "POST",
-            url: '/profile/login/',
+            url: url,
             data: $('.loginForm').serialize(),
             success: function (response) {
                 if (response.message) {
@@ -213,9 +215,10 @@ $('body').on('submit', '.editProfileForm', function (e) {
     let formData = new FormData(this);
 
     if (is_valid_form) {
+        let url = $('.editProfileForm').data('url');
         $.ajax({
             method: "POST",
-            url: '/profile/edit_profile/',
+            url: url,
             data: formData,
             contentType: false,
             processData: false,
@@ -235,11 +238,12 @@ $('body').on('submit', '.editProfileForm', function (e) {
 $('body').on('click', '#choose-role-reviewer-btn', function (e) {
     e.preventDefault();
 
+    let url = $('#choose-role-reviewer-btn').data('url');
+
     $.ajax({
         type: 'GET',
-        url: '/profile/choosen_reviewer_role/',
+        url: url,
         success: function (response) {
-            console.log(response);
             $('#choosen_reviewer_role_div').html(response);
             $('#choosen_reviewerRole').modal('show');
         },
@@ -252,14 +256,14 @@ $('body').on('click', '#choose-role-reviewer-btn', function (e) {
 $('body').on('submit', '#choosen_reviewerRole_form', function (e) {
     e.preventDefault();
     let formData = new FormData(this);
+    let url = $('#choosen_reviewerRole_form').data('url');
     $.ajax({
         type: 'POST',
-        url: '/profile/choosen_reviewer_role/',
+        url: url,
         data: formData,
         contentType: false,
         processData: false,
         success: function (response) {
-            console.log(response);
             swal({
                 title: response.message,
                 timer: 1500,

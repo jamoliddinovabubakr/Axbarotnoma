@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load static %}
-<form class="form-control edit-author-form" data-parsley-validate="true" method="post" data-id="{{ author.id }}"
-      action="{% url 'edit_author' author.id %}"
+<form class="form-control edit-author-form" data-parsley-validate="true" method="post"
+      data-url="{% url 'edit_author' author.id %}"
       id="edit_author_form">
     {% csrf_token %}
     <div class="modal fade" id="edit-author-modal">

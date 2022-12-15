@@ -11,9 +11,11 @@ $('body').on('click', '.resultBtnUnReview', function (e) {
 
 
     if (text.length > 0) {
+        let url = $('.resultBtnUnReview').data('url');
+        let reload_url = $('.resultBtnUnReview').data('action');
         $.ajax({
             type: "POST",
-            url: "/profile/editor_submit_result/",
+            url: url,
             data: {
                 article_id: article_id,
                 notif_id: notif_id,
@@ -22,7 +24,7 @@ $('body').on('click', '.resultBtnUnReview', function (e) {
                 csrfmiddlewaretoken: csrftoken,
             },
             success: function (response) {
-                setTimeout(check_editor_reload(notif_id), 1000);
+                setTimeout(check_editor_reload(reload_url), 1000);
             },
             error: function (error) {
                 console.log(error);
@@ -35,6 +37,7 @@ $('body').on('click', '.resultBtnUnReview', function (e) {
 
 });
 
+
 $('body').on('click', '.resubmit_to_reviewer_btn', function (e) {
     e.preventDefault();
 
@@ -43,16 +46,19 @@ $('body').on('click', '.resubmit_to_reviewer_btn', function (e) {
     let notif_id = parseInt(data.split(',')[1]);
     let csrftoken = getCookie('csrftoken');
 
+    let url = $('#editor_resubmit_to_reviewer').data('url');
+    let reload_url = $('.resultBtnUnReview').data('action');
+
     $.ajax({
         type: "POST",
-        url: "/profile/editor_resubmit_to_reviewer/",
+        url: url,
         data: {
             review_id: id,
             csrfmiddlewaretoken: csrftoken,
         },
         success: function (response) {
             $('#resubmit_to_reviewer_btn_' + id).prop("disabled", true);
-            setTimeout(check_editor_reload(notif_id), 1000);
+            setTimeout(check_editor_reload(reload_url), 1000);
             swal({
                 title: response.message,
                 timer: 1500,
@@ -66,20 +72,27 @@ $('body').on('click', '.resubmit_to_reviewer_btn', function (e) {
 
 });
 
+
 $('body').on('click', '.resultBtn', function (e) {
     e.preventDefault();
+
     let data = $(this).data('id');
     let article_id = parseInt(data.split(',')[0]);
     let notif_id = parseInt(data.split(',')[1]);
     let btn_number = parseInt(data.split(',')[2]);
     let csrftoken = getCookie('csrftoken');
 
+    let url = $('.approve_form').data('url');
+
+    let reload_url = $(this).data('action');
+
+
     if (btn_number === 2) {
         let text = $('#resubmit_text').val();
         if (text.length > 0) {
             $.ajax({
                 type: "POST",
-                url: "/profile/approve_publish/",
+                url: url,
                 data: {
                     article_id: article_id,
                     notif_id: notif_id,
@@ -89,7 +102,7 @@ $('body').on('click', '.resultBtn', function (e) {
                 },
                 success: function (response) {
                     $('#approveForPublicationBtn').prop("disabled", true);
-                    setTimeout(check_editor_reload(notif_id), 1000);
+                    setTimeout(check_editor_reload(reload_url), 1000);
 
                     swal({
                         title: response.message,
@@ -110,7 +123,7 @@ $('body').on('click', '.resultBtn', function (e) {
     if (btn_number === 0 || btn_number === 1 || btn_number === 3) {
         $.ajax({
             type: "POST",
-            url: "/profile/approve_publish/",
+            url: url,
             data: {
                 article_id: article_id,
                 notif_id: notif_id,
@@ -120,7 +133,7 @@ $('body').on('click', '.resultBtn', function (e) {
             success: function (response) {
                 $('#approveForPublicationBtn').prop("disabled", true);
 
-                setTimeout(check_editor_reload(notif_id), 1000);
+                setTimeout(check_editor_reload(reload_url), 1000);
 
                 swal({
                     title: response.message,
@@ -135,6 +148,7 @@ $('body').on('click', '.resultBtn', function (e) {
 
 });
 
+
 $('body').on('click', '#random_send_reviewer_btn', function (e) {
     e.preventDefault();
 
@@ -144,11 +158,14 @@ $('body').on('click', '#random_send_reviewer_btn', function (e) {
     let csrftoken = getCookie('csrftoken');
 
     let value = $('#reviewer_number').val();
+    let url = $('.random_sending_reviewer_form').data('url');
+
+     let reload_url = $(this).data('action');
 
     if (value > 0) {
         $.ajax({
             type: "POST",
-            url: "/profile/random_sending_reviewer/",
+            url: url,
             data: {
                 value: value,
                 article_id: id,
@@ -159,7 +176,7 @@ $('body').on('click', '#random_send_reviewer_btn', function (e) {
                     $('#send_btn_to_reviewer').prop("disabled", true);
                     $('#random_send_reviewer_btn').prop("disabled", true);
 
-                    setTimeout(check_editor_reload(notif_id), 1000);
+                    setTimeout(check_editor_reload(reload_url), 1000);
                     swal({
                         title: response.message,
                         timer: 1500,
@@ -184,6 +201,8 @@ $('body').on('click', '#send_btn_to_reviewer', function (e) {
     let article_id = parseInt(data.split(',')[0]);
     let notif_id = parseInt(data.split(',')[1]);
     let csrftoken = getCookie('csrftoken');
+    let url = $('#choose_reviewer_form').data('url');
+    let reload_url = $(this).data('action');
 
     let selected = [];
     $('#widget-todolist-body input[type=checkbox]').each(function () {
@@ -198,14 +217,10 @@ $('body').on('click', '#send_btn_to_reviewer', function (e) {
         alert("Taqrizchi tanlamadiz!");
     }
 
-    if (n > 5) {
-        alert("5 tadan kop Taqrizchi tanladiz");
-    }
-
-    if (n >= 1 && n <= 5) {
+    if (n >= 1) {
         $.ajax({
             type: "POST",
-            url: "/profile/sending_reviewer/",
+            url: url,
             data: {
                 reviewers: selected,
                 csrfmiddlewaretoken: csrftoken,
@@ -215,7 +230,7 @@ $('body').on('click', '#send_btn_to_reviewer', function (e) {
                 if (response.is_valid) {
                     $('#send_btn_to_reviewer').prop("disabled", true);
                     $('#random_btn').prop("disabled", true);
-                    setTimeout(check_editor_reload(notif_id), 1000);
+                    setTimeout(check_editor_reload(reload_url), 1000);
 
                     swal({
                         title: response.message,
@@ -238,11 +253,11 @@ $('body').on('click', '#send_btn_to_reviewer', function (e) {
 $('body').on('click', '#view-article-messages-by-editor', function (e) {
     e.preventDefault();
 
-    let id = $(this).data('id');
+    let url = $('#view-article-messages-by-editor').data('url');
 
     $.ajax({
         type: "GET",
-        url: "/profile/article_notification/view/" + id + "/",
+        url: url,
         success: function (response) {
             console.log(response);
             $('#MessageBoxEditor').css('display', 'block');
@@ -318,11 +333,11 @@ $('body').on('click', '.editorWrite-message-btn', function (e) {
 $('body').on('click', '.article_view_editor', function (e) {
     e.preventDefault();
 
-    let id = $(this).data('id');
+    let url = $(this).data('url');
 
     $.ajax({
         type: "GET",
-        url: "/profile/editor_check_article/" + id + "/",
+        url: url,
         success: function (response) {
             $('.editor_dashboard').empty();
             $('.editor_dashboard').html(response);
@@ -341,9 +356,11 @@ $('body').on('click', '.choose_type_sumit_btn', function (e) {
         $('#list_reviewers').css("display", "block");
         $('#random_btn').css("display", "none");
 
+        let url = $('.choose_type_sumit_btn').data('url');
+
         $.ajax({
             type: 'GET',
-            url: "/profile/load_reviewers/",
+            url: url,
             success: function (response) {
                 $('#widget-todolist-body').empty();
                 $('#count_reviewer').html("<span>" + response.reviewers.length + "</span><small>Count</small>");
@@ -375,10 +392,10 @@ $('body').on('click', '.choose_type_sumit_btn', function (e) {
 
 });
 
-function check_editor_reload(id) {
+function check_editor_reload(url) {
     $.ajax({
         type: "GET",
-        url: "/profile/editor_check_article/" + id + "/",
+        url: url,
         success: function (response) {
             $('.editor_dashboard').empty();
             $('.editor_dashboard').html(response);
@@ -388,6 +405,7 @@ function check_editor_reload(id) {
     });
     return false;
 }
+
 
 function getCookie(name) {
   let cookieValue = null;

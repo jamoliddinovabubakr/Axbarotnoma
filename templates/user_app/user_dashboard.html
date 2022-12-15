@@ -30,6 +30,7 @@
                             <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5></div>
                             <div class="col-md-6">
                                 <button type="button" data-id="create_article" style="float: right"
+                                        data-url="{% url 'create_article' %}"
                                         class="btn btn-success btn-sm create_article_btn"><i
                                         class="fa fa-plus mr-1"></i>New Submission
                                 </button>
@@ -74,6 +75,8 @@
                                             <td></td>
                                             <td>
                                                 <button onclick="OnClickViewArticle({{ article.id }})"
+                                                        data-url="{% url 'article_view' article.id %}"
+                                                        id="article_view_btn_{{ article.id }}"
                                                         class="btn btn-primary btn-sm"
                                                         style="float: right"><i
                                                         class="fa fa-eye mr-1"></i>View
@@ -81,6 +84,7 @@
                                             </td>
                                             <td>
                                                 <button data-id="{{ article.id }}" type="button" id="view-article-messages-by-author_{{ article.id }}"
+                                                        data-url="{% url 'comment_author_vs_editor'  article.id %}"
                                                         class="btn btn-warning btn-sm view_message_btn"
                                                         style="float: left"><i class="fa fa-comment"></i> Comment
                                                 </button>
@@ -101,6 +105,7 @@
                             </div>
                             <div class="col-md-6">
                                 <button type="button" data-id="create_article" style="float: right"
+                                        data-url="{% url 'create_article' %}"
                                         class="btn btn-success btn-sm create_article_btn"><i
                                         class="fa fa-plus mr-1"></i>New Submission
                                 </button>
@@ -134,12 +139,16 @@
                                             <td></td>
                                             <td>
                                                 <button class="btn btn-primary btn-sm" style="float: right"
+                                                        data-url="{% url 'article_view' article.id %}"
+                                                        id="article_view_btn_{{ article.id }}"
                                                         onclick="OnClickViewArticle({{ article.id }})"><i
                                                         class="fa fa-eye mr-1"></i>View
                                                 </button>
                                             </td>
                                             <td>
                                                 <button data-id="{{ article.id }}" type="button"
+                                                        id="view-article-messages-by-author_{{ article.id }}"
+                                                        data-url="{% url 'comment_author_vs_editor'  article.id %}"
                                                         class="btn btn-warning btn-sm view_message_btn"
                                                         style="float: left"><i class="fa fa-comment"></i> Comments
                                                 </button>

@@ -55,7 +55,7 @@
             </div>
             <div class="modal-footer">
                 <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
-                <form method="post">
+                <form method="post" data-url="{% url 'reviewer_role_list_detail' reviewer.id %}" id="reviewer_role_list_detail_form">
                     {% csrf_token %}
                     <button type="button" onclick="OnClickIsReviewerBtn(0)" class="btn btn-danger btn-md">Rad etish
                     </button>
@@ -69,9 +69,10 @@
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script>
     function OnClickIsReviewerBtn(value) {
+        let url = $('#reviewer_role_list_detail_form').data('url');
         $.ajax({
             type: "POST",
-            url: "/profile/choosen_reviewer_role_list/" + {{ reviewer.id }} +"/",
+            url: url,
             data: {
                 "result": value,
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val(),

@@ -63,10 +63,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $('body').ready(function () {
+            let url = '{% url 'editor_notifications' %}'.toString();
             setInterval(function () {
                 $.ajax({
                     type: 'GET',
-                    url: "/profile/editor_notifications/",
+                    url: url,
                     success: function (response) {
                         $('#editor_uncheck_notifications').empty();
                         $('#editor_checked_notifications').empty();
@@ -83,7 +84,8 @@
                                     item.article__title.toString().slice(0, 100) + `</td>` +
                                     `<td>` + time_string + `</td>` +
                                     `<td id="view_notif_id${item.id}"></td>` +
-                                    `<td><button type="button" data-id="${item.id}" class="btn btn-primary btn-sm article_view_editor" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                                    `<td><button type="button" data-url="${response.view_url}${item.id}/" class="btn btn-primary btn-sm article_view_editor" `+
+                                    `style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </button></td>`
                                     + `</tr>`;
 
@@ -117,7 +119,7 @@
                                     item.article__title.toString().slice(0, 100) + `</td>` +
                                     `<td>` + time_string + `</td>` +
                                     `<td id="view_notif_checked_id${item.id}"></td>` +
-                                    `<td><button type="button" data-id="${item.id}" class="btn btn-primary btn-sm article_view_editor" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                                    `<td><button type="button" data-url="${response.view_url}${item.id}/" class="btn btn-primary btn-sm article_view_editor" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </button></td>`
                                     + `</tr>`;
 

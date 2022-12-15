@@ -31,7 +31,7 @@
 
         $.ajax({
             type: 'POST',
-            url: "/article/delete/" + {{ article.id }} + "/",
+            url: "{% url 'delete_article' article.id %}",
             data: $formData,
             success: function (response) {
                 $('#delete_article_modal').modal('hide');
