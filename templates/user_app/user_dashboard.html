@@ -9,18 +9,19 @@
         <h3 class="page-header">{% trans "Submissions" %}</h3>
         <br>
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a href="#myqueue" data-toggle="tab" class="nav-link active" onclick="OnClickSubmissionTab()">
-                            <span class="d-sm-none">Tab 1</span>
+                            <span class="d-sm-none">My Queue</span>
                             <span class="d-sm-block d-none">My Queue</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#archives" data-toggle="tab" class="nav-link" onclick="OnClickSubmissionTab()">
-                            <span class="d-sm-none">Tab 2</span>
-                            <span class="d-sm-block d-none">Archives</span>
+                            <span class="d-sm-none">Archives</span>
+                            <span class="d-sm-block d-none">Archives &nbsp;<span
+                                    class="badge badge-success">{{ myarchives_count }}</span></span>
                         </a>
                     </li>
                 </ul>
@@ -30,6 +31,7 @@
                             <div class="col-md-6"><h5 class="m-t-10"> My Assigned</h5></div>
                             <div class="col-md-6">
                                 <button type="button" data-id="create_article" style="float: right"
+                                        {% if article %} disabled {% endif %}
                                         data-url="{% url 'create_article' %}"
                                         class="btn btn-success btn-sm create_article_btn"><i
                                         class="fa fa-plus mr-1"></i>New Submission
@@ -37,78 +39,306 @@
                             </div>
                         </div>
                         <br>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                {% if myqueues.count > 0 %}
-                                    {% for article in myqueues %}
-                                        <tr>
-                                            <th scope="row"><b>{{ article.id }}</b></th>
-                                            <td><b>{{ article.author.full_name }}</b><br>{{ article.title|slice:100 }}
-                                            </td>
-                                            <td>
-                                                {% if article.article_status_id == 1 or article.article_status_id == 4 or article.article_status_id == 5 %}
-                                                    <button class="btn btn-outline-warning btn-xs"
-                                                            style="border-radius: 20px; float: right"><i
-                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                                    </button>
-                                                {% elif article.article_status_id == 6 or article.article_status_id == 7 or article.article_status_id == 8 %}
-                                                    <button class="btn btn-outline-danger btn-xs"
-                                                            style="border-radius: 20px; float: right"><i
-                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                                    </button>
-                                                {% elif article.article_status_id == 10 %}
-                                                    <button class="btn btn-outline-info btn-xs"
-                                                            style="border-radius: 20px; float: right"><i
-                                                            class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
-                                                    </button>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-outline-success btn-xs"
-                                                        style="border-radius: 10px; float: right"><i
-                                                        class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
-                                                </button>
-                                            </td>
-                                            <td><span class="badge badge-muted">{{ article.article_type.name }}</span>
-                                            </td>
+                        {% if article %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ article.id }}. &nbsp;{{ article.title }}</h5>
+                                    <br>
+                                    <p class="card-text">Status &nbsp;
+                                        {% if article.article_status_id == 1 or article.article_status_id == 4 or article.article_status_id == 5 %}
+                                            <button class="btn btn-outline-warning btn-xs"
+                                                    style="border-radius: 20px;"><i
+                                                    class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                            </button>
+                                        {% elif article.article_status_id == 6 or article.article_status_id == 7 or article.article_status_id == 8 %}
+                                            <button class="btn btn-outline-danger btn-xs"
+                                                    style="border-radius: 20px;"><i
+                                                    class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                            </button>
+                                        {% elif article.article_status_id == 10 %}
+                                            <button class="btn btn-outline-info btn-xs"
+                                                    style="border-radius: 20px;"><i
+                                                    class="fa fa-circle-notch mr-1"></i>{{ article.article_status.name }}
+                                            </button>
+                                        {% endif %}
+                                        &nbsp;&nbsp;State Review &nbsp;
+                                        <button class="btn btn-outline-info btn-xs"
+                                                style="border-radius: 20px;"><i
+                                                class="fa fa-circle-notch mr-1"></i>{{ article.article_status.stage.name }}
+                                        </button>
+                                    </p>
+                                    <p class="card-text">
+                                        <button onclick="OnClickViewArticle({{ article.id }})"
+                                                data-url="{% url 'article_view' article.id %}"
+                                                id="article_view_btn_{{ article.id }}"
+                                                class="btn btn-default btn-sm"><i
+                                                class="fa fa-eye mr-1"></i>View
+                                        </button>
+                                        <button data-id="{{ article.id }}" type="button"
+                                                id="view-article-messages-by-author_{{ article.id }}"
+                                                data-url="{% url 'comment_author_vs_editor'  article.id %}"
+                                                class="btn btn-default btn-sm view_message_btn"><i
+                                                class="fa fa-comment"></i> Comment
+                                        </button>
+                                    </p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Step of Review</p>
+                                    {% if article.article_status.id == 6 %}
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            1
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            2
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            3
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            4
+                                        </button>
+                                        <span class="text-danger">&nbsp;Yet didn't send to editor</span>
 
-                                            <td></td>
-                                            <td>
-                                                <button onclick="OnClickViewArticle({{ article.id }})"
-                                                        data-url="{% url 'article_view' article.id %}"
-                                                        id="article_view_btn_{{ article.id }}"
-                                                        class="btn btn-primary btn-sm"
-                                                        style="float: right"><i
-                                                        class="fa fa-eye mr-1"></i>View
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button data-id="{{ article.id }}" type="button" id="view-article-messages-by-author_{{ article.id }}"
-                                                        data-url="{% url 'comment_author_vs_editor'  article.id %}"
-                                                        class="btn btn-warning btn-sm view_message_btn"
-                                                        style="float: left"><i class="fa fa-comment"></i> Comment
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr class="text-center">
-                                        <td colspan="4"><h3>NO DATA</h3></td>
-                                    </tr>
-                                {% endif %}
-                            </table>
-                        </div>
+                                    {% elif article.article_status.id == 1 %}
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            2
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            3
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            4
+                                        </button>
+                                        <span class="text-success">&nbsp;Sended to editor</span>
+
+                                    {% elif article.article_status.id == 4 %}
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            3
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            4
+                                        </button>
+                                        <span class="text-warning-darker">&nbsp;Sended to Reviewers</span>
+
+                                    {% elif article.article_status.id == 5 %}
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            4
+                                        </button>
+                                        <span class="text-success">&nbsp; Finished check reviewers</span>
+
+                                    {% elif article.article_status.id == 2 %}
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <span class="text-success">&nbsp;Finished</span>
+                                    {% elif article.article_status.id == 9 %}
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            3
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            4
+                                        </button>
+                                        <span class="text-danger">&nbsp;Your article rejected by editor</span>
+                                    {% elif article.article_status.id == 9 %}
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            3
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            4
+                                        </button>
+                                        <span class="text-danger">&nbsp;Your article rejected by editor</span>
+                                    {% elif article.article_status.id == 7 %}
+                                        <button type="button" class="btn btn-success btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            <i class="fas fa-sync fa-spin"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            3
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                style=" width: 150px; height: 5px;">
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-circle"
+                                                style=" width: 50px;height: 50px;padding: 6px 0px;border-radius: 25px;text-align: center;font-size: 14px;line-height: 1.42857;">
+                                            4
+                                        </button>
+                                        <span class="text-warning-darker">&nbsp;You must read message and resubmit your article to editor</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Reviewers checked prosses</p>
+                                    {% if reviewers.count > 0 %}
+                                        {% for review in reviewers %}
+                                            <p class="card-text">Reviewer{{ forloop.counter }} &nbsp;&nbsp;&nbsp;
+                                                Status: &nbsp;
+                                                {% if review.status.id == 1 %}
+                                                    <span class="badge badge-info">{{ review.status.name }}</span>
+                                                {% elif review.status.id == 2 %}
+                                                    <span class="badge badge-indigo">{{ review.status.name }}</span>
+                                                {% elif review.status.id == 3 %}
+                                                    <span class="badge badge-success">{{ review.status.name }}</span>
+                                                {% elif review.status.id == 4 %}
+                                                    <span class="badge badge-danger">{{ review.status.name }}</span>
+                                                {% elif review.status.id == 5 %}
+                                                    <span class="badge badge-warning">{{ review.status.name }}</span>
+                                                {% endif %}
+                                            </p>
+                                        {% endfor %}
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <br>
+                        {% else %}
+                            <h3 class="text-lg-center">NO DATA</h3>
+                        {% endif %}
                     </div>
                     <div class="tab-pane fade" id="archives">
                         <div class="row">
                             <div class="col-md-6"><h5 class="m-t-10"> Archived Submissions</h5>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" data-id="create_article" style="float: right"
-                                        data-url="{% url 'create_article' %}"
-                                        class="btn btn-success btn-sm create_article_btn"><i
-                                        class="fa fa-plus mr-1"></i>New Submission
-                                </button>
                             </div>
                         </div>
                         <br>
@@ -165,10 +395,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2"></div>
         </div>
+
         <div class="row" style="padding-left: 1%; padding-right: 1%; display: none;" id="articleView">
-            <div class="col-md-10 forshadow" style="padding: 1%; background-color: #fff;">
+            <div class="col-md-12 forshadow" style="padding: 1%; background-color: #fff;">
                 <table class="table table-responsive">
                     <thead>
                     <tr>
@@ -184,7 +414,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-2"></div>
         </div>
         <div class="row">
             <div class="col-md-10">

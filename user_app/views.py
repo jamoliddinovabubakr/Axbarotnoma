@@ -21,6 +21,9 @@ from . import utils
 import numpy as np
 from django.template.loader import render_to_string
 from django.utils.translation import activate, get_language
+import asyncio
+
+from asgiref.sync import async_to_sync, sync_to_async
 
 
 def logout_user(request):
@@ -352,21 +355,25 @@ def password_reset(request):
                   context={"password_reset_form": password_reset_form})
 
 
+@sync_to_async()
 @login_required(login_url='login')
 # @allowed_users(menu_url='profile_page')
 def user_dashboard(request):
     user = request.user
-    myqueues = Article.objects.filter(author=user).filter(
-        Q(article_status_id=1) | Q(article_status_id=4) | Q(article_status_id=5) | Q(article_status_id=6) | Q(
-            article_status_id=7) | Q(article_status_id=8) | Q(article_status_id=10)).order_by(
-        '-updated_at')
+    myqueues = Article.objects.filter(author=user).order_by('id')
+    article = myqueues.last()
+
     myarchives = Article.objects.filter(author=user).filter(
         Q(article_status_id=2) | Q(article_status_id=3) | Q(article_status_id=9)).order_by(
         '-updated_at')
 
+    reviewers = ReviewerArticle.objects.filter(article=article).order_by('id')
+
     context = {
-        'myqueues': myqueues,
+        'article': article,
+        'reviewers': reviewers,
         'myarchives': myarchives,
+        'myarchives_count': myarchives.count(),
     }
     return render(request, "user_app/user_dashboard.html", context=context)
 
