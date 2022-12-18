@@ -56,7 +56,7 @@
                             {% elif LANGUAGE_CODE == 'en' %}
                                 <span class="flag-icon flag-icon-gb"></span>
                                 English
-                            {% elif LANGUAGE_CODE == 'tr' %}
+                            {% elif LANGUAGE_CODE == 'kk' %}
                                 <span><img src="{% static 'img/qq.png' %}" alt="" width="22"/></span>
                                 Qoraqalpoq tili
                             {% endif %}
@@ -66,13 +66,15 @@
                                 <li id="lang_{{ language.code }}">
 
                                     <a href="{% url 'set-language' language.code %}" class="btn btn-white btn-block">
-                                        {% if language.code != 'tr' %}
+                                        {% if language.code != 'kk' %}
                                             <span class="flag-icon flag-icon-{% if language.code == 'en' %}gb{% else %}{{ language.code }}{% endif %}"></span>
                                         {% else %}
                                             <span><img src="{% static 'img/qq.png' %}" alt="" width="22"/></span>
                                         {% endif %}
-                                        {% if language.code == 'tr' %}
+                                        {% if language.code == 'kk' %}
                                             Qoraqalpoq tili
+                                            {% elif language.code == 'uz' %}
+                                            O'zbek tili
                                         {% else %}
                                             {{ language.name_local }}
                                         {% endif %} </a>

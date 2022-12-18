@@ -24,8 +24,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'article_app',
     'user_app',
-    'journal',
     'post',
+    'journal',
     'import_export',
     'ckeditor',
 ]
@@ -105,8 +105,8 @@ from django.utils.translation import gettext_lazy as _
 LANGUAGES = [
     ('uz', _('Uzbek')),
     ('en', _('English')),
-    ('ru', _('Russia')),
-    ('tr', _('Turkish')),
+    ('ru', _('Russian')),
+    ('kk', _('Qoraqalpoq')),
 ]
 
 LOCALE_PATHS = [
@@ -114,7 +114,7 @@ LOCALE_PATHS = [
 ]
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
-MODELTRANSLATION_LANGUAGES = ('uz', 'en', 'ru', 'tr')
+MODELTRANSLATION_LANGUAGES = ('uz', 'en', 'ru', 'kk')
 
 # MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'uz'
 

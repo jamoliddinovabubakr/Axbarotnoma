@@ -24,7 +24,7 @@ urlpatterns += i18n_patterns(
     path('journal/', include('journal.urls')),
     path('post/', include('post.urls')),
     path("set_language/<str:language>", set_language, name="set-language"),
-    prefix_default_language=True,
+    prefix_default_language=False,
 )
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

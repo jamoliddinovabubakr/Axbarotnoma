@@ -303,6 +303,8 @@ if __name__ == '__main__':
         ('Incomplete', 1),
         ('Resubmit', 1),
         ('Resubmit', 2),
+        ('Declined', 2),
+        ('Extra_reviewer_submit', 2),
     ]
     roles = [
         ('Admin',),

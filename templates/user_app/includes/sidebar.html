@@ -38,10 +38,15 @@
                 type: 'GET',
                 url: url,
                 success: function (response) {
+                    let lang = response.lang.toString();
                     $('#menu_sidebar').empty();
                     for (let item of response.menus) {
+                        let link = "/" + lang + item.url;
+                        if (lang === 'uz') {
+                            link = item.url;
+                        }
                         let temp = `<li id="menu_${item.id}">` +
-                            `<a href="${item.url}">` +
+                            `<a href="${link}">` +
                             `<i class="material-icons">${item.icon_name}</i><span>${item.name}</span>` + `</a></li>`;
                         $('#menu_sidebar').append(temp);
 
