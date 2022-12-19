@@ -127,12 +127,15 @@ def create_article(request):
                 email=article.author.email,
                 work=article.author.work,
             )
-
             lang = get_language()
+
+            url = f"/{lang}/article/edit/{article.id}/"
+            if lang == 'uz':
+                url = f"/article/edit/{article.id}/"
             data = {
                 "result": True,
                 "message": "Ok!",
-                "url": f"/{lang}/article/edit/{article.id}/",
+                "url": url,
             }
             return JsonResponse(data=data)
         else:
@@ -198,14 +201,13 @@ def update_article(request, pk):
             if article.article_status.id == 7 or article.article_status.id == 8:
                 article.article_status = ArticleStatus.objects.get(pk=1)
                 article.save()
-                Notification.objects.create(
-                    article=article,
-                    from_user=article.author,
-                    to_user=editor.user,
-                    message=f"({editor.user.email})Assalomu aleykum. Maqolamni to'g'irlab qayta yubordim!",
-                    notification_status=NotificationStatus.objects.get(id=1),
-                    is_update_article=True,
-                )
+                notifs = Notification.objects.filter(is_update_article=True).filter(article=article).filter(
+                    from_user=article.author).filter(to_user=editor.user)
+                if notifs.count() > 0:
+                    notif = notifs.last()
+                    notif.message = f"({editor.user.email})Assalomu aleykum. Maqolamni to'g'irlab qayta yubordim!"
+                    notif.notification_status = NotificationStatus.objects.get(id=1)
+                    notif.save()
 
             return redirect('dashboard')
 
@@ -270,7 +272,6 @@ def article_view(request, pk):
             ob = ArticleFile.objects.filter(
                 article_id=article.id).filter(file_status=1).first()
             document = ob.file.url
-        lang = get_language()
 
         data = {
             "id": article.id,
@@ -286,8 +287,6 @@ def article_view(request, pk):
             "is_publish": article.is_publish,
             "created_at": article.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
             "updated_at": article.updated_at,
-            "edit_url": f"/{lang}/article/edit/{article.id}/",
-            "delete_url": f"/{lang}/article/delete/{article.id}/",
         }
         return JsonResponse(data=data)
     else:
@@ -312,12 +311,18 @@ def delete_article(request, pk):
 def get_article_authors(request, pk):
     authors = ExtraAuthor.objects.filter(article_id=pk).order_by('id')
     lang = get_language()
+    edit_url = f"/{lang}/author/edit/"
+    delete_url = f"/{lang}/author/delete/"
+    if lang == 'uz':
+        edit_url = f"/author/edit/"
+        delete_url = f"/author/delete/"
+
     data = {
         "authors": list(authors.values(
             'id', 'lname', 'fname', 'mname', 'email', 'work', 'scientific_degree__name'
         )),
-        "edit_url": f"/{lang}/author/edit/",
-        "delete_url": f"/{lang}/author/delete/",
+        "edit_url": edit_url,
+        "delete_url": delete_url,
     }
     return JsonResponse(data)
 
@@ -362,7 +367,7 @@ def edit_author(request, pk):
     if request.user.id != article.author.id:
         return render(request, 'user_app/not_access.html')
 
-    if request.method == "POST":
+    if request.method == "POST" and is_ajax(request):
         form = AddAuthorForm(request.POST, instance=author)
         if form.is_valid():
             form.save()

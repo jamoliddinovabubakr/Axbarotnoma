@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'journal',
     'import_export',
     'ckeditor',
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [

@@ -7,161 +7,205 @@
 {% block content %}
     <div id="content" class="content">
         <h3 class="page-header">{% trans "Update Article" %}</h3>
-        <div class="row">
-            <div class="col-md-9">
-                <div class="panel panel-default forshadow">
-                    <div class="panel-body">
-                        <div class="container">
-                            <hr>
+
+        <div class="panel panel-default forshadow">
+            <div class="panel-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            {% if handle_error == 1 %}
+                                <h2 class="text-danger text-center">Formani to'liq to'ldiring!</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <form class="update_article_form" data-parsley-validate="true" method="post">
+                        {% csrf_token %}
+                        {{ form.media }}
+                        <br>
+                        <div style="padding-left:10%; padding-right: 5%;">
                             <div class="row">
-                                <div class="col-12">
-                                    {% if handle_error == 1 %}
-                                        <h2 class="text-danger text-center">Formani to'liq to'ldiring!</h2>
-                                    {% endif %}
+                                <div class="col-md-12">
+                                    <h5 class="text-center"
+                                        style="color: green">{% trans "Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</h5>
+                                    <div class="form-group row m-b-15" style="visibility: hidden;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %}
+                                            <span
+                                                    class="text-danger">*</span></label>
+                                        <div class="col-md-10 col-sm-10">
+                                            <select id="id_author" name="author" class="form-control">
+                                                <option selected
+                                                        value="{{ article.author.id }}">{{ article.author.username }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Title Uzbek" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.title|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Title English" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.title_en|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <h5 class="text-center"
+                                        style="color: green">{% trans "Maqolaga mualliflarni qo'shish" %}</h5>
+                                    <button href="{% url 'add_author' article.id %}" data-toggle="modal"
+                                            class="addUser btn btn-primary btn-sm"><i
+                                            class="fa fa-plus mr-1"></i>{% trans "Add Author" %}
+                                    </button>
+                                    <br>
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered table-response">
+                                            <thead>
+                                            <tr>
+                                                <th><b>Tr</b></th>
+                                                <th><b>{% trans "Familiya" %}</b></th>
+                                                <th><b>{% trans "Ism" %}</b></th>
+                                                <th><b>{% trans "Sharif" %}</b></th>
+                                                <th><b>{% trans "Email" %}</b></th>
+                                                <th><b>{% trans "Ilmiy Daraja" %}</b></th>
+                                                <th><b>{% trans "Ish" %}</b></th>
+                                                <th width="100"><b>{% trans "Action" %}</b></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="authors_table">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Section" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.section }}
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="col-md-6">
+                                    <div class="form-group row m-b-15"
+                                         style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Country" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.country }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="col-md-6">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Type" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.article_type }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Language" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.article_lang }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Keywords Uzbek" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.keywords|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Keywords English" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.keywords_en|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstract Uzbek" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.abstract|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstract English" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.abstract_en|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Reference" %}</label>
+                                        <div class="col-md-10 col-sm-10">
+                                            {{ form.references|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row m-b-15"
+                                          style="background-color: #f3f3f3; padding: 10px; border-radius: 5px;">
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
+                                            <span
+                                                    class="text-danger">*</span></label>
+                                        <div class="col-md-10 col-sm-10">
+                                            <button href="{% url 'create_article_file' article.id %}"
+                                                    data-toggle="modal"
+                                                    class="addUser btn btn-primary btn-md"><i
+                                                    class="fa fa-file mr-1"></i>{% trans " File" %}
+                                            </button>
+                                            <span id="article_file_name" style="margin-left: 1%;"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <hr>
-                            <form class="update_article_form" data-parsley-validate="true" method="post">
-                                {% csrf_token %}
-                                {{ form.media }}
-                                <br>
-                                <div style="padding-left:10%; padding-right: 5%;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h5 class="text-center"
-                                                style="color: green">{% trans "Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</h5>
-                                            <div class="form-group row m-b-15" style="visibility: hidden;">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    <select id="id_author" name="author" class="form-control">
-                                                        <option selected
-                                                                value="{{ article.author.id }}">{{ article.author.username }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row m-b-15"
-                                                 style="background-color: #DCDCDC; padding: 10px; border-radius: 5px;">
-                                                <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Section" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    {{ form.section }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group row m-b-15"
-                                                 style="background-color: #DCDCDC; padding: 10px; border-radius: 5px;">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Title" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    {{ form.title|safe }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group row m-b-15"
-                                                 style="background-color: #DCDCDC; padding: 10px; border-radius: 5px;">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Keywords" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    {{ form.keywords|safe }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group row m-b-15"
-                                                 style="background-color: #DCDCDC; padding: 10px; border-radius: 5px;">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstract" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    {{ form.abstract|safe }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group row m-b-15"
-                                                 style="background-color: #DCDCDC; padding: 10px; border-radius: 5px;">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Reference" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    {{ form.references|safe }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group row m-b-15"
-                                                 style="background-color: #DCDCDC; padding: 10px; border-radius: 5px;">
-                                                <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
-                                                    <span
-                                                            class="text-danger">*</span></label>
-                                                <div class="col-md-10 col-sm-10">
-                                                    <button href="{% url 'create_article_file' article.id %}"
-                                                            data-toggle="modal"
-                                                            class="addUser btn btn-primary btn-md"><i
-                                                            class="fa fa-file mr-1"></i>{% trans " File" %}
-                                                    </button>
-                                                    <span id="article_file_name" style="margin-left: 1%;"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
-                                <br>
-                                <h5 class="text-center"
-                                    style="color: green">{% trans "Maqolaga mualliflarni qo'shish" %}</h5>
-                                <button href="{% url 'add_author' article.id %}" data-toggle="modal"
-                                        class="addUser btn btn-primary btn-sm"><i
-                                        class="fa fa-plus mr-1"></i>{% trans "Add Author" %}
-                                </button>
-                                <br>
-                                <br>
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-bordered table-response">
-                                        <thead>
-                                        <tr>
-                                            <th><b>Tr</b></th>
-                                            <th><b>{% trans "Familiya" %}</b></th>
-                                            <th><b>{% trans "Ism" %}</b></th>
-                                            <th><b>{% trans "Sharif" %}</b></th>
-                                            <th><b>{% trans "Email" %}</b></th>
-                                            <th><b>{% trans "Ilmiy Daraja" %}</b></th>
-                                            <th><b>{% trans "Ish" %}</b></th>
-                                            <th width="100"><b>{% trans "Action" %}</b></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="authors_table">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="row" style="padding-top: 1em">
-                                    <div class="col-md-6 col-sm-6"></div>
-                                    <div class="col-md-6 col-sm-6">
-                                        <button type="submit" style="float: right;" id="submitButtonId"
-                                                class="btn btn-success"><i
-                                                class="fa fa-paper-plane mr-2"></i>{% trans "Maqolani saqlash va yuborish" %}
-                                        </button>
-                                        <a style="float: right; margin-right: 1em" href="{% url 'dashboard' %}"
-                                           class="btn btn-outline-warning">{% trans "Yopish" %}
-                                        </a>
-                                    </div>
-                                </div>
-                            </form>
-                            <br>
                         </div>
                         <br>
-                        <hr>
-                    </div>
+
+                        <div class="row" style="padding-top: 1em">
+                            <div class="col-md-6 col-sm-6"></div>
+                            <div class="col-md-6 col-sm-6">
+                                <button type="submit" style="float: right;" id="submitButtonId"
+                                        class="btn btn-success"><i
+                                        class="fa fa-paper-plane mr-2"></i>{% trans "Maqolani saqlash va yuborish" %}
+                                </button>
+                                <a style="float: right; margin-right: 1em" href="{% url 'dashboard' %}"
+                                   class="btn btn-outline-warning">{% trans "Yopish" %}
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
                 </div>
+                <br>
+                <hr>
             </div>
             <div class="col-md-3"></div>
         </div>
@@ -191,7 +235,7 @@
                                 "<td>" + item.work + "</td>" +
                                 "<td class='with-btn' nowrap>" +
                                 `<button type="button" class="btn btn-xs btn-warning edit-author" data-url="${response.edit_url}${item.id}/"><i class="fa fa-edit mr-1"></i>Edit</button>` + " " +
-                                `<button type="button" class="btn btn-xs btn-danger remove-author" data-url="${response.delete_url}${item.id}"><i class="fa fa-trash mr-1"></i>Delete</button>` +
+                                `<button type="button" class="btn btn-xs btn-danger remove-author" data-url="${response.delete_url}${item.id}/"><i class="fa fa-trash mr-1"></i>Delete</button>` +
                                 "</td>" +
                                 "</tr>";
                             $("#authors_table").append(temp);

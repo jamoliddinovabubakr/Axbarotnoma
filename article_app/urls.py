@@ -21,7 +21,7 @@ urlpatterns = [
     path('author/edit/<int:pk>/', edit_author, name='edit_author'),
     path('author/delete/<int:pk>/', delete_author, name='delete_author'),
 
-    path('send_message/<int:pk>/<int:user_id>', send_message, name='send_message'),
+    path('send_message/<int:pk>/<int:user_id>/', send_message, name='send_message'),
 
     path('sections/', list_sections, name='sections'),
     path('article_types/', article_type_list, name='article_types'),

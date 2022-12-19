@@ -39,40 +39,42 @@
             <div class="col-md-2"></div>
         </div>
 
-        <div class="row d-flex justify-content-center">
+        <div class="row forshadow" style="padding: 15px">
             <h5>Muallifga taqrizchilarga yuborishdan oldin qayta yuborishi yoki rad etish qismi</h5>
             <textarea id="resubmit_or_reject_text" class="form-control" {% if article.article_status.id != 1 %}
                       disabled {% endif %}
                       placeholder="Muallifga qayta yuborish yoki rad etganiz sababini yozing..."></textarea>
 
-            <button type="button" style="width:50%; margin-top: 10px; margin-right: 1px;"
-                    data-url="{% url 'editor_submit_result' %}"
-                    {% if article.article_status.id != 1 %} disabled {% endif %}
-                    data-id="{{ article.id }},{{ notif_id }},0"
-                    data-action="{% url 'editor_check_article' notif_id %}"
-                    class="btn btn-md btn-gray forshadow resultBtnUnReview">
-                <i class="fa fa-comment"></i> Muallifga yuborish
-            </button>
-            <button type="button" style="width:50%; margin-top: 10px; margin-left: 1px;"
-                    data-url="{% url 'editor_submit_result' %}"
-                    {% if article.article_status.id != 1 %} disabled {% endif %}
-                    data-id="{{ article.id }},{{ notif_id }},1"
-                    data-action="{% url 'editor_check_article' notif_id %}"
-                    class="btn btn-md btn-danger forshadow resultBtnUnReview">
-                <i class="fa fa-comment"></i> Maqola jurnalga to'g'ri kelmaydi
-            </button>
+            <div class="col-md-4">
+                <button type="button" style="margin-top: 10px; margin-right: 1px;"
+                        data-url="{% url 'editor_submit_result' %}"
+                        {% if article.article_status.id != 1 %} disabled {% endif %}
+                        data-id="{{ article.id }},{{ notif_id }},0"
+                        data-action="{% url 'editor_check_article' notif_id %}"
+                        class="btn btn-md btn-gray resultBtnUnReview">
+                    <i class="fa fa-comment"></i> Muallifga yuborish
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" style="margin-top: 10px; margin-left: 1px;"
+                        data-url="{% url 'editor_submit_result' %}"
+                        {% if article.article_status.id != 1 %} disabled {% endif %}
+                        data-id="{{ article.id }},{{ notif_id }},1"
+                        data-action="{% url 'editor_check_article' notif_id %}"
+                        class="btn btn-md btn-danger resultBtnUnReview">
+                    <i class="fa fa-comment"></i> Maqola jurnalga to'g'ri kelmaydi
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" id="view-article-messages-by-editor"
+                        style="margin-top: 10px; margin-left: 1px;"
+                        data-url="{% url 'comment_author_vs_editor' article.id %}"
+                        class="btn btn-md btn-info">
+                    <i class="fa fa-comment"></i> LOAD COMMENTS
+                </button>
+            </div>
+        </div>
 
-        </div>
-        <hr>
-        <br>
-        <div class="row d-flex justify-content-center">
-            <button type="button" id="view-article-messages-by-editor"
-                    data-url="{% url 'comment_author_vs_editor' article.id %}"
-                    class="btn btn-md btn-info forshadow">
-                <i class="fa fa-comment"></i> LOAD COMMENTS
-            </button>
-        </div>
-        <br>
         <div class="row">
             <div class="col-lg-12">
                 <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxEditor">
@@ -106,33 +108,54 @@
                 </div>
             </div>
 
-            <div class="col-lg-12">
-                <div class="col-lg-12 col-lg-6">
-                    <br>
-                    <div class="m-b-10 m-t-10 f-s-12">
-                        <h5 class="text-inverse">Send to Reviewers.</h5>
-                    </div>
+            <div class="col-lg-12 col-lg-6">
+                <hr>
+                <div class="m-b-10 m-t-10 f-s-12">
+                    <h5 class="text-inverse">Send to Reviewers.</h5>
+                </div>
 
-                    <div class="jumbotron forshadow">
-                        <div class="form-group row m-b-10 align-items-center">
-                            <label class="col-md-3 col-form-label"><h4>Choosing Types</h4></label>
-                            <div class="col-md-9">
-                                <div class="form-check form-check-inline">
-                                    <button type="button"
-                                            data-url="{% url 'load_reviewers' %}"
-                                            class="btn btn-primary forshadow choose_type_sumit_btn" data-id="1">
-                                        Choose Reviewer
-                                    </button>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <button type="button" class="btn btn-info forshadow choose_type_sumit_btn"
-                                            data-id="2">Random Choosing
-                                    </button>
-                                </div>
-                            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check form-check-inline">
+                            <button type="button"
+                                    data-url="{% url 'load_reviewers' %}"
+                                    class="btn btn-primary forshadow choose_type_sumit_btn" data-id="1">
+                                Choose Reviewer
+                            </button>
                         </div>
-                        <br>
-
+                        <div class="form-check form-check-inline">
+                            <button type="button" class="btn btn-info forshadow choose_type_sumit_btn"
+                                    data-id="2">Random Choosing
+                            </button>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <form method="post" data-url="{% url 'random_sending_reviewer' %}"
+                                  class="random_sending_reviewer_form">
+                                {% csrf_token %}
+                                <br>
+                                <div class="container" id="random_btn" style="display: none;">
+                                    <label>Choose number of reviewers
+                                        <input type="number" id="reviewer_number" name="reviewer_number" value="1"
+                                                {% if article.article_status.id != 1 or article.is_resubmit %}
+                                               disabled {% endif %}
+                                               class="form-control">
+                                    </label>
+                                    <button class="btn btn-md btn-info" id="random_send_reviewer_btn" type="button"
+                                            data-action="{% url 'editor_check_article' notif_id %}"
+                                            data-id="{{ article.id }},{{ notif_id }}"
+                                            {% if article.article_status.id != 1 or article.is_resubmit %}
+                                            disabled {% endif %}>Generate
+                                        Random Choosing Reviewers
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6 col-md-4 col-md-3">
                         <form method="post" id="choose_reviewer_form" data-url="{% url 'sending_reviewer' %}">
                             {% csrf_token %}
                             <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget"
@@ -162,27 +185,12 @@
                                 </div>
                             </div>
                         </form>
-                        <form method="post" data-url="{% url 'random_sending_reviewer' %}" class="random_sending_reviewer_form">
-                            {% csrf_token %}
-                            <div class="container" id="random_btn" style="display: none;">
-                                <label>Choose number of reviewers
-                                    <input type="number" id="reviewer_number" name="reviewer_number" value="1"
-                                            {% if article.article_status.id != 1 or article.is_resubmit %}
-                                           disabled {% endif %}
-                                           class="form-control">
-                                </label>
-                                <button class="btn btn-md btn-info" id="random_send_reviewer_btn" type="button"
-                                        data-action="{% url 'editor_check_article' notif_id %}"
-                                        data-id="{{ article.id }},{{ notif_id }}" {% if article.article_status.id != 1 or article.is_resubmit %}
-                                        disabled {% endif %}>Generate
-                                    Random Choosing Reviewers
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
+
             </div>
         </div>
+        <hr>
         <div class="row">
             <div class="col-lg-12 col-lg-6">
                 <div class="m-b-10 m-t-10 f-s-12">
@@ -190,50 +198,55 @@
                 </div>
                 <form method="post" data-url="{% url 'approve_publish' %}" class="approve_form">
                     {% csrf_token %}
-                    <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},0"
-                            data-action="{% url 'editor_check_article' notif_id %}"
-                            class="btn btn-sm btn-success forshadow resultBtn"
-                            id="approveForPublicationBtn"
-                            {% if article.article_status.id != 5 %} disabled {% endif %}
-                            {% if not is_ready_publish %} disabled {% endif %}>
-                        TASDIQLASH
-                    </button>
-                    <br>
-                    <br>
-                    <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},1"
-                            data-action="{% url 'editor_check_article' notif_id %}"
-                            class="btn btn-sm btn-danger forshadow resultBtn"
-                            id="rejectedBtn"
-                            {% if article.article_status.id != 5 %} disabled {% endif %}
-                            {% if not is_ready_rejected %} disabled {% endif %}
-                    >
-                        RAD ETISH
-                    </button>
-                    <br>
-                    <br>
-                    <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},2"
-                            data-action="{% url 'editor_check_article' notif_id %}"
-                            class="btn btn-sm btn-primary forshadow resultBtn"
-                            id="resubmitBtn"
-                            {% if article.article_status.id != 5 %} disabled {% endif %}
-                            {% if not is_ready_resubmit %} disabled {% endif %}>
-                        MUALLIFGA QAYTA YUBORISH
-                    </button>
-                    <p></p>
-                    {% if is_ready_resubmit %}
-                        <textarea id="resubmit_text" class="form-control"
-                                  placeholder="Muallifga qayta yuborish sababini yozing..."></textarea>
-                    {% endif %}
-                    <br>
-                    <button style="width:100%;" data-id="{{ article.id }},{{ notif_id }},3"
-                            data-action="{% url 'editor_check_article' notif_id %}"
-                            class="btn btn-sm btn-info forshadow resultBtn"
-                            id="rejectedExtraReviewerBtn"
-                            {% if article.article_status.id != 5 %} disabled {% endif %}
-                            {% if not is_ready_resubmit_extra_reviewer %} disabled {% endif %}
-                    >
-                        BOSHQA TAQRIZCHIGA MAQOLANI YUBORISH
-                    </button>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button data-id="{{ article.id }},{{ notif_id }},0"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-success forshadow resultBtn"
+                                    id="approveForPublicationBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_publish %} disabled {% endif %}>
+                                TASDIQLASH
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button data-id="{{ article.id }},{{ notif_id }},1"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-danger forshadow resultBtn"
+                                    id="rejectedBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_rejected %} disabled {% endif %}>RAD ETISH
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button data-id="{{ article.id }},{{ notif_id }},2"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-primary forshadow resultBtn"
+                                    id="resubmitBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_resubmit %} disabled {% endif %}>MUALLIFGA QAYTA YUBORISH
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button data-id="{{ article.id }},{{ notif_id }},3"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-info forshadow resultBtn"
+                                    id="rejectedExtraReviewerBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_resubmit_extra_reviewer %} disabled {% endif %}>BOSHQA
+                                TAQRIZCHIGA MAQOLANI YUBORISH
+                            </button>
+                        </div>
+                    </div>
+                <br>
+                    <div class="row">
+                        {% if is_ready_resubmit %}
+                            <textarea id="resubmit_text" class="form-control"
+                                      placeholder="Muallifga qayta yuborish sababini yozing..."></textarea>
+                        {% endif %}
+                        <br>
+                    </div>
                 </form>
                 <br>
                 <br>
@@ -324,7 +337,8 @@
                                     Not yet {% endif %}</td>
                                 <td>
                                     {% if item.status.id == 5 and article.article_status.id == 1 %}
-                                        <form method="post" data-url="{% url 'editor_resubmit_to_reviewer' %}" id="editor_resubmit_to_reviewer">
+                                        <form method="post" data-url="{% url 'editor_resubmit_to_reviewer' %}"
+                                              id="editor_resubmit_to_reviewer">
                                             {% csrf_token %}
                                             <button type="button" data-id="{{ item.id }},{{ notif_id }}"
                                                     id="resubmit_to_reviewer_btn_{{ item.id }}"

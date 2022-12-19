@@ -31,6 +31,10 @@ def logout_user(request):
     return redirect('main_page')
 
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
 @login_required(login_url='login')
 def countries_list(request):
     objects = Country.objects.all()
@@ -105,11 +109,29 @@ def users_list(request):
 
 @login_required(login_url='login')
 def load_menus(request):
-    menus = Menu.objects.filter(status=True).order_by('order')
+    user = get_object_or_404(User, id=request.user.id)
+    menus = Menu.objects.filter(status=True).filter(type=0).order_by('order')
+    menu_list = []
+    roles = []
+    for item in user.roles.all().order_by('id'):
+        roles.append(item.id)
+    role_user = Role.objects.get(pk=min(roles))
+
+    for menu in menus:
+        array = []
+        for role in menu.allowed_roles.all():
+            array.append(role.id)
+        if role_user.id in array:
+            menu_list.append(menu.id)
+
+    items = menus.filter(id__in=menu_list)
+
+    lang = get_language()
     data = {
-        "menus": list(menus.values(
+        "menus": list(items.values(
             'id', 'name', 'icon_name', 'url', 'url_name', 'order'
-        ))
+        )),
+        "lang": lang,
     }
     return JsonResponse(data=data)
 
@@ -124,10 +146,6 @@ def reviewers_list(request):
         return render(request, "user_app/reviewers_list.html", data)
     else:
         return HttpResponse("Error")
-
-
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
 @unauthenticated_user
@@ -360,18 +378,20 @@ def password_reset(request):
 # @allowed_users(menu_url='profile_page')
 def user_dashboard(request):
     user = request.user
-    myqueues = Article.objects.filter(author=user).order_by('id')
-    article = myqueues.last()
+    myqueues = Article.objects.filter(author=user).filter(
+        Q(article_status_id=1) | Q(article_status_id=4) | Q(article_status_id=5) | Q(article_status_id=6) |
+        Q(article_status_id=7) | Q(article_status_id=8) | Q(article_status_id=10)).order_by('-updated_at')
 
     myarchives = Article.objects.filter(author=user).filter(
         Q(article_status_id=2) | Q(article_status_id=3) | Q(article_status_id=9)).order_by(
         '-updated_at')
 
-    reviewers = ReviewerArticle.objects.filter(article=article).order_by('id')
+    # reviewers = ReviewerArticle.objects.filter(article=article).order_by('id')
 
     context = {
-        'article': article,
-        'reviewers': reviewers,
+        'myqueues': myqueues,
+        'myqueues_count': myqueues.count(),
+        # 'reviewers': reviewers,
         'myarchives': myarchives,
         'myarchives_count': myarchives.count(),
     }
@@ -406,16 +426,25 @@ def editor_notifications(request):
     if request.method == 'GET' and is_ajax(request):
         user = User.objects.get(id=request.user.id)
 
-        uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
-            Q(notification_status_id=1) | Q(notification_status_id=2)).order_by('-created_at')
+        uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(notification_status_id=1).order_by('-id')
+
+        checking_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(notification_status_id=2).order_by('-id')
 
         check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
-            notification_status_id=3).order_by('-created_at')
+            notification_status_id=3).order_by('-id')
 
         lang = get_language()
+        url = f"/{lang}/profile/editor_check_article/"
+        if lang == 'uz':
+            url = f"/profile/editor_check_article/"
 
         data = {
             "uncheck_notifications": list(uncheck_notifications.values(
+                'id', 'created_at', 'article__id', 'article__title', 'notification_status__id',
+                'notification_status__name',
+                'article__author__email', 'is_update_article'
+            )),
+            "checking_notifications": list(checking_notifications.values(
                 'id', 'created_at', 'article__id', 'article__title', 'notification_status__id',
                 'notification_status__name',
                 'article__author__email', 'is_update_article'
@@ -425,7 +454,7 @@ def editor_notifications(request):
                 'notification_status__name',
                 'article__author__email', 'is_update_article'
             )),
-            "view_url": f"/{lang}/profile/editor_check_article/",
+            "url": url,
         }
 
         return JsonResponse(data)
@@ -443,6 +472,9 @@ def reviewer_notifications(request):
         notification_status_id=3).order_by('-created_at')
 
     lang = get_language()
+    url = f"/{lang}/profile/reviewer_check_article/"
+    if lang == 'uz':
+        url = f"/profile/reviewer_check_article/"
 
     data = {
         "uncheck_notifications": list(uncheck_notifications.values(
@@ -453,7 +485,7 @@ def reviewer_notifications(request):
             'id', 'created_at', 'article__id', 'article__title', 'notification_status__id', 'notification_status__name',
             'is_update_article', 'from_user__email', 'message'
         )),
-        "view_url": f"/{lang}/profile/reviewer_check_article/",
+        "url": url,
     }
 
     return JsonResponse(data)
@@ -466,6 +498,12 @@ def author_vs_editor_vs_reviewer(request, pk):
     user = get_object_or_404(User, pk=request.user.id)
     current_user_id = user.id
     author_id = article.author.id
+
+    lang = get_language()
+
+    url = f"/{lang}/send_message/"
+    if lang == 'uz':
+        url = f"/send_message/"
 
     if request.method == "GET" and is_ajax(request):
         current_user_from = Notification.objects.filter(
@@ -486,6 +524,7 @@ def author_vs_editor_vs_reviewer(request, pk):
 
         data = {
             "article_title": article.title,
+            "url": url,
             "current_user_id": current_user_id,
             "author_id": author_id,
             "is_visible_comment": True,
@@ -853,9 +892,9 @@ def approve_publish(request):
             article.is_resubmit = True
             article.save()
 
-            if notif.notification_status.id == 2:
-                notif.notification_status = NotificationStatus.objects.get(id=3)
-                notif.save()
+            # if notif.notification_status.id == 2:
+            #     notif.notification_status = NotificationStatus.objects.get(id=3)
+            #     notif.save()
 
             Notification.objects.create(
                 article=article,
@@ -964,9 +1003,9 @@ def editor_submit_result(request):
             article.article_status = ArticleStatus.objects.get(pk=7)
             article.save()
 
-            if notif.notification_status.id == 2:
-                notif.notification_status = NotificationStatus.objects.get(id=3)
-                notif.save()
+            # if notif.notification_status.id == 2:
+            #     notif.notification_status = NotificationStatus.objects.get(id=3)
+            #     notif.save()
 
             Notification.objects.create(
                 article=article,

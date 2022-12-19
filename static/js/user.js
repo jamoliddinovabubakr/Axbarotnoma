@@ -21,15 +21,11 @@ $('body').on('click', '.create_article_btn', function (e) {
 
 $('body').on('click', '.authorWrite-message-btn', function (e) {
     e.preventDefault();
-
-    const data = $(this).data('id');
-    const array = data.split(',');
-    const id = array[0];
-    const user_id = parseInt(array[1]);
+    const url = $(this).data('url');
 
     $.ajax({
         type: 'GET',
-        url: "/send_message/" + id + "/" + user_id,
+        url: url,
         success: function (response) {
             $('#write_message_div_form').html(response);
             $('#send-message-modal').modal('show');
@@ -44,48 +40,6 @@ $('body').on('click', '.authorWrite-message-btn', function (e) {
     return false;
 });
 
-function OnClickViewArticle(id) {
-    $('#MessageBoxAuthor').css("display", "none");
-    let url = $('#article_view_btn_' + id).data('url');
-
-    $.ajax({
-        type: "GET",
-        url: url,
-        success: function (response) {
-            $("#articleView").css("display", "block");
-
-            console.log(response);
-            let fileID = response['file'];
-            let FileArticle = "File Not Exists";
-            if (fileID != "None") {
-                FileArticle = `<a href='${response['file']}' download role='button'>` + `<span>Yuklab olish</span></a>`
-            }
-            let temp = "<tr><td>" +
-                response['id'] + "</td><td>" + FileArticle
-                + `</td><td>` +
-                response['title'] + `</td><td>` +
-                response['created_at'] + `</td><td>` +
-                `<button type="button" data-url="${response['edit_url']}" class="btn btn-sm btn-outline-warning edit_article_btn" disabled><i class="fa fa-edit"></i></button>` + " " +
-                `<button type="button" data-url="${response['delete_url']}" class="btn btn-sm btn-outline-danger remove_article_btn"><i class="fa fa-trash"></i></button>`
-                + "</td></tr>";
-            $("#articleDetail").html(temp);
-            if (response.article_status_id === 6) {
-                $('.edit_article_btn').prop('disabled', false);
-            }
-            if (response.article_status_id === 7) {
-                $('.edit_article_btn').prop('disabled', false);
-            }
-            if (response.article_status_id === 8) {
-                $('.edit_article_btn').prop('disabled', false);
-            }
-
-        },
-        error: function (response) {
-            console.log(response);
-        }
-    });
-}
-
 $('body').on('click', '.view_message_btn', function (e) {
     e.preventDefault();
     let id = $(this).data('id');
@@ -95,7 +49,6 @@ $('body').on('click', '.view_message_btn', function (e) {
         type: "GET",
         url: url,
         success: function (response) {
-            console.log(response);
             if (response.is_visible_comment) {
                 $('#MessageBoxAuthor').css("display", "block");
 
@@ -139,7 +92,7 @@ $('body').on('click', '.view_message_btn', function (e) {
                             `</div>
                                                                 <div class="widget-chat-time">` + `</div>
                                                                 <br><div class="widget-chat-ansewer">
-                                                                    <button type="button" data-id="${id},${item.from_user__id}" class="btn btn-white btn-sm authorWrite-message-btn">Ansewer</button>
+                                                                    <button type="button" data-url="${response.url}${id}/${item.from_user__id}/" class="btn btn-white btn-sm authorWrite-message-btn">Ansewer</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -202,9 +155,3 @@ $('body').on('click', '.remove_article_btn', function (e) {
         }
     });
 });
-
-
-function OnClickSubmissionTab() {
-    $('#articleView').css("display", "none");
-    $('#MessageBox').css("display", "none");
-}

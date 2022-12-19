@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import TextInput, Textarea, FileInput, Select
 from article_app.models import *
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 
 class CreateArticleForm(forms.ModelForm):
@@ -77,7 +78,7 @@ class CreateArticleFileForm(forms.ModelForm):
 class UpdateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title', 'section', 'abstract', 'keywords', 'references']
+        fields = ['title','title_en', 'section', 'abstract', 'keywords','abstract_en', 'keywords_en', 'references', 'article_type', 'article_lang', 'country']
 
         widgets = {
             'section': Select(attrs={
@@ -91,32 +92,77 @@ class UpdateArticleForm(forms.ModelForm):
             'title': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
-                'rows': '3',
+                'rows': '1',
                 'name': 'title',
                 'id': 'id_title',
+            }),
+            'title_en': Textarea(attrs={
+                'class': 'form-control',
+                'data - parsley - required': "true",
+                'rows': '1',
+                'name': 'title-en',
+                'id': 'id_title_en',
             }),
             'abstract': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
-                'rows': '5',
+                'rows': '3',
                 'placeholder': 'Enter...',
                 'name': 'abstract',
                 'id': 'id_abstract',
+            }),
+            'abstract_en': Textarea(attrs={
+                'class': 'form-control',
+                'data - parsley - required': "true",
+                'rows': '3',
+                'placeholder': 'Enter...',
+                'name': 'abstract_en',
+                'id': 'id_abstract_en',
             }),
             'keywords': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
                 'name': 'keywords',
                 'id': 'id_keywords',
+                'rows': '3',
+            }),
+            'keywords_en': Textarea(attrs={
+                'class': 'form-control',
+                'data - parsley - required': "true",
+                'name': 'keywords_en',
+                'id': 'id_keywords_en',
+                'rows': '3',
             }),
             'references': Textarea(attrs={
                 'class': 'form-control',
                 'data - parsley - required': "true",
-                'rows': '5',
+                'rows': '3',
                 'placeholder': 'Enter...',
                 'name': 'references',
                 'id': 'id_references',
 
+            }),
+            'country': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data-size': "10",
+                'data-live-search': "true",
+                'data-style': "btn-white",
+                'data-placeholder': "Tanlang",
+                'data-parsley-required': "true",
+            }),
+            'article_type': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data-style': "btn-white",
+                'data - parsley - required': "true",
+            }),
+            'article_lang': Select(attrs={
+                'class': 'form-control selectpicker',
+                'data - size': "10",
+                'data-live-search': "true",
+                'data-style': "btn-white",
+                'data - parsley - required': "true",
             }),
         }
 

@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 from django.urls import reverse
 from django.template.defaultfilters import slugify
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Section(models.Model):
@@ -58,8 +59,11 @@ class Article(models.Model):
     file = models.ForeignKey('article_app.ArticleFile', related_name="article_file", blank=True,
                              on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=255, blank=True)
+    title_en = models.CharField(max_length=255, blank=True)
     abstract = RichTextField(blank=True)
+    abstract_en = RichTextField(blank=True)
     keywords = RichTextField(blank=True)
+    keywords_en = RichTextField(blank=True)
     references = RichTextField(blank=True, null=True)
     article_status = models.ForeignKey('article_app.ArticleStatus', on_delete=models.CASCADE, blank=True, null=True)
     is_publish = models.BooleanField(default=False)

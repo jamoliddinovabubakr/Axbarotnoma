@@ -13,14 +13,23 @@
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a href="#uncheck" data-toggle="tab" class="nav-link active">
-                            <span class="d-sm-none">Tab 1</span>
-                            <span class="d-sm-block d-none">Unchecks</span>
+                            <span class="d-sm-none">Unchecks</span>
+                            <span class="d-sm-block d-none">Unchecks &nbsp;<span
+                                    class="badge badge-grey" id="uncheck_count"></span></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#checking" data-toggle="tab" class="nav-link">
+                            <span class="d-sm-none">Checking</span>
+                            <span class="d-sm-block d-none">Checking &nbsp;<span
+                                    class="badge badge-warning" id="checking_count"></span></span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#check" data-toggle="tab" class="nav-link">
-                            <span class="d-sm-none">Tab 2</span>
-                            <span class="d-sm-block d-none">Checked History</span>
+                            <span class="d-sm-none">Checked History</span>
+                            <span class="d-sm-block d-none">Checked History &nbsp;<span
+                                    class="badge badge-success" id="check_count"></span></span>
                         </a>
                     </li>
                 </ul>
@@ -34,6 +43,21 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <tbody id="editor_uncheck_notifications">
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="checking">
+                        <div class="row">
+                            <div class="col-md-6"><h5 class="m-t-10"> Tekshirilayotgan xabarlar</h5>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tbody id="editor_checking_notifications">
 
 
                                 </tbody>
@@ -69,7 +93,13 @@
                     type: 'GET',
                     url: url,
                     success: function (response) {
+
+                        $('#uncheck_count').text(response.uncheck_notifications.length);
+                        $('#check_count').text(response.check_notifications.length);
+                        $('#checking_count').text(response.checking_notifications.length);
+
                         $('#editor_uncheck_notifications').empty();
+                        $('#editor_checking_notifications').empty();
                         $('#editor_checked_notifications').empty();
 
                         if (response.uncheck_notifications.length > 0) {
@@ -84,7 +114,7 @@
                                     item.article__title.toString().slice(0, 100) + `</td>` +
                                     `<td>` + time_string + `</td>` +
                                     `<td id="view_notif_id${item.id}"></td>` +
-                                    `<td><button type="button" data-url="${response.view_url}${item.id}/" class="btn btn-primary btn-sm article_view_editor" `+
+                                    `<td><button type="button" data-url="${response.url}${item.id}/" class="btn btn-primary btn-sm article_view_editor" ` +
                                     `style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </button></td>`
                                     + `</tr>`;
@@ -95,9 +125,6 @@
                                 if (item.notification_status__id === 1) {
                                     $('#view_notif_id' + item.id).html("<span class='badge badge-danger'>" + item.notification_status__name + "</span>");
                                 }
-                                if (item.notification_status__id === 2) {
-                                    $('#view_notif_id' + item.id).html("<span class='badge badge-warning'>" + item.notification_status__name + "</span>");
-                                }
 
                             }
                         } else {
@@ -105,6 +132,37 @@
                                 `<td><h3 class="text-center" style="color: green;">NO DATA</h3></td>`
                                 + `</tr>`;
                             $('#editor_uncheck_notifications').append(tr);
+                        }
+
+                        if (response.checking_notifications.length > 0) {
+                            for (let item of response.checking_notifications) {
+
+                                let time = new Date(item.created_at);
+                                let time_string = time.toLocaleString();
+
+                                let checking = `<tr>` +
+                                    `<td>` + item.id + `</td>` +
+                                    `<td><b>` + item.article__author__email + `</b><br>` +
+                                    item.article__title.toString().slice(0, 100) + `</td>` +
+                                    `<td>` + time_string + `</td>` +
+                                    `<td id="view_notif_cheking_id${item.id}"></td>` +
+                                    `<td><button type="button" data-url="${response.url}${item.id}/" class="btn btn-primary btn-sm article_view_editor" ` +
+                                    `style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                                </button></td>`
+                                    + `</tr>`;
+
+                                $('#editor_checking_notifications').append(checking);
+
+
+                                $('#view_notif_cheking_id' + item.id).html("<span class='badge badge-warning'>" + item.notification_status__name + "</span>");
+
+
+                            }
+                        } else {
+                            let tr = `<tr>` +
+                                `<td><h3 class="text-center" style="color: green;">NO DATA</h3></td>`
+                                + `</tr>`;
+                            $('#editor_checking_notifications').append(tr);
                         }
 
                         if (response.check_notifications.length > 0) {
@@ -119,13 +177,13 @@
                                     item.article__title.toString().slice(0, 100) + `</td>` +
                                     `<td>` + time_string + `</td>` +
                                     `<td id="view_notif_checked_id${item.id}"></td>` +
-                                    `<td><button type="button" data-url="${response.view_url}${item.id}/" class="btn btn-primary btn-sm article_view_editor" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
+                                    `<td><button type="button" data-url="${response.url}${item.id}/" class="btn btn-primary btn-sm article_view_editor" style="float: right"><i class="fas fa-fw m-r-5 fa-pen"></i>View
                                 </button></td>`
                                     + `</tr>`;
 
                                 $('#editor_checked_notifications').append(checked);
 
-                                if (item.notification_status__id == 3) {
+                                if (item.notification_status__id === 3) {
                                     $('#view_notif_checked_id' + item.id).html("<span class='badge badge-success'>" + item.notification_status__name + "</span>");
                                 }
 
@@ -140,7 +198,7 @@
                         console.log(response);
                     }
                 });
-            }, 1500);
+            }, 2000);
         });
     </script>
 {% endblock %}

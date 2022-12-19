@@ -72,7 +72,8 @@
                 success: function (response) {
                     if (response.result) {
                         $('#create_article_modal').modal('hide');
-                        window.location.href = response.url;
+                        let url = response.url.toString();
+                        window.location.href = url;
                     } else {
                         swal({
                             title: response.message,

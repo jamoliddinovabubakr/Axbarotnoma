@@ -293,7 +293,7 @@ $('body').on('click', '#view-article-messages-by-editor', function (e) {
                         `</div><div class="widget-chat-message">` + item.message + `</div>
                                              <div class="widget-chat-time">` + `</div>
                                              <br><div class="widget-chat-ansewer">
-                                                <button type="button" data-id="${id},${item.from_user__id}" class="btn btn-white btn-sm editorWrite-message-btn">Ansewer</button>
+                                                <button type="button" data-url="${response.url}${id}/${item.from_user__id}/" class="btn btn-white btn-sm editorWrite-message-btn">Ansewer</button>
                                             </div>
                                             </div></div></div>`;
                     $('#editor_chat_body').append(temp2);
@@ -311,14 +311,12 @@ $('body').on('click', '#view-article-messages-by-editor', function (e) {
 $('body').on('click', '.editorWrite-message-btn', function (e) {
     e.preventDefault();
 
-    const data = $(this).data('id');
-    const array = data.split(',');
-    const id = array[0];
-    const user_id = parseInt(array[1]);
+    const url = $(this).data('url');
+    alert(url)
 
     $.ajax({
         type: 'GET',
-        url: "/send_message/" + id + "/" + user_id,
+        url: url,
         success: function (response) {
             $('#writeeditor_message_div').html(response);
             $('#send-message-modal').modal('show');
