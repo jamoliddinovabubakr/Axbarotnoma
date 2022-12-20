@@ -31,6 +31,8 @@ class Gender(models.Model):
 
 class Role(models.Model):
     name = models.CharField(_('Name'), max_length=255, unique=True)
+    code_name = models.CharField(max_length=10, blank=True, null=True)
+    level = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -68,9 +70,11 @@ class User(AbstractUser):
     @property
     def get_roles(self):
         roles = []
+        levels = []
         for role in self.roles.all():
             roles.append(role.id)
-        return roles
+            levels.append(role.level)
+        return roles, levels
 
     def __str__(self):
         return self.username

@@ -3,7 +3,7 @@ from django.contrib.auth.models import Permission
 from django.db.models import Q
 from django.shortcuts import redirect, render, get_object_or_404
 
-from user_app.models import Menu
+from user_app.models import Menu, User, Role
 
 
 def unauthenticated_user(view_func):
@@ -27,29 +27,33 @@ def password_reset_authentification(view_func):
     return wrapper_func
 
 
-def allowed_users(perm=None, menu_url=None):
+def allowed_users(role=None):
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):
-            if perm and menu_url is None:
-                user = request.user
-                permissions = [p.codename for p in Permission.objects.filter(Q(user=user) | Q(group__user=user)).all()]
-                if perm in permissions:
-                    return view_func(request, *args, **kwargs)
-                else:
-                    return render(request, 'user_app/not_access.html')
-            elif menu_url and perm is None:
-                menu = get_object_or_404(Menu, url=menu_url)
-                roles = menu.get_roles()
-                user_role = request.user.role.name
-                if user_role in roles:
-                    return view_func(request, *args, **kwargs)
-                else:
-                    return render(request, 'user_app/not_access.html')
+            if role is not None:
+                user = get_object_or_404(User, pk=request.user.id)
+                if len(role) == 1:
+                    current_user_roles = user.roles.all()
+                    rol = Role.objects.get(code_name=role[0])
+                    if rol in current_user_roles:
+                        return view_func(request, *args, **kwargs)
+                    else:
+                        return render(request, 'user_app/not_access.html')
+                if len(role) > 1:
+                    r, lv = user.get_roles
+                    current_role_level = min(lv)
+                    levels = []
+                    for code_name in role:
+                        t = get_object_or_404(Role, code_name=code_name)
+                        levels.append(t.level)
+                    if current_role_level in levels:
+                        return view_func(request, *args, **kwargs)
+                    else:
+                        return render(request, 'user_app/not_access.html')
 
         return wrapper_func
 
     return decorator
-
 
 # def admin_only(view_func):
 #     def wrapper_func(request, *args, **kwargs):

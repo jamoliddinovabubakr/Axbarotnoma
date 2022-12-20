@@ -2,6 +2,7 @@ from django import forms
 from django.forms import Select, TextInput, SelectMultiple
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from user_app.models import *
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 
 class CreateUserForm(UserCreationForm):
@@ -77,6 +78,10 @@ class UpdateUserForm(UserChangeForm):
                 'class': 'form-control work',
                 'type': 'text',
                 'placeholder': 'Please enter your work',
+            }),
+            'birthday': DatePickerInput(attrs={
+                'class': 'form-control birthday',
+                'name': 'birthday',
             }),
         }
 

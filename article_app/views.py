@@ -23,6 +23,7 @@ from django.http import HttpResponseRedirect
 from django.urls.base import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.utils.translation import activate, get_language
+from django.utils.translation import gettext_lazy as _
 
 
 def is_ajax(request):
@@ -58,6 +59,7 @@ def main_page(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def list_sections(request):
     sections = Section.objects.all()
     context = {
@@ -67,6 +69,7 @@ def list_sections(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def article_type_list(request):
     objects = ArticleType.objects.all()
     context = {
@@ -76,6 +79,7 @@ def article_type_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def article_stages_list(request):
     objects = Stage.objects.all()
     context = {
@@ -85,6 +89,7 @@ def article_stages_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def article_status_list(request):
     objects = ArticleStatus.objects.all()
     context = {
@@ -94,6 +99,7 @@ def article_status_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def notification_status_list(request):
     objects = NotificationStatus.objects.all()
     context = {
@@ -103,6 +109,7 @@ def notification_status_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def create_article(request):
     user = User.objects.get(pk=request.user.id)
     if request.method == "POST" and is_ajax(request):
@@ -152,37 +159,49 @@ def create_article(request):
 
 
 @login_required(login_url='login')
+# @allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def update_article(request, pk):
     user = request.user
     editor = Editor.objects.all().last()
     articles = Article.objects.filter(pk=pk)
     if articles.count() == 0:
         return render(request, 'user_app/not_access.html')
+
     article = articles.first()
     if user != article.author:
         return render(request, 'user_app/not_access.html')
 
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, instance=article)
+
+        if not form.has_changed():
+            return JsonResponse({'result': False, "message": _("The form data is unchanged!")})
+
         if form.is_valid():
             files = ArticleFile.objects.filter(
                 article=article).filter(file_status=1)
             title = str(request.POST.get('title')).replace(
                 '<p>', '').replace('</p>', '')
+            title_en = str(request.POST.get('title_en')).replace(
+                '<p>', '').replace('</p>', '')
             abstrk = str(request.POST.get('abstract')).replace(
                 '<p>', '').replace('</p>', '')
+            abstrk_en = str(request.POST.get('abstract_en')).replace(
+                '<p>', '').replace('</p>', '')
             keywords = str(request.POST.get('keywords')).replace(
+                '<p>', '').replace('</p>', '')
+            keywords_en = str(request.POST.get('keywords_en')).replace(
                 '<p>', '').replace('</p>', '')
             references = str(request.POST.get('references')).replace(
                 '<p>', '').replace('</p>', '')
 
-            if len(abstrk) == 0 or len(keywords) == 0 or len(references) == 0 or len(title) == 0 or files.count() == 0:
-                context = {
-                    'form': UpdateArticleForm(instance=article),
-                    'article': article,
-                    'handle_error': 1,
+            if len(keywords_en) == 0 or len(abstrk_en) == 0 or len(title_en) == 0 or len(abstrk) == 0 or len(
+                    keywords) == 0 or len(references) == 0 or len(title) == 0 or files.count() == 0:
+                data = {
+                    'result': False,
+                    'message': "Formani to'liq to'ldiring...!",
                 }
-                return render(request, "article_app/crud/update_article.html", context=context)
+                return JsonResponse(data)
 
             form.save()
 
@@ -209,23 +228,29 @@ def update_article(request, pk):
                     notif.notification_status = NotificationStatus.objects.get(id=1)
                     notif.save()
 
-            return redirect('dashboard')
+            data = {
+                'result': True,
+                'message': "Success...!",
+            }
+            return JsonResponse(data)
 
         else:
             data = {
-                'result': 0,
-                'message': "Formani to'liq to'ldiring...!",
+                'result': False,
+                'message': "Formani to'liq to'ldirilmadi...!",
             }
             return JsonResponse(data=data)
     else:
+        form = UpdateArticleForm(instance=article)
         context = {
-            'form': UpdateArticleForm(instance=article),
+            'form': form,
             'article': article,
         }
         return render(request, "article_app/crud/update_article.html", context=context)
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def create_article_file(request, pk):
     article = Article.objects.get(pk=pk)
     if request.method == "POST":
@@ -294,6 +319,7 @@ def article_view(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if request.method == "POST":
@@ -308,6 +334,7 @@ def delete_article(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def get_article_authors(request, pk):
     authors = ExtraAuthor.objects.filter(article_id=pk).order_by('id')
     lang = get_language()
@@ -328,6 +355,7 @@ def get_article_authors(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def add_author(request, pk):
     user = request.user
     article = Article.objects.get(pk=pk)
@@ -360,6 +388,7 @@ def add_author(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def edit_author(request, pk):
     author = ExtraAuthor.objects.get(pk=pk)
     article = author.article
@@ -388,6 +417,7 @@ def edit_author(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def delete_author(request, pk):
     author = ExtraAuthor.objects.get(pk=pk)
     article = author.article
@@ -442,7 +472,7 @@ def send_message(request, pk, user_id):
 
 
 @login_required(login_url='login')
-# @allowed_users(perm='add_category')
+@allowed_users(role=['admin', 'editor'])
 def create_section(request):
     # if request.method == "POST":
     #     form = CreateSectionForm(request.POST)
@@ -458,7 +488,7 @@ def create_section(request):
 
 
 @login_required(login_url='login')
-# @allowed_users(perm='delete_category')
+@allowed_users(role=['admin', 'editor'])
 def delete_category(request, pk):
     category = Section.objects.get(pk=pk)
     if request.method == "POST":

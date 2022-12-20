@@ -71,6 +71,8 @@ class Article(models.Model):
     is_publish_journal = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    filePDF = models.FileField(_("Pdf Fayl"), upload_to="files/articles/%Y/%m/%d", blank=True, null=True,
+                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
 
     def __str__(self):
         return self.title
@@ -116,6 +118,7 @@ class ExtraAuthor(models.Model):
 
     def __str__(self):
         return self.fname
+
 
 class NotificationStatus(models.Model):
     name = models.CharField(_('Name'), max_length=50, blank=True)

@@ -135,9 +135,9 @@
                                 <br>
                                 <div class="container" id="random_btn" style="display: none;">
                                     <label>Choose number of reviewers
-                                        <input type="number" id="reviewer_number" name="reviewer_number" value="1"
-                                                {% if article.article_status.id != 1 or article.is_resubmit %}
-                                               disabled {% endif %}
+                                        <input type="number" id="reviewer_number" name="reviewer_number" value="2" disabled
+{#                                                {% if article.article_status.id != 1 or article.is_resubmit %}#}
+{#                                               disabled {% endif %}#}
                                                class="form-control">
                                     </label>
                                     <button class="btn btn-md btn-info" id="random_send_reviewer_btn" type="button"

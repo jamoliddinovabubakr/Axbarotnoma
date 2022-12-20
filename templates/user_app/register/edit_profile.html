@@ -4,14 +4,16 @@
     <div id="content" class="content">
         <h1 class="page-header">{% trans "Profile sozlamalari" %}
             <small>{% trans "profilizni ma'luotlarini o'zgartirish..." %}</small></h1>
-        <form method="POST" name="form-wizard" class="form-control-with-bg forshadow editProfileForm" data-url="{% url 'edit_profile' %}"
+        <form method="POST" name="form-wizard" class="form-control-with-bg forshadow editProfileForm"
+              data-url="{% url 'edit_profile' %}"
               enctype="multipart/form-data">
             {% csrf_token %}
+        {{ form.media }}
             <div id="wizard">
                 <ul>
                     <li>
                         <a href="#step-1"><span class="number">!</span><span
-                            class="info">{% trans "Shaxsiy ma'lumotlar" %}</span></a>
+                                class="info">{% trans "Shaxsiy ma'lumotlar" %}</span></a>
                     </li>
                 </ul>
                 <div style="background-color: #f8f8f8; padding:2%;">
@@ -47,9 +49,7 @@
                                 <div class="form-group row m-b-10">
                                     <label class="col-lg-3 text-lg-right col-form-label">{% trans "Tug'ilgan kun" %} </label>
                                     <div class="col-lg-9 col-xl-6">
-                                        <input type="text" value="{{ user.birthday|date:'m/d/Y' }}" name="birthday"
-                                               class="form-control birthday" id="datepicker-default"
-                                               placeholder="Select Date"/>
+                                         {{ form.birthday }}
                                     </div>
                                 </div>
 
@@ -79,8 +79,7 @@
                                 </div>
                                 <script>
                                     document.getElementById('id_avatar').onchange = function () {
-                                        var src = URL.createObjectURL(this.files[0])
-                                        document.getElementById('image').src = src
+                                        document.getElementById('image').src = URL.createObjectURL(this.files[0])
                                     }
                                 </script>
                             </div>
@@ -187,7 +186,7 @@
                                                                    name="role"
                                                                    {% if role.id in user.get_roles %}checked
                                                                    disabled{% endif %}
-                                                                   {% if is_send_request %} checked disabled{% endif %}
+                                                                    {% if is_send_request %} checked disabled{% endif %}
                                                             />
                                                             <label for="role{{ role.id }}"
                                                                    class="p-l-15">&nbsp;</label>
@@ -218,7 +217,8 @@
                                     </div>
                                     <div class="widget-todolist-item">
                                         <div class="widget-todolist-input">
-                                            <button type="button" disabled data-url="{% url 'choosen_reviewer_role' %}" id="choose-role-reviewer-btn"
+                                            <button type="button" disabled data-url="{% url 'choosen_reviewer_role' %}"
+                                                    id="choose-role-reviewer-btn"
                                                     class="btn btn-outline-info btn-sm btn-block forshadow"
                                                     style="float: right">Submit Selection
                                             </button>

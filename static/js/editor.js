@@ -1,4 +1,22 @@
 // EDITOR DASHBOARD
+$('body').on('click', '.create_journal_btn', function (e) {
+    e.preventDefault();
+
+    let url = $('.create_journal_btn').data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+            $('#create_journal_div').html(response);
+            $('#create_journal_modal').modal('show');
+        },
+        error: function (error) {
+            console.log("Xatolik");
+            console.log(error);
+        }
+    });
+});
 
 $('body').on('click', '.resultBtnUnReview', function (e) {
     e.preventDefault();

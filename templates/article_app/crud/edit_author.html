@@ -61,35 +61,4 @@
     </div>
 </form>
 <script type="text/javascript">
-
-    const $myForm = $('.edit-author-form');
-    $myForm.submit(function (e) {
-        e.preventDefault();
-
-        const $formData = $myForm.serialize();
-
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'edit_author' author.id %}",
-            data: $formData,
-            success: function (response) {
-                console.log(response);
-                if (response.result){
-                    swal({
-                        title: response.message,
-                        timer: 2000,
-                    });
-                } else {
-                    alert(response.message);
-                }
-                $('#edit-author-modal').modal('hide');
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-
-        return false;
-    });
-
 </script>

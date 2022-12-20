@@ -1,17 +1,36 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from article_app.models import Article
-from journal.forms import CreateJournalForm, UpdateJournalForm
-from journal.models import SplitPdf, Journal
+from journal.forms import CreateJournalForm
+from journal.models import Journal
 import PyPDF2
 
 from post.models import BlankPage
+from user_app.decorators import allowed_users
+from django.utils.translation import gettext_lazy as _
+
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
+def journal_dashboard(request):
+    journals = Journal.objects.all()
+    articles = Article.objects.filter(article_status_id=2, is_publish=True, is_publish_journal=False)
+    data = {
+        "journals": journals,
+        "articles": articles
+    }
+    return render(request, "journal/journal_dashboard.html", context=data)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['editor'])
 def split_pdf(request):
     journal = Journal.objects.last()
     if request.method == "POST":
@@ -34,8 +53,8 @@ def split_pdf(request):
                 page_end_int = int(finish_page)
                 newpdf = PyPDF2.PdfFileWriter(f"{filename}")
                 for k in range(page_start_int, page_end_int):
-                    newpdf.addPage(pdf.getPage(k-1))
-                newpdf.addPage(pdf.getPage(page_end_int-1))
+                    newpdf.addPage(pdf.getPage(k - 1))
+                newpdf.addPage(pdf.getPage(page_end_int - 1))
                 with open(
                         f"media/split_files//{Article.objects.get(pk=i.id).author.id}_{Article.objects.get(pk=i.id).id}.pdf",
                         "wb") as f:
@@ -56,32 +75,40 @@ def split_pdf(request):
 
 
 @login_required(login_url='login')
-# @allowed_users(perm='add_magazine')
+@allowed_users(role=['editor'])
 def create_journal(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and is_ajax(request):
+        get_file = request.FILES.get('file_pdf', None)
         form = CreateJournalForm(request.POST, request.FILES)
-        articles = Article.objects.filter(article_status_id=2, is_publish_journal=False)
+        articles = Article.objects.filter(article_status_id=2, is_publish=True, is_publish_journal=False)
         if form.is_valid():
             journal = form.save(commit=False)
             journal.save()
-            for i in articles:
-                journal.article.add(Article.objects.get(pk=i.id))
-                article = Article.objects.get(pk=i.id)
+            for article in articles:
+                journal.articles.add(article)
                 article.is_publish_journal = True
                 article.save()
-            return redirect('split_pdf')
+            data = {
+                "result": True,
+                "message": _("Created Journal Successfully!"),
+            }
+            return JsonResponse(data)
+        else:
+            data = {
+                "result": False,
+                "message": _("Form didn't valid!"),
+            }
+            return JsonResponse(data)
     context = {
         'form': CreateJournalForm(),
-        'articles': Article.objects.filter(article_status_id=2, is_publish_journal=False),
-        'len_articles': len(Article.objects.filter(article_status_id=2, is_publish_journal=False))
     }
     return render(request, "journal/create_journal.html", context=context)
 
 
 def journal_detail(request, pk):
-    magazine = get_object_or_404(Journal, pk=pk)
+    journal = get_object_or_404(Journal, pk=pk)
     context = {
-        'magazine': magazine
+        'journal': journal
     }
     return render(request, "journal/journal_detail.html", context=context)
 
@@ -130,6 +157,7 @@ def journals_number(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def edit_journal(request, pk):
     journal = Journal.objects.get(pk=pk)
     if request.method == "POST":
@@ -145,6 +173,7 @@ def edit_journal(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def delete_journal(request, delete_journal_id):
     journal = Journal.objects.get(id=delete_journal_id)
     for i in journal.article.all():

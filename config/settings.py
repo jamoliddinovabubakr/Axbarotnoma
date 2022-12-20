@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'journal',
     'import_export',
     'ckeditor',
+    'bootstrap_datepicker_plus',
     'django_ckeditor_5',
 ]
 

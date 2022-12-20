@@ -41,7 +41,6 @@
                     let lang = response.lang;
                     $('#menu_sidebar').empty();
                     for (let item of response.menus) {
-                        console.log(item);
                         let link = "/" + lang + item.url;
                         if (lang === 'uz') {
                             link = item.url;

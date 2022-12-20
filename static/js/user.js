@@ -1,5 +1,34 @@
 // USER DASHBOARD
+$('body').on('submit', '.edit-author-form', function (e) {
+    e.preventDefault();
+    const $myForm = $('.edit-author-form');
 
+    const $formData = $myForm.serialize();
+    const $thisURL = $myForm.attr('data-url')
+
+    $.ajax({
+        type: 'POST',
+        url: $thisURL,
+        data: $formData,
+        success: function (response) {
+            console.log(response);
+            if (response.result) {
+                swal({
+                    title: response.message,
+                    timer: 2000,
+                });
+            } else {
+                alert(response.message);
+            }
+            $('#edit-author-modal').modal('hide');
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+
+    return false;
+});
 $('body').on('click', '.create_article_btn', function (e) {
     e.preventDefault();
 
@@ -154,4 +183,48 @@ $('body').on('click', '.remove_article_btn', function (e) {
             console.log(error);
         }
     });
+});
+
+$('body').on('submit', '.update_article_form', function (e) {
+    e.preventDefault();
+    const $myForm = $('.update_article_form')
+    const $formData = $myForm.serialize();
+    const $thisURL = $myForm.attr('data-url')
+
+    let title = $('.title').val();
+    let title_en = $('.title_en').val();
+
+
+    let data = [
+        {key: 'title', value: title, message: "title"},
+        {key: 'title_en', value: title_en, message: "title_en"},
+    ];
+
+    let is_valid_editArticleForm = formValidate(data);
+
+    if (is_valid_editArticleForm) {
+
+        $.ajax({
+            type: "POST",
+            url: $thisURL,
+            data: $formData,
+            success: function (response) {
+                $('#edit_article_form_error').empty();
+                if (response.result) {
+                    $('#edit_article_form_error').html(`<div class="alert alert-success forshadow" style="text-align: center">${response.message}</div>`);
+                } else {
+                    $('#edit_article_form_error').html(`<div class="alert alert-danger forshadow" style="text-align: center">${response.message}</div>`);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    } else {
+        swal({
+            title: "Iltimos formani toliq to'ldiring!",
+            timer: 3000
+        });
+    }
 });

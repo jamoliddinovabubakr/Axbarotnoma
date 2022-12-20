@@ -11,14 +11,7 @@
         <div class="panel panel-default forshadow">
             <div class="panel-body">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            {% if handle_error == 1 %}
-                                <h2 class="text-danger text-center">Formani to'liq to'ldiring!</h2>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <form class="update_article_form" data-parsley-validate="true" method="post">
+                    <form class="update_article_form" data-parsley-validate="true" method="post" data-url="{% url 'update_article' article.id %}">
                         {% csrf_token %}
                         {{ form.media }}
                         <br>
@@ -89,14 +82,14 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Section" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.section }}
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="col-md-6">
+                                <div class="col-md-6">
                                     <div class="form-group row m-b-15"
                                          style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Country" %}</label>
@@ -108,7 +101,7 @@
                                 <br>
                                 <div class="col-md-6">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Type" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.article_type }}
@@ -117,7 +110,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Language" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.article_lang }}
@@ -126,16 +119,16 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label">{% trans "Keywords Uzbek" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.keywords|safe }}
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="col-md-12">
+                                <div class="col-md-12">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label">{% trans "Keywords English" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.keywords_en|safe }}
@@ -144,7 +137,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstract Uzbek" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.abstract|safe }}
@@ -153,7 +146,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label">{% trans "Abstract English" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.abstract_en|safe }}
@@ -162,7 +155,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label">{% trans "Reference" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.references|safe }}
@@ -171,7 +164,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15"
-                                          style="background-color: #f3f3f3; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #f3f3f3; padding: 10px; border-radius: 5px;">
                                         <label class="col-md-2 col-sm-2 col-form-label">{% trans "Upload File" %}
                                             <span
                                                     class="text-danger">*</span></label>
@@ -190,7 +183,9 @@
                         <br>
 
                         <div class="row" style="padding-top: 1em">
-                            <div class="col-md-6 col-sm-6"></div>
+                            <div class="col-md-6 col-sm-6">
+                                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary" style="float: left"><i class="fa fa-arrow-alt-circle-left"></i> &nbsp;Asosiy sahifaga qaytish</a>
+                            </div>
                             <div class="col-md-6 col-sm-6">
                                 <button type="submit" style="float: right;" id="submitButtonId"
                                         class="btn btn-success"><i
@@ -203,17 +198,17 @@
                         </div>
                     </form>
                     <br>
+                    <div id="edit_article_form_error">
+                    </div>
+                    <div id="edit_author_div"></div>
                 </div>
                 <br>
                 <hr>
             </div>
-            <div class="col-md-3"></div>
         </div>
     </div>
-    <div id="edit_author_div"></div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-
         $(document).ready(function () {
             setInterval(function () {
                 $.ajax({
@@ -246,20 +241,6 @@
                     }
                 });
             }, 2000);
-
-            $('#update_article_form').submit(function (e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                $.ajax({
-                    url: "{% url 'update_article' article.id %}",
-                    type: 'POST',
-                    data: formData,
-                    success: function (response) {
-                        console.log(response.message);
-                    },
-                });
-            });
-
         });
 
         $('body').on('click', '.edit-author', function (e) {

@@ -104,7 +104,7 @@ $('body').on('click', '.change_pass_btn', function (e) {
     let data = [{key: 'id_old_password', value: id_old_password, message: "oldPassword"},
         {key: 'id_new_password1', value: id_new_password1, message: "newPassword1"},
         {key: 'id_new_password2', value: id_new_password2, message: "newPassword2"},
-        ]
+    ]
 
     let is_valid_registerForm = formValidate(data);
 
@@ -212,16 +212,16 @@ $('body').on('submit', '.editProfileForm', function (e) {
 
     let is_valid_form = formValidate(dataEdit);
 
-    let formData = new FormData(this);
-
     if (is_valid_form) {
-        let url = $('.editProfileForm').data('url');
+
+        const $myProfileForm = $('.editProfileForm');
+        const $formData = $myProfileForm.serialize();
+        const $thisURL = $myProfileForm.attr('data-url')
+
         $.ajax({
             method: "POST",
-            url: url,
-            data: formData,
-            contentType: false,
-            processData: false,
+            url: $thisURL,
+            data: $formData,
             success: function (response) {
                 swal({
                     title: response.message,

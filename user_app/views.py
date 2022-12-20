@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -7,7 +6,7 @@ from django.utils.http import urlsafe_base64_encode
 
 from article_app.models import *
 from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
-from user_app.decorators import unauthenticated_user, password_reset_authentification
+from user_app.decorators import unauthenticated_user, password_reset_authentification, allowed_users
 from user_app.forms import CreateUserForm, AddReviewerForm
 from user_app.models import *
 from django.db.models.query_utils import Q
@@ -21,9 +20,6 @@ from . import utils
 import numpy as np
 from django.template.loader import render_to_string
 from django.utils.translation import activate, get_language
-import asyncio
-
-from asgiref.sync import async_to_sync, sync_to_async
 
 
 def logout_user(request):
@@ -36,6 +32,7 @@ def is_ajax(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def countries_list(request):
     objects = Country.objects.all()
     context = {
@@ -45,6 +42,7 @@ def countries_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def editors_list(request):
     objects = Editor.objects.all()
     context = {
@@ -54,6 +52,7 @@ def editors_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def regions_list(request):
     objects = Region.objects.all()
     context = {
@@ -63,6 +62,7 @@ def regions_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin'])
 def genders_list(request):
     objects = Gender.objects.all()
     context = {
@@ -72,6 +72,7 @@ def genders_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin'])
 def menus_list(request):
     objects = Menu.objects.all()
     context = {
@@ -81,6 +82,7 @@ def menus_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin'])
 def roles_list(request):
     objects = Role.objects.all()
     context = {
@@ -90,6 +92,7 @@ def roles_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin'])
 def scientific_degrees_list(request):
     objects = ScientificDegree.objects.all()
     context = {
@@ -99,6 +102,7 @@ def scientific_degrees_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin'])
 def users_list(request):
     objects = User.objects.all()
     context = {
@@ -137,6 +141,7 @@ def load_menus(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def reviewers_list(request):
     if request.method == 'GET':
         reviewers = Reviewer.objects.all().order_by('id')
@@ -187,13 +192,15 @@ def register_page(request):
             user = form.save(commit=False)
             user.save()
 
-            user_group, created = Group.objects.get_or_create(name='Author')
-            if not user.groups.filter(name__in=['Author']).exists():
-                user_group.user_set.add(user)
+            # user_group, created = Group.objects.get_or_create(name='Author')
+            # if not user.groups.filter(name__in=['Author']).exists():
+            #     user_group.user_set.add(user)
 
             roles = Role.objects.filter(pk=4)
             if roles.count() > 0:
                 user.roles.add(roles.first())
+            else:
+                print("User role havn't!")
 
             user = authenticate(request, username=user.username,
                                 password=request.POST['password1'])
@@ -280,6 +287,7 @@ def choose_roles(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def reviewer_role_list(request):
     submissions = ReviewerEditor.objects.all()
     context = {
@@ -289,6 +297,7 @@ def reviewer_role_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def reviewer_role_list_detail(request, pk):
     reviewer = Reviewer.objects.get(pk=pk)
     files = ReviewerFile.objects.filter(reviewer=reviewer)
@@ -373,9 +382,7 @@ def password_reset(request):
                   context={"password_reset_form": password_reset_form})
 
 
-@sync_to_async()
 @login_required(login_url='login')
-# @allowed_users(menu_url='profile_page')
 def user_dashboard(request):
     user = request.user
     myqueues = Article.objects.filter(author=user).filter(
@@ -386,12 +393,9 @@ def user_dashboard(request):
         Q(article_status_id=2) | Q(article_status_id=3) | Q(article_status_id=9)).order_by(
         '-updated_at')
 
-    # reviewers = ReviewerArticle.objects.filter(article=article).order_by('id')
-
     context = {
         'myqueues': myqueues,
         'myqueues_count': myqueues.count(),
-        # 'reviewers': reviewers,
         'myarchives': myarchives,
         'myarchives_count': myarchives.count(),
     }
@@ -399,36 +403,29 @@ def user_dashboard(request):
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='profile_page')
+@allowed_users(role=['editor'])
 def editor_dashboard(request):
-    user = User.objects.get(id=request.user.id)
-    role_e = Role.objects.get(id=2)
-
-    if role_e.id not in user.get_roles:
-        return render(request, 'user_app/not_access.html')
     return render(request, "user_app/editor_dashboard.html")
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='profile_page')
+@allowed_users(role=['reviewer'])
 def reviewer_dashboard(request):
     user = User.objects.get(id=request.user.id)
-    role_r = Role.objects.get(id=3)
-
-    if role_r.id not in user.get_roles:
-        return render(request, 'user_app/not_access.html')
     return render(request, "user_app/reviewer_dashboard.html")
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='profile_page')
+@allowed_users(role=['editor'])
 def editor_notifications(request):
     if request.method == 'GET' and is_ajax(request):
         user = User.objects.get(id=request.user.id)
 
-        uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(notification_status_id=1).order_by('-id')
+        uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
+            notification_status_id=1).order_by('-id')
 
-        checking_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(notification_status_id=2).order_by('-id')
+        checking_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
+            notification_status_id=2).order_by('-id')
 
         check_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
             notification_status_id=3).order_by('-id')
@@ -461,7 +458,7 @@ def editor_notifications(request):
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='profile_page')
+@allowed_users(role=['reviewer'])
 def reviewer_notifications(request):
     user = User.objects.get(id=request.user.id)
 
@@ -492,7 +489,7 @@ def reviewer_notifications(request):
 
 
 @login_required(login_url='login')
-# @allowed_users(menu_url='notifications')
+@allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def author_vs_editor_vs_reviewer(request, pk):
     article = Article.objects.get(pk=pk)
     user = get_object_or_404(User, pk=request.user.id)
@@ -583,134 +580,143 @@ def count_notification(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def editor_check_article(request, pk):
-    user = get_object_or_404(User, pk=request.user.id)
-    objs = Editor.objects.filter(user=user)
-    if objs.count() != 1:
-        return render(request, 'user_app/not_access.html')
+    if request.method == 'GET' and is_ajax(request):
+        user = get_object_or_404(User, pk=request.user.id)
+        objs = Editor.objects.filter(user=user)
+        if objs.count() != 1:
+            return render(request, 'user_app/not_access.html')
 
-    notifification = get_object_or_404(Notification, pk=pk)
-    if notifification.notification_status.id == 1:
-        notifification.notification_status = NotificationStatus.objects.get(id=2)
-        notifification.save()
-    article = Article.objects.get(pk=notifification.article.id)
+        notifification = get_object_or_404(Notification, pk=pk)
+        if notifification.notification_status.id == 1:
+            notifification.notification_status = NotificationStatus.objects.get(id=2)
+            notifification.save()
+        article = Article.objects.get(pk=notifification.article.id)
 
-    file = ArticleFile.objects.filter(article=article).filter(file_status=1).last()
-    article_reviews = ReviewerArticle.objects.filter(article=article).filter(editor=objs.first())
+        file = ArticleFile.objects.filter(article=article).filter(file_status=1).last()
+        article_reviews = ReviewerArticle.objects.filter(article=article).filter(editor=objs.first())
 
-    is_ready_publish: bool = False
-    is_ready_rejected: bool = False
-    is_ready_resubmit: bool = False
-    is_ready_resubmit_extra_reviewer: bool = False
+        is_ready_publish: bool = False
+        is_ready_rejected: bool = False
+        is_ready_resubmit: bool = False
+        is_ready_resubmit_extra_reviewer: bool = False
 
-    results_list = []
-    confirm = {1}
-    reject = {3}
-    resubmit1 = {2}
-    resubmit2 = {1, 2}
-    resubmit_extra1 = {1, 3}
-    resubmit_extra2 = {2, 3}
-    resubmit_extra3 = {1, 2, 3}
+        results_list = []
+        confirm = {1}
+        reject = {3}
+        resubmit1 = {2}
+        resubmit2 = {1, 2}
+        resubmit_extra1 = {1, 3}
+        resubmit_extra2 = {2, 3}
+        resubmit_extra3 = {1, 2, 3}
 
-    for item in article_reviews:
-        if item.is_extra:
-            if item.result == 1:
+        for item in article_reviews:
+            if item.is_extra:
+                if item.result == 1:
+                    is_ready_publish = True
+                elif item.result == 3:
+                    is_ready_rejected = True
+                elif item.result == 2:
+                    is_ready_resubmit = True
+            else:
+                results_list.append(item.result)
+
+        if set(results_list) == confirm:
+            if article_reviews.count() > len(results_list):
+                is_ready_publish = False
+            if article_reviews.count() == len(results_list):
                 is_ready_publish = True
-            elif item.result == 3:
+
+            if article.article_status.id == 4:
+                article.article_status = get_object_or_404(ArticleStatus, pk=5)
+                article.save()
+
+        if set(results_list) == reject:
+            if article_reviews.count() > len(results_list):
+                is_ready_rejected = False
+            if article_reviews.count() == len(results_list):
                 is_ready_rejected = True
-            elif item.result == 2:
+
+            if article.article_status.id == 4:
+                article.article_status = get_object_or_404(ArticleStatus, pk=5)
+                article.save()
+
+        if set(results_list) == resubmit1 or set(results_list) == resubmit2:
+            if article_reviews.count() > len(results_list):
+                is_ready_resubmit = False
+            if article_reviews.count() == len(results_list):
                 is_ready_resubmit = True
-        else:
-            results_list.append(item.result)
 
-    if set(results_list) == confirm:
-        if article_reviews.count() > len(results_list):
-            is_ready_publish = False
-        if article_reviews.count() == len(results_list):
-            is_ready_publish = True
+            if article.article_status.id == 4:
+                article.article_status = get_object_or_404(ArticleStatus, pk=5)
+                article.save()
 
-        if article.article_status.id == 4:
-            article.article_status = get_object_or_404(ArticleStatus, pk=5)
-            article.save()
+        if set(results_list) == resubmit_extra1 or set(results_list) == resubmit_extra2 or set(
+                results_list) == resubmit_extra3:
+            if article_reviews.count() > len(results_list):
+                is_ready_resubmit_extra_reviewer = False
+            if article_reviews.count() == len(results_list):
+                is_ready_resubmit_extra_reviewer = True
+            if article.article_status.id == 4:
+                article.article_status = get_object_or_404(ArticleStatus, pk=5)
+                article.save()
 
-    if set(results_list) == reject:
-        if article_reviews.count() > len(results_list):
-            is_ready_rejected = False
-        if article_reviews.count() == len(results_list):
-            is_ready_rejected = True
-
-        if article.article_status.id == 4:
-            article.article_status = get_object_or_404(ArticleStatus, pk=5)
-            article.save()
-
-    if set(results_list) == resubmit1 or set(results_list) == resubmit2:
-        if article_reviews.count() > len(results_list):
-            is_ready_resubmit = False
-        if article_reviews.count() == len(results_list):
-            is_ready_resubmit = True
-
-        if article.article_status.id == 4:
-            article.article_status = get_object_or_404(ArticleStatus, pk=5)
-            article.save()
-
-    if set(results_list) == resubmit_extra1 or set(results_list) == resubmit_extra2 or set(
-            results_list) == resubmit_extra3:
-        if article_reviews.count() > len(results_list):
-            is_ready_resubmit_extra_reviewer = False
-        if article_reviews.count() == len(results_list):
-            is_ready_resubmit_extra_reviewer = True
-        if article.article_status.id == 4:
-            article.article_status = get_object_or_404(ArticleStatus, pk=5)
-            article.save()
-
-    data = {
-        "article": article,
-        "article_reviews": article_reviews,
-        "article_file": file,
-        "notif_id": pk,
-        "is_ready_publish": is_ready_publish,
-        "is_ready_rejected": is_ready_rejected,
-        "is_ready_resubmit": is_ready_resubmit,
-        "is_ready_resubmit_extra_reviewer": is_ready_resubmit_extra_reviewer,
-    }
-    html = render_to_string('user_app/check_article_by_editor.html', data)
-    return HttpResponse(html)
-
-
-@login_required(login_url='login')
-def reviewer_check_article(request, pk):
-    user = get_object_or_404(User, pk=request.user.id)
-    objs = Reviewer.objects.filter(user=user).filter(is_reviewer=True)
-    if objs.count() != 1:
-        return render(request, 'user_app/not_access.html')
-
-    notifification = get_object_or_404(Notification, pk=pk)
-    if notifification.notification_status.id == 1:
-        notifification.notification_status = NotificationStatus.objects.get(id=2)
-        notifification.save()
-
-    reviewer = get_object_or_404(Reviewer, user=user)
-    article = Article.objects.get(pk=notifification.article.id)
-
-    article_reviews = ReviewerArticle.objects.filter(article=article).filter(reviewer=objs.first())
-
-    if article_reviews.count() == 1:
-        article_review = article_reviews.first()
-        if article_review.status.id == 1:
-            article_review.status = StatusReview.objects.get(pk=2)
-            article_review.save()
-        context = {
+        data = {
             "article": article,
-            "notifification": notifification,
-            "editor": article_review.editor,
-            "article_review": article_review,
+            "article_reviews": article_reviews,
+            "article_file": file,
+            "notif_id": pk,
+            "is_ready_publish": is_ready_publish,
+            "is_ready_rejected": is_ready_rejected,
+            "is_ready_resubmit": is_ready_resubmit,
+            "is_ready_resubmit_extra_reviewer": is_ready_resubmit_extra_reviewer,
         }
-        return render(request, 'user_app/check_article_by_reviewer.html', context=context)
+        html = render_to_string('user_app/check_article_by_editor.html', data)
+        return HttpResponse(html)
     else:
-        return HttpResponse("Error")
+        return redirect('dashboard')
 
 
 @login_required(login_url='login')
+@allowed_users(role=['reviewer'])
+def reviewer_check_article(request, pk):
+    if request.method == 'GET' and is_ajax(request):
+        user = get_object_or_404(User, pk=request.user.id)
+        objs = Reviewer.objects.filter(user=user).filter(is_reviewer=True)
+        # if objs.count() != 1:
+        #     return render(request, 'user_app/not_access.html')
+
+        notifification = get_object_or_404(Notification, pk=pk)
+        if notifification.notification_status.id == 1:
+            notifification.notification_status = NotificationStatus.objects.get(id=2)
+            notifification.save()
+
+        reviewer = get_object_or_404(Reviewer, user=user)
+        article = Article.objects.get(pk=notifification.article.id)
+
+        article_reviews = ReviewerArticle.objects.filter(article=article).filter(reviewer=objs.first())
+
+        if article_reviews.count() == 1:
+            article_review = article_reviews.first()
+            if article_review.status.id == 1:
+                article_review.status = StatusReview.objects.get(pk=2)
+                article_review.save()
+            context = {
+                "article": article,
+                "notifification": notifification,
+                "editor": article_review.editor,
+                "article_review": article_review,
+            }
+            return render(request, 'user_app/check_article_by_reviewer.html', context=context)
+        else:
+            return HttpResponse("Error")
+    else:
+        return redirect('dashboard')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def load_reviewers(request):
     reviewers = Reviewer.objects.filter(is_reviewer=True)
 
@@ -724,6 +730,7 @@ def load_reviewers(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['reviewer'])
 def reviewer_confirmed(request):
     if request.method == 'POST' and is_ajax(request):
         review_id = request.POST.get('review_article_id')
@@ -749,6 +756,7 @@ def reviewer_confirmed(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['reviewer'])
 def reviewer_resubmit(request):
     if request.method == 'POST' and is_ajax(request):
         review_id = request.POST.get('review_article_id')
@@ -784,6 +792,7 @@ def reviewer_resubmit(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['reviewer'])
 def reviewer_rejected(request):
     if request.method == 'POST' and is_ajax(request):
         review_id = request.POST.get('review_article_id')
@@ -819,6 +828,7 @@ def reviewer_rejected(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def editor_resubmit_to_reviewer(request):
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST' and is_ajax(request):
@@ -851,6 +861,7 @@ def editor_resubmit_to_reviewer(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def approve_publish(request):
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST' and is_ajax(request):
@@ -985,6 +996,7 @@ def approve_publish(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def editor_submit_result(request):
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST' and is_ajax(request):
@@ -1047,6 +1059,7 @@ def editor_submit_result(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def sending_reviewer(request):
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST':
@@ -1104,6 +1117,7 @@ def sending_reviewer(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['editor'])
 def random_sending_reviewer(request):
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST':
@@ -1202,14 +1216,16 @@ def random_sending_reviewer(request):
 @login_required(login_url='login')
 def edit_profile(request):
     user = request.user
-    if request.method == 'POST':
+    if request.method == 'POST' and is_ajax(request):
         form = UpdateUserForm(request.POST, request.FILES, instance=user)
+        print(request.POST)
 
         if not form.has_changed():
             return JsonResponse({'status': False, "message": "Form hasn't change"})
 
         if form.is_valid():
-            form.save()
+            ob = form.save(commit=False)
+            ob.save()
             return JsonResponse({'status': True, "message": "Your changes saved successfully."})
         else:
             return JsonResponse({'status': False, "message": "Form is not valid!"})
@@ -1219,103 +1235,3 @@ def edit_profile(request):
         res = Reviewer.objects.filter(user=user).exists()
         context = {"user": user, 'form': form, 'roles': roles, "is_send_request": res}
         return render(request, 'user_app/register/edit_profile.html', context)
-
-
-def change_group(user, new_gr):
-    if user.groups.exists():
-        user.groups.clear()
-    new_group = Group.objects.get(name=new_gr)
-    new_group.user_set.add(user)
-
-
-
-# @login_required(login_url='login')
-# @allowed_users(perm='change_user')
-# def update_user(request, pk):
-#     MASTER = 'MASTER'
-#     ADMIN = 'ADMIN'
-#     USER = 'USER'
-#     BOSH_MUHARRIR = 'BOSH MUHARRIR'
-#     TAHRIRCHI = 'TAHRIRCHI'
-#     user = get_object_or_404(User, pk=pk)
-#     if request.method == 'POST':
-#         form = UpdateUserForm(request.POST, instance=user)
-#         if form.is_valid():
-#             form.save()
-#
-#             if user.role.name == MASTER:
-#                 if not user.groups.exists():
-#                     new_group, created = Group.objects.get_or_create(name=MASTER)
-#                     new_group.user_set.add(user)
-#
-#             if user.role.name == ADMIN:
-#                 change_group(user, ADMIN)
-#
-#             if user.role.name == USER:
-#                 change_group(user, USER)
-#
-#             if user.role.name == TAHRIRCHI:
-#                 change_group(user, TAHRIRCHI)
-#
-#             if user.role.name == BOSH_MUHARRIR:
-#                 change_group(user, BOSH_MUHARRIR)
-#
-#             if request.FILES.get('avatar', None) is not None:
-#                 try:
-#                     os.remove(user.avatar.url)
-#                 except Exception as e:
-#                     print('Exception in removing old profile image: ', e)
-#                 user.avatar = request.FILES['avatar']
-#                 user.save()
-#             return redirect('users')
-#         else:
-#             return HttpResponse("Forma valid emas!")
-#
-#     else:
-#         form = UpdateUserForm(instance=user)
-#         return render(request, 'user_app/crud/edit_user.html', {"user": user, 'form': form})
-
-
-
-
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='add_region')
-# def create_region(request):
-#     if request.method == "POST":
-#         form = CreateRegionForm(request.POST)
-#         if form.is_valid():
-#             region = form.save(commit=False)
-#             region.save()
-#             return redirect('regions')
-#     else:
-#         context = {
-#             'form': CreateRegionForm(),
-#         }
-#         return render(request, 'user_app/crud/add_region.html', context)
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='change_region')
-# def edit_region(request, pk):
-#     region = get_object_or_404(Region, pk=pk)
-#     if request.method == 'POST':
-#         form = CreateRegionForm(request.POST, instance=region)
-#         form.save()
-#         return redirect('regions')
-#
-#     else:
-#         form = CreateRegionForm(instance=region)
-#         return render(request, 'user_app/crud/edit_region.html', {"region": region, 'form': form})
-#
-#
-# @login_required(login_url='login')
-# @allowed_users(perm='delete_region')
-# def delete_region(request, pk):
-#     region = get_object_or_404(Region, pk=pk)
-#     if request.method == "POST":
-#         region.delete()
-#         return redirect('regions')
-#     else:
-#         return render(request, 'user_app/crud/delete_region.html', {'region': region})

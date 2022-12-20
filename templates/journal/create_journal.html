@@ -1,76 +1,89 @@
-{% extends 'user_app/base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}
-    Jurnallar
-{% endblock %}
-{% block content %}
-    <div id="content" class="content">
-        <div class="panel panel-default forshadow" data-sortable-id="table-basic-7">
-            <div class="panel-body">
-                <h1>Journal yaratish</h1>
-                <form action="{% url 'create_journal' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row m-b-15">
-                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "File" %} <span
-                                        class="text-danger">*</span></label>
-                                <div class="col-md-9 col-sm-9">
-                                    {{ form.file_pdf }}
-                                </div>
-                            </div>
-
-                            <div class="form-group row m-b-15">
-                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "Jurnal soni" %} <span
-                                        class="text-danger">*</span></label>
-                                <div class="col-md-9 col-sm-9">
-                                    {{ form.journal_number }}
-                                </div>
-                            </div>
-
-                            <div class="form-group row m-b-15">
-                                <label class="col-md-3 col-sm-3 col-form-label">{% trans "Jurnal yili" %} <span
-                                        class="text-danger">*</span></label>
-                                <div class="col-md-9 col-sm-9">
-                                    {{ form.journal_year }}
-                                </div>
-                            </div>
-
+<form class="create_journal_form" method="post" data-url="{% url 'create_journal' %}">
+    {% csrf_token %}
+    {{ form.media }}
+    <div class="modal fade" id="create_journal_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans "Create Journal" %}</h5>
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Name" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.name }}
                         </div>
                     </div>
-                    <br>
-                    {% if len_articles == 0 %}
-                        <h1>
-                            <center>Tekshirilgan maqolalar yo'q</center>
-                        </h1>
-                    {% else %}
-                        <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Soha</th>
-                            <th scope="col">gmail</th>
-                        </tr>
-                        {% for article in articles %}
-                            <tr>
-                                <td>{{ article.title }}</td>
-                                <td>{{ article.section }}</td>
-                                <td>{{ article.author }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                    <br>
-                    </thead></table>
-                    {% if len_articles %}
-                        <button type="submit" class="btn btn-primary">Create</button>
-                    {% endif %}
-                </form>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Year" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.year }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Number" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.number }}
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-15">
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "File" %} <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-9 col-sm-9">
+                            {{ form.file_pdf }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
+                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
+                </div>
             </div>
         </div>
     </div>
-{% endblock %}
+</form>
+<script>
+    $(document).ready(function () {
+        $('.create_journal_form').submit(function (e) {
+            e.preventDefault();
+
+            let formData = new FormData(this);
+
+            let url = $('.create_journal_form').data('url');
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.result) {
+                        $('#create_journal_modal').modal('hide');
+                    } else {
+                        swal({
+                            title: response.message,
+                            timer: 2000,
+                        });
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
 <script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 <script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>
+

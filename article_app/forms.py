@@ -78,34 +78,31 @@ class CreateArticleFileForm(forms.ModelForm):
 class UpdateArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title','title_en', 'section', 'abstract', 'keywords','abstract_en', 'keywords_en', 'references', 'article_type', 'article_lang', 'country']
+        fields = ['title', 'title_en', 'section', 'abstract', 'keywords', 'abstract_en', 'keywords_en', 'references',
+                  'article_type', 'article_lang', 'country']
 
         widgets = {
             'section': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data-live-search': "true",
                 'data-style': "btn-white",
-                'data - parsley - required': "true",
                 'name': 'section',
                 'id': 'id_section',
             }),
             'title': Textarea(attrs={
-                'class': 'form-control',
-                'data - parsley - required': "true",
+                'class': 'form-control title',
                 'rows': '1',
                 'name': 'title',
                 'id': 'id_title',
             }),
             'title_en': Textarea(attrs={
-                'class': 'form-control',
-                'data - parsley - required': "true",
+                'class': 'form-control title_en',
                 'rows': '1',
                 'name': 'title-en',
                 'id': 'id_title_en',
             }),
             'abstract': Textarea(attrs={
                 'class': 'form-control',
-                'data - parsley - required': "true",
                 'rows': '3',
                 'placeholder': 'Enter...',
                 'name': 'abstract',
@@ -113,29 +110,24 @@ class UpdateArticleForm(forms.ModelForm):
             }),
             'abstract_en': Textarea(attrs={
                 'class': 'form-control',
-                'data - parsley - required': "true",
                 'rows': '3',
-                'placeholder': 'Enter...',
                 'name': 'abstract_en',
                 'id': 'id_abstract_en',
             }),
             'keywords': Textarea(attrs={
                 'class': 'form-control',
-                'data - parsley - required': "true",
                 'name': 'keywords',
                 'id': 'id_keywords',
                 'rows': '3',
             }),
             'keywords_en': Textarea(attrs={
                 'class': 'form-control',
-                'data - parsley - required': "true",
                 'name': 'keywords_en',
                 'id': 'id_keywords_en',
                 'rows': '3',
             }),
             'references': Textarea(attrs={
                 'class': 'form-control',
-                'data - parsley - required': "true",
                 'rows': '3',
                 'placeholder': 'Enter...',
                 'name': 'references',
@@ -155,14 +147,12 @@ class UpdateArticleForm(forms.ModelForm):
                 'data - size': "10",
                 'data-live-search': "true",
                 'data-style': "btn-white",
-                'data - parsley - required': "true",
             }),
             'article_lang': Select(attrs={
                 'class': 'form-control selectpicker',
                 'data - size': "10",
                 'data-live-search': "true",
                 'data-style': "btn-white",
-                'data - parsley - required': "true",
             }),
         }
 
@@ -178,7 +168,6 @@ class AddAuthorForm(forms.ModelForm):
                 'class': 'form-control',
                 'type': 'text',
                 'placeholder': "Enter...",
-                'data - parsley - required': "true",
             }),
             'lname': TextInput(attrs={
                 'id': 'author_lname',
