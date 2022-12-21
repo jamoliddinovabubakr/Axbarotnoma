@@ -1,14 +1,11 @@
 $('body').on('click', '.reviewerWrite-message-btn', function (e) {
     e.preventDefault();
 
-    const data = $(this).data('id');
-    const array = data.split(',');
-    const id = array[0];
-    const user_id = parseInt(array[1]);
+    const url = $(this).data('url');
 
     $.ajax({
         type: 'GET',
-        url: "/send_message/" + id + "/" + user_id,
+        url: url,
         success: function (response) {
             $('#write_reviewer_message_div').html(response);
             $('#send-message-modal').modal('show');
@@ -99,7 +96,6 @@ $('body').on('click', '#confirm_reviewer_btn', function (e) {
         url: url,
         data: $formData,
         success: function (response) {
-            console.log(response.message);
             window.location.reload();
         },
         error: function (error) {
@@ -133,9 +129,9 @@ $('body').on('click', '#view-article-messages-by-reviewer', function (e) {
 
                     let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
                         + item.from_user__email +
-                        `</div><div class="widget-chat-message">`
+                        `</div><div class="widget-chat-message">` + `<i style="color: #0a6aa1">(${item.to_user__email}).</i>`
                         + item.message +
-                        `</div><div class="widget-chat-time">` + `</div></div></div></div>`;
+                        `</div><div class="widget-chat-time">` + time_string + `</div> <br><br><div class="widget-chat-ansewer"></div></div></div></div>`;
 
                     $('#reviewer_chat_body').append(temp1);
                 }
@@ -147,11 +143,11 @@ $('body').on('click', '#view-article-messages-by-reviewer', function (e) {
                                             <div class="widget-chat-info-container">
                                                 <div class="widget-chat-name text-indigo">`
                         + item.from_user__email +
-                        `</div><div class="widget-chat-message">`
+                        `</div><div class="widget-chat-message">` + `<i style="color: #0a6aa1">(${item.to_user__email}).</i>`
                         + item.message +
-                        `</div><div class="widget-chat-time">` + `</div>
+                        `</div><div class="widget-chat-time">` + time_string + `</div>
                                                          <br><div class="widget-chat-ansewer">
-                                                            <button type="button" data-id="${id},${item.from_user__id}" class="btn btn-white btn-sm reviewerWrite-message-btn">Ansewer</button>
+                                                            <button type="button" data-url="${response.url}${id}/${item.from_user__id}/" class="btn btn-white btn-sm reviewerWrite-message-btn">Ansewer</button>
                                                         </div>
                                                         </div></div></div>`;
                     $('#reviewer_chat_body').append(temp2);

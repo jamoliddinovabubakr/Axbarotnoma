@@ -19,14 +19,23 @@
             <div class="col-md-10">
                 <table style="margin-left: 3%;">
                     <tr>
-                        <td><p><b>{% trans "Mavzu:" %} </b>{{ article.title|safe }}</p></td>
+                        <td><p><b>{% trans "Title(uz):" %} </b>{{ article.title|safe }}</p></td>
+                    </tr>
+                    <tr>
+                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>
                     </tr>
 
                     <tr>
-                        <td><p></p><b>{% trans "Abstract:" %} </b>{{ article.abstract|safe }}</td>
+                        <td><p></p><b>{% trans "Abstract(uz):" %} </b>{{ article.abstract|safe }}</td>
                     </tr>
                     <tr>
-                        <td><b>{% trans "Kalit so'zlar:" %} </b>{{ article.keywords|safe }}</td>
+                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>{% trans "Keywords(uz):" %} </b>{{ article.keywords|safe }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>
                     </tr>
                     <br>
                     <tr>
@@ -42,7 +51,7 @@
 
         <div class="row d-flex justify-content-center">
             <button type="button" data-id="{{ article.id }}" id="view-article-messages-by-reviewer"
-                    data-action="{% url 'comment_author_vs_editor' article.id %}"
+                    data-url="{% url 'comment_author_vs_editor' article.id %}"
                     class="btn btn-md btn-info forshadow">
                 <i class="fa fa-comment"></i> LOAD COMMENTS
             </button>

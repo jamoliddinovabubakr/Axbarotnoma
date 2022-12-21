@@ -684,8 +684,6 @@ def reviewer_check_article(request, pk):
     if request.method == 'GET' and is_ajax(request):
         user = get_object_or_404(User, pk=request.user.id)
         objs = Reviewer.objects.filter(user=user).filter(is_reviewer=True)
-        # if objs.count() != 1:
-        #     return render(request, 'user_app/not_access.html')
 
         notifification = get_object_or_404(Notification, pk=pk)
         if notifification.notification_status.id == 1:
@@ -769,17 +767,17 @@ def reviewer_resubmit(request):
         review.status = StatusReview.objects.get(pk=5)
         review.save()
 
+        article = get_object_or_404(Article, pk=review.article.id)
+
         notif = get_object_or_404(Notification, pk=int(notif_id))
         notif.notification_status = get_object_or_404(NotificationStatus, pk=3)
         notif.save()
-
-        article = get_object_or_404(Article, pk=review.article.id)
 
         Notification.objects.create(
             article=article,
             from_user=review.reviewer.user,
             to_user=review.editor.user,
-            message=f"({review.editor.user.email}){comment}",
+            message=comment,
             notification_status=NotificationStatus.objects.get(id=1),
         )
 
@@ -815,7 +813,7 @@ def reviewer_rejected(request):
             article=article,
             from_user=review.reviewer.user,
             to_user=review.editor.user,
-            message=f"({review.editor.user.email}){comment}",
+            message=comment,
             notification_status=NotificationStatus.objects.get(id=1),
         )
 
@@ -847,7 +845,7 @@ def editor_resubmit_to_reviewer(request):
             article=article,
             from_user=user,
             to_user=review.reviewer.user,
-            message=f"({review.reviewer.user.email}).Hurmatli taqrizchi sizga maqola qayta yuborildi.",
+            message="Hurmatli taqrizchi sizga maqola qayta yuborildi",
             notification_status=NotificationStatus.objects.get(id=1),
             is_update_article=True,
         )
@@ -903,15 +901,11 @@ def approve_publish(request):
             article.is_resubmit = True
             article.save()
 
-            # if notif.notification_status.id == 2:
-            #     notif.notification_status = NotificationStatus.objects.get(id=3)
-            #     notif.save()
-
             Notification.objects.create(
                 article=article,
                 from_user=user,
                 to_user=article.author,
-                message=f"({article.author.email}).{text}",
+                message=text,
                 notification_status=NotificationStatus.objects.get(id=1),
             )
             data = {
@@ -968,7 +962,7 @@ def approve_publish(request):
                     article=article,
                     from_user=user,
                     to_user=reviewer_user,
-                    message=f"({reviewer_user.email}).Hurmatli taqrizchi sizga maqola yuborildi.",
+                    message="Hurmatli taqrizchi sizga maqola yuborildi",
                     notification_status=NotificationStatus.objects.get(id=1),
                     is_update_article=True,
                 )
@@ -1015,15 +1009,11 @@ def editor_submit_result(request):
             article.article_status = ArticleStatus.objects.get(pk=7)
             article.save()
 
-            # if notif.notification_status.id == 2:
-            #     notif.notification_status = NotificationStatus.objects.get(id=3)
-            #     notif.save()
-
             Notification.objects.create(
                 article=article,
                 from_user=user,
                 to_user=article.author,
-                message=f"({article.author.email}).{text}",
+                message=text,
                 notification_status=NotificationStatus.objects.get(id=1),
             )
 
@@ -1042,7 +1032,7 @@ def editor_submit_result(request):
                 article=article,
                 from_user=user,
                 to_user=article.author,
-                message=f"({article.author.email}).{text}",
+                message=text,
                 notification_status=NotificationStatus.objects.get(id=1),
             )
 
@@ -1081,7 +1071,7 @@ def sending_reviewer(request):
                         article=article,
                         from_user=user,
                         to_user=reviewer_user,
-                        message=f"({reviewer_user.email}).Hurmatli taqrizchi sizga maqola yuborildi.",
+                        message="Hurmatli taqrizchi sizga maqola yuborildi",
                         notification_status=NotificationStatus.objects.get(id=1),
                         is_update_article=True,
                     )
@@ -1184,7 +1174,7 @@ def random_sending_reviewer(request):
                     article=article,
                     from_user=user,
                     to_user=reviewer_user,
-                    message=f"({reviewer_user.email}).Hurmatli taqrizchi sizga maqola yuborildi.",
+                    message="Hurmatli taqrizchi sizga maqola yuborildi",
                     notification_status=NotificationStatus.objects.get(id=1),
                     is_update_article=True,
                 )
@@ -1218,7 +1208,6 @@ def edit_profile(request):
     user = request.user
     if request.method == 'POST' and is_ajax(request):
         form = UpdateUserForm(request.POST, request.FILES, instance=user)
-        print(request.POST)
 
         if not form.has_changed():
             return JsonResponse({'status': False, "message": "Form hasn't change"})

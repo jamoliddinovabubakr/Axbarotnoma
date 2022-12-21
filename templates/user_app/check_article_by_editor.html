@@ -12,7 +12,10 @@
             <div class="col-md-8">
                 <table>
                     <tr>
-                        <td><p><b>{% trans "Title:" %} </b>{{ article.title|safe }}</p></td>
+                        <td><p><b>{% trans "Title(uz):" %} </b>{{ article.title|safe }}</p></td>
+                    </tr>
+                    <tr>
+                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>
                     </tr>
                     <tr>
                         <td>
@@ -20,10 +23,16 @@
                             <br><i>{{ article.author.email }}</i></td>
                     </tr>
                     <tr>
-                        <td><p></p><b>{% trans "Abstract:" %} </b>{{ article.abstract|safe }}</td>
+                        <td><p></p><b>{% trans "Abstract(uz):" %} </b>{{ article.abstract|safe }}</td>
                     </tr>
                     <tr>
-                        <td><b>{% trans "Keywords:" %} </b>{{ article.keywords|safe }}</td>
+                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>{% trans "Keywords(uz):" %} </b>{{ article.keywords|safe }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>
                     </tr>
                     <br>
                     <tr>
@@ -68,6 +77,7 @@
             <div class="col-md-4">
                 <button type="button" id="view-article-messages-by-editor"
                         style="margin-top: 10px; margin-left: 1px;"
+                        data-id="{{ article.id }}"
                         data-url="{% url 'comment_author_vs_editor' article.id %}"
                         class="btn btn-md btn-info">
                     <i class="fa fa-comment"></i> LOAD COMMENTS
@@ -98,8 +108,7 @@
                         <!-- end widget-chat-header -->
 
                         <!-- begin widget-chat-body -->
-                        <div class="widget-chat-body" data-scrollbar="true" data-height="250px"
-                             id="editor_chat_body">
+                        <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="editor_chat_body">
 
 
                         </div>

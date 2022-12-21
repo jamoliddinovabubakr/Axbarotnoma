@@ -178,7 +178,7 @@ $('body').on('click', '#random_send_reviewer_btn', function (e) {
     let value = $('#reviewer_number').val();
     let url = $('.random_sending_reviewer_form').data('url');
 
-     let reload_url = $(this).data('action');
+    let reload_url = $(this).data('action');
 
     if (value > 0) {
         $.ajax({
@@ -272,12 +272,12 @@ $('body').on('click', '#view-article-messages-by-editor', function (e) {
     e.preventDefault();
 
     let url = $('#view-article-messages-by-editor').data('url');
+    let id = $(this).data('id');
 
     $.ajax({
         type: "GET",
         url: url,
         success: function (response) {
-            console.log(response);
             $('#MessageBoxEditor').css('display', 'block');
             $('#editor_chat_body').empty();
 
@@ -285,35 +285,26 @@ $('body').on('click', '#view-article-messages-by-editor', function (e) {
 
                 let time_tz = new Date(item.created_at);
                 let time_string = time_tz.toLocaleString();
-                console.log(time_string);
 
                 if (response.current_user_id === item.from_user__id) {
 
                     let temp1 = `<div class="widget-chat-item right"><div class="widget-chat-info"><div class="widget-chat-info-container">
                                         <div class="widget-chat-name text-indigo">`
                         + item.from_user__email +
-                        `</div><div class="widget-chat-message">`
+                        `</div><div class="widget-chat-message">` + `<i style="color: #0a6aa1">(${item.to_user__email}).</i>`
                         + item.message +
                         `</div><div class="widget-chat-time">`
-                        + `</div></div></div></div>`;
+                        + time_string +`</div> <br><br><div class="widget-chat-ansewer"></div></div></div></div>`;
 
                     $('#editor_chat_body').append(temp1);
                 }
 
                 if (response.current_user_id === item.to_user__id) {
-                    console.log("menga");
 
-                    let temp2 = `<div class="widget-chat-item left">
-                                        <div class="widget-chat-info">
-                                            <div class="widget-chat-info-container">
-                                        <div class="widget-chat-name text-indigo">`
+                    let temp2 = `<div class="widget-chat-item left"><div class="widget-chat-info"><div class="widget-chat-info-container"><div class="widget-chat-name text-indigo">`
                         + item.from_user__email +
-                        `</div><div class="widget-chat-message">` + item.message + `</div>
-                                             <div class="widget-chat-time">` + `</div>
-                                             <br><div class="widget-chat-ansewer">
-                                                <button type="button" data-url="${response.url}${id}/${item.from_user__id}/" class="btn btn-white btn-sm editorWrite-message-btn">Ansewer</button>
-                                            </div>
-                                            </div></div></div>`;
+                        `</div><div class="widget-chat-message">` + `<i style="color: #0a6aa1">(${item.to_user__email}).</i>` + item.message + `</div><div class="widget-chat-time">` + time_string + `</div><br><div class="widget-chat-ansewer">
+                                                <button type="button" data-url="${response.url}${id}/${item.from_user__id}/" class="btn btn-white btn-sm editorWrite-message-btn">Ansewer</button></div></div></div></div>`;
                     $('#editor_chat_body').append(temp2);
                 }
             }
@@ -330,7 +321,6 @@ $('body').on('click', '.editorWrite-message-btn', function (e) {
     e.preventDefault();
 
     const url = $(this).data('url');
-    alert(url)
 
     $.ajax({
         type: 'GET',
@@ -424,17 +414,17 @@ function check_editor_reload(url) {
 
 
 function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    let cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = jQuery.trim(cookies[i]);
-      // Does this cookie string begin with the name we want?
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
     }
-  }
-  return cookieValue;
+    return cookieValue;
 }

@@ -10,14 +10,11 @@ class Journal(models.Model):
                                 help_text='Please upload only .pdf!')
     number = models.PositiveBigIntegerField(unique=True)
     year = models.CharField(max_length=4)
-    articles = models.ManyToManyField('article_app.Article', related_name='articles', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_publish = models.BooleanField(default=False)
     status = models.BooleanField(default=True)
-
-    def get_articles(self):
-        return [p.title for p in self.articles.all()]
+    is_split = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -26,11 +23,16 @@ class Journal(models.Model):
         verbose_name = _("Journal")
 
 
-# class SplitPdf(models.Model):
-#     start_page = models.PositiveIntegerField(default=0, null=True)
-#     finish_page = models.PositiveIntegerField(default=0, null=True)
-#     article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE)
-#     file = models.FileField(upload_to="files/articles/%Y/%m/%d", blank=True, null=True)
-#
-#     def __str__(self):
-#         return f'{self.id}, {self.article}, {self.start_page}, {self.finish_page}, {self.file}'
+class JournalArticle(models.Model):
+    journal = models.ForeignKey('journal.Journal', on_delete=models.CASCADE, related_name="journal_article")
+    article = models.ForeignKey('article_app.Article', on_delete=models.CASCADE, related_name="article")
+    start_page = models.PositiveBigIntegerField(default=0)
+    end_page = models.PositiveBigIntegerField(default=0)
+    article_pdf = models.FileField(_("Fayl"), upload_to="files/split_article", max_length=255, null=True,
+                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
+                                help_text='Please upload only .pdf!')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)

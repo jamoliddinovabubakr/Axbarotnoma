@@ -18,7 +18,7 @@
                             <td class="text-nowrap">
                                 <select id="id_article" name="article" class="form-control">
                                     <option selected
-                                            value="{{ article.id }}">{{article.id}}</option>
+                                            value="{{ article.id }}">{{ article.id }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -26,7 +26,7 @@
                             <td class="text-nowrap">
                                 <select id="id_from_user" name="from_user" class="form-control">
                                     <option selected
-                                            value="{{ from_user.id }}">{{from_user.id }}</option>
+                                            value="{{ from_user.id }}">{{ from_user.id }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -34,7 +34,7 @@
                             <td class="text-nowrap">
                                 <select id="id_to_user" name="to_user" class="form-control">
                                     <option selected
-                                            value="{{ user_id }}">{{user_id }}</option>
+                                            value="{{ user_id }}">{{ user_id }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -55,33 +55,25 @@
     </div>
 </form>
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
         const $myForm = $('.send-message-form');
         $myForm.submit(function (e) {
             e.preventDefault();
-    
+
             const $formData = $myForm.serialize();
-    
+
             $.ajax({
                 type: 'POST',
                 url: "{% url 'send_message' article.id  user_id %}",
                 data: $formData,
                 success: function (response) {
-                    console.log(response);
-                    if (response.result){
+                    if (response.result) {
                         $('#send-message-modal').modal('hide');
-                        const roles = response.roles;
-                        const main_role_id = Math.min(...roles);
-                        
-                        const admin = 1;
-                        const editor = 2;
-                        const reviewer = 3;
-                        const author = 4;
 
-                        if(main_role_id === admin){ $('#view-article-messages-admin').click(); }
-                        if(main_role_id === editor){ $('#view-article-messages-by-editor').click(); }
-                        if(main_role_id === reviewer){ $('#view-article-messages-by-reviewer').click(); }
-                        if(main_role_id === author){ $('#view-article-messages-by-author_{{ article.id }}').click(); }
+                        $('#view-article-messages-admin').click();
+                        $('#view-article-messages-by-editor').click();
+                        $('#view-article-messages-by-reviewer').click();
+                        $('#view-article-messages-by-author_{{ article.id }}').click();
 
                     } else {
                         alert(response.message);
@@ -91,7 +83,7 @@
                     console.log(error);
                 }
             });
-    
+
         });
     });
 </script>

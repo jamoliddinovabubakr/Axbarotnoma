@@ -1,14 +1,15 @@
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from article_app.models import Article
-from journal.forms import CreateJournalForm
-from journal.models import Journal
+from article_app.models import Article, ExtraAuthor
+from journal.forms import CreateJournalForm, UpdateJournalForm
+from journal.models import Journal, JournalArticle
 import PyPDF2
 
-from post.models import BlankPage
 from user_app.decorators import allowed_users
 from django.utils.translation import gettext_lazy as _
 
@@ -31,47 +32,72 @@ def journal_dashboard(request):
 
 @login_required(login_url='login')
 @allowed_users(role=['editor'])
-def split_pdf(request):
-    journal = Journal.objects.last()
-    if request.method == "POST":
-        for i in journal.article.all():
-            start_page = request.POST[f'start_page{i.id}']
-            finish_page = request.POST[f'end_page{i.id}']
-            if start_page is not None:
-                filename = journal.file_pdf.path
-                pdf = PyPDF2.PdfFileReader(
-                    open(f"{filename}", "rb"))
-                if start_page == '' or finish_page == '' \
-                        or int(start_page) >= int(finish_page):
-                    context = {
-                        'journal': journal,
-                        'article_number': journal.article.all(),
-                        'error': "Forma to'liq kiritilmagan"
-                    }
-                    return render(request, 'journal/splitpdf.html', context=context)
-                page_start_int = int(start_page)
-                page_end_int = int(finish_page)
-                newpdf = PyPDF2.PdfFileWriter(f"{filename}")
-                for k in range(page_start_int, page_end_int):
-                    newpdf.addPage(pdf.getPage(k - 1))
-                newpdf.addPage(pdf.getPage(page_end_int - 1))
-                with open(
-                        f"media/split_files//{Article.objects.get(pk=i.id).author.id}_{Article.objects.get(pk=i.id).id}.pdf",
-                        "wb") as f:
-                    newpdf.write(f)
+def split_journal_pages(request, pk):
+    journal = get_object_or_404(Journal, pk=pk)
+    if request.method == "POST" and is_ajax(request):
+        j_articles = JournalArticle.objects.filter(journal=journal)
+        article_ids = request.POST.getlist('article')
+        start_pages = request.POST.getlist('start_page')
+        end_pages = request.POST.getlist('end_page')
 
-                SplitPdf.objects.create(
-                    article=Article.objects.get(pk=i.id),
-                    start_page=request.POST[f'start_page{i.id}'],
-                    finish_page=request.POST[f'end_page{i.id}'],
-                    file=f"/split_files/{Article.objects.get(pk=i.id).author.id}_{Article.objects.get(pk=i.id).id}.pdf"
-                )
-        return redirect('get_journals')
+        if j_articles.count() != len(article_ids):
+            data = {"result": False, "message": _("Wrong Article Count")}
+            return JsonResponse(data)
+        full_file = journal.file_pdf.path
+        pdf = PyPDF2.PdfFileReader(full_file)
+        pages_count = pdf.getNumPages()
+        last_article_end_page = int(end_pages[-1])
+        if pages_count < last_article_end_page:
+            data = {"result": False, "message": _("Journal page count is less than last article end page number! ")}
+            return JsonResponse(data)
+        for i in range(len(article_ids)):
+            cwd = os.getcwd()
+            article = get_object_or_404(Article, pk=int(article_ids[i]))
+            start_page = int(start_pages[i])
+            end_page = int(end_pages[i])
+            if start_page == 0 or end_page == 0:
+                data = {
+                    "result": False,
+                    "message": _(f"{i + 1}-article not entered!"),
+                }
+                return JsonResponse(data)
+            if start_page >= end_page:
+                data = {
+                    "result": False,
+                    "message": _(f"{i + 1}-article page must be {start_page} < {end_page}!"),
+                }
+                return JsonResponse(data)
+
+            newpdf = PyPDF2.PdfFileWriter()
+            for j in range(start_page, end_page + 1, 1):
+                newpdf.addPage(pdf.getPage(j - 1))
+
+            out_path = f"{cwd}\\media\\files\\split_article\\{article.id}.pdf"
+
+            with open(out_path, "wb") as out:
+                newpdf.write(out)
+
+            table = get_object_or_404(JournalArticle, journal=journal, article=article)
+            table.start_page = start_page
+            table.end_page = end_page
+            table.article_pdf = f"{cwd}\\media\\files\\split_article\\{article.id}.pdf"
+            table.save()
+            article.filePDF = table.article_pdf
+            article.save()
+
+        journal.is_split = True
+        journal.save()
+        data = {
+            "result": True,
+            "message": _("Splited Successfully"),
+        }
+        return JsonResponse(data)
+    objects = JournalArticle.objects.filter(journal=journal)
     context = {
         'journal': journal,
-        'article_number': journal.article.all()
+        'objects': objects,
     }
-    return render(request, 'journal/splitpdf.html', context=context)
+    return render(request, 'journal/split_pages.html', context=context)
 
 
 @login_required(login_url='login')
@@ -85,9 +111,16 @@ def create_journal(request):
             journal = form.save(commit=False)
             journal.save()
             for article in articles:
-                journal.articles.add(article)
-                article.is_publish_journal = True
-                article.save()
+                try:
+                    JournalArticle.objects.create(
+                        journal=journal,
+                        article=article,
+                    )
+                    article.is_publish_journal = True
+                    article.save()
+                except:
+                    print("Error Create Journal")
+
             data = {
                 "result": True,
                 "message": _("Created Journal Successfully!"),
@@ -107,64 +140,44 @@ def create_journal(request):
 
 def journal_detail(request, pk):
     journal = get_object_or_404(Journal, pk=pk)
+    list_articles = JournalArticle.objects.filter(journal=journal)
     context = {
-        'journal': journal
+        'journal': journal,
+        'list_articles': list_articles,
     }
     return render(request, "journal/journal_detail.html", context=context)
 
 
-def journal_article(request, pk_article):
-    article = Article.objects.get(pk=pk_article)
-    article_journal = SplitPdf.objects.get(article_id=pk_article)
-    return render(request, 'journal/journal_article.html',
-                  context={'article_journal': article_journal, 'article': article})
-    # return HttpResponse(f'{pk_article}, \n {a.file.path}')
-
-
-@login_required(login_url='login')
-def get_journal(request):
-    search = request.GET.get('search')
-    magazines = Journal.objects.all()
-    paginator = Paginator(magazines, 10)
-    page_num = request.GET.get('page')
-    page = paginator.get_page(page_num)
-    p_n = paginator.count
-    page_count = page.paginator.page_range
-
+def journals_list(request):
+    journals = Journal.objects.filter(is_publish=True, status=True).order_by('-id')
     context = {
-        'magazines': magazines,
-        'page_count': page_count,
-        'page': page,
-        'p_n': p_n,
-        'search': search,
+        'journals': journals,
     }
     return render(request, "journal/journals.html", context=context)
-
-
-def about_journal(request):
-    journal_ab = BlankPage.objects.get(id=1)
-    return render(request, "journal/about_journal.html", {
-        "ob": journal_ab
-    })
-
-
-def journals_number(request):
-    journals = Journal.objects.filter(status=True)
-    context = {
-        'journals': journals
-    }
-    return render(request, "journal/journals_number.html", context=context)
 
 
 @login_required(login_url='login')
 @allowed_users(role=['editor'])
 def edit_journal(request, pk):
-    journal = Journal.objects.get(pk=pk)
-    if request.method == "POST":
+    journal = get_object_or_404(Journal, pk=pk)
+    if request.method == "POST" and is_ajax(request):
         form = UpdateJournalForm(request.POST, request.FILES, instance=journal)
+        if not form.has_changed():
+            data = {"message": "The information has not changed", "result": False}
+            return JsonResponse(data)
         if form.is_valid():
             form.save()
-            return redirect('get_journals')
+            data = {
+                "result": True,
+                "message": "Succes"
+            }
+            return JsonResponse(data)
+        else:
+            data = {
+                "result": False,
+                "message": "Error"
+            }
+            return JsonResponse(data)
     context = {
         'form': UpdateJournalForm(instance=journal),
         'journal': journal,
@@ -174,19 +187,23 @@ def edit_journal(request, pk):
 
 @login_required(login_url='login')
 @allowed_users(role=['editor'])
-def delete_journal(request, delete_journal_id):
-    journal = Journal.objects.get(id=delete_journal_id)
-    for i in journal.article.all():
-        article = Article.objects.get(pk=i.id)
-        article.is_publish_journal = False
-        article.save()
-        split_pdfs = SplitPdf.objects.get(article=article)
-        split_pdfs.delete()
-    journal.delete()
-    return HttpResponseRedirect(reverse('get_journals'))
+def delete_journal(request, pk):
+    journal = get_object_or_404(Journal, pk=pk)
+    if request.method == "POST" and is_ajax(request):
+        journal_articles = JournalArticle.objects.filter(journal=journal)
+        for item in journal_articles:
+            article = item.article
+            article.is_publish_journal = False
+            article.save()
+        journal.delete()
+        return JsonResponse({"message": "Success"})
+
+    data = {"journal": journal}
+    return render(request, "journal/delete_journal.html", context=data)
 
 
 @login_required(login_url='login')
-def journal_view(request, journal_view_id):
-    journal = Journal.objects.get(id=journal_view_id)
-    return render(request, 'journal/journal_view.html', context={'journal': journal})
+def journal_article_view(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    authors = ExtraAuthor.objects.filter(article=article)
+    return render(request, 'journal/journal_article_view.html', context={'article': article, "authors": authors})

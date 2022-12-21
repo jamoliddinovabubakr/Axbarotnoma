@@ -169,9 +169,8 @@
                                             <span
                                                     class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
-                                            <button href="{% url 'create_article_file' article.id %}"
-                                                    data-toggle="modal"
-                                                    class="addUser btn btn-primary btn-md"><i
+                                            <button data-url="{% url 'create_article_file' article.id %}"
+                                                    class="btn btn-primary btn-md create_articleFileBtn"><i
                                                     class="fa fa-file mr-1"></i>{% trans " File" %}
                                             </button>
                                             <span id="article_file_name" style="margin-left: 1%;"></span>
@@ -198,9 +197,8 @@
                         </div>
                     </form>
                     <br>
-                    <div id="edit_article_form_error">
-                    </div>
                     <div id="edit_author_div"></div>
+                    <div id="edit_article_form_error"></div>
                 </div>
                 <br>
                 <hr>
@@ -242,44 +240,5 @@
                 });
             }, 2000);
         });
-
-        $('body').on('click', '.edit-author', function (e) {
-            e.preventDefault();
-
-            let url = $(this).data('url');
-
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function (response) {
-                    $('#edit_author_div').html(response);
-                    $('#edit-author-modal').modal('show');
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-
-        });
-
-        $('body').on('click', '.remove-author', function (e) {
-            e.preventDefault();
-
-            let url = $(this).data('url');
-
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function (response) {
-                    $('#edit_author_div').html(response);
-                    $('#removeAuthor').modal('show');
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-
-        });
-
     </script>
 {% endblock %}

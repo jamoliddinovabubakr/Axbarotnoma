@@ -212,7 +212,7 @@ def update_article(request, pk):
                     article=article,
                     from_user=article.author,
                     to_user=editor.user,
-                    message=f"({editor.user.email})Assalomu aleykum. Yangi maqolamni yubordim!",
+                    message=_("Assalomu aleykum.Yangi maqolamni yubordim!"),
                     notification_status=NotificationStatus.objects.get(id=1),
                     is_update_article=True,
                 )

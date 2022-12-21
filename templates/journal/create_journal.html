@@ -67,6 +67,7 @@
                 success: function (response) {
                     if (response.result) {
                         $('#create_journal_modal').modal('hide');
+                         window.location.reload();
                     } else {
                         swal({
                             title: response.message,

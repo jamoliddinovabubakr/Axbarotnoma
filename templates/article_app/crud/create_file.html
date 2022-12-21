@@ -1,17 +1,18 @@
 {% load i18n %}
 {% load static %}
-<form class="form-control" data-parsley-validate="true" method="post"
+<form data-parsley-validate="true" method="post"
       id="create_articleFile_form"
       data-url="{% url 'create_article_file' article.id %}"
       enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="modal fade" id="addUser">
+    <div class="modal fade" id="create_articleFile_modal">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{% trans "Upload File" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
+
                 <div class="modal-body">
                     <select id="id_article" name="article" class="form-control" style="visibility: hidden">
                         <option selected value="{{ article.id }}"></option>
@@ -59,7 +60,7 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    if(response.result){
+                    if (response.result) {
                         $('#createArticleFile_modal').click();
                         $('#article_file_name').text(response.file_name);
                         swal({
@@ -72,12 +73,11 @@
                             timer: 2000,
                         });
                     }
-                      
+
                 },
             });
         });
 
     });
+
 </script>
-<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
-<script src="{% static '/assets/plugins/parsleyjs/dist/parsley.min.js' %}"></script>

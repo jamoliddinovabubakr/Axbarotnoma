@@ -14,7 +14,7 @@
                 <div class="row">
                     <hr>
                     <div class="col-lg-12">
-                        <button type="button" style="float: right"
+                        <button type="button" style="float: right;"
                                 data-url="{% url 'create_journal' %}"
                                 {% if articles.count == 0 %} disabled {% endif %}
                                 class="btn btn-success btn-sm forshadow create_journal_btn"><i
@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <hr>
-                <table class="table table-hover table-fixed">
+                <table class="table table-hover table-responsive-lg">
 
                     <thead>
                     <tr>
@@ -36,7 +36,7 @@
                         <th><strong>UPDATED AT</strong></th>
                         <th><strong>IS PUBLISH</strong></th>
                         <th><strong>STATUS</strong></th>
-                        <th><strong>ACTION</strong></th>
+                        <th width="150"><strong>ACTION</strong></th>
                     </tr>
                     </thead>
 
@@ -49,7 +49,7 @@
                                 <td>{{ journal.year }}</td>
                                 <td>{{ journal.number }}</td>
                                 <td>
-                                    <a href="{{ journal.file_pdf.url }}">Pdf</a>
+                                    <a href="{{ journal.file_pdf.url }}" target="_blank">Pdf</a>
                                 </td>
                                 <td>{{ journal.created_at }}</td>
                                 <td>{{ journal.updated_at }}</td>
@@ -68,7 +68,20 @@
                                         <span class='badge badge-danger'>No</span>
                                     {% endif %}
                                 </td>
-                                <td><a href="{% url 'view_journal' journal.id %}" class="btn btn-outline-warning"><i class="fa fa-pen"></i></a></td>
+                                <td>
+                                    <button type="button" data-url="{% url 'edit_journal' journal.id %}"
+                                            class="btn btn-outline-warning btn-sm edit_journal_btn"><i
+                                            class="fa fa-pencil-alt"></i></button>
+                                    <button type="button" data-url="{% url 'split_journal_pages' journal.id %}"
+                                            {% if journal.is_split %}
+                                            disabled
+                                            {% endif %}
+                                            class="btn btn-outline-primary btn-sm split_journal_btn"><i
+                                            class="fa fa-cut"></i></button>
+                                    <button type="button" data-url="{% url 'delete_journal' journal.id %}"
+                                            class="btn btn-outline-danger btn-sm delete_journal_btn"><i
+                                            class="fa fa-trash-alt"></i></button>
+                                </td>
                             </tr>
                         {% endfor %}
                     {% else %}
@@ -148,4 +161,82 @@
         </div>
     </div>
     <div id="create_journal_div"></div>
+    <div id="edit_journal_div"></div>
+    <script type="text/javascript">
+        $('body').on('click', '.edit_journal_btn', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (response) {
+                    $('#edit_journal_div').html(response);
+                    $('#edit_journal_modal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        $('body').on('click', '.delete_journal_btn', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (response) {
+                    $('#edit_journal_div').html(response);
+                    $('#delete_journal_modal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        $('body').on('click', '.split_journal_btn', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (response) {
+                    $('#edit_journal_div').html(response);
+                    $('#split_journal_modal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        $('body').on('submit', '.edit_journal_form', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+            let formData = new FormData(this);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $('#edit_journal_modal').modal('hide');
+                    swal({
+                        title: response.message,
+                        timer: 1500,
+                    })
+                    if (response.result) {
+                        window.location.reload();
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
 {% endblock %}

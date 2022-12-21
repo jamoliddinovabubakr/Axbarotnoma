@@ -1,4 +1,63 @@
 // USER DASHBOARD
+
+$('body').on('click', '.create_articleFileBtn', function (e) {
+    e.preventDefault();
+
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+            $('#edit_author_div').html(response);
+            $('#create_articleFile_modal').modal('show');
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+
+});
+
+
+$('body').on('click', '.edit-author', function (e) {
+    e.preventDefault();
+
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+            $('#edit_author_div').html(response);
+            $('#edit-author-modal').modal('show');
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+
+});
+
+$('body').on('click', '.remove-author', function (e) {
+    e.preventDefault();
+
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+            $('#edit_author_div').html(response);
+            $('#removeAuthor').modal('show');
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+
+});
+
 $('body').on('submit', '.edit-author-form', function (e) {
     e.preventDefault();
     const $myForm = $('.edit-author-form');
@@ -97,10 +156,11 @@ $('body').on('click', '.view_message_btn', function (e) {
                                                                 <div class="widget-chat-name text-indigo">`
                             + item.from_user__email +
                             `</div>
-                                                                <div class="widget-chat-message">`
+                                                                <div class="widget-chat-message">` + `<i style="color: #0a6aa1">(${item.to_user__email}).</i>`
                             + item.message +
                             `</div>
-                                                                <div class="widget-chat-time">` + `</div>
+                                                                <div class="widget-chat-time">` + time_string + `</div>
+                                                                 <br><br><div class="widget-chat-ansewer"></div>
                                                             </div>
                                                         </div>
                                                     </div>`;
@@ -116,10 +176,10 @@ $('body').on('click', '.view_message_btn', function (e) {
                                                                 <div class="widget-chat-name text-indigo">`
                             + item.from_user__email +
                             `</div>
-                                                                <div class="widget-chat-message">`
+                                                                <div class="widget-chat-message">` + `<i style="color: #0a6aa1">(${item.to_user__email}).</i>`
                             + item.message +
                             `</div>
-                                                                <div class="widget-chat-time">` + `</div>
+                                                                <div class="widget-chat-time">` + time_string + `</div>
                                                                 <br><div class="widget-chat-ansewer">
                                                                     <button type="button" data-url="${response.url}${id}/${item.from_user__id}/" class="btn btn-white btn-sm authorWrite-message-btn">Ansewer</button>
                                                                 </div>
