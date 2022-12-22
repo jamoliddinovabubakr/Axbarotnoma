@@ -92,7 +92,7 @@ def roles_list(request):
 
 
 @login_required(login_url='login')
-@allowed_users(role=['admin'])
+@allowed_users(role=['admin', 'editor'])
 def scientific_degrees_list(request):
     objects = ScientificDegree.objects.all()
     context = {

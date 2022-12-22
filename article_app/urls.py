@@ -1,14 +1,12 @@
-from django.conf.urls.i18n import i18n_patterns
 from django.urls import path, include, re_path
-from django.views.generic.base import TemplateView
 from .views import *
 
 urlpatterns = [
     path('', main_page, name='main_page'),
-    path('contact/', TemplateView.as_view(template_name="article_app/contact.html"), name='contact'),
-    path('aboutdtm/', TemplateView.as_view(template_name="article_app/blank_page/about_dtm.html"), name='aboutdtm'),
-    path('editor_board/', TemplateView.as_view(template_name="article_app/blank_page/editor_board.html"),
-         name='editor_board'),
+    path('contact/', contact,  name='contact'),
+    path('about_journal/', about_journal, name='about_journal'),
+    path('editor_board/', editor_board, name='editor_board'),
+    path('guide_for_authors/', guide_for_authors, name='guide_for_authors'),
 
     path('article/create/', create_article, name='create_article'),
     path('article/view/<int:pk>/', article_view, name='article_view'),

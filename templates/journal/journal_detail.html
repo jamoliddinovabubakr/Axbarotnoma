@@ -15,7 +15,7 @@
             <i class="fas fa-md fa-fw m-r-10 fa-calendar-alt"></i><span class="text-inverse"
                                                                         style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif; font-size: 12px;">{{ journal.created_at }}</span>
             <br><br>
-            <center><img class="card-img-top" src="{% static 'img/jurnal_ob.png' %}" alt="" style="width: 250px;"/></center>
+            <center><img class="card-img-top" src="{{ journal.image.url }}" alt="" style="width: 250px;"/></center>
         <hr>
         <p><i class="fa fa-file-pdf fa-lg"></i>&nbsp;&nbsp;<a href="{{ journal.file_pdf.url }}" target="_blank">Pdf file</a></p>
             {% for item in list_articles %}

@@ -80,7 +80,7 @@ def split_journal_pages(request, pk):
             table = get_object_or_404(JournalArticle, journal=journal, article=article)
             table.start_page = start_page
             table.end_page = end_page
-            table.article_pdf = f"{cwd}\\media\\files\\split_article\\{article.id}.pdf"
+            table.article_pdf = f"files\\split_article\\{article.id}.pdf"
             table.save()
             article.filePDF = table.article_pdf
             article.save()
@@ -196,13 +196,12 @@ def delete_journal(request, pk):
             article.is_publish_journal = False
             article.save()
         journal.delete()
-        return JsonResponse({"message": "Success"})
+        return JsonResponse({"message": "Deleted Success"})
 
     data = {"journal": journal}
     return render(request, "journal/delete_journal.html", context=data)
 
 
-@login_required(login_url='login')
 def journal_article_view(request, pk):
     article = get_object_or_404(Article, pk=pk)
     authors = ExtraAuthor.objects.filter(article=article)

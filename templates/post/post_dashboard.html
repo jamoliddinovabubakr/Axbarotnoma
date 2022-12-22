@@ -1,0 +1,191 @@
+{% extends "user_app/base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Post Dashboard" %}
+{% endblock %}
+{% block content %}
+    <div id="content" class="content">
+        <h2 class="page-header viewArticleFont">
+            {% trans "Post Dashboard" %}
+        </h2>
+        <div class="panel-body forshadow" style="background-color: #ffffff; border-radius: 5px; padding: 15px">
+            <div class="container">
+                <div class="row">
+                    <hr>
+                    <div class="col-lg-12">
+                        <button type="button" style="float: right;"
+                                data-url="{% url 'create_post' %}"
+                                class="btn btn-success btn-sm forshadow create_post_btn"><i
+                                class="fa fa-plus mr-1"></i>Create New Post
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <table class="table table-hover table-responsive-lg">
+
+                    <thead>
+                    <tr>
+                        <th><strong>Tr</strong></th>
+                        <th><strong>Title</strong></th>
+                        {#                        <th><strong>Tag</strong></th>#}
+                        {#                        <th><strong>Description</strong></th>#}
+                        <th><strong>Url</strong></th>
+                        <th><strong>Image</strong></th>
+                        <th><strong>Publish</strong></th>
+                        <th><strong>Created</strong></th>
+                        <th><strong>Updated</strong></th>
+                        <th width="150"><strong>Action</strong></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% if posts.count > 0 %}
+                        {% for post in posts %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ post.title }}</td>
+                                {#                                <td>{{ post.tag|safe }}</td>#}
+                                {#                                <td>{{ post.desc|safe }}</td>#}
+                                <td>{{ post.url }}</td>
+                                <td><a href="{{ post.img.url }}" target="_blank">{{ post.img.name }}</a></td>
+
+                                <td>
+                                    {% if post.is_publish %}
+                                        <span class='badge badge-success'>Yes</span>
+                                    {% else %}
+                                        <span class='badge badge-danger'>No</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ post.created_at }}</td>
+                                <td>{{ post.updated_at }}</td>
+                                <td>
+                                    <button type="button" data-url="{% url 'edit_post' post.id %}"
+                                            class="btn btn-outline-warning btn-sm edit_post_btn"><i
+                                            class="fa fa-pencil-alt"></i></button>
+                                    <button type="button" data-url="{% url 'delete_post' post.id %}"
+                                            class="btn btn-outline-danger btn-sm delete_post_btn"><i
+                                            class="fa fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="10"><h3 class="text-lg-center text-danger">NO DATA</h3></td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+    </div>
+    <div id="create_post_div"></div>
+    <div id="edit_post_div"></div>
+    <script type="text/javascript">
+        $('body').on('click', '.create_post_btn', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (response) {
+                    $('#create_post_div').html(response);
+                    $('#create_post_modal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        $('body').on('click', '.edit_post_btn', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (response) {
+                    $('#edit_post_div').html(response);
+                    $('#edit_post_modal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        $('body').on('click', '.delete_post_btn', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (response) {
+                    $('#edit_post_div').html(response);
+                    $('#delete_post_modal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        $('body').on('submit', '.edit_post_form', function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+            let formData = new FormData(this);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $('#edit_post_modal').modal('hide');
+                    swal({
+                        title: response.message,
+                        timer: 1500,
+                    })
+                    if (response.result) {
+                        window.location.reload();
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        $('body').on('submit', '.delete_post_form', function (e) {
+            e.preventDefault();
+
+            const $formData = $('.delete_post_form');
+            let url = $('.delete_post_form').data('url');
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: $formData.serialize(),
+                success: function (response) {
+                    $('#delete_post_modal').modal('hide');
+
+                    swal({
+                        title: response.message,
+                        timer: 2000,
+                    });
+
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+
+            return false;
+        });
+    </script>
+{% endblock %}

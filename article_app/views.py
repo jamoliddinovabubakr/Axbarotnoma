@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from django.views.decorators.csrf import requires_csrf_token
 
-from post.models import Post
+from post.models import Post, BlankPage
 from user_app.decorators import allowed_users
 from article_app.models import *
 from article_app.models import ExtraAuthor
@@ -51,11 +51,43 @@ def set_language(request, language):
 
 
 def main_page(request):
-    post = Post.objects.last()
+    post = Post.objects.filter(is_publish=True)
     context = {
-        'post': post,
+        'post': post.last(),
     }
     return render(request, "article_app/main.html", context=context)
+
+
+def contact(request):
+    connect = BlankPage.objects.filter(is_publish=True, key='contact')
+    context = {
+        'contact': connect.last(),
+    }
+    return render(request, "article_app/blank_page/contact.html", context=context)
+
+
+def editor_board(request):
+    editorial_board = BlankPage.objects.filter(is_publish=True, key='editorial_board')
+    context = {
+        'editorial_board': editorial_board.last(),
+    }
+    return render(request, "article_app/blank_page/editor_board.html", context=context)
+
+
+def about_journal(request):
+    about_journals = BlankPage.objects.filter(is_publish=True, key='about_journal')
+    context = {
+        'about_journal': about_journals.last(),
+    }
+    return render(request, "article_app/blank_page/about_journal.html", context=context)
+
+
+def guide_for_authors(request):
+    guide_for_author = BlankPage.objects.filter(is_publish=True, key='guide_for_authors')
+    context = {
+        'guide_for_author': guide_for_author.last(),
+    }
+    return render(request, "article_app/blank_page/guide_for_authors.html", context=context)
 
 
 @login_required(login_url='login')
@@ -174,8 +206,17 @@ def update_article(request, pk):
     if request.method == "POST":
         form = UpdateArticleForm(request.POST, instance=article)
 
-        if not form.has_changed():
-            return JsonResponse({'result': False, "message": _("The form data is unchanged!")})
+        authors = ExtraAuthor.objects.filter(article=article)
+        for author in authors:
+            if author.scientific_degree is None or author.work is None:
+                data = {
+                    'result': False,
+                    'message': _("Bazi muallifning ilmiy darajasi yoki ish joyi kiritilmadi!"),
+                }
+                return JsonResponse(data)
+
+        # if not form.has_changed():
+        #     return JsonResponse({'result': False, "message": _("The form data is unchanged!")})
 
         if form.is_valid():
             files = ArticleFile.objects.filter(
@@ -224,7 +265,7 @@ def update_article(request, pk):
                     from_user=article.author).filter(to_user=editor.user)
                 if notifs.count() > 0:
                     notif = notifs.last()
-                    notif.message = f"({editor.user.email})Assalomu aleykum. Maqolamni to'g'irlab qayta yubordim!"
+                    notif.message = _("Assalomu aleykum.Maqolamni to'g'irlab qayta yubordim!")
                     notif.notification_status = NotificationStatus.objects.get(id=1)
                     notif.save()
 

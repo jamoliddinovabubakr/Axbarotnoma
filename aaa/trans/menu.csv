@@ -1,0 +1,27 @@
+id,name,name_uz,name_en,name_ru,name_kk,icon_name,url,url_name,order,status,type
+2,Muharrir boshqaruv paneli,Muharrir boshqaruv paneli,Editor dashboard,Панель редактора,0,message,/profile/editor_dashboard/,editor_dashboard,2,t,"0"
+3,Taqrizchi boshqaruv paneli,Taqrizchi boshqaruv paneli,Reviewer dashboard,Панель рецензента,0,message,/profile/reviewer_dashboard/,reviewer_dashboard,3,t,"0"
+4,Taqrizchilar ro'yxati,Taqrizchilar ro'yxati,List of reviewers,Список рецензентов,0,grid_on,/profile/reviewers_list/,reviewers_list,4,t,"0"
+5,Taqrizchilarni tayinlash,Taqrizchilarni tayinlash,Appointment of reviewers,Назначение рецензентов,0,help,/profile/choosen_reviewer_role_list/,choosen_reviewer_role_list,5,t,"0"
+6,Mening profilim,Mening profilim,My profile,Мой профиль,0,settings,/profile/edit_profile/,edit_profile,6,t,"0"
+7,Parolni o'zgartirish,Parolni o'zgartirish,Change password,Изменить пароль,0,password,/profile/change_password/,change_password,7,t,"0"
+8,Jurnal mavzulari,Jurnal mavzulari,Journal topics,Темы журналов,0,book,/sections/,sections,8,t,"0"
+9,Mamlakatlar bo'limi,Mamlakatlar bo'limi,Countries section,Раздел стран,0,settings,/profile/countries/,countries,9,t,"0"
+10,Viloyatlar paneli,Viloyatlar paneli,Panel of regions,Панель регионов,0,settings,/profile/regions/,regions,10,t,"0"
+11,Jinslar bo'limi,Jinslar bo'limi,Gender section,Гендерный раздел,0,star,/profile/genders/,genders,11,t,"0"
+12,Menyular bo'limi,Menyular bo'limi,Menus section,Раздел меню,0,settings,/profile/menus/,menus,12,t,"0"
+13,Rollar bo'limi,Rollar bo'limi,Roles section,Раздел ролей,0,settings,/profile/roles/,roles,13,t,"0"
+14,Muharrirlar ro'yxati,Muharrirlar ro'yxati,List of editors,Список редакторов,0,settings,/profile/editors/,editors,14,t,"0"
+15,Ilmiy darajalar ro'yxati,Ilmiy darajalar ro'yxati,List of scientific degrees,Список ученых степеней,0,settings,/profile/scientific_degrees/,scientific_degrees,15,t,"0"
+16,Foydalanuvchilar ro'yxati,Foydalanuvchilar ro'yxati,0,Список пользователей,0,person,/profile/users/,person,16,t,"0"
+17,Maqola statuslari bo'limi,Maqola statuslari bo'limi,Article status section,Раздел статуса статьи,0,settings,/article_status/,article_status,17,t,"0"
+18,Maqola turi,Maqola turi,Type of article,Тип статьи,0,settings,/article_types/,article_types,18,t,"0"
+19,Xabarnoma holatlari,Xabarnoma holatlari,Status of notification,Статус уведомления,0,settings,/notification_status/,notification_status,19,t,"0"
+20,Bosqichlar ro'yxati,Bosqichlar ro'yxati,List of stages,Список этапов,0,settings,/article_stages/,article_stages,20,t,"0"
+21,Jurnal boshqaruv paneli,Jurnal boshqaruv paneli,Journal dashboard,Панель управления журналом,0,book,/journal/dashboard/,jurnal_dashboard,21,t,"0"
+22,Bosh sahifa,Bosh sahifa,0,0,0,0,dashboard,dashboard,1,t,1
+23,Konferensiya,Konferensiya,0,0,0,0,0,0,2,t,1
+24,Bog'lanish,Bog'lanish,0,0,0,0,0,0,3,t,1
+1,Muallif boshqaruv paneli,Muallif boshqaruv paneli,Author dashboard,Панель автора,0,home,/profile/user_dashboard/,dashboard,1,t,"0"
+25,E'lonlar boshqaruv paneli,E'lonlar boshqaruv paneli,Posts dashboard,Панель управления с объявлениями,0,settings,/post/post_dashboard/,post_dashboard,22,t,"0"
+26,Pastki sahifalar bilan ishlash,Pastki sahifalar bilan ishlash,Subpages dashboard,Работа с подстраницами,0,settings,/post/page_dashboard/,page_dashboard,23,t,"0"

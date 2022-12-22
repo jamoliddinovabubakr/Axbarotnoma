@@ -7,7 +7,7 @@ from django import forms
 class CreateJournalForm(forms.ModelForm):
     class Meta:
         model = Journal
-        fields = ['name', 'year', 'number', 'file_pdf']
+        fields = ['name', 'year', 'number', 'file_pdf', 'image']
 
         widgets = {
             'name': TextInput(attrs={
@@ -32,13 +32,20 @@ class CreateJournalForm(forms.ModelForm):
                 'type': 'file',
                 'accept': ".pdf, .rtf",
             }),
+            'image': FileInput(attrs={
+                'class': 'form-control image',
+                'name': 'image',
+                'id': 'id_image',
+                'type': 'file',
+                'accept': ".jpg, .jpeg, .png",
+            }),
         }
 
 
 class UpdateJournalForm(forms.ModelForm):
     class Meta:
         model = Journal
-        fields = ['name', 'year', 'number', 'file_pdf', 'is_publish', 'status']
+        fields = ['name', 'year', 'number', 'file_pdf', 'is_publish', 'status', 'image']
 
         widgets = {
             'name': TextInput(attrs={
@@ -59,6 +66,13 @@ class UpdateJournalForm(forms.ModelForm):
                 'id': 'id_file_pdf',
                 'type': 'file',
                 'accept': ".pdf, .rtf",
+            }),
+            'image': FileInput(attrs={
+                'class': 'form-control image',
+                'name': 'image',
+                'id': 'id_image',
+                'type': 'file',
+                'accept': ".jpg, .jpeg, .png",
             }),
             'is_publish': CheckboxInput(attrs={
                 'class': 'form-control',

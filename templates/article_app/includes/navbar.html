@@ -3,9 +3,9 @@
 <div id="header" class="header navbar navbar-default navbar-fixed-top navbar-expand-lg">
     <div class="container">
         <a href="{% url 'main_page' %}">
-            <img src="{% static 'img/dtm.jpeg' %}" alt="" width="100"/>
+            <img src="{% static 'img/dtm.jpeg' %}" alt="" width="110"/>
         </a>
-        <span style="text-transform: uppercase; margin-left: 1em; font-family: Roboto,sans-serif; text-align: center; display: table-cell; vertical-align: middle;">
+        <span style="text-transform: uppercase; margin-left: 1em; font-size: 16px; font-family: Roboto,sans-serif; text-align: center; display: table-cell; vertical-align: middle;">
                 <b>Onlayn axborotnoma jurnal</b>
 			</span>
 
@@ -14,32 +14,28 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="collapse navbar-collapse" id="header-navbar">
             <ul class="nav navbar-nav navbar-right d-flex flex-grow-1">
-                <li><a href="{% url 'main_page' %}">{% trans "Bosh sahifa" %}</a></li>
-                {#                <li><a href="{% url 'about_journal' %}">{% trans "Jurnal haqida" %}</a></li>#}
-                <li><a href="#">{% trans "Konferensiya" %}</a></li>
-                {#                <li><a href="{% url 'talabnoma' %}">{% trans "Talabnoma" %}</a></li>#}
-                <li><a href="{% url 'contact' %}">{% trans "Bog'lanish" %}</a></li>
+                <li><a href="{% url 'main_page' %}" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;">{% trans "Bosh sahifa" %}</a></li>
+{#                <li><a href="#" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;">{% trans "Konferensiya" %}</a></li>#}
+                <li><a href="{% url 'contact' %}" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;">{% trans "Bog'lanish" %}</a></li>
                 {% if request.user.is_authenticated %}
                     <li class="dropdown navbar-user">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-{#                                                        <img src="{{ request.user.avatar.url }}" alt="" width="40" class="img-circle"/>#}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;">
                             <b><span class="d-none d-md-inline">{{ request.user.full_name }}</span></b>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="{% url 'dashboard' %}" class="dropdown-item"><i
+                            <a href="{% url 'dashboard' %}" class="dropdown-item" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;"><i
                                     class="icon-pencil  p-r-10"></i><span>{% trans "Shaxsiy kabinet" %}</span></a>
-                            <a href="{% url 'logout' %}" class="dropdown-item"><i
+                            <a href="{% url 'logout' %}" class="dropdown-item" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;"><i
                                     class="icon-logout  p-r-10"></i><span>{% trans "Chiqish" %}</span></a>
                         </div>
                     </li>
                 {% else %}
-                    <li><a href="{% url 'register' %}">{% trans "Ro'yxatdan o'tish" %}</a></li>
-                    <li><a href="{% url 'login' %}">{% trans "Kirish" %}</a></li>
+                    <li><a href="{% url 'register' %}" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;">{% trans "Ro'yxatdan o'tish" %}</a></li>
+                    <li><a href="{% url 'login' %}" style="font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif; font-size: 14px;">{% trans "Kirish" %}</a></li>
                 {% endif %}
-
                 <li style="margin-top: 1%">
                     {% get_current_language as LANGUAGE_CODE %}
                     {% get_available_languages as LANGUAGES %}

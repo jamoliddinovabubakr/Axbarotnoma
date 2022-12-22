@@ -13,7 +13,7 @@ Barcha jurnallar soni
                 {% for item in journals %}
                     <div class="col-xl-3 col-sm-6">
                         <div class="card border-0">
-                            <img class="card-img-top" src="{% static 'img/jurnal_ob.png' %}" alt=""/>
+                            <img class="card-img-top" src="{{ item.image.url }}" alt=""/>
                             <div class="card-body">
                                 <center><a href="{% url 'view_journal' item.id %}">{{item.year }} № {{ item.number }}</a></center>
                             </div>

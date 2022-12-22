@@ -1,23 +1,23 @@
 {% load i18n %}
 {% load static %}
-<form class="delete_journal_form" method="post" data-url="{% url 'delete_journal' journal.id %}">
+<form class="delete_post_form" method="post" data-url="{% url 'delete_post' post.id %}">
     {% csrf_token %}
     {{ form.media }}
-    <div class="modal fade" id="delete_journal_modal">
+    <div class="modal fade" id="delete_post_modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">{% trans "Delete Journal" %}</h3>
+                    <h5 class="modal-title">{% trans "Delete Post" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">{{ journal.name }}</label>
+                        <label class="col-form-label">{{ post.title }}</label>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
-                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Delete" %}</button>
                 </div>
             </div>
         </div>

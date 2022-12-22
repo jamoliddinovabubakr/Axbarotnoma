@@ -1,0 +1,5 @@
+id,name,name_uz,name_en,name_ru,name_kk,code_name,level
+1,Admin,Admin,Admin,Администратор,0,admin,1
+2,Muharrir,Muharrir,Editor,Редактор,0,editor,2
+3,Taqrizchi,Taqrizchi,Reviewer,Рецензент,0,reviewer,3
+4,Muallif,Muallif,Author,Автор,0,author,4

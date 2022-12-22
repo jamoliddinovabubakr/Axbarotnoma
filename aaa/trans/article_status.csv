@@ -1,0 +1,11 @@
+id,name,name_uz,name_en,name_ru,name_kk,stage_id
+1,Yuborilgan,Yuborilgan,submit,послал,0,1
+2,Tasdiqlandi,Tasdiqlandi,accept,подтвержденный,0,3
+3,Rad etildi,Rad etildi,declined,отклоненный,0,2
+4,Yuborilgan,Yuborilgan,submit,послал,0,2
+5,Yuborilgan,Yuborilgan,submit,послал,0,3
+6,Maqola to'liq to'ldirilmagan,Maqola to'liq to'ldirilmagan,incomplete,неполный,0,1
+7,Qayta yubormoq,Qayta yubormoq,resubmit,повторно представить,0,1
+8,Qayta yubormoq,Qayta yubormoq,resubmit,повторно представить,0,2
+9,Rad etildi,Rad etildi,declined,отклоненный,0,1
+10,Qo'shimcha taqrizchiga yuborilgan,Qo'shimcha taqrizchiga yuborilgan,submit extra reviewer,отправить дополнительного рецензента,0,2

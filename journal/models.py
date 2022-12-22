@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 class Journal(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
+    image = models.ImageField(upload_to="files/journal_images",  max_length=255, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])],
+                                help_text='Please upload only image!')
     file_pdf = models.FileField(_("Fayl"), upload_to="files/journals", max_length=255, null=True,
                                 validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
                                 help_text='Please upload only .pdf!')

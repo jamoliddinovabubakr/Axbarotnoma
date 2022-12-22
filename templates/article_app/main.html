@@ -11,7 +11,8 @@
 		{% if post %}
 			<center><h4 class="title">{{post.title}}</h4></center>
 			<i class="fas fa-md fa-fw m-r-10 fa-calendar-alt"></i><span class="text-inverse"><span style="font-size: small; color: #7b7b7b">{{ post.created_at }}</span></span><br><br>
-			<center><img src="{{ post.img.url}}"   width="100%" alt="" /></center>
+			<center><img src="{{ post.img.url}}"   alt="" width="30%"/></center>
+            <br>
 			<p>{{ post.tag|safe }}</p>
 			<a href="{{ post.get_absolute_url }}" class="btn btn-outline-success">{% trans 'Batafsil' %}>></a>
 		{% endif %}

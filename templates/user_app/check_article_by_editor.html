@@ -345,7 +345,7 @@
                                 <td><b>Updated Time: </b>{% if item.updated_at %}{{ item.updated_at }}{% else %}
                                     Not yet {% endif %}</td>
                                 <td>
-                                    {% if item.status.id == 5 and article.article_status.id == 1 %}
+                                    {% if item.status.id == 5 %}
                                         <form method="post" data-url="{% url 'editor_resubmit_to_reviewer' %}"
                                               id="editor_resubmit_to_reviewer">
                                             {% csrf_token %}
