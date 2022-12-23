@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
@@ -18,7 +18,7 @@ from django.contrib.auth.models import Group
 from user_app.models import User, ReviewerArticle, StatusReview
 from . import utils
 import numpy as np
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
 from django.utils.translation import activate, get_language
 
 
@@ -204,6 +204,17 @@ def register_page(request):
 
             user = authenticate(request, username=user.username,
                                 password=request.POST['password1'])
+
+            try:
+                htmly = get_template('user_app/Email.html')
+                d = {'user': user}
+                subject, from_email, to = 'DTM axborotnoma jurnali', 'abubakrtestjamoliddinov0055@gmail.com', email
+                html_content = htmly.render(d)
+                msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            except:
+                print("Pochtaga ma'lumot yuborilmadi")
 
             if user is not None:
                 login(request, user)
@@ -831,7 +842,6 @@ def editor_resubmit_to_reviewer(request):
     user = get_object_or_404(User, pk=request.user.id)
     if request.method == 'POST' and is_ajax(request):
         review_id = request.POST.get('review_id')
-
         review = ReviewerArticle.objects.get(pk=int(review_id))
         review.result = 0
         review.status = StatusReview.objects.get(pk=1)
@@ -881,6 +891,17 @@ def approve_publish(request):
                 notif.notification_status = NotificationStatus.objects.get(id=3)
                 notif.save()
 
+            try:
+                htmly = get_template('user_app/Email_confirm.html')
+                d = {'user': user, 'article': article}
+                subject, from_email, to = 'DTM axborotnoma jurnali', 'abubakrtestjamoliddinov0055@gmail.com', article.author.email
+                html_content = htmly.render(d)
+                msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            except:
+                print("Pochtaga ma'lumot yuborilmadi")
+
             data = {
                 "message": "Maqola omadli tasdiqlandi!",
             }
@@ -891,6 +912,17 @@ def approve_publish(request):
             if notif.notification_status.id == 2:
                 notif.notification_status = NotificationStatus.objects.get(id=3)
                 notif.save()
+
+            try:
+                htmly = get_template('user_app/Email_reject.html')
+                d = {'user': article.author, 'article': article}
+                subject, from_email, to = 'DTM axborotnoma jurnali', 'abubakrtestjamoliddinov0055@gmail.com', article.author.email
+                html_content = htmly.render(d)
+                msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            except:
+                print("Pochtaga ma'lumot yuborilmadi")
 
             data = {
                 "message": "Maqola Rad Etildi!",
@@ -1035,6 +1067,17 @@ def editor_submit_result(request):
                 message=text,
                 notification_status=NotificationStatus.objects.get(id=1),
             )
+
+            try:
+                htmly = get_template('user_app/Email_reject.html')
+                d = {'user': article.author, 'article': article}
+                subject, from_email, to = 'DTM axborotnoma jurnali', 'abubakrtestjamoliddinov0055@gmail.com', article.author.email
+                html_content = htmly.render(d)
+                msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            except:
+                print("Pochtaga ma'lumot yuborilmadi")
 
             data = {
                 "message": "Maqola Rad Etildi!",
