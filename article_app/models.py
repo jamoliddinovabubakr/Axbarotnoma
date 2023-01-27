@@ -4,9 +4,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
-from django.urls import reverse
-from django.template.defaultfilters import slugify
-from django_ckeditor_5.fields import CKEditor5Field
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Section(models.Model):
@@ -60,8 +58,8 @@ class Article(models.Model):
                              on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=255, blank=True)
     title_en = models.CharField(max_length=255, blank=True)
-    abstract = RichTextField(blank=True)
-    abstract_en = RichTextField(blank=True)
+    abstract = RichTextUploadingField(blank=True)
+    abstract_en = RichTextUploadingField(blank=True)
     keywords = RichTextField(blank=True)
     keywords_en = RichTextField(blank=True)
     references = RichTextField(blank=True, null=True)

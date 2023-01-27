@@ -3,7 +3,8 @@ from .views import *
 
 urlpatterns = [
     path('', main_page, name='main_page'),
-    path('contact/', contact,  name='contact'),
+    path('contact/', contact, name='contact'),
+    path('render_pdf/', render_pdf, name="render_pdf"),
     path('about_journal/', about_journal, name='about_journal'),
     path('editor_board/', editor_board, name='editor_board'),
     path('guide_for_authors/', guide_for_authors, name='guide_for_authors'),

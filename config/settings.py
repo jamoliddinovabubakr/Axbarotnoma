@@ -28,9 +28,13 @@ INSTALLED_APPS = [
     'journal',
     'import_export',
     'ckeditor',
+    'ckeditor_uploader',
     'bootstrap_datepicker_plus',
-    'django_ckeditor_5',
+    'django_tex',
 ]
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+LATEX_INTERPRETER = 'pdflatex'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -61,6 +65,17 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+    },
+    {
+        'NAME': 'tex',
+        'BACKEND': 'django_tex.engine.TeXEngine',
+        'APP_DIRS': True,
+        'DIRS': [
+            '%s/templates' % BASE_DIR
+        ],
+        'OPTIONS': {
+            'environment': 'article_app.environment.my_environment',
+        }
     },
 ]
 
@@ -127,10 +142,7 @@ LOGIN_URL = 'login'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-if DEBUG:
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -138,19 +150,21 @@ AUTH_USER_MODEL = 'user_app.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
+
 CKEDITOR_CONFIGS = {
     'default': {
-        'skin': 'moono',
-        # 'skin': 'office2013',
-        'toolbar_Basic': [
-            ['Source', '-', 'Bold', 'Italic']
-        ],
         'toolbar_YourCustomToolbarConfig': [
             {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-',
-            'Templates']}, {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord',
-            '-', 'Undo', 'Redo']}, {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
-            {'name': 'forms', 'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button',
-            'ImageButton', 'HiddenField']}, '/',
+                                           'Templates']},
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord',
+                                            '-', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            # {'name': 'forms', 'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button',
+            #                             'ImageButton', 'HiddenField']}, '/',
 
             {'name': 'paragraph',
              'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
@@ -158,33 +172,56 @@ CKEDITOR_CONFIGS = {
             {'name': 'basicstyles',
              'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {
+                'name': 'extra',
+                'items': ['Image', 'Table',
+                          'CodeSnippet', 'Mathjax', 'Embed', ],
+            },
             {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
-            # '/',
+             'items': ['HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
-            # {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
-            # {'name': 'about', 'items': ['About']},
-            '/',  # put this to force next toolbar on new line
-            # {'name': 'yourcustomtools', 'items': [
-            #     # put the name of your editor.ui.addButton here
-            #     'Preview',
-            #     'Maximize',
-
-            # ]},
         ],
         'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
         'toolbarGroups': [{'name': 'document', 'groups': ['mode', 'document', 'doctools']}],
         'height': 100,
         'width': '100%',
+        'forcePasteAsPlainText ': True,
+
         'filebrowserWindowHeight': 725,
         'filebrowserWindowWidth': 940,
         'toolbarCanCollapse': True,
-        'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+
+        # Which tags to allow in format tab
+        'format_tags': 'p;h1;h2',
+
+        # Remove these dialog tabs (semicolon separated dialog:tab)
+        'removeDialogTabs': ';'.join([
+            'image:advanced',
+            'image:Link',
+            'link:upload',
+            'table:advanced',
+            'tableProperties:advanced',
+        ]),
+        'linkShowTargetTab': False,
+        'linkShowAdvancedTab': False,
+        # Class used inside span to render mathematical formulae using latex
+        'mathJaxClass': 'mathjax-latex',
+
+        # Mathjax library link to be used to render mathematical formulae
+        'mathJaxLib': 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_SVG',
+
         'tabSpaces': 4,
+
         'extraPlugins': ','.join([
             'uploadimage',  # the upload image feature
-            # your extra plugins here
+            'mathjax',
+            'uicolor',
+            'uploadwidget',
+            'codesnippet',  # Used to add code snippets
+            'image2',  # Loads new and better image dialog
+            'embed',  # Used for embedding media (YouTube/Slideshare etc)
+            'tableresize',  # Used to allow resizing of columns in tables
             'div',
             'autolink',
             'autoembed',
@@ -196,7 +233,7 @@ CKEDITOR_CONFIGS = {
             'clipboard',
             'dialog',
             'dialogui',
-            'elementspath'
+            'elementspath',
         ]),
     }
 }

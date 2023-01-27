@@ -23,8 +23,9 @@ urlpatterns += i18n_patterns(
     path('profile/', include('user_app.urls')),
     path('journal/', include('journal.urls')),
     path('post/', include('post.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path("set_language/<str:language>", set_language, name="set-language"),
     prefix_default_language=False,
 )
 urlpatterns += [
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

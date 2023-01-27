@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import TextInput, Textarea, FileInput, Select
 from article_app.models import *
-from django_ckeditor_5.widgets import CKEditor5Widget
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 class CreateArticleForm(forms.ModelForm):
@@ -76,6 +76,8 @@ class CreateArticleFileForm(forms.ModelForm):
 
 
 class UpdateArticleForm(forms.ModelForm):
+    abstract = forms.CharField(widget=CKEditorUploadingWidget())
+
     class Meta:
         model = Article
         fields = ['title', 'title_en', 'section', 'abstract', 'keywords', 'abstract_en', 'keywords_en', 'references',
@@ -101,19 +103,19 @@ class UpdateArticleForm(forms.ModelForm):
                 'name': 'title-en',
                 'id': 'id_title_en',
             }),
-            'abstract': Textarea(attrs={
-                'class': 'form-control',
-                'rows': '3',
-                'placeholder': 'Enter...',
-                'name': 'abstract',
-                'id': 'id_abstract',
-            }),
-            'abstract_en': Textarea(attrs={
-                'class': 'form-control',
-                'rows': '3',
-                'name': 'abstract_en',
-                'id': 'id_abstract_en',
-            }),
+            # 'abstract': Textarea(attrs={
+            #     'class': 'form-control',
+            #     'rows': '3',
+            #     'placeholder': 'Enter...',
+            #     'name': 'abstract',
+            #     'id': 'id_abstract',
+            # }),
+            # 'abstract_en': Textarea(attrs={
+            #     'class': 'form-control',
+            #     'rows': '3',
+            #     'name': 'abstract_en',
+            #     'id': 'id_abstract_en',
+            # }),
             'keywords': Textarea(attrs={
                 'class': 'form-control',
                 'name': 'keywords',

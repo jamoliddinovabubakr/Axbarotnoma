@@ -24,10 +24,17 @@ from django.urls.base import resolve, reverse
 from django.urls.exceptions import Resolver404
 from django.utils.translation import activate, get_language
 from django.utils.translation import gettext_lazy as _
+from django_tex.shortcuts import render_to_pdf
 
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
+def render_pdf(request):
+    template_name = 'article_app/texput.tex'
+    context = {'foo': 'Bar'}
+    return render_to_pdf(request, template_name, context, filename='test.pdf')
 
 
 def set_language(request, language):
