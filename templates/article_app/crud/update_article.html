@@ -11,7 +11,8 @@
         <div class="panel panel-default forshadow">
             <div class="panel-body">
                 <div class="container">
-                    <form class="update_article_form" data-parsley-validate="true" method="post" data-url="{% url 'update_article' article.id %}">
+                    <form class="update_article_form" data-parsley-validate="true" method="post"
+                          data-url="{% url 'update_article' article.id %}">
                         {% csrf_token %}
                         {{ form.media }}
                         <br>
@@ -182,10 +183,7 @@
                         <br>
 
                         <div class="row" style="padding-top: 1em">
-                            <div class="col-md-6 col-sm-6">
-                                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary" style="float: left"><i class="fa fa-arrow-alt-circle-left"></i> &nbsp;Asosiy sahifaga qaytish</a>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
+                            <div class="col-md-12 col-sm-12">
                                 <button type="submit" style="float: right;" id="submitButtonId"
                                         class="btn btn-success"><i
                                         class="fa fa-paper-plane mr-2"></i>{% trans "Maqolani saqlash va yuborish" %}
@@ -227,18 +225,20 @@
                                 "<td>" + item.scientific_degree__name + "</td>" +
                                 "<td>" + item.work + "</td>" +
                                 "<td class='with-btn' nowrap>" +
-                                `<button type="button" class="btn btn-xs btn-warning edit-author" data-url="${response.edit_url}${item.id}/"><i class="fa fa-edit mr-1"></i>O'zgartirish</button>` + " " +
-                                `<button type="button" class="btn btn-xs btn-danger remove-author" data-url="${response.delete_url}${item.id}/"><i class="fa fa-trash mr-1"></i>O'chirish</button>` +
+                                `<button type="button" class="btn btn-xs btn-warning edit-author" data-url="${response.edit_url}${item.id}/"><i class="fa fa-edit mr-1"></i>O'zgartirish</button>` +
+                                " " +
+                                `<button type="button" class="btn btn-xs btn-danger remove-author" id="remove-author${tr}" data-url="${response.delete_url}${item.id}/"><i class="fa fa-trash mr-1"></i>O'chirish</button>` +
                                 "</td>" +
                                 "</tr>";
                             $("#authors_table").append(temp);
+                            $('#remove-author1').prop('disabled', true);
                         }
                     },
                     error: function (response) {
                         console.log(response);
                     }
                 });
-            }, 2000);
+            }, 1500);
         });
     </script>
 {% endblock %}

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 LATEX_INTERPRETER = 'pdflatex'
+FILE_UPLOAD_TEMP_DIR = os.path.join(BASE_DIR, 'temp')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,9 +71,7 @@ TEMPLATES = [
         'NAME': 'tex',
         'BACKEND': 'django_tex.engine.TeXEngine',
         'APP_DIRS': True,
-        'DIRS': [
-            '%s/templates' % BASE_DIR
-        ],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         'OPTIONS': {
             'environment': 'article_app.environment.my_environment',
         }
@@ -142,7 +141,10 @@ LOGIN_URL = 'login'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -234,6 +236,7 @@ CKEDITOR_CONFIGS = {
             'dialog',
             'dialogui',
             'elementspath',
+            # 'wordcount'
         ]),
     }
 }
