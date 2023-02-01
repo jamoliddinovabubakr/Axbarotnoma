@@ -80,7 +80,7 @@ class UpdateArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ['title', 'title_en', 'section', 'abstract', 'keywords', 'abstract_en', 'keywords_en', 'references',
+        fields = ['title', 'section', 'abstract', 'keywords', 'references',
                   'article_type', 'article_lang', 'country']
 
         widgets = {
@@ -97,12 +97,12 @@ class UpdateArticleForm(forms.ModelForm):
                 'name': 'title',
                 'id': 'id_title',
             }),
-            'title_en': Textarea(attrs={
-                'class': 'form-control title_en',
-                'rows': '1',
-                'name': 'title-en',
-                'id': 'id_title_en',
-            }),
+            # 'title_en': Textarea(attrs={
+            #     'class': 'form-control title_en',
+            #     'rows': '1',
+            #     'name': 'title-en',
+            #     'id': 'id_title_en',
+            # }),
             # 'abstract': Textarea(attrs={
             #     'class': 'form-control',
             #     'rows': '3',
@@ -122,12 +122,12 @@ class UpdateArticleForm(forms.ModelForm):
                 'id': 'id_keywords',
                 'rows': '3',
             }),
-            'keywords_en': Textarea(attrs={
-                'class': 'form-control',
-                'name': 'keywords_en',
-                'id': 'id_keywords_en',
-                'rows': '3',
-            }),
+            # 'keywords_en': Textarea(attrs={
+            #     'class': 'form-control',
+            #     'name': 'keywords_en',
+            #     'id': 'id_keywords_en',
+            #     'rows': '3',
+            # }),
             'references': Textarea(attrs={
                 'class': 'form-control',
                 'rows': '3',

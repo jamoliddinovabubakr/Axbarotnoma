@@ -141,6 +141,19 @@ def load_menus(request):
 
 
 @login_required(login_url='login')
+def load_notif_count(request):
+    user = get_object_or_404(User, id=request.user.id)
+
+    uncheck_notifications = Notification.objects.filter(to_user=user).filter(is_update_article=True).filter(
+        notification_status_id=1)
+
+    data = {
+        "notif_count": uncheck_notifications.count(),
+    }
+    return JsonResponse(data=data)
+
+
+@login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
 def reviewers_list(request):
     if request.method == 'GET':

@@ -33,6 +33,7 @@
     <script type="text/javascript">
         $('body').ready(function () {
             let url = '{% url 'load_menus' %}'.toString();
+            let base_url = "{{ url_name }}";
 
             $.ajax({
                 type: 'GET',
@@ -46,11 +47,11 @@
                             link = item.url;
                         }
                         let temp = `<li id="menu_${item.id}">` +
-                            `<a href="${link}">` +
+                            `<a href="${link}"><span id="badge_${item.id}" style="font-size: 14px; background-color: #4DA704; color: white;"></span>` +
                             `<i class="material-icons">${item.icon_name}</i><span>${item.name}</span>` + `</a></li>`;
                         $('#menu_sidebar').append(temp);
 
-                        if (url === item.url_name.toString()) {
+                        if (base_url === item.url_name.toString()) {
                             $('#menu_' + item.id).addClass("active");
                         }
                     }
@@ -59,6 +60,23 @@
                     console.log(error);
                 }
             });
+        });
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'load_notif_count' %}",
+                    success: function (response) {
+                        $('#badge_2').addClass("badge badge-success pull-right");
+                        $('#badge_2').text(response.notif_count);
+                        $('#badge_3').addClass("badge badge-success pull-right");
+                        $('#badge_3').text(response.notif_count);
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            }, 1500);
         });
     </script>
 {% endwith %}

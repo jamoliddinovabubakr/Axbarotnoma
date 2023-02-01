@@ -10,6 +10,8 @@ urlpatterns = [
     path('editor_notifications/', editor_notifications, name='editor_notifications'),
     path('reviewer_notifications/', reviewer_notifications, name='reviewer_notifications'),
 
+    path('load_notif_count/', load_notif_count, name='load_notif_count'),
+
     path('editor_check_article/<int:pk>/', editor_check_article, name='editor_check_article'),
     path('editor_submit_result/', editor_submit_result, name='editor_submit_result'),
 

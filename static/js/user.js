@@ -257,7 +257,6 @@ $('body').on('submit', '.update_article_form', function (e) {
 
     let data = [
         {key: 'title', value: title, message: "title"},
-        {key: 'title_en', value: title_en, message: "title_en"},
     ];
 
     let is_valid_editArticleForm = formValidate(data);

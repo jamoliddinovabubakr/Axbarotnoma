@@ -15,8 +15,8 @@
                           data-url="{% url 'update_article' article.id %}">
                         {% csrf_token %}
                         {{ form.media }}
-                        <br>
-                        <div style="padding-left:10%; padding-right: 5%;">
+
+                            <br>
                             <div class="row">
                                 <div class="col-md-12">
                                     <h5 class="text-center"
@@ -35,32 +35,29 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
+                                    <h5>{% trans "Maqolangizni mavzusini kiriting" %}</h5>
                                     <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Mavzusi" %}</label>
-                                        <div class="col-md-10 col-sm-10">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;border: 1px solid #afafaf;">
+                                        <div class="col-md-12 col-sm-12">
                                             {{ form.title|safe }}
                                         </div>
                                     </div>
                                 </div>
+                              <br>
+{#                                <div class="col-md-12">#}
+{#                                    <div class="form-group row m-b-15"#}
+{#                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">#}
+{#                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Mavzusi (inglizcha)" %}</label>#}
+{#                                        <div class="col-md-10 col-sm-10">#}
+{#                                            {{ form.title_en|safe }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
                                 <div class="col-md-12">
-                                    <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Mavzusi (inglizcha)" %}</label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.title_en|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <h5 class="text-center"
-                                        style="color: green">{% trans "Maqolaga mualliflarni qo'shish" %}</h5>
-                                    <button href="{% url 'add_author' article.id %}" data-toggle="modal"
-                                            class="addUser btn btn-primary btn-sm"><i
-                                            class="fa fa-plus mr-1"></i>{% trans "Qo'shish" %}
+                                    <button href="{% url 'add_author' article.id %}" data-toggle="modal" style="margin-bottom: 1em; margin-top: 3em; border: 1px solid #0e93be;"
+                                            class="addUser btn btn-outline-info btn-block btn-sm"><i
+                                            class="fa fa-plus mr-1"></i><strong>{% trans "Maqolangizga mualliflarni qo'shish" %}</strong>
                                     </button>
-                                    <br>
-                                    <br>
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-response">
                                             <thead>
@@ -81,18 +78,19 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <br>
+                                <div class="col-md-6" style="margin-top: 3em;">
                                     <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;border: 1px solid #afafaf;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Rukn" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.section }}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" style="margin-top: 3em;">
                                     <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;border: 1px solid #afafaf;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Davlat" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.country }}
@@ -102,7 +100,7 @@
                                 <br>
                                 <div class="col-md-6">
                                     <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;border: 1px solid #afafaf;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Turi" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.article_type }}
@@ -111,64 +109,53 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;">
+                                         style="background-color: #eeeeee; padding: 10px; margin-left: 1px; border-radius: 5px;border: 1px solid #d9d9d9;">
                                         <label class="col-md-2 col-sm-2 col-form-label"> {% trans "Tili" %}</label>
                                         <div class="col-md-10 col-sm-10">
                                             {{ form.article_lang }}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Kalit so'zlar" %}</label>
-                                        <div class="col-md-10 col-sm-10">
+                                <div class="col-md-12" style="margin-top: 1em">
+                                   <h5> {% trans "Kalit so'zlar" %}</h5>
+                                    <div class="form-group row m-b-15" style="border: 1px solid #d9d9d9">
                                             {{ form.keywords|safe }}
-                                        </div>
                                     </div>
                                 </div>
+{#                                <div class="col-md-12">#}
+{#                                    <div class="form-group row m-b-15"#}
+{#                                         style="padding: 10px; border-radius: 5px;">#}
+{#                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Kalit so'zlar (inglizcha)" %}</label>#}
+{#                                        <div class="col-md-10 col-sm-10">#}
+{#                                            {{ form.keywords_en|safe }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
                                 <div class="col-md-12">
-                                    <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Kalit so'zlar (inglizcha)" %}</label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.keywords_en|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Qisqacha mazmuni" %}</label>
-                                        <div class="col-md-10 col-sm-10">
+                                    <h5>{% trans "Maqolangizni qisqacha mazmuni" %}</h5>
+                                    <div class="form-group row m-b-15" style="border: 1px solid #d9d9d9">
                                             {{ form.abstract|safe }}
-                                        </div>
                                     </div>
                                 </div>
+{#                                <div class="col-md-12">#}
+{#                                    <div class="form-group row m-b-15"#}
+{#                                         style="padding: 10px; border-radius: 5px;">#}
+{#                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Qisqacha mazmuni (inglizcha)" %}</label>#}
+{#                                        <div class="col-md-10 col-sm-10">#}
+{#                                            {{ form.abstract_en|safe }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
                                 <div class="col-md-12">
-                                    <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Qisqacha mazmuni (inglizcha)" %}</label>
-                                        <div class="col-md-10 col-sm-10">
-                                            {{ form.abstract_en|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group row m-b-15"
-                                         style="background-color: #eeeeee; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Adabiyotlar" %}</label>
-                                        <div class="col-md-10 col-sm-10">
+                                    <h5>{% trans "Foydalanilgan adabiyotlarni kiriting" %}</h5>
+                                    <div class="form-group row m-b-15" style="border: 1px solid #d9d9d9">
                                             {{ form.references|safe }}
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group row m-b-15"
-                                         style="background-color: #f3f3f3; padding: 10px; border-radius: 5px;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Faylni yuklash (.doc, docx)" %}
-                                            <span
-                                                    class="text-danger">*</span></label>
+                                         style="background-color: #f3f3f3; padding: 10px; border-radius: 5px;border: 1px solid #afafaf;">
+                                        <p>{% trans "Maqola faylini yuklang (.doc, docx)" %}</p>
                                         <div class="col-md-10 col-sm-10">
                                             <button data-url="{% url 'create_article_file' article.id %}"
                                                     class="btn btn-primary btn-md create_articleFileBtn"><i
@@ -179,9 +166,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <br>
 
+                        <br>
                         <div class="row" style="padding-top: 1em">
                             <div class="col-md-12 col-sm-12">
                                 <button type="submit" style="float: right;" id="submitButtonId"

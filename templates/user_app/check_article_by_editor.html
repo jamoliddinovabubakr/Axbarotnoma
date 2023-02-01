@@ -12,11 +12,11 @@
             <div class="col-md-8">
                 <table>
                     <tr>
-                        <td><p><b>{% trans "Title(uz):" %} </b>{{ article.title|safe }}</p></td>
+                        <td><p><b>{% trans "Title:" %} </b>{{ article.title|safe }}</p></td>
                     </tr>
-                    <tr>
-                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>
-                    </tr>
+{#                    <tr>#}
+{#                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>#}
+{#                    </tr>#}
                     <tr>
                         <td>
                             <b>{% trans "Author:" %} </b>{{ article.author.last_name }} {{ article.author.first_name }}
@@ -25,15 +25,15 @@
                     <tr>
                         <td><p></p><b>{% trans "Abstract(uz):" %} </b>{{ article.abstract|safe }}</td>
                     </tr>
-                    <tr>
-                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>
-                    </tr>
+{#                    <tr>#}
+{#                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>#}
+{#                    </tr>#}
                     <tr>
                         <td><b>{% trans "Keywords(uz):" %} </b>{{ article.keywords|safe }}</td>
                     </tr>
-                    <tr>
-                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>
-                    </tr>
+{#                    <tr>#}
+{#                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>#}
+{#                    </tr>#}
                     <br>
                     <tr>
                         <td><b>{% trans "File:" %} </b><a class="btn btn-outline-info btn-sm"
@@ -380,3 +380,6 @@
     </div>
 </div>
 <div id="writeeditor_message_div"></div>
+<script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+</script>

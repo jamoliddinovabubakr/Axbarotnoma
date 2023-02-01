@@ -30,12 +30,9 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'bootstrap_datepicker_plus',
-    'django_tex',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
-LATEX_INTERPRETER = 'pdflatex'
-FILE_UPLOAD_TEMP_DIR = os.path.join(BASE_DIR, 'temp')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,15 +63,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-    },
-    {
-        'NAME': 'tex',
-        'BACKEND': 'django_tex.engine.TeXEngine',
-        'APP_DIRS': True,
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
-        'OPTIONS': {
-            'environment': 'article_app.environment.my_environment',
-        }
     },
 ]
 
@@ -159,15 +147,11 @@ CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
 
 CKEDITOR_CONFIGS = {
     'default': {
+        'skin': 'office2013',
         'toolbar_YourCustomToolbarConfig': [
-            {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-',
-                                           'Templates']},
+            {'name': 'document', 'items': ['Source', '-', 'Templates']},
             {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord',
                                             '-', 'Undo', 'Redo']},
-            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
-            # {'name': 'forms', 'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button',
-            #                             'ImageButton', 'HiddenField']}, '/',
-
             {'name': 'paragraph',
              'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
                        'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', ]},

@@ -31,12 +31,6 @@ def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
-def render_pdf(request):
-    template_name = 'article_app/texput.tex'
-    context = {'foo': 'Bar'}
-    return render_to_pdf(request, template_name, context, filename='test.pdf')
-
-
 def set_language(request, language):
     global view
     for lang, _ in settings.LANGUAGES:
@@ -230,20 +224,20 @@ def update_article(request, pk):
                 article=article).filter(file_status=1)
             title = str(request.POST.get('title')).replace(
                 '<p>', '').replace('</p>', '')
-            title_en = str(request.POST.get('title_en')).replace(
-                '<p>', '').replace('</p>', '')
+            # title_en = str(request.POST.get('title_en')).replace(
+            #     '<p>', '').replace('</p>', '')
             abstrk = str(request.POST.get('abstract')).replace(
                 '<p>', '').replace('</p>', '')
-            abstrk_en = str(request.POST.get('abstract_en')).replace(
-                '<p>', '').replace('</p>', '')
+            # abstrk_en = str(request.POST.get('abstract_en')).replace(
+            #     '<p>', '').replace('</p>', '')
             keywords = str(request.POST.get('keywords')).replace(
                 '<p>', '').replace('</p>', '')
-            keywords_en = str(request.POST.get('keywords_en')).replace(
-                '<p>', '').replace('</p>', '')
+            # keywords_en = str(request.POST.get('keywords_en')).replace(
+            #     '<p>', '').replace('</p>', '')
             references = str(request.POST.get('references')).replace(
                 '<p>', '').replace('</p>', '')
 
-            if len(keywords_en) == 0 or len(abstrk_en) == 0 or len(title_en) == 0 or len(abstrk) == 0 or len(
+            if len(abstrk) == 0 or len(
                     keywords) == 0 or len(references) == 0 or len(title) == 0 or files.count() == 0:
                 data = {
                     'result': False,
