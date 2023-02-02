@@ -5,7 +5,7 @@
 </h2>
 <div>
     <div class="panel-body" style="padding:10px;">
-        <div class="row jumbotron forshadow" style="background-color: #FFFFFF; font-size: 15px;">
+        <div class="row jumbotron forshadow" style="background-color: #FFFFFF; font-size: 14px;">
             <div class="col-md-2">
                 <div class="card">
                     <img class="card-img-top" src="{{ editor.user.avatar.url }}" width="10" alt="Card image cap"/>
@@ -19,24 +19,24 @@
             <div class="col-md-10">
                 <table style="margin-left: 3%;">
                     <tr>
-                        <td><p><b>{% trans "Title(uz):" %} </b>{{ article.title|safe }}</p></td>
+                        <td><p><b>{% trans "Mavzu:" %} </b>{{ article.title|safe }}</p></td>
                     </tr>
-                    <tr>
-                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>
-                    </tr>
+{#                    <tr>#}
+{#                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>#}
+{#                    </tr>#}
 
                     <tr>
-                        <td><p></p><b>{% trans "Abstract(uz):" %} </b>{{ article.abstract|safe }}</td>
+                        <td><p></p><b>{% trans "Qisqacha mazmuni:" %} </b>{{ article.abstract|safe }}</td>
                     </tr>
+{#                    <tr>#}
+{#                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>#}
+{#                    </tr>#}
                     <tr>
-                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>
+                        <td><b>{% trans "Kalit so'zlar:" %} </b>{{ article.keywords|safe }}</td>
                     </tr>
-                    <tr>
-                        <td><b>{% trans "Keywords(uz):" %} </b>{{ article.keywords|safe }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>
-                    </tr>
+{#                    <tr>#}
+{#                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>#}
+{#                    </tr>#}
                     <br>
                     <tr>
                         <td><b>{% trans "MS word fayl:" %} </b><a class="btn btn-outline-info btn-sm"
@@ -53,7 +53,7 @@
             <button type="button" data-id="{{ article.id }}" id="view-article-messages-by-reviewer"
                     data-url="{% url 'comment_author_vs_editor' article.id %}"
                     class="btn btn-md btn-info forshadow">
-                <i class="fa fa-comment"></i> LOAD COMMENTS
+                <i class="fa fa-comment"></i> &nbsp;{% trans "Xabarlar" %}
             </button>
         </div>
         <br>
@@ -62,7 +62,7 @@
                 <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxReviewer">
                     <!-- begin widget-chat -->
                     <div class="m-b-10 m-t-10 f-s-12">
-                        <h5 class="text-inverse">Comments</h5>
+                        <h5 class="text-inverse">{% trans "Xabarlar" %}</h5>
                     </div>
 
                     <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
@@ -74,7 +74,7 @@
                                    style="line-height: 30px"></i>
                             </div>
                             <div class="widget-chat-header-content">
-                                <h4 class="widget-chat-header-title">Sending Comment To Author and Editor</h4>
+                                <h4 class="widget-chat-header-title">{% trans "Muharrir bilan yozishmalar" %}</h4>
                             </div>
                         </div>
                         <!-- end widget-chat-header -->
@@ -94,9 +94,9 @@
             <div class="col-lg-12 col-lg-6">
                 <div class="card forshadow">
                     <ul style="margin: 2%;">
-                        <li><b>Title: </b> {{ article_review.article.title }}</li>
-                        <li><b>Editor: </b> {{ article_review.editor.user.full_name }}</li>
-                        <li><b>Reviewer: </b> {{ article_review.reviewer.user.full_name }}</li>
+                        <li><b>{% trans "Mavzu:" %} </b> {{ article_review.article.title }}</li>
+                        <li><b>{% trans "Muharrir:" %} </b> {{ article_review.editor.user.full_name }}</li>
+                        <li><b>{% trans "Taqrizchi:" %} </b> {{ article_review.reviewer.user.full_name }}</li>
                         <li><b>Status: </b> <span {% if article_review.status.id == 1 %}
                             class='badge badge-warning' {% elif article_review.status.id == 2 %}
                             class='badge badge-info' {% elif article_review.status.id == 3 %}
@@ -125,7 +125,7 @@
                                     <label for="exampleFormControlTextarea1" class="form-label"><b>Taqriz</b></label>
                                     <label for="id_comment"></label><textarea class="form-control" name="comment"
                                                                               id="id_comment" rows="3"
-                                                                              placeholder="Enter Result"></textarea>
+                                                                              placeholder="Izhoh kiriting"></textarea>
                                 </td>
                             </tr>
                             </tbody>
@@ -136,16 +136,16 @@
                     <div class="row d-flex justify-content-center">
                         <button type="button" class="btn btn-danger forshadow" id="reject_reviewer_btn"
                                 data-url="{% url 'reviewer_rejected' %}"
-                                style="margin-right: 1%;" disabled>Reject
+                                style="margin-right: 1%;" disabled>{% trans "Rad etish" %}
                         </button>
                         <button type="button" class="btn btn-warning forshadow" id="resubmit_reviewer_btn"
                                 data-url="{% url 'reviewer_resubmit' %}"
-                                style="margin-right: 1%;" disabled>Resubmit
+                                style="margin-right: 1%;" disabled>{% trans "Muallif maqolani qayta yuborsin" %}
                         </button>
                         <button type="button" class="btn btn-success forshadow"
                                 data-url="{% url 'reviewer_confirmed' %}"
                                 id="confirm_reviewer_btn" disabled>
-                            Confirm
+                            {% trans "Tasdiqlash" %}
                         </button>
                     </div>
                     <br>

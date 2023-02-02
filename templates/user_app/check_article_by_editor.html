@@ -6,161 +6,153 @@
 
 <div>
     <div class="panel-body" style="padding:10px;">
-        <div class="row jumbotron forshadow" style="background-color: #FFFFFF; font-size: 15px;">
-            <div class="col-md-2">
+        <div class="row jumbotron forshadow" style="background-color: #FFFFFF; font-size: 14px;">
+            <div class="col-md-1">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <table>
                     <tr>
-                        <td><p><b>{% trans "Title:" %} </b>{{ article.title|safe }}</p></td>
+                        <td><p><b>{% trans "Mavzu:" %} </b>{{ article.title|safe }}</p></td>
                     </tr>
-{#                    <tr>#}
-{#                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>#}
-{#                    </tr>#}
+                    {#                    <tr>#}
+                    {#                        <td><p><b>{% trans "Title(en):" %} </b>{{ article.title_en|safe }}</p></td>#}
+                    {#                    </tr>#}
                     <tr>
                         <td>
-                            <b>{% trans "Author:" %} </b>{{ article.author.last_name }} {{ article.author.first_name }}
+                            <b>{% trans "Mualliflar:" %} </b>{{ article.author.last_name }} {{ article.author.first_name }}
                             <br><i>{{ article.author.email }}</i></td>
                     </tr>
                     <tr>
-                        <td><p></p><b>{% trans "Abstract(uz):" %} </b>{{ article.abstract|safe }}</td>
+                        <td><p></p><b>{% trans "Qisqacha mazmuni:" %} </b>{{ article.abstract|safe }}</td>
                     </tr>
-{#                    <tr>#}
-{#                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>#}
-{#                    </tr>#}
+                    {#                    <tr>#}
+                    {#                        <td><p></p><b>{% trans "Abstract(en):" %} </b>{{ article.abstract_en|safe }}</td>#}
+                    {#                    </tr>#}
                     <tr>
-                        <td><b>{% trans "Keywords(uz):" %} </b>{{ article.keywords|safe }}</td>
+                        <td><b>{% trans "Kalit so'zlar:" %} </b>{{ article.keywords|safe }}</td>
                     </tr>
-{#                    <tr>#}
-{#                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>#}
-{#                    </tr>#}
+                    {#                    <tr>#}
+                    {#                        <td><b>{% trans "Keywords(en):" %} </b>{{ article.keywords_en|safe }}</td>#}
+                    {#                    </tr>#}
                     <br>
                     <tr>
-                        <td><b>{% trans "File:" %} </b><a class="btn btn-outline-info btn-sm"
+                        <td><b>{% trans "Fayl:" %} </b><a class="btn btn-outline-info btn-sm"
                                                           href="{{ article_file.file.url }}"
                                                           download
                                                           role="button"><i
-                                class="icon-paper-clip"></i><span> {% trans "Download File" %}</span></a>
+                                class="icon-paper-clip"></i><span> {% trans "Faylni yuklab olish" %}</span></a>
                         </td>
                     </tr>
                 </table>
+                <br>
+                <hr>
+                <br>
+                <h5>Muallifga taqrizchilarga yuborishdan oldin qayta yuborishi yoki rad etish sababini kiriting:</h5>
+                <textarea id="resubmit_or_reject_text" class="form-control forshadow"
+                        {% if article.article_status.id != 1 %}
+                          disabled {% endif %} placeholder="Izoh kiriting"></textarea><br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <button type="button" data-url="{% url 'editor_submit_result' %}"
+                                {% if article.article_status.id != 1 %} disabled {% endif %}
+                                data-id="{{ article.id }},{{ notif_id }},0"
+                                data-action="{% url 'editor_check_article' notif_id %}"
+                                class="btn btn-sm btn-outline-warning btn-block resultBtnUnReview">Muallifga yuborish
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" data-url="{% url 'editor_submit_result' %}"
+                                {% if article.article_status.id != 1 %} disabled {% endif %}
+                                data-id="{{ article.id }},{{ notif_id }},1"
+                                data-action="{% url 'editor_check_article' notif_id %}"
+                                class="btn btn-sm btn-block btn-outline-danger resultBtnUnReview">Maqola jurnalga
+                            to'g'ri kelmaydi
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+
+                    </div>
+                </div>
             </div>
-            <div class="col-md-2"></div>
+            <div class="col-md-1"></div>
         </div>
-
-        <div class="row forshadow" style="padding: 15px">
-            <h5>Muallifga taqrizchilarga yuborishdan oldin qayta yuborishi yoki rad etish qismi</h5>
-            <textarea id="resubmit_or_reject_text" class="form-control" {% if article.article_status.id != 1 %}
-                      disabled {% endif %}
-                      placeholder="Muallifga qayta yuborish yoki rad etganiz sababini yozing..."></textarea>
-
-            <div class="col-md-4">
-                <button type="button" style="margin-top: 10px; margin-right: 1px;"
-                        data-url="{% url 'editor_submit_result' %}"
-                        {% if article.article_status.id != 1 %} disabled {% endif %}
-                        data-id="{{ article.id }},{{ notif_id }},0"
-                        data-action="{% url 'editor_check_article' notif_id %}"
-                        class="btn btn-md btn-gray resultBtnUnReview">
-                    <i class="fa fa-comment"></i> Muallifga yuborish
-                </button>
-            </div>
-            <div class="col-md-4">
-                <button type="button" style="margin-top: 10px; margin-left: 1px;"
-                        data-url="{% url 'editor_submit_result' %}"
-                        {% if article.article_status.id != 1 %} disabled {% endif %}
-                        data-id="{{ article.id }},{{ notif_id }},1"
-                        data-action="{% url 'editor_check_article' notif_id %}"
-                        class="btn btn-md btn-danger resultBtnUnReview">
-                    <i class="fa fa-comment"></i> Maqola jurnalga to'g'ri kelmaydi
-                </button>
-            </div>
-            <div class="col-md-4">
-                <button type="button" id="view-article-messages-by-editor"
-                        style="margin-top: 10px; margin-left: 1px;"
-                        data-id="{{ article.id }}"
-                        data-url="{% url 'comment_author_vs_editor' article.id %}"
-                        class="btn btn-md btn-info">
-                    <i class="fa fa-comment"></i> LOAD COMMENTS
-                </button>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-lg-12">
-                <div class="col-lg-12 col-lg-6" style="display: none;" id="MessageBoxEditor">
+                <div class="col-lg-8 col-lg-6" id="MessageBoxEditor">
                     <!-- begin widget-chat -->
                     <div class="m-b-10 m-t-10 f-s-12">
-                        <h5 class="text-inverse">Comments</h5>
+                        <h5 class="text-inverse">Xabarlar</h5>
                     </div>
-
                     <div class="widget-chat widget-chat-rounded m-b-30 forshadow" data-id="widget">
-
-                        <!-- begin widget-chat-header -->
                         <div class="widget-chat-header">
-                            <div class="widget-chat-header-icon">
-                                <i class="fa fa-book width-30 height-30 f-s-20 bg-yellow text-inverse text-center rounded-corner"
-                                   style="line-height: 30px"></i>
-                            </div>
-                            <div class="widget-chat-header-content">
-                                <h4 class="widget-chat-header-title">Write Comment To Author and Reviewer</h4>
-                            </div>
-                        </div>
-                        <!-- end widget-chat-header -->
 
-                        <!-- begin widget-chat-body -->
+                            <div class="widget-chat-header-content">
+                                <button type="button" id="view-article-messages-by-editor"
+                                        style="margin-top: 10px; margin-right: 2%;"
+                                        data-id="{{ article.id }}"
+                                        data-url="{% url 'comment_author_vs_editor' article.id %}"
+                                        class="btn btn-sm btn-block btn-outline-success forshadow">
+                                    <i class="fa fa-comment"></i> {% trans "Muallif va taqrizchilar bilan yozishmalar" %}
+                                </button>
+                            </div>
+
+                        </div>
                         <div class="widget-chat-body" data-scrollbar="true" data-height="250px" id="editor_chat_body">
 
 
                         </div>
-                        <!-- end widget-chat-body -->
+
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-12 col-lg-6">
-                <hr>
                 <div class="m-b-10 m-t-10 f-s-12">
-                    <h5 class="text-inverse">Send to Reviewers.</h5>
+                    <h5 class="text-inverse">{% trans "Taqrizchilarni tanlash" %}</h5>
                 </div>
-
-                <div class="row">
+                <div class="row forshadow" style="background-color: #FFFFFF; border-radius: 5px; padding-top: 1%;">
                     <div class="col-md-6">
-                        <div class="form-check form-check-inline">
+                        <div class="form-check">
                             <button type="button"
                                     data-url="{% url 'load_reviewers' %}"
-                                    class="btn btn-primary forshadow choose_type_sumit_btn" data-id="1">
-                                Choose Reviewer
+                                    class="btn btn-outline-success btn-sm btn-block forshadow choose_type_sumit_btn"
+                                    data-id="1">
+                                Taqrizchini ixtiyoriy tanlash
                             </button>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <button type="button" class="btn btn-info forshadow choose_type_sumit_btn"
-                                    data-id="2">Random Choosing
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <button type="button"
+                                    class="btn btn-outline-success btn-sm btn-block forshadow choose_type_sumit_btn"
+                                    data-id="2">Taqrizchini tasodifiy tanlash
                             </button>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check">
                             <form method="post" data-url="{% url 'random_sending_reviewer' %}"
                                   class="random_sending_reviewer_form">
                                 {% csrf_token %}
                                 <br>
                                 <div class="container" id="random_btn" style="display: none;">
-                                    <label>Choose number of reviewers
-                                        <input type="number" id="reviewer_number" name="reviewer_number" value="2" disabled
-{#                                                {% if article.article_status.id != 1 or article.is_resubmit %}#}
-{#                                               disabled {% endif %}#}
+                                    <label>{% trans "Taqrizchilar soni" %}
+                                        <input type="number" id="reviewer_number" name="reviewer_number" value="2"
+                                               disabled
+                                                {#                                                {% if article.article_status.id != 1 or article.is_resubmit %}#}
+                                                {#                                               disabled {% endif %}#}
                                                class="form-control">
                                     </label>
-                                    <button class="btn btn-md btn-info" id="random_send_reviewer_btn" type="button"
+                                    <button class="btn btn-md btn-success" id="random_send_reviewer_btn" type="button"
                                             data-action="{% url 'editor_check_article' notif_id %}"
                                             data-id="{{ article.id }},{{ notif_id }}"
                                             {% if article.article_status.id != 1 or article.is_resubmit %}
-                                            disabled {% endif %}>Generate
-                                        Random Choosing Reviewers
+                                            disabled {% endif %}>{% trans "Yuborish" %}
                                     </button>
                                 </div>
                             </form>
                         </div>
                     </div>
-                    <div class="col-md-6"></div>
                 </div>
                 <br>
                 <div class="row">
@@ -171,7 +163,7 @@
                                  id="list_reviewers" style="display: none;">
                                 <div class="widget-todolist-header">
                                     <div class="widget-todolist-header-left">
-                                        <h4 class="widget-todolist-header-title">Reviewers</h4>
+                                        <h4 class="widget-todolist-header-title">{% trans "Taqrizchilar" %}</h4>
                                     </div>
                                     <div class="widget-todolist-header-right">
                                         <div class="widget-todolist-header-total" id="count_reviewer"></div>
@@ -188,7 +180,7 @@
                                                 class="btn btn-success" id="send_btn_to_reviewer"
                                                 {% if article.article_status.id != 1 or article.is_resubmit %}
                                                 disabled {% endif %}>
-                                            SEND TO SELECTED REVIEWERS
+                                            {% trans "Tanlangan taqrizchilarga yuborish" %}
                                         </button>
                                     </div>
                                 </div>
@@ -199,66 +191,12 @@
 
             </div>
         </div>
-        <hr>
+        <br>
         <div class="row">
             <div class="col-lg-12 col-lg-6">
                 <div class="m-b-10 m-t-10 f-s-12">
-                    <h5 class="text-inverse">Reviewing Process</h5>
+                    <h5 class="text-inverse">{% trans "Taqrizchilar maqolani ko'rib chiqish holatlari" %}</h5>
                 </div>
-                <form method="post" data-url="{% url 'approve_publish' %}" class="approve_form">
-                    {% csrf_token %}
-
-                    <div class="row">
-                        <div class="col-md-3">
-                            <button data-id="{{ article.id }},{{ notif_id }},0"
-                                    data-action="{% url 'editor_check_article' notif_id %}"
-                                    class="btn btn-sm btn-success forshadow resultBtn"
-                                    id="approveForPublicationBtn"
-                                    {% if article.article_status.id != 5 %} disabled {% endif %}
-                                    {% if not is_ready_publish %} disabled {% endif %}>
-                                TASDIQLASH
-                            </button>
-                        </div>
-                        <div class="col-md-3">
-                            <button data-id="{{ article.id }},{{ notif_id }},1"
-                                    data-action="{% url 'editor_check_article' notif_id %}"
-                                    class="btn btn-sm btn-danger forshadow resultBtn"
-                                    id="rejectedBtn"
-                                    {% if article.article_status.id != 5 %} disabled {% endif %}
-                                    {% if not is_ready_rejected %} disabled {% endif %}>RAD ETISH
-                            </button>
-                        </div>
-                        <div class="col-md-3">
-                            <button data-id="{{ article.id }},{{ notif_id }},2"
-                                    data-action="{% url 'editor_check_article' notif_id %}"
-                                    class="btn btn-sm btn-primary forshadow resultBtn"
-                                    id="resubmitBtn"
-                                    {% if article.article_status.id != 5 %} disabled {% endif %}
-                                    {% if not is_ready_resubmit %} disabled {% endif %}>MUALLIFGA QAYTA YUBORISH
-                            </button>
-                        </div>
-                        <div class="col-md-3">
-                            <button data-id="{{ article.id }},{{ notif_id }},3"
-                                    data-action="{% url 'editor_check_article' notif_id %}"
-                                    class="btn btn-sm btn-info forshadow resultBtn"
-                                    id="rejectedExtraReviewerBtn"
-                                    {% if article.article_status.id != 5 %} disabled {% endif %}
-                                    {% if not is_ready_resubmit_extra_reviewer %} disabled {% endif %}>BOSHQA
-                                TAQRIZCHIGA MAQOLANI YUBORISH
-                            </button>
-                        </div>
-                    </div>
-                <br>
-                    <div class="row">
-                        {% if is_ready_resubmit %}
-                            <textarea id="resubmit_text" class="form-control"
-                                      placeholder="Muallifga qayta yuborish sababini yozing..."></textarea>
-                        {% endif %}
-                        <br>
-                    </div>
-                </form>
-                <br>
-                <br>
                 {% for item in article_reviews %}
                     <div class="card forshadow" style="padding: 1%;">
                         <table>
@@ -267,61 +205,61 @@
                                     {% if item.status.id == 1 %}
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
                                              role="progressbar" style="width: 25%" aria-valuenow="25"
-                                             aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Yuborilgan" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                              role="progressbar" style="width: 0%" aria-valuenow="0"
-                                             aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Ko'rilmoqda" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped bg-success"
                                              role="progressbar" style="width: 0%" aria-valuenow="0"
-                                             aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Tugatildi" %}
                                         </div>
                                     {% endif %}
                                     {% if item.status.id == 2 %}
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
                                              role="progressbar" style="width: 25%" aria-valuenow="25"
-                                             aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Yuborilgan" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                              role="progressbar" style="width: 35%" aria-valuenow="35"
-                                             aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Ko'rilmoqda" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
                                              role="progressbar" style="width: 0%" aria-valuenow="0"
-                                             aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Tugatildi" %}
                                         </div>
                                     {% endif %}
                                     {% if item.status.id == 3 or item.status.id == 4 %}
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
                                              role="progressbar" style="width: 25%" aria-valuenow="25"
-                                             aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Yuborilgan" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                              role="progressbar" style="width: 35%" aria-valuenow="35"
-                                             aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Ko'rilmoqda" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
                                              role="progressbar" style="width: 40%" aria-valuenow="40"
-                                             aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Tugatildi" %}
                                         </div>
                                     {% endif %}
                                     {% if item.status.id == 5 %}
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
                                              role="progressbar" style="width: 25%" aria-valuenow="25"
-                                             aria-valuemin="0" aria-valuemax="100">Yuborilgan
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Yuborilgan" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                              role="progressbar" style="width: 25%" aria-valuenow="25"
-                                             aria-valuemin="0" aria-valuemax="100">Ko'rilmoqda
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Ko'rilmoqda" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
                                              role="progressbar" style="width: 25%" aria-valuenow="25"
-                                             aria-valuemin="0" aria-valuemax="100">Qayta yuborish
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Qayta yuborish" %}
                                         </div>
                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
                                              role="progressbar" style="width: 0%" aria-valuenow="0"
-                                             aria-valuemin="0" aria-valuemax="100">Tugatildi
+                                             aria-valuemin="0" aria-valuemax="100">{% trans "Tugatildi" %}
                                         </div>
                                     {% endif %}
                                 </div>
@@ -329,8 +267,8 @@
                             </tr>
                             <tr>
                                 <td><h3>{{ forloop.counter }}</h3></td>
-                                <td><b>Reviewer: </b> {{ item.reviewer.user.full_name }}</td>
-                                <td><b>Status: </b>
+                                <td><b>{% trans "Taqrizchi:" %} </b> {{ item.reviewer.user.full_name }}</td>
+                                <td><b>{% trans "Holat" %} </b>
                                     <span {% if item.status.id == 1 %}
                                         class='badge badge-warning' {% elif item.status.id == 2 %}
                                         class='badge badge-info' {% elif item.status.id == 3 %}
@@ -340,12 +278,12 @@
                                                     {{ item.status.name }}
                                                 </span>
                                 </td>
-                                <td><b>Created Time: </b>{% if item.created_at %}{{ item.created_at }}{% else %}
+                                <td><b>Yaratilgan vaqt: </b>{% if item.created_at %}{{ item.created_at }}{% else %}
                                     Not yet {% endif %}</td>
-                                <td><b>Updated Time: </b>{% if item.updated_at %}{{ item.updated_at }}{% else %}
+                                <td><b>Yangilangan vaqt: </b>{% if item.updated_at %}{{ item.updated_at }}{% else %}
                                     Not yet {% endif %}</td>
                                 <td>
-                                    {% if item.status.id == 5 %}
+                                    {% if item.status.id == 5 and article.article_status.id == 1 %}
                                         <form method="post" data-url="{% url 'editor_resubmit_to_reviewer' %}"
                                               id="editor_resubmit_to_reviewer">
                                             {% csrf_token %}
@@ -353,8 +291,7 @@
                                                     id="resubmit_to_reviewer_btn_{{ item.id }}"
                                                     data-action="{% url 'editor_check_article' notif_id %}"
                                                     class="btn btn-outline-success btn-xs resubmit_to_reviewer_btn">
-                                                <i class="fas fa-lg fa-fw m-r-10 fa-arrow-circle-right"></i>Qayta
-                                                yuborish
+                                                <i class="fas fa-lg fa-fw m-r-10 fa-arrow-circle-right"></i>{% trans "Qayta yuborish" %}
                                             </button>
                                         </form>
                                     {% endif %}
@@ -367,14 +304,81 @@
                         </table>
                         <table>
                             <tr>
-                                <br><b>Taqriz bayoni: </b> {% if item.comment %}{{ item.comment }}{% else %}
-                                <em>No message</em> {% endif %}
+                                <br><b>{% trans "Taqriz bayoni:" %} </b>
+                                {% if item.comment %}{{ item.comment }}{% else %}
+                                    <em>{% trans "Mavjud emas" %}</em> {% endif %}
                             </tr>
                         </table>
                     </div>
                     <br>
                 {% endfor %}
                 <br>
+                <form method="post" data-url="{% url 'approve_publish' %}" class="approve_form">
+                    {% csrf_token %}
+                    <div class="row" {% if not is_ready_publish %} style="display: none;" {% endif %}>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <button data-id="{{ article.id }},{{ notif_id }},0"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-success btn-block forshadow resultBtn"
+                                    id="approveForPublicationBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_publish %} disabled {% endif %}>
+                                {% trans "Tadiqlash" %}
+                            </button>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                    <div class="row" {% if not is_ready_rejected %} style="display: none;" {% endif %}>
+                    <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <button data-id="{{ article.id }},{{ notif_id }},1"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-danger btn-block forshadow resultBtn"
+                                    id="rejectedBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_rejected %} disabled {% endif %}>RAD ETISH
+                            </button>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                     <div class="row" {% if not is_ready_resubmit %} style="display: none;" {% endif %}>
+                     <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <button data-id="{{ article.id }},{{ notif_id }},2"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-primary btn-block forshadow resultBtn"
+                                    id="resubmitBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_resubmit %} disabled {% endif %}>MUALLIFGA QAYTA YUBORISH
+                            </button>
+                        </div>
+                        <div class="col-md-3"></div>
+                     </div>
+                        <div class="row" {% if not is_ready_resubmit_extra_reviewer %} style="display: none;" {% endif %}>
+                         <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <button data-id="{{ article.id }},{{ notif_id }},3"
+                                    data-action="{% url 'editor_check_article' notif_id %}"
+                                    class="btn btn-sm btn-info btn-block forshadow resultBtn"
+                                    id="rejectedExtraReviewerBtn"
+                                    {% if article.article_status.id != 5 %} disabled {% endif %}
+                                    {% if not is_ready_resubmit_extra_reviewer %} disabled {% endif %}>BOSHQA
+                                TAQRIZCHIGA MAQOLANI YUBORISH
+                            </button>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        {% if is_ready_resubmit %}
+                            <textarea id="resubmit_text" class="form-control"
+                                      placeholder="Muallifga qayta yuborish sababini yozing..."></textarea>
+                        {% endif %}
+                        <br>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>

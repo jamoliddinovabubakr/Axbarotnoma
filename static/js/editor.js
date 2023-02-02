@@ -369,7 +369,7 @@ $('body').on('click', '.choose_type_sumit_btn', function (e) {
             url: url,
             success: function (response) {
                 $('#widget-todolist-body').empty();
-                $('#count_reviewer').html("<span>" + response.reviewers.length + "</span><small>Count</small>");
+                $('#count_reviewer').html("<span>" + response.reviewers.length + "</span>");
 
 
                 for (let item of response.reviewers) {
