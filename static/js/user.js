@@ -287,3 +287,136 @@ $('body').on('submit', '.update_article_form', function (e) {
         });
     }
 });
+
+$('body').on('click', '.view_user_btn', function (e) {
+    e.preventDefault();
+
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+            $('#show_res').html(response);
+            $('#view_user_modal').modal('show');
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
+
+
+$('body').on('click', '.edit_user_btn', function (e) {
+    e.preventDefault();
+
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+            $('#show_res').html(response);
+            $('#edit_user_modal').modal('show');
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
+
+$('body').on('click', '.edit_user_btn_save', function (e) {
+    e.preventDefault();
+
+    let csrftoken = getCookie('csrftoken');
+    let url = $('#choose_role_form').data('url');
+
+    let selected = [];
+    $('#widget-todolist-body-role input[type=checkbox]').each(function () {
+        if ($(this).is(":checked")) {
+            selected.push($(this).val());
+        }
+    });
+    let n = selected.length;
+
+    if (n === 0) {
+        alert("Rol tanlanishi kerak!");
+    }
+    if (n >= 1) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                roles: selected,
+                csrfmiddlewaretoken: csrftoken,
+            },
+            success: function (response) {
+                swal({
+                    title: response.message,
+                    timer: 1500,
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+});
+
+$('body').on('click', '.delete_user_btn', function (e) {
+    e.preventDefault();
+
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+            $('#show_res').html(response);
+            $('#delete_user_modal').modal('show');
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
+
+$('body').on('click', '.confirm_role_editor_btn', function (e) {
+    e.preventDefault();
+
+    alert("salom");
+
+    let url = $(this).data('url');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+             swal({
+                    title: response.message,
+                    timer: 1500,
+                });
+             window.location.reload();
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
+
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

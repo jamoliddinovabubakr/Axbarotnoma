@@ -82,6 +82,7 @@ class User(AbstractUser):
 
 class Editor(models.Model):
     user = models.ForeignKey('user_app.User', on_delete=models.CASCADE, blank=True)
+    is_editor = models.BooleanField(default=False)
 
 
 class ScientificDegree(models.Model):

@@ -1,30 +1,29 @@
 {% extends 'user_app/base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Users" %}{% endblock %}
+{% block title %}{% trans "Foydalanuvchilar" %}{% endblock %}
 {% block content %}
     <div id="content" class="content">
 
         <h2 class="page-header viewArticleFont">
-            {% trans "List of Users" %}
+            {% trans "Foydalanuvchilar ro'yxati" %}
         </h2>
 
         <div class="panel-body forshadow" style="background-color: #ffffff; border-radius: 5px; padding: 10px;">
-            <div class="container" style="padding: 15px;">
+            <div class="container" style="padding: 5px;">
                 <table class="table table-hover table-fixed table-responsive-lg">
 
                     <thead>
                     <tr>
-                       <th><strong>Tr</strong></th>
+                        <th><strong>Tr</strong></th>
                         <th><strong>FIO</strong></th>
-                        <th><strong>Email</strong></th>
-                        <th><strong>Phone</strong></th>
-                        <th><strong>Pasport Ser</strong></th>
-                        <th><strong>Pasport Number</strong></th>
-                        <th><strong>Gender</strong></th>
-                        <th><strong>Region</strong></th>
+                        <th><strong>E-mail</strong></th>
+                        <th><strong>Telefon</strong></th>
+                        <th><strong>Seriya</strong></th>
+                        <th><strong>Raqam</strong></th>
+                        <th><strong>Rollar</strong></th>
                         <th></th>
-                        <th><strong>Action</strong></th>
+                        <th><strong>Amallar</strong></th>
                     </tr>
                     </thead>
 
@@ -33,21 +32,30 @@
                         {% for item in objects %}
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                               <td>{{ item.full_name }}</td>
+                                <td>{{ item.full_name }}</td>
                                 <td>{{ item.email }}</td>
                                 <td>{{ item.phone }}</td>
                                 <td>{{ item.pser }}</td>
                                 <td>{{ item.pnum }}</td>
-                                <td>{{ item.gender.name }}</td>
-                                <td>{{ item.region.name }}</td>
+                                <td>
+                                    {% for foo in item.roles.all %}
+                                        <span class="badge badge-light">{{ foo.name }}</span>
+                                    {% endfor %}
+
+                                </td>
                                 <td></td>
                                 <td>
-                                    <button type="button" class="btn btn-info btn-sm">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                    <button class="btn btn-outline-info btn-sm view_user_btn" data-url="{% url 'view_user' item.id %}">
+                                        <i class="far fa-lg fa-fw fa-eye"></i></button>
+                                    <button class="btn btn-outline-warning btn-sm edit_user_btn" data-url="{% url 'edit_user' item.id %}">
+                                        <i class="far fa-lg fa-fw fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger btn-sm delete_user_btn" data-url="{% url 'delete_user' item.id %}" {% if item == request.user or item.is_superuser %}
+                                    disabled
+                                    {% endif %} >
+                                        <i class="far fa-lg fa-fw fa-trash-alt"></i></button>
                                 </td>
                             </tr>
                         {% endfor %}
-
                     {% endif %}
                     </tbody>
                 </table>

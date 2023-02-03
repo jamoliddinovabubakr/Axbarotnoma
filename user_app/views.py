@@ -20,6 +20,7 @@ from . import utils
 import numpy as np
 from django.template.loader import render_to_string, get_template
 from django.utils.translation import activate, get_language
+from django.utils.translation import gettext_lazy as _
 
 
 def logout_user(request):
@@ -44,7 +45,7 @@ def countries_list(request):
 @login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
 def editors_list(request):
-    objects = Editor.objects.all()
+    objects = Editor.objects.all().order_by('id')
     context = {
         'objects': objects,
     }
@@ -169,7 +170,6 @@ def reviewers_list(request):
 @unauthenticated_user
 def login_page(request):
     if request.method == 'POST' and is_ajax(request):
-        print(request.POST)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -916,7 +916,7 @@ def approve_publish(request):
                 print("Pochtaga ma'lumot yuborilmadi")
 
             data = {
-                "message": "Maqola omadli tasdiqlandi!",
+                "message": _("Maqola omadli tasdiqlandi!"),
             }
         elif btn_number == 1:
             article.article_status = ArticleStatus.objects.get(pk=3)
@@ -938,7 +938,7 @@ def approve_publish(request):
                 print("Pochtaga ma'lumot yuborilmadi")
 
             data = {
-                "message": "Maqola Rad Etildi!",
+                "message": _("Maqola Rad Etildi!"),
             }
         elif btn_number == 2:
             text = request.POST.get('text')
@@ -954,7 +954,7 @@ def approve_publish(request):
                 notification_status=NotificationStatus.objects.get(id=1),
             )
             data = {
-                "message": "Maqola Qayta Yuborish uchun Muallifga yuborildi!",
+                "message": _("Muallifga maqolani qayta yuborish uchun  yuborildi!"),
             }
         elif btn_number == 3:
             article_section = article.section
@@ -995,7 +995,7 @@ def approve_publish(request):
             else:
                 data = {
                     "is_valid": False,
-                    "message": f"{article_section.name} sohasini tekshiradigan taqrizchilar topilmadi!",
+                    "message": _(f"{article_section.name} sohasini tekshiradigan taqrizchilar topilmadi!"),
                 }
                 return JsonResponse(data=data)
 
@@ -1007,7 +1007,7 @@ def approve_publish(request):
                     article=article,
                     from_user=user,
                     to_user=reviewer_user,
-                    message="Hurmatli taqrizchi sizga maqola yuborildi",
+                    message=_("Hurmatli taqrizchi sizga maqola yuborildi"),
                     notification_status=NotificationStatus.objects.get(id=1),
                     is_update_article=True,
                 )
@@ -1024,7 +1024,7 @@ def approve_publish(request):
             data = {
                 "is_valid": True,
                 "select_random_reviewers": select_random_reviewer,
-                "message": "Taqrizchiga muvaffaqiyatli yuborildi!",
+                "message": _("Taqrizchiga muvaffaqiyatli yuborildi!"),
             }
 
         else:
@@ -1063,7 +1063,7 @@ def editor_submit_result(request):
             )
 
             data = {
-                "message": "Maqola muallifga to'g'irlash uchun yuborildi!",
+                "message": _("Maqola muallifga to'g'irlash uchun yuborildi!"),
             }
         elif btn_number == 1:
             article.article_status = ArticleStatus.objects.get(pk=9)
@@ -1093,11 +1093,11 @@ def editor_submit_result(request):
                 print("Pochtaga ma'lumot yuborilmadi")
 
             data = {
-                "message": "Maqola Rad Etildi!",
+                "message": _("Maqola Rad Etildi!"),
             }
         else:
             data = {
-                "message": "Bunday buyruq yo'q",
+                "message": _("Bunday buyruq yo'q"),
             }
         return JsonResponse(data=data)
     else:
@@ -1127,7 +1127,7 @@ def sending_reviewer(request):
                         article=article,
                         from_user=user,
                         to_user=reviewer_user,
-                        message="Hurmatli taqrizchi sizga maqola yuborildi",
+                        message=_("Hurmatli taqrizchi sizga maqola yuborildi"),
                         notification_status=NotificationStatus.objects.get(id=1),
                         is_update_article=True,
                     )
@@ -1142,7 +1142,7 @@ def sending_reviewer(request):
                 else:
                     data = {
                         "is_valid": False,
-                        "message": "Bu taqrizchiga oldin yuborilgan!",
+                        "message": _("Bu taqrizchiga oldin yuborilgan!"),
                     }
                     return JsonResponse(data=data)
 
@@ -1151,13 +1151,13 @@ def sending_reviewer(request):
             data = {
                 "is_valid": True,
                 "select_random_reviewers": selected,
-                "message": "Taqrizchilarga muvaffaqiyatli yuborildi!",
+                "message": _("Taqrizchilarga muvaffaqiyatli yuborildi!"),
             }
             return JsonResponse(data=data)
         else:
             data = {
                 "is_valid": False,
-                "message": "Taqrizchilarni to'liq tanlang!",
+                "message": _("Taqrizchilarni to'liq tanlang!"),
             }
             return JsonResponse(data=data)
 
@@ -1202,7 +1202,7 @@ def random_sending_reviewer(request):
                 degree = ScientificDegree.objects.get(level=max_level_author)
                 data = {
                     "is_valid": False,
-                    "message": f"Bu maqolaga ilmiy darajasi({degree.name})ga teng taqrizchilar topilmadi!",
+                    "message": _(f"Bu maqolaga ilmiy darajasi({degree.name})ga teng taqrizchilar topilmadi!"),
                 }
                 return JsonResponse(data=data)
 
@@ -1212,13 +1212,14 @@ def random_sending_reviewer(request):
                 else:
                     data = {
                         "is_valid": False,
-                        "message": f"Topilgan taqrizchilar soni {len(reviewers_id)} ga teng. Siz izlagan son {number} ga teng!",
+                        "message": _(
+                            f"Topilgan taqrizchilar soni {len(reviewers_id)} ga teng. Siz izlagan son {number} ga teng!"),
                     }
                     return JsonResponse(data=data)
             else:
                 data = {
                     "is_valid": False,
-                    "message": f"{article_section.name} sohasini tekshiradigan taqrizchilar topilmadi!",
+                    "message": _(f"{article_section.name} sohasini tekshiradigan taqrizchilar topilmadi!"),
                 }
                 return JsonResponse(data=data)
 
@@ -1230,7 +1231,7 @@ def random_sending_reviewer(request):
                     article=article,
                     from_user=user,
                     to_user=reviewer_user,
-                    message="Hurmatli taqrizchi sizga maqola yuborildi",
+                    message=_("Hurmatli taqrizchi sizga maqola yuborildi"),
                     notification_status=NotificationStatus.objects.get(id=1),
                     is_update_article=True,
                 )
@@ -1248,13 +1249,13 @@ def random_sending_reviewer(request):
             data = {
                 "is_valid": True,
                 "select_random_reviewers": select_random_reviewers,
-                "message": "Taqrizchilarga muvaffaqiyatli yuborildi!",
+                "message": _("Taqrizchilarga muvaffaqiyatli yuborildi!"),
             }
             return JsonResponse(data=data)
         else:
             data = {
                 "is_valid": False,
-                "message": "Taqrizchilarni to'liq tanlang!",
+                "message": _("Taqrizchilarni to'liq tanlang!"),
             }
             return JsonResponse(data=data)
 
@@ -1266,17 +1267,120 @@ def edit_profile(request):
         form = UpdateUserForm(request.POST, request.FILES, instance=user)
 
         if not form.has_changed():
-            return JsonResponse({'status': False, "message": "Form hasn't change"})
+            return JsonResponse({'status': False, "message": _("Form hasn't change")})
 
         if form.is_valid():
             ob = form.save(commit=False)
             ob.save()
-            return JsonResponse({'status': True, "message": "Your changes saved successfully."})
+            return JsonResponse({'status': True, "message": _("Your changes saved successfully.")})
         else:
-            return JsonResponse({'status': False, "message": "Form is not valid!"})
+            return JsonResponse({'status': False, "message": _("Form is not valid!")})
     else:
         form = UpdateUserForm(instance=user)
         roles = Role.objects.all().order_by('-id')
         res = Reviewer.objects.filter(user=user).exists()
         context = {"user": user, 'form': form, 'roles': roles, "is_send_request": res}
         return render(request, 'user_app/register/edit_profile.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin'])
+def view_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    context = {
+        "user": user,
+    }
+    return render(request, 'user_app/crud/view_user.html', context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin'])
+def edit_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        selected = list(request.POST.getlist('roles[]'))
+        token = request.POST['csrfmiddlewaretoken']
+
+        if len(selected) < 1:
+            data = {
+                "message": "Rol tanlanmadi!",
+            }
+            return JsonResponse(data=data)
+
+        roles_id, _ = user.get_roles
+        for item in selected:
+            r = get_object_or_404(Role, pk=int(item))
+            if r.id in roles_id or r.level == 3:
+                continue
+            else:
+                user.roles.add(r)
+                if r.level == 2:
+                    Editor.objects.create(
+                        user=user
+                    )
+        arr1 = np.array(user.get_roles, dtype=np.int)
+        arr2 = np.array(selected, dtype=np.int)
+        res = np.setdiff1d(arr1, arr2)
+        for item in res:
+            rl = get_object_or_404(Role, pk=int(item))
+            if rl.level == 4:
+                continue
+            if rl.level == 2:
+                editor = get_object_or_404(Editor, user=user)
+                editor.delete()
+            if rl.level == 3:
+                reviewer = get_object_or_404(Reviewer, user=user)
+                reviewer.delete()
+            user.roles.remove(rl)
+        data = {
+            "message": "Omadli bajarildi!",
+        }
+        return JsonResponse(data=data)
+    else:
+        context = {
+            "user": user,
+            "roles": Role.objects.all(),
+        }
+        return render(request, 'user_app/crud/edit_user.html', context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin'])
+def delete_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        user.delete()
+        data = {
+            "result": True,
+            "message": _("Bu foydalanuvchi omadli o'chirildi!"),
+        }
+        return JsonResponse(data=data)
+    context = {
+        "user": user,
+    }
+    return render(request, 'user_app/crud/delete_user.html', context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin'])
+def give_editor_role(request, pk):
+    new_editor = get_object_or_404(Editor, pk=pk)
+    if request.method == "GET":
+        old_editors = Editor.objects.filter(is_editor=True)
+        for it in old_editors:
+            old_editor = get_object_or_404(Editor, pk=it.id)
+            old_editor.is_editor = False
+            old_editor.save()
+            new_editor.is_editor = True
+            new_editor.save()
+        data = {
+            "result": True,
+            "message": _("Bu muharrir omadli tasdiqlandi!"),
+        }
+        return JsonResponse(data=data)
+    else:
+        data = {
+            "result": False,
+            "message": _("Xatolik!"),
+        }
+        return JsonResponse(data=data)

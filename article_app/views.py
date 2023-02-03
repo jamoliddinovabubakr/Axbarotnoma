@@ -195,7 +195,7 @@ def create_article(request):
 # @allowed_users(role=['admin', 'editor', 'reviewer', 'author'])
 def update_article(request, pk):
     user = request.user
-    editor = Editor.objects.all().last()
+    editor = get_object_or_404(Editor, is_editor=True)
     articles = Article.objects.filter(pk=pk)
     if articles.count() == 0:
         return render(request, 'user_app/not_access.html')
@@ -279,7 +279,7 @@ def update_article(request, pk):
         else:
             data = {
                 'result': False,
-                'message': "Formani to'liq to'ldirilmadi...!",
+                'message': _("Formani to'liq to'ldirilmadi!"),
             }
             return JsonResponse(data=data)
     else:

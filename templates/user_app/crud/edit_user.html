@@ -1,97 +1,59 @@
 {% load i18n %}
 {% load static %}
-<div class="modal fade" id="UserModal">
+<div class="modal fade" id="edit_user_modal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'update_user' user.id %}">
+        <form method="post" data-url="{% url 'edit_user' user.id %}" id="choose_role_form">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{% trans "Foydalanuvchi ma'lumotlarini o'zgartirish" %}</h5>
+                    <h5 class="modal-title">{% trans "Foydalanuvchiga rol tayinlash" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
+                    <h5>{{ user.full_name }}</h5>
+                    <div class="widget-todolist widget-todolist-rounded m-b-30" data-id="widget"
+                         id="list_roles">
+                        <div class="widget-todolist-header">
+                            <div class="widget-todolist-header-left">
+                                <h4 class="widget-todolist-header-title">{% trans "Rollar" %}</h4>
+                            </div>
+                            <div class="widget-todolist-header-right">
+                                <div class="widget-todolist-header-total"></div>
+                            </div>
+                        </div>
+                        <div class="widget-todolist-body" id="widget-todolist-body-role">
+                            {% for role in roles %}
 
-                    <table id="data-table-default"
-                           class="table table-bordered table-td-valign-middle">
-                        <tbody>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Familiya" %}</th>
-                            <td class="text-nowrap">{{ form.last_name }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Ism" %}</th>
-                            <td class="text-nowrap">{{ form.first_name }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">Otasini ismi</th>
-                            <td class="text-nowrap">{{ form.middle_name }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Username" %}</th>
-                            <td class="text-nowrap">{{ form.username }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Tug'ilgan sana" %}</th>
-                            <td class="text-nowrap">
-                                <input type="text" value="{{ user.birthday|date:'m/d/Y' }}" name="birthday"
-                                       class="form-control" id="datepicker-default" placeholder="Select Date"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Jins" %}</th>
-                            <td class="text-nowrap">{{ form.gender }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Telefon" %}</th>
-                            <td class="text-nowrap">{{ form.phone }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Email" %}</th>
-                            <td class="text-nowrap">{{ form.email }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Pasport" %}</th>
-                            <td class="text-nowrap">{{ form.passport }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Tuman" %}</th>
-                            <td class="text-nowrap">{{ form.district }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Viloyat" %}</th>
-                            <td class="text-nowrap">{{ form.region }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Rol" %}</th>
-                            <td class="text-nowrap">{{ form.role }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap">{% trans "Rasm" %}</th>
-                            <td class="text-nowrap">
-                                <img src="{{ user.avatar.url }}" width="100" id="image">
-                                <hr>
-                                <input type="file" name="avatar" class="form-control" id="id_avatar"
-                                       accept=".png, .jpg, .jpeg">
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                <!-- begin widget-todolist-item -->
+                                <div class="widget-todolist-item">
+                                    <div class="widget-todolist-input">
+                                        <div class="checkbox checkbox-css pt-0">
+                                            <input type="checkbox" id="widget_todolist_{{ role.id }}"
+                                                   name="role_checkbox" value="{{ role.id }}"
+                                                   {% if role in user.roles.all %}checked{% endif %}/>
+                                            <label for="widget_todolist_{{ role.id }}" class="p-l-15">&nbsp;</label>
+                                        </div>
+                                    </div>
+                                    <div class="widget-todolist-content">
+                                        <h4 class="widget-todolist-title">{{ role.name }}</h4>
+                                        <p class="widget-todolist-desc">Level: {{ role.level }}</p>
+                                    </div>
+                                    <div class="widget-todolist-icon">
+                                        <a href="#"><i class="fa fa-question-circle"></i></a>
+                                    </div>
+                                </div>
+                                <!-- end widget-todolist-item -->
+
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
-                    <button type="submit" class="btn btn-primary">{% trans "Saqlash" %}</button>
+                    <button type="button" class="btn btn-primary edit_user_btn_save">{% trans "Saqlash" %}</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-
-<script>
-    document.getElementById('id_avatar').onchange = function () {
-        var src = URL.createObjectURL(this.files[0])
-        document.getElementById('image').src = src
-    }
-</script>
-<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>
 

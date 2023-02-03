@@ -1,7 +1,7 @@
 {% load i18n %}
-<div class="modal fade" id="UserModal">
+<div class="modal fade" id="delete_user_modal">
     <div class="modal-dialog">
-        <form method="post" enctype="multipart/form-data" action="{% url 'delete_user' user.pk %}">
+        <form method="post" id="delete_user_form" enctype="multipart/form-data" data-url="{% url 'delete_user' user.pk %}">
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
@@ -28,3 +28,38 @@
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        const $RemoveUserForm = $('#delete_user_form');
+        $RemoveUserForm.submit(function (e) {
+        e.preventDefault();
+
+        const $formData = $RemoveUserForm.serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'delete_user' user.id %}",
+            data: $formData,
+            success: function (response) {
+                $('#delete_user_modal').modal('hide');
+
+                if (response.result){
+                    swal({
+                        title: response.message,
+                        timer: 2000,
+                    });
+                        location.reload(true);
+                } else {
+                    alert("Xatolik");
+                }
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        return false;
+    });
+    });
+</script>
