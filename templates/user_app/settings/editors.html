@@ -1,12 +1,12 @@
 {% extends 'user_app/base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Editors" %}{% endblock %}
+{% block title %}{% trans "Muharrirlar ro'yxati" %}{% endblock %}
 {% block content %}
     <div id="content" class="content">
 
         <h2 class="page-header viewArticleFont">
-            {% trans "List of Editors" %}
+            {% trans "Muharrirlar ro'yxati" %}
         </h2>
 
         <div class="panel-body forshadow" style="background-color: #ffffff; border-radius: 5px; padding: 10px;">
@@ -15,12 +15,12 @@
 
                     <thead>
                     <tr>
-                        <th><strong>Tr</strong></th>
-                        <th><strong>FIO</strong></th>
+                        <th><strong>{% trans "Tr" %}</strong></th>
+                        <th><strong>{% trans "FIO" %}</strong></th>
                         <th><strong>E-mail</strong></th>
-                        <th><strong>Telefon</strong></th>
-                        <th><strong>Pasport Ser</strong></th>
-                        <th><strong>Pasport Number</strong></th>
+                        <th><strong>{% trans "Telefon" %}</strong></th>
+                        <th><strong>{% trans "Pasport ser" %}</strong></th>
+                        <th><strong>{% trans "Pasport nomer" %}</strong></th>
                         <th><strong>{% trans "Muharrirmi ?" %}</strong></th>
                         <th></th>
                     </tr>

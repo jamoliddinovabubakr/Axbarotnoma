@@ -15,10 +15,10 @@
 
                     <thead>
                     <tr>
-                        <th><strong>Tr</strong></th>
-                        <th><strong>Name</strong></th>
+                       <th><strong>{% trans "Tr" %}</strong></th>
+                        <th><strong>{% trans "Nomi" %}</strong></th>
                         <th></th>
-                        <th><strong>Action</strong></th>
+                        <th></th>
                     </tr>
                     </thead>
 
@@ -30,8 +30,8 @@
                                 <td>{{ section.name }}</td>
                                 <td></td>
                                 <td>
-                                    <button type="button" class="btn btn-info btn-sm">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                    <button type="button" class="btn btn-info btn-sm">{% trans "O'zgartirish" %}</button>
+                                    <button type="button" class="btn btn-danger btn-sm">{% trans "O'chirish" %}</button>
                                 </td>
                             </tr>
                         {% endfor %}

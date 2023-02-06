@@ -15,8 +15,8 @@
 							<span class="text-blue">T</span>
 							<span class="text-blue">M</span>
 						</span>
-                        <b>Ro'yxatdan o'tish</b>
-                        <small>Onlayn axborotnoma jurnali</small>
+                        <b>{% trans "Ro'yxatdan o'tish" %}</b>
+                        <small>{% trans "Onlayn axborotnoma jurnali" %}</small>
                     </div>
                     <div class="icon">
                         <img src="{% static 'img/version.png' %}" width="120" alt=""/>
@@ -27,47 +27,47 @@
                         <form data-url="{% url 'register' %}" method="POST" class="margin-bottom-0 registerForm">
                             {% csrf_token %}
                             <div class="form-group m-b-20">
-                                <input type="text" name="last_name" class="form-control form-control-xs inverse-mode last_name"
-                                       placeholder="Familiya"/>
+                                <input type="text" name="last_name" class="form-control form-control-xs inverse-mode last_name forshadow"
+                                       placeholder="{% trans 'Familiya' %}"/>
                             </div>
                             <div class="form-group m-b-20">
-                                <input type="text" name="first_name" class="form-control form-control-xs inverse-mode first_name"
-                                       placeholder="Ism"/>
+                                <input type="text" name="first_name" class="form-control form-control-xs inverse-mode first_name forshadow"
+                                       placeholder="{% trans 'Ism' %}"/>
                             </div>
                             <div class="form-group m-b-20">
-                                <input type="text" name="middle_name" class="form-control form-control-xs inverse-mode middle_name"
-                                       placeholder="Otangizni ismi"/>
+                                <input type="text" name="middle_name" class="form-control form-control-xs inverse-mode middle_name forshadow"
+                                       placeholder="{% trans 'Otangizni ismi' %}"/>
                             </div>
                             <div class="form-group m-b-20">
-                                <input type="text" name="username" class="form-control form-control-xs inverse-mode username"
-                                       placeholder="Username"/>
+                                <input type="text" name="username" class="form-control form-control-xs inverse-mode username forshadow"
+                                       placeholder="{% trans 'Username' %}"/>
                             </div>
                             <div class="form-group m-b-20">
-                                <input type="text" name="email" class="form-control form-control-xs inverse-mode email"
-                                       placeholder="Email"/>
+                                <input type="text" name="email" class="form-control form-control-xs inverse-mode email forshadow"
+                                       placeholder="{% trans 'E-mail' %}"/>
                             </div>
                             <div class="form-group m-b-20">
                                 <input type="password" name="password1"
-                                       class="form-control form-control-xs inverse-mode password1" placeholder="Password"/>
+                                       class="form-control form-control-xs inverse-mode password1 forshadow" placeholder="{% trans 'Parol' %}"/>
                             </div>
                             <div class="form-group m-b-20">
                                 <input type="password" name="password2"
-                                       class="form-control form-control-xs inverse-mode password2"
-                                       placeholder="Re-enter password"/>
+                                       class="form-control form-control-xs inverse-mode password2 forshadow"
+                                       placeholder="{% trans 'Parolni takror kiriting' %}"/>
                             </div>
                             <br>
                             <div class="login-buttons">
                                 <button type="submit"
-                                        class="UserModal btn btn-primary btn-block btn-lg registerBtn">{% trans "Ro'yxatdan o'tish" %}</button>
+                                        class="UserModal btn btn-primary btn-block btn-md registerBtn forshadow">{% trans "Ro'yxatdan o'tish" %}</button>
                             </div>
                             <div class="m-t-30 m-b-30 p-b-30">
-                                {% trans "Already a member? Click" %} <a
-                                    href="{% url 'login' %}">{% trans "here" %}</a> {% trans "to login." %}
+                                {% trans "Siz oldin ro'yxatdan o'tgan bo'lsangiz." %}
+                               <a href="{% url 'login' %}">{% trans "Kirish" %}</a>
                             </div>
                             <div class="row d-flex justify-content-center" id="registerFormError"></div>
                             <hr/>
                             <p class="text-center mb-0">
-                                &copy; DTM 2022
+                                &copy; Bilim va malakalarni baholash agentligi
                             </p>
                         </form>
                     </div>

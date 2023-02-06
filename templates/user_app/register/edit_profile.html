@@ -2,8 +2,8 @@
 {% load i18n %}
 {% block content %}
     <div id="content" class="content">
-        <h1 class="page-header">{% trans "Profile sozlamalari" %}
-            <small>{% trans "profilizni ma'luotlarini o'zgartirish..." %}</small></h1>
+        <h1 class="page-header">{% trans "Profilim sozlamalari" %}
+            <small>{% trans "profil ma'luotlarini o'zgartirish..." %}</small></h1>
         <form method="POST" name="form-wizard" class="form-control-with-bg forshadow editProfileForm"
               data-url="{% url 'edit_profile' %}"
               enctype="multipart/form-data">
@@ -129,7 +129,7 @@
                             </div>
                             <div class="col-lg-2">
                                 <hr>
-                                <span class="text-center">Sizga berilgan rollar:</span>
+                                <span class="text-center">{% trans "Sizga berilgan rollar:" %}</span>
                                 {% for item in user.roles.all %}
                                     <span class="badge badge-pill badge-info">{{ item.name }}</span>
                                 {% endfor %}
@@ -138,7 +138,7 @@
                                      id="list_reviewers">
                                     <div class="widget-todolist-header">
                                         <div class="widget-todolist-header-left">
-                                            <span class="text-center">Taqrizchi rolini tanlash</span>
+                                            <span class="text-center">{% trans "Taqrizchi rolini tanlash" %}</span>
                                         </div>
                                     </div>
                                     <div class="widget-todolist-body" id="widget-todolist-body">
@@ -220,7 +220,7 @@
                                             <button type="button" disabled data-url="{% url 'choosen_reviewer_role' %}"
                                                     id="choose-role-reviewer-btn"
                                                     class="btn btn-outline-info btn-sm btn-block forshadow"
-                                                    style="float: right">Yuborish
+                                                    style="float: right">{% trans "Yuborish" %}
                                             </button>
                                         </div>
                                     </div>

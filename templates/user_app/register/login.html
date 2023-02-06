@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% block title %}
-    Login
+    {% trans "Kirish" %}
 {% endblock %}
 {% block base_content %}
     <div id="page-container" class="fade">
@@ -18,36 +18,33 @@
 							<span class="text-blue">T</span>
 							<span class="text-blue">M</span>
 						</span>
-                        <b>Tizimga kirish</b>
-                        <small>Onlayn axborotnoma jurnali</small>
+                        <b>{% trans "Tizimga kirish" %}</b>
+                        <small>{% trans "Onlayn axborotnoma jurnali" %}</small>
                     </div>
                     <div class="icon">
                         <img src="{% static 'img/version.png' %}" width="100" alt=""/>
                     </div>
                 </div>
-                <!-- end login-header -->
-                <!-- begin login-body -->
                 <div class="login-body">
-                    <!-- begin login-content -->
                     <div class="login-content">
                         <form method="POST" class="margin-bottom-0 loginForm" data-url="{% url 'login' %}">
                             {% csrf_token %}
                             <div class="form-group m-b-20">
-                                <input type="text" name="username" class="form-control form-control-xs inverse-mode usernameLogin"
-                                       placeholder="Username"/>
+                                <input type="text" name="username" class="form-control form-control-xs inverse-mode usernameLogin forshadow"
+                                       placeholder="{% trans 'Username' %}"/>
                             </div>
 
                             <div class="form-group m-b-20">
                                 <input type="password" name="password"
-                                       class="form-control form-control-xs inverse-mode passwordLogin" placeholder="Password"/>
+                                       class="form-control form-control-xs inverse-mode passwordLogin forshadow" placeholder="{% trans 'Parol' %}"/>
                             </div>
 
                             <div class="login-buttons">
                                 <button type="submit"
-                                        class="btn btn-primary btn-block btn-lg loginBtn">{% trans "KIRISH" %}</button>
+                                        class="btn btn-primary btn-block btn-md loginBtn forshadow">{% trans "Kirish" %}</button>
                             </div>
                             <div class="m-t-20 m-b-20 p-b-20">
-                                Not a member yet? Click <a href="{% url 'register' %}">{% trans "here" %}</a> {% trans "to register." %}
+                                {% trans "Tizimdan oldin ro'yxatdan o'tmagan bo'lsangiz. Bu linkga kiring" %} <a href="{% url 'register' %}">{% trans "Ro'yxatdan o'tish" %}</a>
 {#                                Are you forgot? Click <a#}
 {#                                    href="{% url 'password_reset' %}">{% trans "here" %}</a> {% trans "to reset password." %}#}
                             </div>
@@ -58,17 +55,10 @@
                             </p>
                         </form>
                     </div>
-                    <!-- end login-content -->
                 </div>
-                <!-- end login-body -->
             </div>
-            <!-- end login-container -->
         </div>
-        <!-- end login -->
-
-        <!-- begin scroll to top btn -->
         <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade"
            data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
-        <!-- end scroll to top btn -->
     </div>
 {% endblock %}

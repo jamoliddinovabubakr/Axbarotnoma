@@ -17,7 +17,7 @@
     <ul class="navbar-nav d-flex flex-grow-1">
         <li style="padding-top: 20px;">
             <span style="text-transform: uppercase; margin-left: 1em;  text-align: center; display: table-cell; vertical-align: middle;">
-                <b>Onlayn axborotnoma jurnal</b>
+                <b>{% trans "Onlayn axborotnoma jurnal" %}</b>
 			</span>
         </li>
         <li class="navbar-form flex-grow-1"></li>
@@ -70,14 +70,11 @@
                     class="caret"></b>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{% url 'edit_profile' %}" class="dropdown-item"><i
-                        class="icon-people p-r-10"></i><span>{% trans "Mening ma'lumotlarim" %}</span></a>
                 <a href="{% url 'main_page' %}" class="dropdown-item"><i
-                        class="icon-home p-r-10"></i><span>{% trans "Bosh sahifaga qaytish" %}</span></a>
+                        class="icon-globe p-r-10"></i><span>{% trans "Asosiy sahifaga o'tish" %}</span></a>
                 <a href="{% url 'logout' %}" class="dropdown-item"><i
-                        class="icon-logout  p-r-10"></i><span>{% trans "Log out" %}</span></a>
+                        class="icon-logout  p-r-10"></i><span>{% trans "Chiqish" %}</span></a>
             </div>
         </li>
     </ul>
-    <!-- end header-nav -->
 </div>

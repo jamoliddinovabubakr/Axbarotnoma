@@ -15,7 +15,7 @@ from article_app.models import ExtraAuthor
 from article_app.forms import CreateArticleForm, UpdateArticleForm, CreateArticleFileForm, AddAuthorForm, \
     SendMessageForm
 from django.core.paginator import Paginator
-from user_app.models import User, Editor
+from user_app.models import User, Editor, Menu, Role
 
 from urllib.parse import urlparse
 from django.conf import settings
@@ -89,6 +89,38 @@ def guide_for_authors(request):
         'guide_for_author': guide_for_author.last(),
     }
     return render(request, "article_app/blank_page/guide_for_authors.html", context=context)
+
+
+def load_sidebar_menus(request):
+    menus = Menu.objects.filter(status=True).filter(type=2).order_by('order')
+    lang = get_language()
+    data = {
+        "menus": list(menus.values(
+            'id', 'name', 'icon_name', 'url', 'url_name', 'order'
+        )),
+        "lang": lang,
+    }
+    return JsonResponse(data=data)
+
+
+def load_navbar_menus(request):
+    is_authenticated = False
+    full_name = None
+    if request.user.is_authenticated:
+        user = get_object_or_404(User, pk=request.user.id)
+        is_authenticated = user.is_authenticated
+        full_name = user.full_name
+    menus = Menu.objects.filter(status=True).filter(type=1).order_by('order')
+    lang = get_language()
+    data = {
+        "navbar_menus": list(menus.values(
+            'id', 'name', 'icon_name', 'url', 'url_name', 'order'
+        )),
+        "is_authenticated": is_authenticated,
+        "full_name": full_name,
+        "lang": lang,
+    }
+    return JsonResponse(data=data)
 
 
 @login_required(login_url='login')

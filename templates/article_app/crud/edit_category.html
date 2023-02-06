@@ -6,7 +6,7 @@
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{% trans "Yo'nalishni o'zgartirish" %}</h5>
+                    <h5 class="modal-title">{% trans "Ruknni o'zgartirish" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
@@ -22,7 +22,7 @@
                             <td class="text-nowrap">{{ form.key }}</td>
                         </tr>
                         <tr>
-                            <th class="text-nowrap">{% trans "Status" %}</th>
+                            <th class="text-nowrap">{% trans "Holat" %}</th>
                             <td class="text-nowrap">{{ form.status }}</td>
                         </tr>
                         </tbody>
@@ -36,5 +36,4 @@
         </form>
     </div>
 </div>
-{#<script src="{% static '/assets/js/demo/form-plugins.demo.js' %}"></script>#}
 

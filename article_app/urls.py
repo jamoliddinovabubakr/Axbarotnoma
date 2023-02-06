@@ -7,6 +7,8 @@ urlpatterns = [
     path('about_journal/', about_journal, name='about_journal'),
     path('editor_board/', editor_board, name='editor_board'),
     path('guide_for_authors/', guide_for_authors, name='guide_for_authors'),
+    path('load_sidebar_menus/', load_sidebar_menus, name='load_sidebar_menus'),
+    path('load_navbar_menus/', load_navbar_menus, name='load_navbar_menus'),
 
     path('article/create/', create_article, name='create_article'),
     path('article/view/<int:pk>/', article_view, name='article_view'),

@@ -9,7 +9,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{% trans "Reviewer Form" %}</h5>
+                    <h5 class="modal-title">{% trans "Taqrizchi formasi" %}</h5>
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                 </div>
                 <div class="modal-body">
@@ -17,16 +17,16 @@
                         <option selected value="{{ article.id }}"></option>
                     </select>
                     <div class="form-group row m-b-15">
-                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "File" %} <span
+                        <label class="col-md-3 col-sm-3 col-form-label">{% trans "Fayl" %} <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-9 col-sm-9">
                             <div class="input-group">
                                 <div class="input-group-prepend"></div>
                                 {{ form.file }}
                                 {% if message %}
-                                    <div class="invalid-feedback">Form is invalid!</div>
+                                    <div class="invalid-feedback">{% trans "Ma'lumotlarni yuborishda xatolik yuz berdi!" %}</div>
                                 {% else %}
-                                    <div class="valid-feedback">File is ready for upload!</div>
+                                    <div class="valid-feedback">{% trans "Fayllar yuborish uchun tayyor!" %}</div>
                                 {% endif %}
                             </div>
                         </div>

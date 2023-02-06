@@ -16,11 +16,11 @@
                         <td class="text-nowrap">{{ reviewer.user.full_name }}</td>
                     </tr>
                     <tr>
-                        <th class="text-nowrap">{% trans "Email" %}</th>
+                        <th class="text-nowrap">{% trans "E-mail" %}</th>
                         <td class="text-nowrap">{{ reviewer.user.email }}</td>
                     </tr>
                     <tr>
-                        <th class="text-nowrap">{% trans "Phone" %}</th>
+                        <th class="text-nowrap">{% trans "Telefon nomer" %}</th>
                         <td class="text-nowrap">{{ reviewer.user.phone }}</td>
                     </tr>
                     <tr>
@@ -28,11 +28,11 @@
                         <td class="text-nowrap">{{ reviewer.scientific_degree.name }}</td>
                     </tr>
                     <tr>
-                        <th class="text-nowrap">{% trans "Work" %}</th>
+                        <th class="text-nowrap">{% trans "Ish joyi" %}</th>
                         <td class="text-nowrap">{{ reviewer.user.work }}</td>
                     </tr>
                     <tr>
-                        <th>{% trans "Tanlangan Sohalar" %}</th>
+                        <th>{% trans "Tanlangan ruknlar" %}</th>
                     </tr>
                     {% for foo in reviewer.section.all %}
                         <tr>
@@ -41,7 +41,7 @@
                         </tr>
                     {% endfor %}
                     <tr>
-                        <th>{% trans "Fayllar" %}</th>
+                        <th>{% trans "Yuborilgan fayllar" %}</th>
                     </tr>
                     {% for file in files %}
                         <tr>
@@ -57,9 +57,9 @@
                 <a href="#" class="btn btn-white" data-dismiss="modal">{% trans "Yopish" %}</a>
                 <form method="post" data-url="{% url 'reviewer_role_list_detail' reviewer.id %}" id="reviewer_role_list_detail_form">
                     {% csrf_token %}
-                    <button type="button" onclick="OnClickIsReviewerBtn(0)" class="btn btn-danger btn-md">Rad etish
+                    <button type="button" onclick="OnClickIsReviewerBtn(0)" class="btn btn-danger btn-md">{% trans "Rad etish" %}
                     </button>
-                    <button type="button" onclick="OnClickIsReviewerBtn(1)" class="btn btn-success btn-md">Tasdiqlash
+                    <button type="button" onclick="OnClickIsReviewerBtn(1)" class="btn btn-success btn-md">{%  trans "Tasdiqlash" %}
                     </button>
                 </form>
             </div>

@@ -2,11 +2,11 @@
 {% load i18n %}
 {% load static %}
 {% block title %}
-    Update Article
+    {% trans "Maqola bo'yicha ma'lumotlarni to'ldiring" %}
 {% endblock %}
 {% block content %}
     <div id="content" class="content">
-        <h3 class="page-header">{% trans "Maqolaga o'zgartirish kiritish" %}</h3>
+        <h3 class="page-header">{% trans "Maqola bo'yicha ma'lumotlarni to'ldiring" %}</h3>
 
         <div class="panel panel-default forshadow">
             <div class="panel-body">
@@ -22,7 +22,7 @@
                                     <h5 class="text-center"
                                         style="color: green">{% trans "Quyidagi so'ralgan ma'lumotlarni to'ldiring" %}</h5>
                                     <div class="form-group row m-b-15" style="visibility: hidden;">
-                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Aftor" %}
+                                        <label class="col-md-2 col-sm-2 col-form-label">{% trans "Muallif" %}
                                             <span
                                                     class="text-danger">*</span></label>
                                         <div class="col-md-10 col-sm-10">
@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <h5>{% trans "Maqolangizni mavzusini kiriting" %}</h5>
+                                    <h5>{% trans "Maqola mavzusi" %}</h5>
                                     <div class="form-group row m-b-15"
                                          style="background-color: #eeeeee; padding: 10px; border-radius: 5px;border: 1px solid #afafaf;">
                                         <div class="col-md-12 col-sm-12">
@@ -56,7 +56,7 @@
                                 <div class="col-md-12">
                                     <button href="{% url 'add_author' article.id %}" data-toggle="modal" style="margin-bottom: 1em; margin-top: 3em;"
                                             class="addUser btn btn-outline-success btn-block btn-sm"><i
-                                            class="fa fa-plus mr-1"></i><strong>{% trans "Maqolangizga mualliflarni qo'shish" %}</strong>
+                                            class="fa fa-plus mr-1"></i><strong>{% trans "Mualliflarni qo'shish" %}</strong>
                                     </button>
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered table-response">
@@ -132,7 +132,7 @@
 {#                                    </div>#}
 {#                                </div>#}
                                 <div class="col-md-12">
-                                    <h5>{% trans "Maqolangizni qisqacha mazmuni" %}</h5>
+                                    <h5>{% trans "Qisqacha mazmuni" %}</h5>
                                     <div class="form-group row m-b-15" style="border: 1px solid #d9d9d9">
                                             {{ form.abstract|safe }}
                                     </div>
@@ -147,7 +147,7 @@
 {#                                    </div>#}
 {#                                </div>#}
                                 <div class="col-md-12">
-                                    <h5>{% trans "Foydalanilgan adabiyotlarni kiriting" %}</h5>
+                                    <h5>{% trans "Adabiyotlar ro'yxati" %}</h5>
                                     <div class="form-group row m-b-15" style="border: 1px solid #d9d9d9">
                                             {{ form.references|safe }}
                                     </div>
@@ -172,7 +172,7 @@
                             <div class="col-md-12 col-sm-12">
                                 <button type="submit" style="float: right;" id="submitButtonId"
                                         class="btn btn-success"><i
-                                        class="fa fa-paper-plane mr-2"></i>{% trans "Maqolani saqlash va yuborish" %}
+                                        class="fa fa-paper-plane mr-2"></i>{% trans "Saqlash va yuborish" %}
                                 </button>
                                 <a style="float: right; margin-right: 1em" href="{% url 'dashboard' %}"
                                    class="btn btn-outline-warning">{% trans "Yopish" %}
@@ -211,9 +211,9 @@
                                 "<td>" + item.scientific_degree__name + "</td>" +
                                 "<td>" + item.work + "</td>" +
                                 "<td class='with-btn' nowrap>" +
-                                `<button type="button" class="btn btn-xs btn-warning edit-author" data-url="${response.edit_url}${item.id}/"><i class="fa fa-edit mr-1"></i>O'zgartirish</button>` +
+                                `<button type="button" class="btn btn-xs btn-warning edit-author" data-url="${response.edit_url}${item.id}/"><i class="fa fa-edit mr-1"></i>{% trans "O'zgartirish" %}</button>` +
                                 " " +
-                                `<button type="button" class="btn btn-xs btn-danger remove-author" id="remove-author${tr}" data-url="${response.delete_url}${item.id}/"><i class="fa fa-trash mr-1"></i>O'chirish</button>` +
+                                `<button type="button" class="btn btn-xs btn-danger remove-author" id="remove-author${tr}" data-url="${response.delete_url}${item.id}/"><i class="fa fa-trash mr-1"></i>{% trans "O'chirish" %}</button>` +
                                 "</td>" +
                                 "</tr>";
                             $("#authors_table").append(temp);
