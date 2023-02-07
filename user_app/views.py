@@ -44,6 +44,33 @@ def countries_list(request):
 
 @login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
+def country_delete(request, pk):
+    country = Country.objects.get(pk=pk)
+    country.delete()
+    return redirect('countries')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def country_update(request, pk):
+    name = request.POST['country']
+    country = Country.objects.get(pk=pk)
+    country.name = name
+    country.save()
+    return redirect('countries')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def country_create(request):
+    new_country = request.POST['country']
+    country = Country.objects.create(name=new_country)
+    country.save()
+    return redirect('countries')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def editors_list(request):
     objects = Editor.objects.all().order_by('id')
     context = {
@@ -60,6 +87,33 @@ def regions_list(request):
         'objects': objects,
     }
     return render(request, "user_app/settings/region.html", context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def region_delete(request, pk):
+    regions = Region.objects.get(pk=pk)
+    regions.delete()
+    return redirect('regions')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def region_update(request, pk):
+    name = request.POST['region']
+    region = Region.objects.get(pk=pk)
+    region.name = name
+    region.save()
+    return redirect('regions')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def region_create(request):
+    name = request.POST['region']
+    region = Region.objects.create(name=name)
+    region.save()
+    return redirect('regions')
 
 
 @login_required(login_url='login')
@@ -90,6 +144,33 @@ def roles_list(request):
         'objects': objects,
     }
     return render(request, "user_app/settings/roles.html", context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin'])
+def role_create(request):
+    if request.method == 'POST':
+        new_role = request.POST['role']
+        role = Role.objects.create(name=new_role)
+        role.save()
+        return redirect('roles')
+
+
+def roles_delete(request, pk):
+    role = Role.objects.get(pk=pk)
+    role.delete()
+    return redirect('roles')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def roles_update(request, pk):
+    if request.method == 'POST':
+        role = Role.objects.get(pk=pk)
+        role_new = request.POST['role']
+        role.name = role_new
+        role.save()
+        return redirect('roles')
 
 
 @login_required(login_url='login')

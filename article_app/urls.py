@@ -21,12 +21,35 @@ urlpatterns = [
     path('author/edit/<int:pk>/', edit_author, name='edit_author'),
     path('author/delete/<int:pk>/', delete_author, name='delete_author'),
 
+    # Article Status
+    path('article_status/', article_status_list, name='article_status_list'),
+    path('article_status_update/<int:pk>/', article_status_update, name='article_status_update'),
+    path('article_status_delete/<int:pk>/', article_status_delete, name='article_status_delete'),
+
     path('send_message/<int:pk>/<int:user_id>/', send_message, name='send_message'),
 
+    # Sections
     path('sections/', list_sections, name='sections'),
+    path('section_delete/<int:pk>/', section_delete, name='section-delete'),
+    path('section_update/<int:pk>/', section_update, name='section-update'),
+    path('section_create', section_create, name='section-create'),
+
+    # Article type
     path('article_types/', article_type_list, name='article_types'),
+    path('article_types_delete/<int:pk>/', article_type_delete, name='article_type_delete'),
+    path('article_type_update/<int:pk>/', article_type_update, name='article_type_update'),
+    path('article_type_create', article_type_create, name='article_type_create'),
+
+    # Article stage
     path('article_stages/', article_stages_list, name='article_stages'),
-    path('article_status/', article_status_list, name='article_status'),
+    path('article_stages_delete/<int:pk>/', article_stages_delete, name='article_stages_delete'),
+    path('article_stages_update/<int:pk>/', article_stages_update, name='article_stages_update'),
+    path('artilce_stages_create/', article_stages_create, name='article_stages_create'),
+
+    # Notification status 
     path('notification_status/', notification_status_list, name='notification_status'),
+    path('notification_status_delete/<int:pk>/', notification_status_delete, name='notification_delete'),
+    path('notification_status_update/<int:pk>/', notification_status_update, name='notification_update'),
+    path('notification_status_create/', notification_status_create, name='notification_create')
 
 ]

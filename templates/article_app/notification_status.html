@@ -1,12 +1,12 @@
 {% extends 'user_app/base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Xabar holatlari ro'yxati" %}{% endblock %}
+{% block title %}{% trans "List of Article Type" %}{% endblock %}
 {% block content %}
     <div id="content" class="content">
 
         <h2 class="page-header viewArticleFont">
-            {% trans "Xabar holatlari ro'yxati" %}
+            {% trans "List of Article Type" %}
         </h2>
 
         <div class="panel-body forshadow" style="background-color: #ffffff; border-radius: 5px; padding: 10px;">
@@ -14,10 +14,10 @@
                 <table class="table table-hover table-fixed table-responsive-lg">
                     <thead>
                     <tr>
-                        <th><strong>{% trans "Tr" %}</strong></th>
-                        <th><strong>{% trans "Nomi" %}</strong></th>
+                        <th><strong>Tr</strong></th>
+                        <th><strong>Name</strong></th>
                         <th></th>
-                        <th></th>
+                        <th><strong>Action</strong></th>
                     </tr>
                     </thead>
 
@@ -29,9 +29,8 @@
                                 <td>{{ item.name }}</td>
                                 <td></td>
                                 <td>
-                                    <button type="button"
-                                            class="btn btn-info btn-sm">{% trans "O'zgartirish" %}</button>
-                                    <button type="button" class="btn btn-danger btn-sm">{% trans "O'chirish" %}</button>
+                                    <button type="button" class="btn btn-info btn-sm">Edit</button>
+                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
                                 </td>
                             </tr>
                         {% endfor %}

@@ -44,6 +44,7 @@ class GenderAdmin(ImportExportActionModelAdmin, TranslationAdmin):
 @admin.register(Role)
 class RoleAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'name']
+
     class Media:
         js = (
             'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
@@ -59,6 +60,8 @@ class RoleAdmin(ImportExportActionModelAdmin, TranslationAdmin):
 class MenuAdmin(ImportExportActionModelAdmin, TranslationAdmin):
     list_display = ['id', 'name', 'status',
                     'url', 'url_name', 'icon_name', 'order', 'get_roles']
+    list_editable = ['status']
+
     class Media:
         js = (
             'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',

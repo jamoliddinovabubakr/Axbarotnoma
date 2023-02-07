@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils import translation
 from django.views.decorators.csrf import requires_csrf_token
+from django.views.generic import UpdateView
 
 from post.models import Post, BlankPage
 from user_app.decorators import allowed_users
@@ -29,6 +30,17 @@ from django_tex.shortcuts import render_to_pdf
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
+# ToDo
+"""
+1) notification_status [done]
+2) article_stages  [done]
+3) article type [done]
+4) article status []
+5) 
+
+"""
 
 
 def set_language(request, language):
@@ -132,6 +144,32 @@ def list_sections(request):
     }
     return render(request, "article_app/sections.html", context=context)
 
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def section_delete(request, pk):
+    section = Section.objects.get(pk=pk)
+    section.delete()
+    return redirect('sections')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def section_update(request, pk):
+    name = request.POST['section']
+    section = Section.objects.get(pk=pk)
+    section.name = name
+    section.save()
+    return redirect('sections')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def section_create(request):
+    section = Section.objects.create(name=request.POST['section'])
+    section.save()
+    return redirect('sections')
+
+
 
 @login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
@@ -144,13 +182,38 @@ def article_type_list(request):
 
 
 @login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def article_type_create(request):
+    """ Article stages Create """
+    if request.method == 'POST':
+        new_type = request.POST['type']
+        article_type = ArticleType.objects.create(name=new_type)
+        article_type.save()
+        return redirect('article_types')
+
+
+@login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
-def article_stages_list(request):
-    objects = Stage.objects.all()
-    context = {
-        'objects': objects,
-    }
-    return render(request, "article_app/article_stages.html", context=context)
+def article_type_delete(request, pk):
+    """ Article type delete """
+    try:
+        article = ArticleType.objects.get(pk=pk)
+    except ArticleType.DoesNotExist:
+        return HttpResponse("Not found")
+    article.delete()
+    return redirect('article_types')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def article_type_update(request, pk):
+    if request.method == 'POST':
+        article_type = ArticleType.objects.get(pk=pk)
+        new_type = request.POST['type']
+        article_type.name = new_type
+        article_type.save()
+        return redirect('article_types')
+
 
 
 @login_required(login_url='login')
@@ -159,18 +222,120 @@ def article_status_list(request):
     objects = ArticleStatus.objects.all()
     context = {
         'objects': objects,
+        'stages': Stage.objects.all()
     }
     return render(request, "article_app/article_status.html", context=context)
 
 
 @login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
+def article_status_delete(request, pk):
+    article_status = ArticleStatus.objects.get(pk=pk)
+    article_status.delete()
+    return redirect('article_status_list')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def article_status_update(request, pk):
+    article = ArticleStatus.objects.get(pk=pk)
+    stage = request.POST['stages']
+    article.name = request.POST['article-status']
+    article.stage = Stage.objects.get(pk=pk)
+    article.save()
+    return redirect('article_status_list')
+
+
+
+
+# Article Stage
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def article_stages_list(request):
+    """ Article Stage List """
+    objects = Stage.objects.all()
+    context = {
+        'objects': objects,
+    }
+    return render(request, "article_app/article_stages.html", context=context)
+
+
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
+def article_stages_delete(request, pk):
+    """ Article Stages Delete """
+    stage = Stage.objects.get(pk=pk)
+    stage.delete()
+    return redirect('article_stages')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def article_stages_update(request, pk):
+    """ Article Stages Update """
+    if request.method == 'POST':
+        stage = Stage.objects.get(pk=pk)
+        article_stage = request.POST['article_stage']
+        stage.name = article_stage
+        stage.save()
+        return redirect('article_stages')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def article_stages_create(request):
+    """ Article stages Create """
+    if request.method == 'POST':
+        stage = request.POST['article_stage']
+        status = Stage.objects.create(name=stage)
+        status.save()
+        return redirect('article_stages')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', 'editor'])
 def notification_status_list(request):
+    """ Notification Status List """
     objects = NotificationStatus.objects.all()
+
     context = {
         'objects': objects,
     }
     return render(request, "article_app/notification_status.html", context=context)
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def notification_status_delete(request, pk):
+    """ Notification Status Delete """
+    status = NotificationStatus.objects.get(pk=pk)
+    status.delete()
+    return redirect('notification_status')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def notification_status_update(request, pk):
+    """ Notification Status Update """
+    if request.method == 'POST':
+        status = NotificationStatus.objects.get(pk=pk)
+        notification = request.POST['notification']
+        status.name = notification
+        status.save()
+        return redirect('notification_status')
+
+
+@login_required(login_url='login')
+@allowed_users(role=['admin', ])
+def notification_status_create(request):
+    """ Notification Status Create """
+    if request.method == 'POST':
+        notification = request.POST['notification']
+        status = NotificationStatus.objects.create(name=notification)
+        status.save()
+        return redirect('notification_status')
 
 
 @login_required(login_url='login')

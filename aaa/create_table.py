@@ -1,7 +1,7 @@
 from psycopg2 import connect, Error
 
 user = "postgres"
-password = "4144"
+password = "0055"
 host = "localhost"
 port = "5432"
 database = "article_db"
@@ -405,7 +405,7 @@ if __name__ == '__main__':
     # insert_to_article_status(article_status)
     # insert_to_role(roles)
     # insert_to_auth_group(groups)
-    # insert_to_notificationstatus(notif_status)
+    insert_to_notificationstatus(notif_status)
     # insert_to_reviewstatus(review_status)
     # insert_to_scientific_degree(scientific_degree)
     # insert_to_section(sections)

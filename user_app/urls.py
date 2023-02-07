@@ -39,24 +39,35 @@ urlpatterns = [
     path('choosen_reviewer_role_list/', reviewer_role_list, name='choosen_reviewer_role_list'),
     path('choosen_reviewer_role_list/<int:pk>/', reviewer_role_list_detail, name='reviewer_role_list_detail'),
 
-
     path('edit_profile/', edit_profile, name='edit_profile'),
     path('load_menus/', load_menus, name='load_menus'),
     path('reviewers_list/', reviewers_list, name='reviewers_list'),
 
+    # Country
     path('countries/', countries_list, name='countries'),
+    path('county_delete/<int:pk>/', country_delete, name='country-delete'),
+    path('county_update/<int:pk>/', country_update, name='country-update'),
+    path('county_create', country_create, name='country-create'),
+
     path('editors/', editors_list, name='editors'),
     path('editors/give_role/<int:pk>/', give_editor_role, name='give_editor_role'),
+
+    # Region
     path('regions/', regions_list, name='regions'),
+    path('region_delete/<int:pk>/', region_delete, name='regions_delete'),
+    path('region_update/<int:pk>/', region_update, name='region-update'),
+    path('region_create', region_create, name='region-create'),
+
     path('genders/', genders_list, name='genders'),
     path('menus/', menus_list, name='menus'),
     path('roles/', roles_list, name='roles'),
+    path('role_delete/<int:pk>/', roles_delete, name='roles-delete'),
+    path('role_update/<int:pk>/', roles_update, name='role_update'),
     path('scientific_degrees/', scientific_degrees_list, name='scientific_degrees'),
     path('users/', users_list, name='users'),
     path('users/view/<int:pk>/', view_user, name='view_user'),
     path('users/edit/<int:pk>/', edit_user, name='edit_user'),
     path('users/delete/<int:pk>/', delete_user, name='delete_user'),
-
 
     path('change_password/', change_password, name='change_password'),
     path('password_reset/', password_reset, name='password_reset'),

@@ -9,23 +9,25 @@
          style="background-color: white; padding:10px; border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;;">
         <div class="container" style="padding: 4em">
 
-        <h5 style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif;"><b>Title:</b>&nbsp;{{ article.title }}</h5>
-        <b style="color:black;">Abstract(uz)</b>
-        {{ article.abstract|safe }}
-        <b style="color:black;">Abstract(en)</b>
-        {{ article.abstract_en|safe }}
-         <b style="color:black;">Keywords(uz)</b>
-        {{ article.keywords|safe }}
-        <b style="color:black;">Keywords(en)</b>
-        {{ article.keywords_en|safe }}
-        <br>
+            <h5 style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif,serif;">
+                <b>Title:</b>&nbsp;{{ article.title }}</h5>
+            <b style="color:black;">Abstract(uz)</b>
+            {{ article.abstract|safe }}
+            <b style="color:black;">Abstract(en)</b>
+            {{ article.abstract_en|safe }}
+            <b style="color:black;">Keywords(uz)</b>
+            {{ article.keywords|safe }}
+            <b style="color:black;">Keywords(en)</b>
+            {{ article.keywords_en|safe }}
+            <br>
             {% for item in authors %}
                 <p style="color:black; font-family: Tahoma, Helvetica, Arial, Sans-Serif,sans-serif; font-size: 13px;">
-                    {{ forloop.counter }}. {{ item.lname }} {{ item.fname }}  &nbsp; <i>{{ item.work }}</i>
+                    {{ forloop.counter }}. {{ item.lname }} {{ item.fname }} &nbsp; <i>{{ item.work }}</i>
                 </p>
             {% endfor %}
-        <br>
-        <a href="{{ article.filePDF.url }}" target="_blank"><i class="fa fa-file-pdf fa-lg"></i>&nbsp;&nbsp;View full text</a>
+            <br>
+            <a href="{{ article.filePDF.url }}" target="_blank"><i class="fa fa-file-pdf fa-lg"></i>&nbsp;&nbsp;View
+                full text</a>
             {% include 'article_app/includes/social_buttons.html' %}
         </div>
     </div>
