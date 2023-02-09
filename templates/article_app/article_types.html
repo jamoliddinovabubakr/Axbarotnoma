@@ -21,6 +21,45 @@
                     </tr>
                     </thead>
 
+
+                    <button type="button" class="btn btn-success btn-sm create_article_btn" data-toggle="modal"
+                            data-target="#article-types-create">
+                        Create
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="article-types-create" tabindex="-1"
+                         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Article types</h5>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{% url 'article_type_create' %}"
+                                          method="post">
+                                        {% csrf_token %}
+                                        <input name="type" class="form-control" type="text"
+                                               placeholder="{{ item.name }}">
+                                        </button>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Save
+                                                changes
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <tbody>
                     {% if objects.count > 0 %}
                         {% for item in objects %}
@@ -29,8 +68,85 @@
                                 <td>{{ item.name }}</td>
                                 <td></td>
                                 <td>
-                                    <button type="button" class="btn btn-info btn-sm">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                
+
+
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                            data-target="#article-types-update-{{ item.id }}">
+                                        Edit
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="article-types-update-{{ item.id }}" tabindex="-1"
+                                         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Article types</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{% url 'article_type_update' item.id %}"
+                                                          method="post">
+                                                        {% csrf_token %}
+                                                        <input name="type" class="form-control" type="text"
+                                                               placeholder="{{ item.name }}">
+                                                        </button>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary">Save
+                                                                changes
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                          <!-- Button Delete trigger modal -->
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                            data-target="#article-types-delete-{{ item.id }}">
+                                        Delete
+                                    </button>
+                                    <!-- Modal Delete -->
+                                    <div class="modal fade" id="article-types-delete-{{ item.id }}" tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Article stages
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ item.name }}ni o'chirishni xoxlaysizmi ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close
+                                                    </button>
+                                                    <a href="{% url 'article_type_delete' item.id %}"
+                                                       class="btn btn-danger" type="button">Ha</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                 </td>
                             </tr>
                         {% endfor %}
