@@ -9,15 +9,58 @@
             {% trans "Maqola holatini bosqichlari ro'yxati" %}
         </h2>
 
+
         <div class="panel-body forshadow" style="background-color: #ffffff; border-radius: 5px; padding: 10px;">
             <div class="container">
                 <table class="table table-hover table-fixed table-responsive-lg">
                     <thead>
                     <tr>
-                        <th><strong>{% trans "Tr" %}</strong></th>
-                        <th><strong>{% trans "Nomi" %}</strong></th>
+                        <th><strong>Tr</strong></th>
+                        <th><strong>Name</strong></th>
+                        <th></th>
+                        <th><strong>Action</strong></th>
                     </tr>
                     </thead>
+
+                    <button type="button" class="btn btn-success btn-sm create_article_btn" data-toggle="modal"
+                            data-target="#notification-create">
+                        Create
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="notification-create" tabindex="-1"
+                         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Notification
+                                        status</h5>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{% url 'article_stages_create' %}"
+                                          method="post">
+                                        {% csrf_token %}
+                                        <input name="article_stage" class="form-control" type="text"
+                                               placeholder="{{ item.name }}">
+                                        </button>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Save
+                                                changes
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <tbody>
                     {% if objects.count > 0 %}
@@ -26,7 +69,80 @@
                                 <th scope="row">{{ forloop.counter }}</th>
                                 <td>{{ item.name }}</td>
                                 <td>
-                                  
+
+
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                            data-target="#article-stages-update-{{ item.id }}">
+                                        Edit
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="article-stages-update-{{ item.id }}" tabindex="-1"
+                                         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Notification
+                                                        status</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{% url 'article_stages_update' item.id %}"
+                                                          method="post">
+                                                        {% csrf_token %}
+                                                        <input name="article_stage" class="form-control" type="text"
+                                                               placeholder="{{ item.name }}">
+                                                        </button>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary">Save
+                                                                changes
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Button Delete trigger modal -->
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                            data-target="#article-stage-delete-{{ item.id }}">
+                                        Delete
+                                    </button>
+                                    <!-- Modal Delete -->
+                                    <div class="modal fade" id="article-stage-delete-{{ item.id }}" tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Article stages
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ item.name }}ni o'chirishni xoxlaysizmi ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close
+                                                    </button>
+                                                    <a href="{% url 'article_stages_delete' item.id %}"
+                                                       class="btn btn-danger" type="button">Ha</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
                                 </td>
