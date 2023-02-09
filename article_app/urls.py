@@ -30,9 +30,9 @@ urlpatterns = [
 
     # Sections
     path('sections/', list_sections, name='sections'),
-    path('section_delete/<int:pk>/', section_delete, name='section-delete'),
-    path('section_update/<int:pk>/', section_update, name='section-update'),
-    path('section_create', section_create, name='section-create'),
+    path('section_delete/<int:pk>/', section_delete, name='section_delete'),
+    path('section_update/<int:pk>/', section_update, name='section_update'),
+    path('section_create', section_create, name='section_create'),
 
     # Article type
     path('article_types/', article_type_list, name='article_types'),

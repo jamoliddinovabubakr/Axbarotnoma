@@ -60,9 +60,12 @@ urlpatterns = [
 
     path('genders/', genders_list, name='genders'),
     path('menus/', menus_list, name='menus'),
+
+    # Roles
     path('roles/', roles_list, name='roles'),
-    path('role_delete/<int:pk>/', roles_delete, name='roles-delete'),
+    path('role_delete/<int:pk>/', roles_delete, name='roles_delete'),
     path('role_update/<int:pk>/', roles_update, name='role_update'),
+    
     path('scientific_degrees/', scientific_degrees_list, name='scientific_degrees'),
     path('users/', users_list, name='users'),
     path('users/view/<int:pk>/', view_user, name='view_user'),
