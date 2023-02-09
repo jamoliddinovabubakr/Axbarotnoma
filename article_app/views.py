@@ -144,6 +144,7 @@ def list_sections(request):
     }
     return render(request, "article_app/sections.html", context=context)
 
+
 @login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
 def section_delete(request, pk):
@@ -168,7 +169,6 @@ def section_create(request):
     section = Section.objects.create(name=request.POST['section'])
     section.save()
     return redirect('sections')
-
 
 
 @login_required(login_url='login')
@@ -215,7 +215,6 @@ def article_type_update(request, pk):
         return redirect('article_types')
 
 
-
 @login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
 def article_status_list(request):
@@ -246,8 +245,6 @@ def article_status_update(request, pk):
     return redirect('article_status_list')
 
 
-
-
 # Article Stage
 @login_required(login_url='login')
 @allowed_users(role=['admin', 'editor'])
@@ -258,8 +255,6 @@ def article_stages_list(request):
         'objects': objects,
     }
     return render(request, "article_app/article_stages.html", context=context)
-
-
 
 
 @login_required(login_url='login')

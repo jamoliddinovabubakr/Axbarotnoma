@@ -16,8 +16,6 @@
                     <tr>
                         <th><strong>{% trans "Tr" %}</strong></th>
                         <th><strong>{% trans "Nomi" %}</strong></th>
-                        <th></th>
-                        <th></th>
                     </tr>
                     </thead>
 
@@ -27,11 +25,10 @@
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
                                 <td>{{ item.name }}</td>
-                                <td></td>
                                 <td>
-                                    <button type="button"
-                                            class="btn btn-info btn-sm">{% trans "O'zgartirish" %}</button>
-                                    <button type="button" class="btn btn-danger btn-sm">{% trans "O'chirish" %}</button>
+                                  
+
+
                                 </td>
                             </tr>
                         {% endfor %}
